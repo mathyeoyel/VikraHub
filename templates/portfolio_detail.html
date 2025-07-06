@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<main class="main">
+
+  <!-- Page Title -->
+  <div class="page-title dark-background" data-aos="fade">
+    <div class="container position-relative">
+      <h1>{{ item.title }}</h1>
+      <p>{{ item.description|truncatewords:20 }}</p>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li class="current">{{ item.title }}</li>
+        </ol>
+      </nav>
+    </div>
+  </div><!-- End Page Title -->
+
+  <!-- Portfolio Detail Section -->
+  <section id="portfolio-details" class="portfolio-details section">
+    <div class="container py-5" data-aos="fade-up" data-aos-delay="100">
+      <div class="row gy-5">
+
+        <div class="col-lg-8">
+          <div class="portfolio-main-content">
+            {% if item.image %}
+              <img src="{{ item.image.url }}" alt="{{ item.title }}" class="img-fluid rounded mb-4" style="max-width:600px;">
+            {% endif %}
+            <h2>{{ item.title }}</h2>
+            <p>{{ item.description }}</p>
+            {% if item.url %}
+              <a href="{{ item.url }}" target="_blank" class="btn btn-primary mt-3">View Live Project</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="portfolio-meta p-4 bg-light rounded">
+            <h5>Project Details</h5>
+            <ul class="list-unstyled">
+              <li><strong>Date:</strong> {{ item.date|date:"M d, Y" }}</li>
+              {% if item.url %}
+              <li><strong>Link:</strong> <a href="{{ item.url }}" target="_blank">{{ item.url }}</a></li>
+              {% endif %}
+            </ul>
+            <a href="{% url 'home' %}#portfolio" class="btn btn-outline-secondary btn-sm mt-3">
+              &larr; Back to Portfolio
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}

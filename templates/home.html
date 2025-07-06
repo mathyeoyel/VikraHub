@@ -1,0 +1,765 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<main class="main">
+
+  <!-- Hero Section -->
+  <section id="hero" class="hero section">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-7 content-col" data-aos="fade-up">
+          <div class="content">
+            <div class="agency-name">
+              <h5>VIKRA HUB</h5>
+            </div>
+            <div class="main-heading">
+              <h1>IGNITING IDEAS.<br>EMPOWERING BRANDS.</h1>
+            </div>
+            <div class="divider"></div>
+            <div class="description">
+              <p>
+                Empowering African creativity and innovation—Vikra Hub is where big ideas and digital solutions meet. We help startups, entrepreneurs, and organizations in South Sudan and beyond unleash their full potential through strategic branding, web development, and digital transformation.
+              </p>
+            </div>
+            <div class="cta-button">
+              <a href="#services" class="btn">
+                <span>DISCOVER OUR SERVICES</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5" data-aos="zoom-out">
+          <div class="visual-content">
+            <div class="fluid-shape">
+              <img src="{% static 'assets/img/abstract/vikrah.webp' %}" alt="Abstract Fluid Shape" class="fluid-img">
+            </div>
+            <div class="stats-card">
+              <div class="stats-number">
+                <h2>200+</h2>
+              </div>
+              <div class="stats-label">
+                <p>Brands Elevated</p>
+              </div>
+              <div class="stats-arrow">
+                <a href="#portfolio"><i class="bi bi-arrow-up-right"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section><!-- /Hero Section -->
+
+  <!-- About Section -->
+  <section id="about" class="about section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>About</h2>
+      <div><span>Learn More</span> <span class="description-title">About Vikra Hub</span></div>
+    </div>
+    <div class="container">
+      <div class="row gx-5 align-items-center">
+        <div class="col-lg-6" data-aos="fade-right" data-aos-delay="200">
+          <div class="about-image position-relative">
+            <img src="{% static 'assets/img/about/MacBook_Mockup_2.jpg' %}" class="img-fluid rounded-4 shadow-sm" alt="About Image" loading="lazy">
+            <div class="experience-badge">
+              <span class="years">5+</span>
+              <span class="text">Years Empowering Creativity</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 mt-4 mt-lg-0" data-aos="fade-left" data-aos-delay="300">
+          <div class="about-content">
+            <h2>Your Growth Partner in the Digital Era</h2>
+            <p class="lead">Vikra Hub is a creative agency and digital innovation platform based in South Sudan, dedicated to helping brands and businesses grow in an ever-evolving market.</p>
+            <p>From creative strategy and design to digital product development and branding, we bring your vision to life. Our team blends local insight with global standards to deliver solutions that inspire and perform.</p>
+            <div class="row g-4 mt-3">
+              <div class="col-md-6" data-aos="zoom-in" data-aos-delay="400">
+                <div class="feature-item">
+                  <i class="bi bi-people-fill"></i>
+                  <h5>Expert Team</h5>
+                  <p>Collaborative, passionate professionals who understand both creativity and technology.</p>
+                </div>
+              </div>
+              <div class="col-md-6" data-aos="zoom-in" data-aos-delay="450">
+                <div class="feature-item">
+                  <i class="bi bi-lightbulb-fill"></i>
+                  <h5>Tailored Solutions</h5>
+                  <p>Every business is unique—so are our strategies.</p>
+                </div>
+              </div>
+            </div>
+            <a href="#contact" class="btn btn-primary mt-4">Learn More About Us</a>
+          </div>
+        </div>
+      </div>
+      <!-- Optional: Testimonials from real clients if you have them -->
+    </div>
+  </section><!-- /About Section -->
+
+  <!-- Services Section -->
+  <section id="services" class="services section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Services</h2>
+      <div><span>Check Our</span> <span class="description-title">Services</span></div>
+    </div>
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="service-header">
+        <div class="row align-items-center">
+          <div class="col-lg-8 col-md-12">
+            <div class="service-intro">
+              <h2 class="service-heading">
+                <div>Creative &amp; Digital</div>
+                <div><span>Solutions for Modern Brands</span></div>
+              </h2>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-12">
+            <div class="service-summary">
+              <p>
+                At Vikra Hub, we offer a full suite of creative and digital services designed for impact. From branding to web development, our solutions help you reach your goals.
+              </p>
+              <a href="#services" class="service-btn">
+                View All Services
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        {% for service in services %}
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00">
+          <div class="service-card position-relative z-1">
+            <div class="service-icon">
+              <i class="{{ service.icon }}"></i>
+            </div>
+            <a href="{% url 'service-detail' service.slug %}" class="card-action d-flex align-items-center justify-content-center rounded-circle">
+              <i class="bi bi-arrow-up-right"></i>
+            </a>
+            <h3>
+              <a href="{% url 'service-detail' service.slug %}">
+                {{ service.title }}
+              </a>
+            </h3>
+            <p>
+              {{ service.description|truncatewords:25 }}
+            </p>
+          </div>
+        </div>
+        {% empty %}
+        <!-- Example static service cards -->
+        <div class="col-lg-4 col-md-6">
+          <div class="service-card position-relative z-1">
+            <div class="service-icon">
+              <i class="bi bi-brush"></i>
+            </div>
+            <h3>Brand Strategy &amp; Identity</h3>
+            <p>Shape how the world sees you with a compelling, consistent brand that stands out in the market.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="service-card position-relative z-1">
+            <div class="service-icon">
+              <i class="bi bi-code-slash"></i>
+            </div>
+            <h3>Web &amp; App Development</h3>
+            <p>Modern, responsive websites and digital platforms that engage and convert your audience.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="service-card position-relative z-1">
+            <div class="service-icon">
+              <i class="bi bi-bullseye"></i>
+            </div>
+            <h3>Digital Marketing</h3>
+            <p>Campaigns that get noticed, drive traffic, and grow communities both online and offline.</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  <!-- /Services Section -->
+
+  <!-- Steps Section -->
+  <section id="steps" class="steps section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Steps</h2>
+      <div><span>How we</span> <span class="description-title">Work</span></div>
+    </div>
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="steps-wrapper">
+        <div class="step-item" data-aos="fade-right" data-aos-delay="200">
+          <div class="step-content">
+            <div class="step-icon">
+              <i class="bi bi-lightbulb"></i>
+            </div>
+            <div class="step-info">
+              <span class="step-number">Step 01</span>
+              <h3>Discovery</h3>
+              <p>Deep dive into your needs and vision through collaborative sessions and research.</p>
+            </div>
+          </div>
+        </div>
+        <div class="step-item" data-aos="fade-left" data-aos-delay="300">
+          <div class="step-content">
+            <div class="step-icon">
+              <i class="bi bi-gear"></i>
+            </div>
+            <div class="step-info">
+              <span class="step-number">Step 02</span>
+              <h3>Strategy</h3>
+              <p>Tailored planning to match your goals with creative and technical solutions.</p>
+            </div>
+          </div>
+        </div>
+        <div class="step-item" data-aos="fade-right" data-aos-delay="400">
+          <div class="step-content">
+            <div class="step-icon">
+              <i class="bi bi-bar-chart"></i>
+            </div>
+            <div class="step-info">
+              <span class="step-number">Step 03</span>
+              <h3>Execution</h3>
+              <p>We deliver your project with creativity, skill, and clear communication at every step.</p>
+            </div>
+          </div>
+        </div>
+        <div class="step-item" data-aos="fade-left" data-aos-delay="500">
+          <div class="step-content">
+            <div class="step-icon">
+              <i class="bi bi-check2-circle"></i>
+            </div>
+            <div class="step-info">
+              <span class="step-number">Step 04</span>
+              <h3>Growth &amp; Support</h3>
+              <p>We help you launch, monitor, and scale—with ongoing support and optimization.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section><!-- /Steps Section -->
+
+  <!-- Call To Action Section -->
+  <section id="call-to-action" class="call-to-action section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="advertise-1 d-flex flex-column flex-lg-row gap-4 align-items-center position-relative">
+        <div class="content-left flex-grow-1" data-aos="fade-right" data-aos-delay="200">
+          <span class="badge text-uppercase mb-2">Ready to Start?</span>
+          <h2>Transform Your Brand with Vikra Hub</h2>
+          <p class="my-4">
+            Join the Vikra Hub community—where ambition meets expertise. Let’s build the future together with creative, digital, and branding solutions designed for you.
+          </p>
+          <div class="features d-flex flex-wrap gap-3 mb-4">
+            <div class="feature-item">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Personalized Support</span>
+            </div>
+            <div class="feature-item">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Innovative Approach</span>
+            </div>
+            <div class="feature-item">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Scalable Solutions</span>
+            </div>
+          </div>
+          <div class="cta-buttons d-flex flex-wrap gap-3">
+            <a href="#contact" class="btn btn-primary">Start Your Project</a>
+            <a href="#services" class="btn btn-outline">See Our Work</a>
+          </div>
+        </div>
+        <div class="content-right position-relative" data-aos="fade-left" data-aos-delay="300">
+          <img src="{% static 'assets/img/misc/misc-1.webp' %}" alt="Digital Platform" class="img-fluid rounded-4">
+          <div class="floating-card">
+            <div class="card-icon">
+              <i class="bi bi-graph-up-arrow"></i>
+            </div>
+            <div class="card-content">
+              <span class="stats-number">245%</span>
+              <span class="stats-text">Growth Rate</span>
+            </div>
+          </div>
+        </div>
+        <div class="decoration">
+          <div class="circle-1"></div>
+          <div class="circle-2"></div>
+        </div>
+      </div>
+    </div>
+  </section><!-- /Call To Action Section -->
+
+  <!-- Testimonials Section -->
+  <section id="testimonials" class="testimonials section light-background">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Testimonials</h2>
+      <div><span>What Our</span> <span class="description-title">Clients Say</span></div>
+    </div>
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="testimonials-slider swiper init-swiper">
+        <script type="application/json" class="swiper-config">
+          {
+            "slidesPerView": 1,
+            "loop": true,
+            "speed": 600,
+            "autoplay": {
+              "delay": 5000
+            },
+            "navigation": {
+              "nextEl": ".swiper-button-next",
+              "prevEl": ".swiper-button-prev"
+            }
+          }
+        </script>
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <div class="testimonial-item">
+              <div class="row">
+                <div class="col-lg-8">
+                  <h2>“A creative powerhouse!”</h2>
+                  <p>Vikra Hub reimagined our online presence and helped us connect with our audience like never before.</p>
+                  <div class="profile d-flex align-items-center">
+                    <img src="{% static 'assets/img/person/person-f-8.webp' %}" class="profile-img" alt="">
+                    <div class="profile-info">
+                      <h3>Grace O.</h3>
+                      <span>Startup Founder</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 d-none d-lg-block">
+                  <div class="featured-img-wrapper">
+                    <img src="{% static 'assets/img/person/person-f-8.webp' %}" class="featured-img" alt="">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="testimonial-item">
+              <div class="row">
+                <div class="col-lg-8">
+                  <h2>“Easy, fast, and inspiring!”</h2>
+                  <p>From logo to website, their team made the process easy and inspiring. Highly recommended!</p>
+                  <div class="profile d-flex align-items-center">
+                    <img src="{% static 'assets/img/person/person-m-7.webp' %}" class="profile-img" alt="">
+                    <div class="profile-info">
+                      <h3>Daniel K.</h3>
+                      <span>NGO Director</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 d-none d-lg-block">
+                  <div class="featured-img-wrapper">
+                    <img src="{% static 'assets/img/person/person-m-7.webp' %}" class="featured-img" alt="">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-navigation w-100 d-flex align-items-center justify-content-center">
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+      </div>
+    </div>
+  </section><!-- /Testimonials Section -->
+
+  <!-- Portfolio Section -->
+  <section id="portfolio" class="portfolio section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Portfolio</h2>
+      <div><span>Check Our</span> <span class="description-title">Work</span></div>
+    </div>
+    <div class="container-fluid" data-aos="fade-up" data-aos-delay="100">
+      <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+        <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="200">
+          <li data-filter="*" class="filter-active">
+            <i class="bi bi-grid-3x3"></i> All Projects
+          </li>
+        </ul>
+        <div class="row g-4 isotope-container" data-aos="fade-up" data-aos-delay="300">
+          {% for item in portfolios %}
+          <div class="col-xl-3 col-lg-4 col-md-6 portfolio-item isotope-item">
+            <article class="portfolio-entry">
+              <figure class="entry-image">
+                <img src="{{ item.image.url }}" class="img-fluid" alt="{{ item.title }}" loading="lazy">
+                <div class="entry-overlay">
+                  <div class="overlay-content">
+                    <div class="entry-meta">{{ item.date|date:"Y" }}</div>
+                    <h3 class="entry-title">{{ item.title }}</h3>
+                    <div class="entry-links">
+                      <a href="{{ item.image.url }}" class="glightbox" data-gallery="portfolio-gallery" data-glightbox="title: {{ item.title }}; description: {{ item.description|truncatewords:20 }}">
+                        <i class="bi bi-arrows-angle-expand"></i>
+                      </a>
+                      <a href="{% url 'portfolio-detail' item.id %}">
+                        <i class="bi bi-arrow-right"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </figure>
+            </article>
+          </div>
+          {% empty %}
+          <div class="col-12"><p>We’re just getting started! Check back soon for exciting projects from Vikra Hub.</p></div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- /Portfolio Section -->
+
+  <!-- Team Section -->
+  <section id="team" class="team section light-background">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Team</h2>
+      <div><span>Meet the</span> <span class="description-title">Vikra Hub Team</span></div>
+    </div>
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row gy-4">
+        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+          <div class="team-member d-flex">
+            <div class="member-img">
+              <img src="{% static 'assets/img/person/Mathew.jpg' %}" class="img-fluid" alt="" loading="lazy">
+            </div>
+            <div class="member-info flex-grow-1">
+              <h4>Mathew Yel</h4>
+              <span>Founder &amp; Creative Director</span>
+              <p>Building the vision for Vikra Hub and empowering South Sudanese creatives.</p>
+              <div class="social">
+                <a href="https://www.facebook.com/mathew.yelose" target="_blank" rel="noopener">
+                  <i class="bi bi-facebook"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/mathew-yel-0806my" target="_blank" rel="noopener">
+                  <i class="bi bi-linkedin"></i>
+                </a>
+                <a href="https://twitter.com/mathyeoyel" target="_blank" rel="noopener">
+                  <i class="bi bi-twitter-x"></i>
+                </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+          <div class="team-member d-flex">
+            <div class="member-img">
+              <img src="{% static 'assets/img/person/person-f-8.webp' %}" class="img-fluid" alt="" loading="lazy">
+            </div>
+            <div class="member-info flex-grow-1">
+              <h4>Nyamal Ladu</h4>
+              <span>Lead Designer</span>
+              <p>Specialist in visual storytelling and brand identity for African brands.</p>
+              <div class="social">
+                <a href="#"><i class="bi bi-facebook"></i></a>
+                <a href="#"><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+          <div class="team-member d-flex">
+            <div class="member-img">
+              <img src="{% static 'assets/img/person/person-m-6.webp' %}" class="img-fluid" alt="" loading="lazy">
+            </div>
+            <div class="member-info flex-grow-1">
+              <h4>Gatluak Peter</h4>
+              <span>Tech Lead</span>
+              <p>Expert in web development and digital solutions, powering Vikra Hub’s platforms.</p>
+              <div class="social">
+                <a href="#"><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Add or replace with your real team as needed -->
+      </div>
+    </div>
+  </section><!-- /Team Section -->
+
+  <!-- Pricing Section -->
+  <section id="pricing" class="pricing section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Pricing</h2>
+      <div><span>Custom</span> <span class="description-title">Packages</span></div>
+    </div>
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
+          <div class="pricing-card">
+            <div class="plan-header">
+              <div class="plan-icon">
+                <i class="bi bi-box"></i>
+              </div>
+              <h3>Starter</h3>
+              <p>Perfect for personal brands and small startups</p>
+            </div>
+            <div class="plan-pricing">
+              <div class="price">
+                <span class="currency">$</span>
+                <span class="amount">Contact</span>
+                <span class="period">us</span>
+              </div>
+            </div>
+            <div class="plan-features">
+              <ul>
+                <li><i class="bi bi-check-circle-fill"></i> Branding Kit</li>
+                <li><i class="bi bi-check-circle-fill"></i> Single Page Website</li>
+                <li><i class="bi bi-check-circle-fill"></i> Social Media Setup</li>
+                <li class="disabled"><i class="bi bi-x-circle-fill"></i> Advanced Features</li>
+              </ul>
+            </div>
+            <div class="plan-cta">
+              <a href="#contact" class="btn-plan">Choose Plan</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="300">
+          <div class="pricing-card popular">
+            <div class="popular-tag">Most Popular</div>
+            <div class="plan-header">
+              <div class="plan-icon">
+                <i class="bi bi-briefcase"></i>
+              </div>
+              <h3>Pro</h3>
+              <p>Best for growing businesses</p>
+            </div>
+            <div class="plan-pricing">
+              <div class="price">
+                <span class="currency">$</span>
+                <span class="amount">Contact</span>
+                <span class="period">us</span>
+              </div>
+            </div>
+            <div class="plan-features">
+              <ul>
+                <li><i class="bi bi-check-circle-fill"></i> Full Branding Suite</li>
+                <li><i class="bi bi-check-circle-fill"></i> Multi-page Website</li>
+                <li><i class="bi bi-check-circle-fill"></i> Marketing Strategy</li>
+                <li><i class="bi bi-check-circle-fill"></i> Ongoing Support</li>
+              </ul>
+            </div>
+            <div class="plan-cta">
+              <a href="#contact" class="btn-plan">Choose Plan</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="400">
+          <div class="pricing-card">
+            <div class="plan-header">
+              <div class="plan-icon">
+                <i class="bi bi-building"></i>
+              </div>
+              <h3>Enterprise</h3>
+              <p>Tailored solutions for large projects</p>
+            </div>
+            <div class="plan-pricing">
+              <div class="price">
+                <span class="currency">$</span>
+                <span class="amount">Contact</span>
+                <span class="period">us</span>
+              </div>
+            </div>
+            <div class="plan-features">
+              <ul>
+                <li><i class="bi bi-check-circle-fill"></i> Custom Solutions</li>
+                <li><i class="bi bi-check-circle-fill"></i> Web & App Development</li>
+                <li><i class="bi bi-check-circle-fill"></i> Dedicated Team</li>
+                <li><i class="bi bi-check-circle-fill"></i> Long-term Support</li>
+              </ul>
+            </div>
+            <div class="plan-cta">
+              <a href="#contact" class="btn-plan">Choose Plan</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section><!-- /Pricing Section -->
+
+  <!-- FAQ Section -->
+  <section class="faq-9 faq section" id="faq">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-5" data-aos="fade-up">
+          <h2 class="faq-title">Have a question? Check out the FAQ</h2>
+          <p class="faq-description">We’re here to help. Don’t see your question? Reach out to us directly!</p>
+        </div>
+        <div class="col-lg-7" data-aos="fade-up" data-aos-delay="300">
+          <div class="faq-container">
+            <div class="faq-item faq-active">
+              <h3>What services does Vikra Hub offer?</h3>
+              <div class="faq-content">
+                <p>We provide branding, web/app development, digital marketing, content creation, and creative consulting.</p>
+              </div>
+              <i class="faq-toggle bi bi-chevron-right"></i>
+            </div>
+            <div class="faq-item">
+              <h3>Where is Vikra Hub based?</h3>
+              <div class="faq-content">
+                <p>We are based in Juba, South Sudan, serving clients locally and internationally.</p>
+              </div>
+              <i class="faq-toggle bi bi-chevron-right"></i>
+            </div>
+            <div class="faq-item">
+              <h3>How do I start a project?</h3>
+              <div class="faq-content">
+                <p>Contact us using the form below or click “Start Your Project” for a free consultation.</p>
+              </div>
+              <i class="faq-toggle bi bi-chevron-right"></i>
+            </div>
+            <div class="faq-item">
+              <h3>Do you offer ongoing support?</h3>
+              <div class="faq-content">
+                <p>Yes, all of our packages include optional ongoing support and growth services.</p>
+              </div>
+              <i class="faq-toggle bi bi-chevron-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section><!-- /Faq Section -->
+
+  <!-- Blog Section -->
+  <section id="blog" class="blog section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Latest Blog Posts</h2>
+    </div>
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row">
+        {% for post in posts %}
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            {% if post.image %}
+            <a href="{% url 'blog-detail' post.slug %}">
+              <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+            </a>
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">
+                <a href="{% url 'blog-detail' post.slug %}">{{ post.title }}</a>
+              </h5>
+              <p class="card-text">{{ post.content|truncatewords:20 }}</p>
+              <a href="{% url 'blog-detail' post.slug %}" class="btn btn-outline-primary btn-sm">Read more</a>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-12"><p>Stay tuned—insights, tips, and inspiration from the Vikra Hub team coming soon.</p></div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  <!-- /Blog Section -->
+
+  <!-- Contact Section -->
+  <section id="contact" class="contact section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Contact</h2>
+      <div><span>Let's</span> <span class="description-title">Connect</span></div>
+    </div>
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row gy-4 mb-5">
+        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="contact-info-box">
+            <div class="icon-box">
+              <i class="bi bi-geo-alt"></i>
+            </div>
+            <div class="info-content">
+              <h4>Our Address</h4>
+              <p>Juba, South Sudan</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="contact-info-box">
+            <div class="icon-box">
+              <i class="bi bi-envelope"></i>
+            </div>
+            <div class="info-content">
+              <h4>Email Address</h4>
+              <p>info@vikrahub.com</p>
+              <p>hello@vikrahub.com</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+          <div class="contact-info-box">
+            <div class="icon-box">
+              <i class="bi bi-headset"></i>
+            </div>
+            <div class="info-content">
+              <h4>Hours of Operation</h4>
+              <p>Monday–Friday: 9 AM - 6 PM</p>
+              <p>Saturday: 10 AM - 4 PM</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Google Maps (replace src if you want to update location) -->
+    <div class="map-section" data-aos="fade-up" data-aos-delay="200">
+      <iframe src="https://www.google.com/maps?q=Juba,+South+Sudan&output=embed" width="100%" height="500" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+    <!-- Contact Form Section (Overlapping) -->
+    <div class="container form-container-overlap">
+      <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="300">
+        <div class="col-lg-10">
+          <div class="contact-form-wrapper">
+            <h2 class="text-center mb-4">Get in Touch</h2>
+            <form action="forms/contact.php" method="post" class="php-email-form">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="input-with-icon">
+                      <i class="bi bi-person"></i>
+                      <input type="text" class="form-control" name="name" placeholder="First Name" required="">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="input-with-icon">
+                      <i class="bi bi-envelope"></i>
+                      <input type="email" class="form-control" name="email" placeholder="Email Address" required="">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <div class="input-with-icon">
+                      <i class="bi bi-text-left"></i>
+                      <input type="text" class="form-control" name="subject" placeholder="Subject" required="">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-group">
+                    <div class="input-with-icon">
+                      <i class="bi bi-chat-dots message-icon"></i>
+                      <textarea class="form-control" name="message" placeholder="Write Message..." style="height: 180px" required=""></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="loading">Loading</div>
+                  <div class="error-message"></div>
+                  <div class="sent-message">Your message has been sent. Thank you!</div>
+                </div>
+                <div class="col-12 text-center">
+                  <button type="submit" class="btn btn-primary btn-submit">SEND MESSAGE</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section><!-- /Contact Section -->
+
+</main>
+{% endblock %}

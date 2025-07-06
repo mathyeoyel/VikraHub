@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+  <div class="card shadow-lg p-4 border-0" style="background: var(--background-color);">
+    <div class="d-flex align-items-center mb-3">
+      <div class="me-3">
+        <span class="bg-vikra-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width:56px;height:56px;font-size:2rem;">
+          <i class="bi bi-person-circle"></i>
+        </span>
+      </div>
+      <div>
+        <h2 class="mb-0" style="color:var(--vikra-primary);">Welcome, {{ user.username }}!</h2>
+        <small class="text-muted">Member since {{ user.date_joined|date:"F d, Y" }}</small>
+      </div>
+    </div>
+    <hr>
+    <ul class="list-group list-group-flush mb-4">
+      <li class="list-group-item bg-transparent"><strong>Email:</strong> {{ user.email }}</li>
+    </ul>
+    <div>
+      <a href="{% url 'logout' %}" class="btn btn-outline-danger me-2">Log out</a>
+      <!-- Add dashboard links or stats here -->
+    </div>
+  </div>
+</div>
+{% endblock %}

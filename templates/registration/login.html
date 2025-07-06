@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow border-0 p-4" style="background: var(--background-color);" data-aos="zoom-in" data-aos-delay="150">
+              <div class="text-center mb-4" data-aos="fade-down" data-aos-delay="80">
+            <a href="{% url 'home' %}">
+                <img src="{% static 'assets/img/logo.webp' %}" alt="Vikra Hub" style="max-width:90px;">
+            </a>
+        </div>  
+        {% if form.errors %}
+          <div class="alert alert-danger">
+            <strong>Error!</strong> Please correct the errors below.
+          </div>
+        {% endif %}
+        <h2 class="mb-4 text-center" style="color:var(--vikra-primary);">
+          <i class="bi bi-box-arrow-in-right"></i> Login
+        </h2>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+          <div class="mb-3">
+            {{ form.username.label_tag }} {{ form.username }}
+            {% for error in form.username.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="mb-3">
+            {{ form.password.label_tag }} {{ form.password }}
+            {% for error in form.password.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <button type="submit" class="btn btn-primary w-100" style="background: var(--vikra-primary); border:none;">Login</button>
+        </form>
+        <p class="mt-3 mb-0 text-center text-muted">
+          Don't have an account? <a href="{% url 'register' %}" style="color:var(--vikra-accent);">Register</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

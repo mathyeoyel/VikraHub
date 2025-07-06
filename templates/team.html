@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<main class="main">
+  <section class="team section">
+    <div class="container py-5">
+      <div class="section-title mb-5" data-aos="fade-up">
+        <h2>Meet the Team</h2>
+        <p>Our creative professionals at Vikra Hub</p>
+      </div>
+      <div class="row justify-content-center">
+        {% for member in team_members %}
+          <div class="col-xl-3 col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00">
+            <div class="card h-100 shadow-sm border-0 team-member-card text-center">
+              {% if member.image %}
+                <img src="{{ member.image.url }}" alt="{{ member.name }}" class="card-img-top rounded-circle mx-auto mt-3 shadow" style="width:120px;height:120px;object-fit:cover;">
+              {% else %}
+                <img src="{% static 'assets/img/person/default-avatar.webp' %}" alt="{{ member.name }}" class="card-img-top rounded-circle mx-auto mt-3 shadow" style="width:120px;height:120px;object-fit:cover;">
+              {% endif %}
+              <div class="card-body">
+                <h5 class="card-title" style="color:var(--vikra-primary);">{{ member.name }}</h5>
+                <span class="d-block mb-2" style="color:var(--vikra-accent);font-size:1.05rem;">{{ member.role }}</span>
+                <p class="card-text small">{{ member.bio }}</p>
+                <div class="d-flex justify-content-center gap-2 mt-2">
+                  {% if member.linkedin %}
+                    <a href="{{ member.linkedin }}" class="text-decoration-none" target="_blank"><i class="bi bi-linkedin"></i></a>
+                  {% endif %}
+                  {% if member.twitter %}
+                    <a href="{{ member.twitter }}" class="text-decoration-none" target="_blank"><i class="bi bi-twitter-x"></i></a>
+                  {% endif %}
+                  {% if member.facebook %}
+                    <a href="{{ member.facebook }}" class="text-decoration-none" target="_blank"><i class="bi bi-facebook"></i></a>
+                  {% endif %}
+                  {% if member.instagram %}
+                    <a href="{{ member.instagram }}" class="text-decoration-none" target="_blank"><i class="bi bi-instagram"></i></a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          <div class="col-12 text-center"><p>No team members yet. Add them in the admin!</p></div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}
