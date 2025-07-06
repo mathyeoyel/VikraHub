@@ -21,6 +21,12 @@ def dashboard(request):
     return render(request, 'dashboard.html')
 
 
+@login_required
+def profile(request):
+    return render(request, 'profile.html')
+
+
+
 def home(request):
     services = Service.objects.all()
     portfolios = PortfolioItem.objects.all()[:6]  # Show 6 latest
