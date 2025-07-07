@@ -4,15 +4,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('core.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/register/', views.register, name='register'),
-    path('dashboard/', views.dashboard, name='dashboard'),
-    path('profile/', views.profile, name='profile')
-]
-
-urlpatterns = [
     path('', views.home, name='home'),
     path('portfolio/<int:id>/', views.portfolio_detail, name='portfolio-detail'),
     path('service/<slug:slug>/', views.service_detail, name='service-detail'),

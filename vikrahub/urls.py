@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
-from core import views  # so we can use views.register here
+from core import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -8,4 +10,11 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/register/', views.register, name='register'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('profile/', views.profile, name='profile'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# The above code sets up the URL routing for the Vikra Hub project, linking various paths to their corresponding views.
+# It includes paths for the admin interface, core app views, user authentication, and registration.
