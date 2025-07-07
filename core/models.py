@@ -4,10 +4,23 @@ from django.contrib.auth.models import User
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
-    # Add more fields if needed, e.g. bio, location, etc.
 
     def __str__(self):
         return f"{self.user.username}'s profile"
+    
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    bio = models.TextField(blank=True)
+    website = models.URLField(blank=True)
+    twitter = models.CharField(max_length=100, blank=True)
+    instagram = models.CharField(max_length=100, blank=True)
+    facebook = models.CharField(max_length=100, blank=True)
+    # More fields can be added as needed
+
+    def __str__(self):
+        return f"{self.user.username}'s profile"
+
 
 class Service(models.Model):
     title = models.CharField(max_length=100)

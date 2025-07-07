@@ -7,25 +7,22 @@ from django.shortcuts import render
 from .models import TeamMember
 from .forms import UserForm, UserProfileForm
 from .models import UserProfile
+from django.contrib.auth.forms import UserChangeForm
 
 @login_required
 def edit_profile(request):
-    user = request.user
-    try:
-        profile = user.userprofile
-    except UserProfile.DoesNotExist:
-        profile = UserProfile.objects.create(user=user)
+    user_form = UserChangeForm(request.POST or None, instance=request.user)
+    profile_form = UserProfileForm(
+        request.POST or None,
+        request.FILES or None,
+        instance=request.user.profile
+    )
 
     if request.method == 'POST':
-        user_form = UserForm(request.POST, instance=user)
-        profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
             return redirect('profile')
-    else:
-        user_form = UserForm(instance=user)
-        profile_form = UserProfileForm(instance=profile)
 
     return render(request, 'edit_profile.html', {
         'user_form': user_form,

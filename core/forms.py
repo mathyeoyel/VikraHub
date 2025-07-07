@@ -3,6 +3,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import UserProfile
 
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['avatar', 'bio', 'website', 'twitter', 'instagram', 'facebook']
+
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
