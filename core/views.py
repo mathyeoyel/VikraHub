@@ -8,6 +8,15 @@ from .models import TeamMember
 from .forms import UserForm, UserProfileForm
 from .models import UserProfile
 from django.contrib.auth.forms import UserChangeForm
+from .forms import UserProfileForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate
+from django.contrib.auth import get_user_model
+User = get_user_model()
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserChangeForm
+from .models import UserProfile
+from .forms import UserProfileForm, CustomUserCreationForm
 
 @login_required
 def edit_profile(request):
