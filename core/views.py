@@ -1,24 +1,13 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Service, PortfolioItem, BlogPost
-from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from .models import TeamMember
-from .forms import UserForm, UserProfileForm
-from .models import UserProfile
+from django.contrib.auth import get_user_model, login, authenticate
 from django.contrib.auth.forms import UserChangeForm
-from .forms import UserProfileForm
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, authenticate
-from django.contrib.auth import get_user_model
-User = get_user_model()
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserChangeForm
-from .models import UserProfile
-from .forms import UserProfileForm, CustomUserCreationForm
+from .forms import CustomUserCreationForm, UserProfileForm
+from .models import Service, PortfolioItem, BlogPost, TeamMember, UserProfile
 
-from core.models import UserProfile
+User = get_user_model()
+
+# --- User Profile Views ---
 
 @login_required
 def profile(request):
@@ -47,15 +36,15 @@ def edit_profile(request):
         'user_form': user_form,
         'profile_form': profile_form,
     })
-from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm
+
+# --- Registration View ---
 
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')  # or wherever you want
+            return redirect('login')
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
@@ -63,8 +52,8 @@ def register(request):
 @login_required
 def dashboard(request):
     return render(request, 'dashboard.html')
-from django.shortcuts import render, get_object_or_404
-from .models import Service, PortfolioItem, BlogPost, TeamMember
+
+# --- Content Views ---
 
 def home(request):
     services = Service.objects.all()
@@ -89,14 +78,6 @@ def starter(request):
 
 def about(request):
     return render(request, 'about.html')
-
-def service_detail(request, slug):
-    service = get_object_or_404(Service, slug=slug)
-    return render(request, 'service_detail.html', {'service': service})
-
-def portfolio_detail(request, id):
-    item = get_object_or_404(PortfolioItem, pk=id)
-    return render(request, 'portfolio_detail.html', {'item': item})
 
 def blog_detail(request, slug):
     post = get_object_or_404(BlogPost, slug=slug, published=True)
