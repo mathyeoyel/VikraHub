@@ -20,6 +20,10 @@ from .forms import UserProfileForm, CustomUserCreationForm
 
 @login_required
 def edit_profile(request):
+    UserProfile.objects.get_or_create(user=request.user)
+    # Ensure the user has a profile
+    if not hasattr(request.user, 'profile'):
+        UserProfile.objects.create(user=request.user)
     user_form = UserChangeForm(request.POST or None, instance=request.user)
     profile_form = UserProfileForm(
         request.POST or None,
@@ -56,6 +60,10 @@ def dashboard(request):
 
 @login_required
 def profile(request):
+    UserProfile.objects.get_or_create(user=request.user)
+    # Ensure the user has a profile
+    if not hasattr(request.user, 'profile'):
+        UserProfile.objects.create(user=request.user) 
     return render(request, 'profile.html')
 
 def home(request):
