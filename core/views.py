@@ -18,18 +18,24 @@ from django.contrib.auth.forms import UserChangeForm
 from .models import UserProfile
 from .forms import UserProfileForm, CustomUserCreationForm
 
+from core.models import UserProfile
+
+@login_required
+def profile(request):
+    try:
+        profile = request.user.profile
+    except UserProfile.DoesNotExist:
+        profile = UserProfile.objects.create(user=request.user)
+    return render(request, 'profile.html')
+
 @login_required
 def edit_profile(request):
-    UserProfile.objects.get_or_create(user=request.user)
-    # Ensure the user has a profile
-    if not hasattr(request.user, 'profile'):
-        UserProfile.objects.create(user=request.user)
+    try:
+        profile = request.user.profile
+    except UserProfile.DoesNotExist:
+        profile = UserProfile.objects.create(user=request.user)
     user_form = UserChangeForm(request.POST or None, instance=request.user)
-    profile_form = UserProfileForm(
-        request.POST or None,
-        request.FILES or None,
-        instance=request.user.profile
-    )
+    profile_form = UserProfileForm(request.POST or None, request.FILES or None, instance=profile)
 
     if request.method == 'POST':
         if user_form.is_valid() and profile_form.is_valid():
@@ -41,7 +47,8 @@ def edit_profile(request):
         'user_form': user_form,
         'profile_form': profile_form,
     })
-
+from django.shortcuts import render, redirect
+from .forms import CustomUserCreationForm
 
 def register(request):
     if request.method == 'POST':
@@ -56,15 +63,8 @@ def register(request):
 @login_required
 def dashboard(request):
     return render(request, 'dashboard.html')
-
-
-@login_required
-def profile(request):
-    UserProfile.objects.get_or_create(user=request.user)
-    # Ensure the user has a profile
-    if not hasattr(request.user, 'profile'):
-        UserProfile.objects.create(user=request.user) 
-    return render(request, 'profile.html')
+from django.shortcuts import render, get_object_or_404
+from .models import Service, PortfolioItem, BlogPost, TeamMember
 
 def home(request):
     services = Service.objects.all()
