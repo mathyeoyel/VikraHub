@@ -5,6 +5,33 @@ from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import TeamMember
+from .forms import UserForm, UserProfileForm
+from .models import UserProfile
+
+@login_required
+def edit_profile(request):
+    user = request.user
+    try:
+        profile = user.userprofile
+    except UserProfile.DoesNotExist:
+        profile = UserProfile.objects.create(user=user)
+
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=user)
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect('profile')
+    else:
+        user_form = UserForm(instance=user)
+        profile_form = UserProfileForm(instance=profile)
+
+    return render(request, 'edit_profile.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+    })
+
 
 def register(request):
     if request.method == 'POST':
@@ -24,8 +51,6 @@ def dashboard(request):
 @login_required
 def profile(request):
     return render(request, 'profile.html')
-
-
 
 def home(request):
     services = Service.objects.all()

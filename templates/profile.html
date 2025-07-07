@@ -1,24 +1,103 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<div class="container py-5">
-  <div class="card p-4 shadow border-0" style="max-width:450px;margin:auto;">
-    <div class="text-center mb-3">
-      <span class="bg-vikra-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width:72px;height:72px;font-size:2.5rem;">
-        <i class="bi bi-person-circle"></i>
-      </span>
+
+<!-- Profile Cover Section -->
+<div class="profile-cover" style="
+  background: linear-gradient(120deg, var(--vikra-primary) 60%, var(--vikra-accent) 100%), url('{% static 'assets/img/profile-cover.jpg' %}') center/cover no-repeat;
+  min-height: 320px;
+  position: relative;
+  display: flex;
+  align-items: center;
+">
+  <div class="container position-relative" style="z-index:2;">
+    <div class="d-flex align-items-center justify-content-between" style="min-height: 320px;">
+      <div>
+        <h1 class="text-white fw-bold display-4 mb-2">Hello {{ user.username|title }}</h1>
+        <p class="text-white-50 fs-5 mb-4">
+          This is your profile page. You can see your progress, manage your info, and edit your account below.
+        </p>
+        <a href="{% url 'dashboard' %}" class="btn btn-light text-vikra-primary fw-bold me-2">Dashboard</a>
+        <a href="#" class="btn btn-info fw-bold">Edit profile</a>
+      </div>
+      <div class="d-none d-lg-block">
+        <!-- Optionally, put a cover art or transparent logo here -->
+      </div>
     </div>
-    <h3 class="text-center mb-2" style="color:var(--vikra-primary);">{{ user.username }}</h3>
-    <p class="text-center text-muted mb-4">{{ user.email }}</p>
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item bg-transparent"><b>Date joined:</b> {{ user.date_joined|date:"F d, Y" }}</li>
-      <li class="list-group-item bg-transparent"><b>Last login:</b> {{ user.last_login|date:"F d, Y H:i" }}</li>
-    </ul>
-    <div class="text-center mt-3">
-      <a href="{% url 'dashboard' %}" class="btn btn-outline-primary">Back to Dashboard</a>
-      <a href="{% url 'logout' %}" class="btn btn-outline-danger ms-2">Logout</a>
+  </div>
+  <!-- Optional overlay for readability -->
+  <div style="
+    position:absolute;top:0;left:0;width:100%;height:100%;
+    background:rgba(20,24,35,0.45);z-index:1;"></div>
+</div>
+
+<!-- Profile Content Cards -->
+<div class="container position-relative" style="z-index:3; margin-top:-80px;">
+  <div class="row g-4 align-items-start">
+    <!-- Main Account Card -->
+    <div class="col-lg-8">
+      <div class="card shadow-lg border-0 mb-4">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="fs-5 fw-bold" style="color:var(--vikra-primary);">My account</span>
+            <a href="#" class="btn btn-light btn-sm border">Settings</a>
+          </div>
+          <form>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label text-muted">Username</label>
+                <input class="form-control" value="{{ user.username }}" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label text-muted">Email address</label>
+                <input class="form-control" value="{{ user.email }}" readonly>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label text-muted">First name</label>
+                <input class="form-control" value="{{ user.first_name }}" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label text-muted">Last name</label>
+                <input class="form-control" value="{{ user.last_name }}" readonly>
+              </div>
+            </div>
+            <!-- Add more fields if you create a user profile model -->
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- Profile Card with Photo & Stats -->
+    <div class="col-lg-4">
+      <div class="card shadow-lg border-0 text-center py-4 px-2">
+        <!-- Circle photo (replace with user's avatar if you add it) -->
+        <div class="mx-auto mb-3 position-relative" style="width:120px; height:120px;">
+          <img src="{% static 'assets/img/person/default-avatar.webp' %}" alt="Avatar" class="rounded-circle border border-3 border-white shadow" style="width:120px;height:120px;object-fit:cover; background:#eee;">
+        </div>
+        <h5 class="mb-1" style="color:var(--vikra-primary);">{{ user.get_full_name|default:user.username|title }}</h5>
+        <div class="text-muted mb-2 small">@{{ user.username }}</div>
+        <!-- Example stats, replace with your data -->
+        <div class="row text-center mb-3">
+          <div class="col-4">
+            <div class="fw-bold fs-5" style="color:var(--vikra-accent);">22</div>
+            <div class="small text-muted">Friends</div>
+          </div>
+          <div class="col-4">
+            <div class="fw-bold fs-5" style="color:var(--vikra-accent);">10</div>
+            <div class="small text-muted">Photos</div>
+          </div>
+          <div class="col-4">
+            <div class="fw-bold fs-5" style="color:var(--vikra-accent);">89</div>
+            <div class="small text-muted">Comments</div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center gap-2">
+          <a href="#" class="btn btn-outline-primary btn-sm">Connect</a>
+          <a href="#" class="btn btn-primary btn-sm text-white">Message</a>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 {% endblock %}
-<!-- This is the profile page for authenticated users -->

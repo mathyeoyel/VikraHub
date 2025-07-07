@@ -11,6 +11,7 @@ urlpatterns = [
     path('starter/', views.starter, name='starter-page'),
     path('about/', views.about, name='about-page'),
     path('team/', views.team, name='team'),
+    path('profile/edit/', views.edit_profile, name='edit_profile'),
 ]
 # vikrahub/core/urls.py
 # This file defines the URL patterns for the core app of the Vikra Hub project.
