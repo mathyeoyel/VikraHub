@@ -11,17 +11,15 @@ User = get_user_model()
 
 @login_required
 def profile(request):
-    try:
-        profile = request.user.profile
-    except UserProfile.DoesNotExist:
+    profile = getattr(request.user, 'profile', None)
+    if profile is None:
         profile = UserProfile.objects.create(user=request.user)
     return render(request, 'profile.html')
 
 @login_required
 def edit_profile(request):
-    try:
-        profile = request.user.profile
-    except UserProfile.DoesNotExist:
+    profile = getattr(request.user, 'profile', None)
+    if profile is None:
         profile = UserProfile.objects.create(user=request.user)
     user_form = UserChangeForm(request.POST or None, instance=request.user)
     profile_form = UserProfileForm(request.POST or None, request.FILES or None, instance=profile)
