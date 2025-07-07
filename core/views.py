@@ -1,26 +1,19 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import get_user_model, login, authenticate
 from django.contrib.auth.forms import UserChangeForm
 from .forms import CustomUserCreationForm, UserProfileForm
 from .models import Service, PortfolioItem, BlogPost, TeamMember, UserProfile
-
-User = get_user_model()
 
 # --- User Profile Views ---
 
 @login_required
 def profile(request):
-    profile = getattr(request.user, 'profile', None)
-    if profile is None:
-        profile = UserProfile.objects.create(user=request.user)
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
     return render(request, 'profile.html')
 
 @login_required
 def edit_profile(request):
-    profile = getattr(request.user, 'profile', None)
-    if profile is None:
-        profile = UserProfile.objects.create(user=request.user)
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
     user_form = UserChangeForm(request.POST or None, instance=request.user)
     profile_form = UserProfileForm(request.POST or None, request.FILES or None, instance=profile)
 
