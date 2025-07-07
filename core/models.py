@@ -4,23 +4,26 @@ from django.contrib.auth.models import User
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
-
-    def __str__(self):
-        return f"{self.user.username}'s profile"
-    
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
     bio = models.TextField(blank=True)
     website = models.URLField(blank=True)
     twitter = models.CharField(max_length=100, blank=True)
     instagram = models.CharField(max_length=100, blank=True)
     facebook = models.CharField(max_length=100, blank=True)
-    # More fields can be added as needed
+    # Add more fields as needed
 
     def __str__(self):
         return f"{self.user.username}'s profile"
 
+# Signal to auto-create or update profile when User is created or saved
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+@receiver(post_save, sender=User)
+def create_or_update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+    else:
+        UserProfile.objects.get_or_create(user=instance)
 
 class Service(models.Model):
     title = models.CharField(max_length=100)
@@ -34,7 +37,6 @@ class Service(models.Model):
 
     def __str__(self):
         return self.title
-
 
 class PortfolioItem(models.Model):
     title = models.CharField(max_length=100)
@@ -69,3 +71,4 @@ class TeamMember(models.Model):
 
     def __str__(self):
         return self.name
+# This model represents a team member with their name, role, bio, and social media links.
