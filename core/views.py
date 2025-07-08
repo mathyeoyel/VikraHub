@@ -51,6 +51,7 @@ def dashboard(request):
     filled_fields = [f for f in fields if f]
     profile_percent = int((len(filled_fields) / len(fields)) * 100) if fields else 100
 
+
     # Recent blog posts (last 3, by this user, if BlogPost.user exists)
     try:
         recent_posts = BlogPost.objects.filter(user=request.user).order_by('-created_at')[:3]
@@ -81,6 +82,7 @@ def dashboard(request):
             {"message": "You can update your profile in the settings.", "type": "info"},
             {"message": "You can create blog posts and portfolio items.", "type": "info"},
         ]
+        
 
     context = {
         "profile": profile,
@@ -106,14 +108,21 @@ def dashboard(request):
     chart_labels = [calendar.month_abbr[item['month'].month] + ' ' + str(item['month'].year) for item in monthly_posts]
     chart_data = [item['count'] for item in monthly_posts]
 
+    skills_list = []
+if profile.skills:
+    skills_list = [s.strip() for s in profile.skills.split(',') if s.strip()]
+
     context = {
         # ... existing context ...
         "chart_labels": chart_labels,
         "chart_data": chart_data,
-        # ... 
+        "profile": profile,
+        "skills_list": skills_list,
+        "profile_percent": profile_percent,
+        "recent_posts": recent_posts,
     }
     return render(request, "dashboard.html", context)
-
+    
     # Example todo list for profile completion
     # This can be dynamic based on profile fields    
     todo = ["Complete your profile", "Create a blog post", "Upload a portfolio item", "Connect with friends"]
