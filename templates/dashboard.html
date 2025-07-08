@@ -86,7 +86,7 @@
         <h6>Skills:</h6>
         {% if profile.skills %}
           {% for skill in skills_list %}
-            <span class="badge bg-primary">{{ skill|trim }}</span>
+            <span class="badge bg-primary">{{ skill }}</span>
           {% endfor %}
         {% else %}
           <span class="text-muted">No skills listed</span>
