@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserChangeForm
 from .forms import CustomUserCreationForm, UserProfileForm
-from .models import Service, PortfolioItem, BlogPost, TeamMember, UserProfile
+from .models import Service, PortfolioItem, BlogPost, TeamMember, UserProfile, Notification
 
 # --- User Profile Views ---
 
@@ -42,6 +42,7 @@ def register(request):
 
 @login_required
 def dashboard(request):
+    
     # Get or create profile
     profile, _ = UserProfile.objects.get_or_create(user=request.user)
 
@@ -68,10 +69,18 @@ def dashboard(request):
 
     # Example notifications (static for now, make dynamic as you wish)
     notifications = [
-        {"icon": "bi-person-check", "msg": "Welcome to your dashboard!"},
-        {"icon": "bi-bell", "msg": "Don't forget to complete your profile."},
-        # Add more or fetch from DB
+        {"message": "Welcome to your dashboard!", "type": "info"},
+        {"message": "You have new messages.", "type": "alert"}, 
     ]
+    if request.user.is_authenticated:
+        # Fetch notifications from the database
+        notifications = Notification.objects.filter(user=request.user, is_read=False).order_by('-created_at')[:5]
+    else:
+        notifications = [
+            {"message": "Please log in to see your notifications.", "type": "info"},
+            {"message": "You can update your profile in the settings.", "type": "info"},
+            {"message": "You can create blog posts and portfolio items.", "type": "info"},
+        ]
 
     context = {
         "profile": profile,
@@ -81,8 +90,36 @@ def dashboard(request):
         "recent_posts": recent_posts,
         "recent_portfolios": recent_portfolios,
         "notifications": notifications,
+        "todo": [],  # Placeholder for todo list, can be dynamic
+    }
+
+    # --- Blog Posts per Month for Chart ---
+    blog_qs = BlogPost.objects.all()  # Or filter(user=request.user) if your model supports it
+    monthly_posts = (
+        blog_qs.annotate(month=TruncMonth('created_at'))
+        .values('month')
+        .annotate(count=Count('id'))
+        .order_by('month')
+    )
+
+    # Prepare chart data for template
+    chart_labels = [calendar.month_abbr[item['month'].month] + ' ' + str(item['month'].year) for item in monthly_posts]
+    chart_data = [item['count'] for item in monthly_posts]
+
+    context = {
+        # ... existing context ...
+        "chart_labels": chart_labels,
+        "chart_data": chart_data,
+        # ... 
     }
     return render(request, "dashboard.html", context)
+
+    # Example todo list for profile completion
+    # This can be dynamic based on profile fields    
+    todo = ["Complete your profile", "Create a blog post", "Upload a portfolio item", "Connect with friends"]
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
+import calendar
 
 
 # --- Content Views ---

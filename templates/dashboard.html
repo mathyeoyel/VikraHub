@@ -82,6 +82,31 @@
           </div>
         </div>
       </div>
+      <div>
+        <h6>Skills:</h6>
+        {% if profile.skills %}
+          {% for skill in profile.skills.split(',') %}
+            <span class="badge bg-primary">{{ skill|trim }}</span>
+          {% endfor %}
+        {% else %}
+          <span class="text-muted">No skills listed</span>
+        {% endif %}
+      </div>
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h6 class="mb-3"><i class="bi bi-clipboard-check"></i> To-Do</h6>
+          <ul class="list-group">
+            {% for item in todo %}
+              <li class="list-group-item text-warning">{{ item }}</li>
+            {% endfor %}
+            {% if not todo %}
+              <li class="list-group-item text-success">Your profile is complete!</li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+
+
 
       <!-- Recent Activity Section -->
       <div class="card shadow-sm mb-4">
@@ -120,4 +145,46 @@
     </div>
   </div>
 </div>
+
+<!-- Chart Section -->
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <h5 class="mb-3"><i class="bi bi-bar-chart-line"></i> Blog Posts Per Month</h5>
+    <canvas id="postsChart" height="90"></canvas>
+  </div>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('postsChart').getContext('2d');
+const postsChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: {{ chart_labels|safe }},
+        datasets: [{
+            label: 'Blog Posts',
+            data: {{ chart_data|safe }},
+            backgroundColor: 'rgba(0,123,255,0.4)',
+            borderColor: 'rgba(0,123,255,1)',
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+});
+</script>
+{% if user.is_authenticated %}
+  <script>
+    // Example: Update profile completion dynamically
+    const profilePercent = {{ profile_percent }};
+    document.querySelector('.progress-bar').style.width = profilePercent + '%';
+    document.querySelector('.progress-bar').setAttribute('aria-valuenow', profilePercent);
+  </script>
+{% endif %}
+
 {% endblock %}
