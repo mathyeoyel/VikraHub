@@ -42,7 +42,48 @@ def register(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    # Get or create profile
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+
+    # Profile completeness
+    fields = [profile.avatar, profile.bio, profile.website, profile.twitter, profile.instagram, profile.facebook]
+    filled_fields = [f for f in fields if f]
+    profile_percent = int((len(filled_fields) / len(fields)) * 100) if fields else 100
+
+    # Recent blog posts (last 3, by this user, if BlogPost.user exists)
+    try:
+        recent_posts = BlogPost.objects.filter(user=request.user).order_by('-created_at')[:3]
+        post_count = BlogPost.objects.filter(user=request.user).count()
+    except Exception:
+        recent_posts = BlogPost.objects.filter(published=True).order_by('-created_at')[:3]  # fallback: all posts
+        post_count = BlogPost.objects.filter(published=True).count()
+
+    # Recent portfolio items (last 3, if you link PortfolioItem to user)
+    try:
+        recent_portfolios = PortfolioItem.objects.filter(user=request.user).order_by('-date')[:3]
+        portfolio_count = PortfolioItem.objects.filter(user=request.user).count()
+    except Exception:
+        recent_portfolios = PortfolioItem.objects.all().order_by('-date')[:3]
+        portfolio_count = PortfolioItem.objects.count()
+
+    # Example notifications (static for now, make dynamic as you wish)
+    notifications = [
+        {"icon": "bi-person-check", "msg": "Welcome to your dashboard!"},
+        {"icon": "bi-bell", "msg": "Don't forget to complete your profile."},
+        # Add more or fetch from DB
+    ]
+
+    context = {
+        "profile": profile,
+        "profile_percent": profile_percent,
+        "post_count": post_count,
+        "portfolio_count": portfolio_count,
+        "recent_posts": recent_posts,
+        "recent_portfolios": recent_portfolios,
+        "notifications": notifications,
+    }
+    return render(request, "dashboard.html", context)
+
 
 # --- Content Views ---
 
