@@ -1,8 +1,8 @@
 /* Fonts */
 :root {
-  --default-font: "Raleway",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --heading-font: "figtree",  sans-serif;
-  --nav-font: "Raleway",  figtree, sans-serif;
+  --default-font: "Figtree",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --heading-font: "Raleway",  sans-serif;
+  --nav-font: "figtree",  figtree, sans-serif;
 }
 
 :root {
@@ -13,13 +13,7 @@
   --surface-color: #000223;
   --contrast-color: #ffffff;
 
-  /* Bootstrap variables */
-  --bs-primary: var(--accent-color);
-  --bs-secondary: var(--heading-color);
-  --bs-dark: var(--default-color);
-  --bs-light: var(--background-color);
-
-  /* Optionally, your own for quick classes */
+  /* VikraHub colors */
   --vikra-primary: #000223;
   --vikra-secondary: #7c521b;
   --vikra-accent: #ffa000;
@@ -460,8 +454,8 @@ h6 {
 # Global Footer
 --------------------------------------------------------------*/
 .footer {
-  color: var(--default-color);
-  background-color: var(--background-color);
+  color: var(--background-color);
+  background-color: var(--default-color);
   font-size: 14px;
   padding-bottom: 50px;
   position: relative;
@@ -502,9 +496,9 @@ h6 {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1px solid color-mix(in srgb, var(--default-color), transparent 50%);
+  border: 1px solid color-mix(in srgb, var(--background-color), transparent 50%);
   font-size: 16px;
-  color: color-mix(in srgb, var(--default-color), transparent 50%);
+  color: color-mix(in srgb, var(--background-color), transparent 50%);
   margin-right: 10px;
   transition: 0.3s;
 }
@@ -548,7 +542,7 @@ h6 {
 }
 
 .footer .footer-links ul a {
-  color: color-mix(in srgb, var(--default-color), transparent 20%);
+  color: color-mix(in srgb, var(--background-color), transparent 20%);
   display: inline-block;
   line-height: 1;
 }
@@ -584,7 +578,10 @@ h6 {
   inset: 0;
   z-index: 999999;
   overflow: hidden;
-  background: var(--background-color);
+  background: var(--default-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.6s ease-out;
 }
 
@@ -818,7 +815,7 @@ section,
   font-size: 1.25rem;
   font-weight: 600;
   letter-spacing: 1px;
-  color: var(--contrast-color);
+  color: var(--default-color);
   margin: 0;
 }
 
@@ -1032,7 +1029,7 @@ section,
   position: absolute;
   bottom: 30px;
   right: -30px;
-  background: var(--accent-color);
+  background: var(--default-color);
   color: var(--contrast-color);
   padding: 1.5rem;
   border-radius: 8px;
@@ -1083,11 +1080,12 @@ section,
 .about .about-content .lead {
   font-size: 1.15rem;
   margin-bottom: 1.25rem;
-  color: color-mix(in srgb, var(--heading-color), transparent 30%);
+  color: color-mix(in srgb, var(--default-color), transparent 30%);
 }
 
 .about .about-content p {
   margin-bottom: 1rem;
+  color: #000000;
 }
 
 .about .about-content .feature-item {
@@ -1097,6 +1095,7 @@ section,
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
   height: 100%;
   transition: all 0.3s ease;
+  color: var(--vikra-light);
 }
 
 .about .about-content .feature-item:hover {
@@ -1120,6 +1119,7 @@ section,
 .about .about-content .feature-item p {
   font-size: 0.9rem;
   margin-bottom: 0;
+  color: color-mix(in srgb, var(--vikra-light), transparent 20%);
 }
 
 .about .about-content .btn-primary {
@@ -1346,6 +1346,10 @@ section,
   margin-bottom: 0;
 }
 
+.services .service-card p:hover {
+  color: var(--vikra-light);
+}
+
 .services .service-card .card-action {
   position: absolute;
   top: 0;
@@ -1406,7 +1410,7 @@ section,
 }
 
 .services .service-card:hover p {
-  color: color-mix(in srgb, var(--default-color), transparent 20%);
+  color: color-mix(in srgb, var(--vikra-light), transparent 20%);
 }
 
 .services .service-card:hover .card-action {
@@ -1506,7 +1510,7 @@ section,
   flex: 1;
   background-color: var(--surface-color);
   padding: 30px;
-  border-radius: 8px;
+  border-radius: 25px;
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease-in-out;
 }
@@ -1534,7 +1538,7 @@ section,
 }
 
 .steps p {
-  color: color-mix(in srgb, var(--default-color), transparent 20%);
+  color: color-mix(in srgb, var(--vikra-light), transparent 20%);
   font-size: 1rem;
   line-height: 1.6;
   margin-bottom: 0;
@@ -1634,7 +1638,7 @@ section,
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   background-color: var(--surface-color);
-  border-radius: 0.5rem;
+  border-radius: 0.7rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease;
 }
@@ -1650,6 +1654,7 @@ section,
 
 .call-to-action .features .feature-item span {
   font-weight: 500;
+  color: var(--vikra-light);
 }
 
 .call-to-action .cta-buttons .btn {
@@ -1806,6 +1811,14 @@ section,
 /*--------------------------------------------------------------
 # Testimonials Section
 --------------------------------------------------------------*/
+.testimonials {
+  padding: 60px 0;
+}
+
+.testimonials .section-title h2 {
+  color: var(--vikra-light);
+}
+
 .testimonials .testimonials-slider {
   width: 100%;
   position: relative;
@@ -1832,6 +1845,7 @@ section,
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 20px;
+  color: var(--vikra-accent);
 }
 
 .testimonials .testimonial-item p {
@@ -1839,6 +1853,7 @@ section,
   line-height: 1.8;
   margin-bottom: 30px;
   font-style: italic;
+  color: var(--vikra-light);
 }
 
 .testimonials .testimonial-item .profile {
@@ -1860,7 +1875,7 @@ section,
 
 .testimonials .testimonial-item .profile .profile-info span {
   font-size: 14px;
-  color: color-mix(in srgb, var(--default-color) 70%, transparent);
+  color: color-mix(in srgb, var(--vikra-light) 70%, transparent);
 }
 
 .testimonials .testimonial-item .featured-img-wrapper {
@@ -1894,16 +1909,16 @@ section,
   margin: 0;
   width: 44px;
   height: 44px;
-  background-color: var(--surface-color);
+  background-color: var(--vikra-light);
   border-radius: 50%;
-  border: 1px solid color-mix(in srgb, var(--default-color) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vikra-accent) 10%, transparent);
   transition: 0.3s;
 }
 
 .testimonials .swiper-button-prev::after,
 .testimonials .swiper-button-next::after {
   font-size: 20px;
-  color: var(--default-color);
+  color: var(--vikra-accent);
 }
 
 .testimonials .swiper-button-prev:hover,
@@ -2167,6 +2182,14 @@ section,
 /*--------------------------------------------------------------
 # Team Section
 --------------------------------------------------------------*/
+.team {
+  padding: 60px 0;
+}
+
+.team .section-title h2 {
+  color: var(--vikra-light);
+}
+
 .team .team-member {
   position: relative;
   background-color: var(--surface-color);
@@ -2201,13 +2224,13 @@ section,
   font-size: 1.2rem;
   font-weight: 700;
   margin-bottom: 5px;
-  color: var(--heading-color);
+  color: var(--vikra-accent);
 }
 
 .team .team-member .member-info span {
   font-size: 0.9rem;
   font-weight: 400;
-  color: color-mix(in srgb, var(--heading-color), transparent 30%);
+  color: color-mix(in srgb, var(--vikra-accent), transparent 30%);
   display: block;
   margin-bottom: 15px;
 }
@@ -2215,7 +2238,7 @@ section,
 .team .team-member .member-info p {
   font-size: 0.9rem;
   margin-bottom: 20px;
-  color: color-mix(in srgb, var(--default-color), transparent 20%);
+  color: color-mix(in srgb, var(--vikra-light), transparent 20%);
 }
 
 .team .team-member .member-info .social {
@@ -2345,11 +2368,12 @@ section,
   font-size: 24px;
   font-weight: 700;
   margin-bottom: 10px;
+  color: var(--vikra-accent);
 }
 
 .pricing .plan-header p {
   font-size: 15px;
-  color: color-mix(in srgb, var(--default-color), transparent 30%);
+  color: color-mix(in srgb, var(--vikra-light), transparent 30%);
 }
 
 .pricing .plan-pricing {
@@ -2395,11 +2419,11 @@ section,
   display: flex;
   align-items: center;
   gap: 10px;
-  color: color-mix(in srgb, var(--default-color), transparent 20%);
+  color: color-mix(in srgb, var(--vikra-light), transparent 20%);
 }
 
 .pricing .plan-features ul li.disabled {
-  color: color-mix(in srgb, var(--default-color), transparent 60%);
+  color: color-mix(in srgb, var(--vikra-light), transparent 60%);
 }
 
 .pricing .plan-features ul li i {
@@ -2411,7 +2435,7 @@ section,
 }
 
 .pricing .plan-features ul li i.bi-x-circle-fill {
-  color: color-mix(in srgb, var(--default-color), transparent 60%);
+  color: color-mix(in srgb, var(--vikra-secondary), transparent 30%);
 }
 
 .pricing .plan-cta {
@@ -2423,8 +2447,8 @@ section,
   display: inline-block;
   width: 100%;
   padding: 14px 32px;
-  background-color: color-mix(in srgb, var(--default-color), transparent 95%);
-  color: var(--default-color);
+  background-color: color-mix(in srgb, var(--vikra-secondary), transparent 78%);
+  color: var(--vikra-light);
   border-radius: 50px;
   font-size: 16px;
   font-weight: 600;
@@ -2432,7 +2456,7 @@ section,
 }
 
 .pricing .plan-cta .btn-plan:hover {
-  background-color: color-mix(in srgb, var(--default-color), transparent 80%);
+  background-color: color-mix(in srgb, var(--vikra-secondary), transparent 10%);
 }
 
 @media (max-width: 992px) {
@@ -2524,6 +2548,7 @@ section,
 .faq .faq-container .faq-item .faq-content p {
   margin-bottom: 0;
   overflow: hidden;
+  color: var(--vikra-light);
 }
 
 .faq .faq-container .faq-item .faq-toggle {
@@ -2596,11 +2621,12 @@ section,
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 10px;
+  color: var(--vikra-accent);
 }
 
 .contact .contact-info-box .info-content p {
   margin-bottom: 5px;
-  color: color-mix(in srgb, var(--default-color), transparent 20%);
+  color: color-mix(in srgb, var(--vikra-light), transparent 10%);
   font-size: 15px;
   line-height: 1.5;
 }
@@ -2668,7 +2694,7 @@ section,
   left: 15px;
   top: 50%;
   transform: translateY(-50%);
-  color: color-mix(in srgb, var(--default-color), transparent 40%);
+  color: color-mix(in srgb, var(--vikra-light), transparent 40%);
   font-size: 18px;
   z-index: 10;
 }
@@ -2686,10 +2712,10 @@ section,
   border-radius: 8px;
   padding: 12px 15px 12px 45px;
   height: 3.5rem;
-  color: var(--default-color);
+  color: var(--vikra-light);
   background-color: var(--surface-color);
   font-size: 15px;
-  border: 1px solid color-mix(in srgb, var(--default-color), transparent 80%);
+  border: 1px solid color-mix(in srgb, var(--vikra-secondary), transparent 60%);
 }
 
 .contact .contact-form-wrapper .form-group .input-with-icon .form-control:focus {
@@ -2698,7 +2724,7 @@ section,
 }
 
 .contact .contact-form-wrapper .form-group .input-with-icon .form-control::placeholder {
-  color: color-mix(in srgb, var(--default-color), transparent 40%);
+  color: color-mix(in srgb, var(--vikra-light), transparent 40%);
 }
 
 .contact .contact-form-wrapper .form-group .input-with-icon textarea.form-control {
@@ -3634,7 +3660,7 @@ section,
 }
 
 .service-details .service-sidebar .testimonial-card .testimonial-header .rating i {
-  color: #FFD700;
+  color: #ffa000;
   font-size: 16px;
   opacity: 1;
   margin-left: 2px;
@@ -3644,7 +3670,7 @@ section,
   font-style: italic;
   line-height: 1.7;
   margin-bottom: 20px;
-  color: color-mix(in srgb, var(--default-color), transparent 15%);
+  color: color-mix(in srgb, var(--vikra-light), transparent 15%);
 }
 
 .service-details .service-sidebar .testimonial-card .client-info {
@@ -3668,7 +3694,7 @@ section,
 
 .service-details .service-sidebar .testimonial-card .client-info .client-details span {
   font-size: 14px;
-  color: color-mix(in srgb, var(--default-color), transparent 30%);
+  color: color-mix(in srgb, var(--vikra-light), transparent 10%);
 }
 
 .service-details .service-sidebar .contact-info {
