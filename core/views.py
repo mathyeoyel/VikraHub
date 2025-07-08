@@ -3,6 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserChangeForm
 from .forms import CustomUserCreationForm, UserProfileForm
 from .models import Service, PortfolioItem, BlogPost, TeamMember, UserProfile, Notification
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
+import calendar
 
 # --- User Profile Views ---
 
@@ -109,8 +112,9 @@ def dashboard(request):
     chart_data = [item['count'] for item in monthly_posts]
 
     skills_list = []
-if profile.skills:
-    skills_list = [s.strip() for s in profile.skills.split(',') if s.strip()]
+    if profile.skills:
+        skills_list = [s.strip() for s in profile.skills.split(',') if s.strip()]
+    # Prepare skills list
 
     context = {
         # ... existing context ...
@@ -120,16 +124,12 @@ if profile.skills:
         "skills_list": skills_list,
         "profile_percent": profile_percent,
         "recent_posts": recent_posts,
+        "recent_portfolios": recent_portfolios,
+        "notifications": notifications,
     }
+    # Render the dashboard template with the context
     return render(request, "dashboard.html", context)
-    
-    # Example todo list for profile completion
-    # This can be dynamic based on profile fields    
-    todo = ["Complete your profile", "Create a blog post", "Upload a portfolio item", "Connect with friends"]
-from django.db.models import Count
-from django.db.models.functions import TruncMonth
-import calendar
-
+        
 
 # --- Content Views ---
 
