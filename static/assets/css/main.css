@@ -1,8 +1,8 @@
 /* Fonts */
 :root {
-  --default-font: "Roboto",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --heading-font: "Nunito Sans",  sans-serif;
-  --nav-font: "Raleway",  sans-serif;
+  --default-font: "Raleway",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --heading-font: "figtree",  sans-serif;
+  --nav-font: "Raleway",  figtree, sans-serif;
 }
 
 :root {
@@ -11,7 +11,7 @@
   --heading-color: #7c521b;
   --accent-color: #ffa000;
   --surface-color: #000223;
-  --contrast-color: #ffffff;
+  --contrast-color: #000000;
 
   /* Bootstrap variables */
   --bs-primary: var(--accent-color);
@@ -40,15 +40,15 @@
 /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
 
 .light-background {
-  --background-color: #0d1d26;
-  --surface-color: #16262f;
+  --background-color: #16172e;
+  --surface-color: #1b1b31;
 }
 
 .dark-background {
-  --background-color: #060606;
-  --default-color: #ffffff;
-  --heading-color: #ffffff;
-  --surface-color: #252525;
+  --background-color: #000000;
+  --default-color: #000223;
+  --heading-color: #ffa000;
+  --surface-color: #7c521b;
   --contrast-color: #ffffff;
 }
 
