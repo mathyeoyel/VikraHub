@@ -11,7 +11,7 @@
   --heading-color: #7c521b;
   --accent-color: #ffa000;
   --surface-color: #000223;
-  --contrast-color: #000000;
+  --contrast-color: #ffffff;
 
   /* Bootstrap variables */
   --bs-primary: var(--accent-color);
