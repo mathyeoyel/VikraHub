@@ -1,7 +1,29 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField  # for Postgres
+from django.urls import reverse # for URL reversing in templates
+# This file defines the models for the Vikra Hub project, including user profiles, services, portfolio items, blog posts, team members, and notifications.
 
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.CharField(max_length=200)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.is_read = False
+    def get_absolute_url(self):
+        return reverse('notification-detail', kwargs={'pk': self.pk})
+    def mark_as_read(self):
+        self.is_read = True
+        self.save()
+
+    def __str__(self):
+        return f"Notification for {self.user.username}: {self.message}"
 class UserProfile(models.Model):
+    skills = models.CharField(max_length=250, blank=True, help_text="Comma-separated list of skills")
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
     bio = models.TextField(blank=True)

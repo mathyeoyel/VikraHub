@@ -2,7 +2,28 @@ import dj_database_url
 import os
 from pathlib import Path
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Database
+# Use DATABASE_URL if set, otherwise use local SQLite for dev
+DATABASES = {}
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if DATABASE_URL:
+    import dj_database_url
+    DATABASES['default'] = dj_database_url.config(default=DATABASE_URL)
+else:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+# Static files (CSS, JavaScript, Images)
+# Use Whitenoise for serving static files in production
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# ─── SECURITY ──────────────────────────────────────────────────────────────────
+# This is a minimal settings file for a Django project, suitable for deployment on Render.
 
 if os.environ.get('RENDER', None):
     MEDIA_ROOT = '/media'
@@ -60,12 +81,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'vikrahub.wsgi.application'
-
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL')
-    )
-}
+# ─── AUTHENTICATION ────────────────────────────────────────────────────────────
+AUTH_USER_MODEL = 'auth.User'  # Use Django's built-in User model
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},

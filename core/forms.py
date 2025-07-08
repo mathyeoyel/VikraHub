@@ -6,7 +6,7 @@ from .models import UserProfile
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['avatar', 'bio', 'website', 'twitter', 'instagram', 'facebook']
+        fields = ['avatar', 'bio', 'website', 'twitter', 'instagram', 'facebook', 'skills',]
 
 class UserForm(forms.ModelForm):
     class Meta:
