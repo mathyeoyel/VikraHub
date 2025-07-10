@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',  # ← must be here
     # third-party
     'whitenoise.runserver_nostatic',  # for local development with Whiten
+    'storages',  # for AWS S3 storage
+    # local apps
     'core',
 ]
 
