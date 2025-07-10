@@ -37,8 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',  # ← must be here
-    # third-party
+    'django.contrib.staticfiles', # for static files
     'whitenoise.runserver_nostatic',  # for local development with Whiten
     'storages',  # for AWS S3 storage
     # local apps
@@ -109,9 +108,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/profile/'
 LOGOUT_REDIRECT_URL = '/logout-success/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# ---- AWS S3 MEDIA STORAGE ----
-INSTALLED_APPS += ['storages']
 
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
