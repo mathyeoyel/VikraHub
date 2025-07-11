@@ -291,6 +291,76 @@
     </div>
   </section><!-- /Call To Action Section -->
 
+  <!-- Featured Designers Section -->
+  <section id="featured-designers" class="featured section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Featured Designers & Agencies</h2>
+      <div><span>Meet Top Talent</span> <span class="description-title">On VikraHub</span></div>
+    </div>
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row">
+        {% for designer in featured_designers %}
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="card h-100 text-center">
+            <img src="{{ designer.profile_pic.url }}" class="card-img-top rounded-circle" alt="{{ designer.name }}" style="width:100px; height:100px; object-fit:cover; margin:auto; margin-top:1rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{ designer.name }}</h5>
+              <p class="card-text">{{ designer.specialty|truncatewords:8 }}</p>
+              <a href="{% url 'designer-profile' designer.id %}" class="btn btn-outline-primary btn-sm">View Profile</a>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center"><p>No featured designers yet. Stay tuned!</p></div>
+        {% endfor %}
+      </div>
+    </div>
+  </section> <!-- /Featured Designers Section -->
+
+  <!-- Call to Action for Clients -->
+  <section id="client-cta-branded" class="client-cta-branded section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Looking to Hire the Best Creatives?</h2>
+      <div><span>Post Your Project</span> <span class="description-title">or Browse Our Network</span></div>
+    </div>
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <p class="text-center mb-4">
+        Whether you need a one-time project or ongoing support, Vikra Hub connects you with top talent ready to bring your ideas to life.
+      </p>
+    </div>
+    <div class="container text-center">
+      <a href="{% url 'post-project' %}" class="btn btn-primary-cta">Post a Project</a>
+      <a href="{% url 'browse_designers' %}" class="btn btn-outline-cta">Browse Designers</a>
+    </div>
+  </section>
+
+  <!-- /Call to Action for Clients -->
+
+  <!-- How It Works Section -->
+  <section id="how-it-works" class="section py-5">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-4">
+          <div class="icon mb-3"><i class="bi bi-search" style="font-size:2rem;"></i></div>
+          <h5>1. Discover</h5>
+          <p>Browse portfolios and find the right talent for your project.</p>
+        </div>
+        <div class="col-md-4">
+          <div class="icon mb-3"><i class="bi bi-chat-dots" style="font-size:2rem;"></i></div>
+          <h5>2. Connect</h5>
+          <p>Message, negotiate, and hire designers or agencies directly.</p>
+        </div>
+        <div class="col-md-4">
+          <div class="icon mb-3"><i class="bi bi-star" style="font-size:2rem;"></i></div>
+          <h5>3. Build</h5>
+          <p>Work together, deliver great results, and leave feedback!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- /How It Works Section -->
+
+
   <!-- Testimonials Section -->
   <section id="testimonials" class="testimonials section light-background">
     <div class="container section-title" data-aos="fade-up">
@@ -475,7 +545,6 @@
             </div>
           </div>
         </div>
-        <!-- Add or replace with your real team as needed -->
       </div>
     </div>
   </section><!-- /Team Section -->

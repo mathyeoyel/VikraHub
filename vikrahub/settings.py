@@ -25,9 +25,16 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # ─── SECURITY ──────────────────────────────────────────────────────────────────
 # This is a minimal settings file for a Django project, suitable for deployment on Render.
 import os
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev-secret-key-1234567890')  # Use a secure key in production
+SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
 DEBUG = True
-ALLOWED_HOSTS = ['vikrahub.onrender.com', '.onrender.com', 'localhost', '127.0.0.1']
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+else:
+    SECURE_SSL_REDIRECT = False
+# Allowed hosts
+ALLOWED_HOSTS = ['vikrahub.onrender.com', '.onrender.com', 'localhost', '127.0.0.1',
+                 'vikrahub.com', 'www.vikrahub.com']
 
 
 INSTALLED_APPS = [

@@ -143,6 +143,15 @@ def home(request):
         'posts': posts,
     })
 
+def post_project(request):
+    # Your view logic here
+    return render(request, 'post_project.html')
+
+def browse_designers(request):
+    # Your view logic here
+    return render(request, 'browse_designers.html')
+
+
 def portfolio_detail(request, id):
     item = get_object_or_404(PortfolioItem, pk=id)
     return render(request, 'portfolio_detail.html', {'item': item})

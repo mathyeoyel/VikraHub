@@ -1,8 +1,8 @@
 /* Fonts */
 :root {
   --default-font: "Figtree",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --heading-font: "Raleway",  sans-serif;
-  --nav-font: "figtree",  figtree, sans-serif;
+  --heading-font: "Figtree",  sans-serif;
+  --nav-font: "Figtree",  figtree, sans-serif;
 }
 
 :root {
@@ -1807,6 +1807,68 @@ section,
     transform: translateY(-10px);
   }
 }
+
+/*--------------------------------------------------------------
+# Client CTA Branded Section
+--------------------------------------------------------------*/
+.client-cta-branded {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: var(--vikra-primary); /* navy */
+  color: var(--vikra-light);        /* off-white */
+  padding: 3rem 1.5rem;
+  border-radius: 1.5rem;
+}
+
+.client-cta-branded h2 {
+  color: var(--vikra-accent);       /* gold/yellow */
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.client-cta-branded .description-title {
+  color: var(--vikra-accent);
+  font-weight: 600;
+  margin-left: 0.3em;
+}
+
+.btn-primary-cta {
+  background: var(--vikra-accent);
+  color: var(--vikra-primary);
+  border: none;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  margin: 0 0.5rem 0.5rem 0;
+  transition: 0.3s;
+  box-shadow: 0 2px 12px 0 rgba(250,170,0,0.07);
+}
+
+.btn-primary-cta:hover {
+  background: #e3a127;
+  color: var(--vikra-light);
+}
+
+.btn-outline-cta {
+  background: transparent;
+  color: var(--vikra-accent);
+  border: 2px solid var(--vikra-accent);
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  margin: 0 0.5rem 0.5rem 0;
+  transition: 0.3s;
+}
+
+.btn-outline-cta:hover {
+  background: var(--vikra-accent);
+  color: var(--vikra-primary);
+}
+
 
 /*--------------------------------------------------------------
 # Testimonials Section
