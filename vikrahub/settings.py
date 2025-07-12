@@ -1,6 +1,14 @@
 import dj_database_url
 import os
 from pathlib import Path
+# ─── DEBUGGING ──────────────────────────────────────────────────────────────────
+# Print environment variables for debugging purposes
+print("DEBUG: AWS_ACCESS_KEY_ID:", os.environ.get('AWS_ACCESS_KEY_ID'))
+print("DEBUG: AWS_SECRET_ACCESS_KEY:", os.environ.get('AWS_SECRET_ACCESS_KEY'))
+print("DEBUG: SETTINGS FILE:", __file__)
+
+# ─── SETTINGS ──────────────────────────────────────────────────────────────────
+# Base directory of the project
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
