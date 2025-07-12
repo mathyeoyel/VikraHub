@@ -1,7 +1,12 @@
 import dj_database_url
 import os
 from pathlib import Path
-
+import os
+print("DEBUG: AWS_ACCESS_KEY_ID:", os.environ.get('AWS_ACCESS_KEY_ID'))
+print("DEBUG: AWS_SECRET_ACCESS_KEY:", os.environ.get('AWS_SECRET_ACCESS_KEY'))
+print("DEBUG: AWS_STORAGE_BUCKET_NAME:", os.environ.get('AWS_STORAGE_BUCKET_NAME'))
+# ─── SETTINGS ──────────────────────────────────────────────────────────────────
+# This is a minimal settings file for a Django project, suitable for deployment on Render.
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
