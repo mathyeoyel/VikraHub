@@ -28,8 +28,3 @@ if settings.DEBUG:
     )
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-# The above code defines URL patterns for the core app, linking specific paths to their corresponding view functions.
-# The 'name' parameter allows us to refer to these URLs in templates and other parts of the code.
-# For example, we can use `{% url 'home' %}` in a template to generate the URL for the home view.
-# This makes it easier to manage URLs and ensures that if the URL changes, we only need to update it in one place.
