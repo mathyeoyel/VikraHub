@@ -129,7 +129,3 @@ MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
 
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_FILE_OVERWRITE = False
-
-AWS_S3_OBJECT_PARAMETERS = {
-    "ACL": "bucket-owner-full-control",
-}
