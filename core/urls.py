@@ -15,6 +15,12 @@ urlpatterns = [
     path('profile/edit/', views.edit_profile, name='edit_profile'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('accounts/', include('django.contrib.auth.urls')),  # For login/logout
+    path('add-team-member/', views.add_team_member, name='add_team_member'),
+    path('add-service/', views.add_service, name='add_service'),
+    path('add-portfolio/', views.add_portfolio, name='add_portfolio'),
+    path('add-blog/', views.add_blog, name='add_blog'),
+    path('post-project/', views.post_project, name='post-project'),
+    path('designers/', views.browse_designers, name='browse_designers'),
 ]
 # vikrahub/core/urls.py
 # This file defines the URL patterns for the core app of the Vikra Hub project.

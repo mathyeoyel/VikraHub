@@ -1,11 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserChangeForm
-from .forms import CustomUserCreationForm, UserProfileForm
+from django.contrib.auth.models import User
 from .models import Service, PortfolioItem, BlogPost, TeamMember, UserProfile, Notification
 from django.db.models import Count
 from django.db.models.functions import TruncMonth
 import calendar
+from .forms import (
+    CustomUserCreationForm, UserProfileForm,
+    TeamMemberForm, ServiceForm, PortfolioItemForm, BlogPostForm
+)
 
 # --- User Profile Views ---
 
@@ -173,3 +177,50 @@ def blog_detail(request, slug):
 def team(request):
     team_members = TeamMember.objects.all()
     return render(request, 'team.html', {'team_members': team_members})
+
+
+@login_required
+def add_team_member(request):
+    if request.method == 'POST':
+        form = TeamMemberForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('team')
+    else:
+        form = TeamMemberForm()
+    return render(request, 'add_team_member.html', {'form': form})
+
+@login_required
+def add_service(request):
+    if request.method == 'POST':
+        form = ServiceForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = ServiceForm()
+    return render(request, 'add_service.html', {'form': form})
+
+@login_required
+def add_portfolio(request):
+    if request.method == 'POST':
+        form = PortfolioItemForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = PortfolioItemForm()
+    return render(request, 'add_portfolio.html', {'form': form})
+
+@login_required
+def add_blog(request):
+    if request.method == 'POST':
+        form = BlogPostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = BlogPostForm()
+    return render(request, 'add_blog.html', {'form': form})
+# --- End of Views ---
+# vikrahub/core/views.py
