@@ -2,8 +2,6 @@ import dj_database_url
 import os
 from pathlib import Path
 
-# print AWS S3 settings after they are defined below
-
 # ─── SETTINGS ──────────────────────────────────────────────────────────────────
 # Base directory of the project
 
@@ -27,12 +25,14 @@ else:
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ─── SECURITY ───────────────────────────────────────────────────────────────
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-if not SECRET_KEY:
-    raise Exception("DJANGO_SECRET_KEY environment variable is required for production.")
-SECURE_SSL_REDIRECT = not DEBUG
-
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev-secret-key-1234567890')  # Use a secure key in production
+SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
+DEBUG = True
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+else:
+    SECURE_SSL_REDIRECT = False
+# Allowed hosts
 ALLOWED_HOSTS = ['vikrahub.onrender.com', '.onrender.com', 'localhost', '127.0.0.1',
                  'vikrahub.com', 'www.vikrahub.com']
 
