@@ -2,6 +2,8 @@ import dj_database_url
 import os
 from pathlib import Path
 
+# print AWS S3 settings after they are defined below
+
 # ─── SETTINGS ──────────────────────────────────────────────────────────────────
 # Base directory of the project
 
@@ -133,3 +135,9 @@ MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
 
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_FILE_OVERWRITE = False
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_FILE_OVERWRITE = False
+
+print("AWS S3 KEY:", AWS_ACCESS_KEY_ID)
+print("AWS S3 BUCKET:", AWS_STORAGE_BUCKET_NAME)
+print("DEFAULT_FILE_STORAGE:", DEFAULT_FILE_STORAGE)
