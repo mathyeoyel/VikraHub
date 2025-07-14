@@ -27,14 +27,12 @@ else:
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ─── SECURITY ───────────────────────────────────────────────────────────────
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev-secret-key-1234567890')  # Use a secure key in production
-SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
-DEBUG = True
-if not DEBUG:
-    SECURE_SSL_REDIRECT = True
-else:
-    SECURE_SSL_REDIRECT = False
-# Allowed hosts
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+if not SECRET_KEY:
+    raise Exception("DJANGO_SECRET_KEY environment variable is required for production.")
+SECURE_SSL_REDIRECT = not DEBUG
+
 ALLOWED_HOSTS = ['vikrahub.onrender.com', '.onrender.com', 'localhost', '127.0.0.1',
                  'vikrahub.com', 'www.vikrahub.com']
 
@@ -137,7 +135,3 @@ AWS_QUERYSTRING_AUTH = False
 AWS_S3_FILE_OVERWRITE = False
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_FILE_OVERWRITE = False
-
-print("AWS S3 KEY:", AWS_ACCESS_KEY_ID)
-print("AWS S3 BUCKET:", AWS_STORAGE_BUCKET_NAME)
-print("DEFAULT_FILE_STORAGE:", DEFAULT_FILE_STORAGE)
