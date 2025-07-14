@@ -5,12 +5,13 @@ from django.urls import reverse # for URL reversing in templates
 # This file defines the models for the Vikra Hub project, including user profiles, services, portfolio items, blog posts, team members, and notifications.
 
 class Notification(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
     message = models.CharField(max_length=200)
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    # This model represents a notification for a user, with fields for the message, read status, and timestamps.
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.is_read = False
@@ -35,6 +36,23 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s profile"
+
+    def get_absolute_url(self):
+        return reverse('profile-detail', kwargs={'pk': self.pk})
+    def get_skills_list(self):
+        return [skill.strip() for skill in self.skills.split(',')] if self.skills else []
+    def save(self, *args, **kwargs):
+        # Automatically generate skills from the comma-separated string
+        if self.skills:
+            self.skills = ', '.join([skill.strip() for skill in self.skills.split(',')])
+        super().save(*args, **kwargs)
+
+from django.contrib.auth.models import User
+
+def get_profile(self):
+    return UserProfile.objects.get_or_create(user=self)[0]
+User.profile = property(get_profile)
+
 
 # Signal to auto-create or update profile when User is created or saved
 from django.db.models.signals import post_save
