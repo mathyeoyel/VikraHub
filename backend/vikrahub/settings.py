@@ -173,6 +173,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://127.0.0.1:3001",
     # Add your Render frontend URL here when you get it
-    # "https://your-frontend-app.onrender.com",
+    "https://vikrahub-frontend.onrender.com",
 ]
 CORS_ALLOW_CREDENTIALS = True  # Allow cookies to be included in cross-origin requests (CORS)
