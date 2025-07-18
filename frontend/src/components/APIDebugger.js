@@ -11,25 +11,53 @@ const APIDebugger = () => {
   useEffect(() => {
     const testAPI = async () => {
       const backendUrl = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000/api/';
+      console.log('Environment variables:', {
+        REACT_APP_API_URL: process.env.REACT_APP_API_URL,
+        NODE_ENV: process.env.NODE_ENV
+      });
+      
       setStatus(prev => ({ ...prev, backendUrl }));
 
       try {
         // Test basic API connectivity
-        const response = await fetch(`${backendUrl}`, {
+        console.log('Testing API connectivity to:', backendUrl);
+        
+        // First try the root endpoint
+        let response = await fetch(`${backendUrl}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
         });
 
+        console.log('Root API response status:', response.status);
+
+        if (!response.ok) {
+          // Try the backend root (without /api/)
+          const backendRoot = backendUrl.replace('/api/', '/');
+          console.log('Trying backend root:', backendRoot);
+          
+          response = await fetch(backendRoot, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          
+          console.log('Backend root response status:', response.status);
+        }
+
         if (response.ok) {
           const data = await response.json();
+          console.log('API response data:', data);
           setStatus(prev => ({ 
             ...prev, 
             apiTest: 'Success - API is reachable',
             corsTest: 'Success - CORS working'
           }));
         } else {
+          const errorText = await response.text();
+          console.log('Error response text:', errorText);
           setStatus(prev => ({ 
             ...prev, 
             apiTest: `Failed - Status: ${response.status}`,
@@ -37,6 +65,7 @@ const APIDebugger = () => {
           }));
         }
       } catch (error) {
+        console.error('API test error:', error);
         setStatus(prev => ({ 
           ...prev, 
           apiTest: 'Failed - Network error',
