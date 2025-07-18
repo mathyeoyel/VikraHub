@@ -1,0 +1,32 @@
+services:
+  # Django Backend
+  - type: web
+    name: vikrahub-backend
+    runtime: python3
+    buildCommand: cd backend && ./build.sh
+    startCommand: cd backend && gunicorn vikrahub.wsgi:application
+    plan: free
+    env: python
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: PYTHON_VERSION
+        value: 3.11.4
+
+  # React Frontend  
+  - type: web
+    name: vikrahub-frontend
+    runtime: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/build
+    plan: free
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://vikrahub-backend.onrender.com/api/
+
+# PostgreSQL Database
+databases:
+  - name: vikrahub-db
+    plan: free
