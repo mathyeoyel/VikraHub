@@ -176,12 +176,33 @@ if not CLOUDINARY_CLOUD_NAME:
     print("WARNING: Cloudinary not configured - file uploads will be disabled")
 
 # CORS Configuration
+# Temporarily allow all origins to fix CORS issues
+CORS_ALLOW_ALL_ORIGINS = True
+print("CORS_ALLOW_ALL_ORIGINS = True (temporary for debugging)")
+
+# Production CORS settings (to be enabled later)
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:3001", 
     "http://127.0.0.1:3000",
     "http://127.0.0.1:3001",
-    # Add your Render frontend URL here when you get it
     "https://vikrahub-frontend.onrender.com",
 ]
+
+# Additional CORS settings for production
 CORS_ALLOW_CREDENTIALS = True  # Allow cookies to be included in cross-origin requests (CORS)
+CORS_ALLOWED_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# Debug CORS configuration
+print(f"CORS_ALLOW_ALL_ORIGINS: {CORS_ALLOW_ALL_ORIGINS}")
+print(f"CORS_ALLOW_CREDENTIALS: {CORS_ALLOW_CREDENTIALS}")
