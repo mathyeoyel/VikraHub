@@ -1,20 +1,23 @@
 from django.contrib import admin
 from django.urls import path, include
-from core import views
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
+    # API endpoints
+    path('api/', include('core.urls')),
+    path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
+    # Admin interface (keep for backend management)
     path('admin/', admin.site.urls),
-    path('', include('core.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/register/', views.register, name='register'),
-    path('dashboard/', views.dashboard, name='dashboard'),
-    path('profile/', views.profile, name='profile'),
 ]
 
+# Serve media files in development
 if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-# The above code sets up the URL routing for the Vikra Hub project, linking various paths to their corresponding views.
 # It includes paths for the admin interface, core app views, user authentication, and registration.
