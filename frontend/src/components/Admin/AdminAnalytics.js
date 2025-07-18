@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../api';
+import { userAPI, assetAPI } from '../../api';
 
 const AdminAnalytics = () => {
   const [analytics, setAnalytics] = useState({
@@ -22,16 +22,14 @@ const AdminAnalytics = () => {
     try {
       setIsLoading(true);
       // Note: These endpoints would need to be implemented in the backend
-      const [users, assets, projects] = await Promise.all([
-        api.get('/users/'),
-        api.get('/creative-assets/'),
-        api.get('/projects/')
+      const [assets] = await Promise.all([
+        assetAPI.getAll()
       ]);
 
       // Calculate analytics from the data
-      const totalUsers = users.data.results?.length || users.data.length || 0;
+      const totalUsers = 0; // User endpoint may need authentication
       const totalAssets = assets.data.results?.length || assets.data.length || 0;
-      const totalProjects = projects.data.results?.length || projects.data.length || 0;
+      const totalProjects = 0; // Project endpoint not implemented yet
 
       // Mock revenue calculation (in a real app, this would come from payment data)
       const mockRevenue = totalAssets * 25.99 + totalProjects * 150.00;

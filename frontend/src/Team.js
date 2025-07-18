@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import api from "./api";
+import { teamAPI } from "./api";
 
 export default function Team() {
   const [team, setTeam] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get("team/")   // This will attach the JWT automatically
+    teamAPI.getAll()   // Use the proper API method
       .then(res => setTeam(res.data))
       .catch(err => console.error(err))
       .finally(() => setLoading(false));

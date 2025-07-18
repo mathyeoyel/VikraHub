@@ -14,6 +14,7 @@ import AdminDashboard from "./components/Admin/AdminDashboard";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import AssetsMarketplace from "./components/Marketplace/AssetsMarketplace";
 import AssetUpload from "./components/Marketplace/AssetUpload";
+import Freelance from "./components/Freelance";
 import Login from "./Login";
 import APIDebugger from "./components/APIDebugger";
 
@@ -33,6 +34,7 @@ function App() {
             <Route path="/members" element={<PublicProfilesList />} />
             <Route path="/profile/:username" element={<PublicProfile />} />
             <Route path="/marketplace" element={<AssetsMarketplace />} />
+            <Route path="/freelance" element={<Freelance />} />
             <Route path="/login" element={<Login />} />
             
             {/* Protected Routes */}
