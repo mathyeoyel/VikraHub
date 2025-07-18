@@ -2,7 +2,7 @@ import axios from "axios";
 import { getAccessToken, removeTokens } from "./auth";
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://127.0.0.1:8000/api/", // Django API base URL
+  baseURL: process.env.REACT_APP_API_URL || "https://vikrahub.onrender.com/api/", // Django API base URL
   headers: {
     "Content-Type": "application/json",
   },   
