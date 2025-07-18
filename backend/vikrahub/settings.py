@@ -174,6 +174,11 @@ CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET', '')
 # Optional: Log if Cloudinary is not configured
 if not CLOUDINARY_CLOUD_NAME:
     print("WARNING: Cloudinary not configured - file uploads will be disabled")
+else:
+    print(f"Cloudinary configured with cloud name: {CLOUDINARY_CLOUD_NAME}")
+    
+# Don't fail if Cloudinary is not configured - just disable file uploads
+CLOUDINARY_CONFIGURED = bool(CLOUDINARY_CLOUD_NAME and CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET)
 
 # CORS Configuration
 # Temporarily allow all origins to fix CORS issues
