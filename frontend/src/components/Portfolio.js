@@ -6,6 +6,21 @@ const Portfolio = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchPortfolio = async () => {
+      try {
+        const response = await portfolioAPI.getAll();
+        setPortfolios(response.data || []);
+      } catch (error) {
+        console.error('Error fetching portfolio:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPortfolio();
+  }, []);
+
+  useEffect(() => {
     const fetchPortfolios = async () => {
       try {
         const response = await portfolioAPI.list();

@@ -8,7 +8,7 @@ const Services = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await serviceAPI.list();
+        const response = await serviceAPI.getAll();
         setServices(response.data || []);
       } catch (error) {
         console.error('Error fetching services:', error);

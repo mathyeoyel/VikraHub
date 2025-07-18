@@ -8,7 +8,7 @@ const Blog = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await blogAPI.list();
+        const response = await blogAPI.getAll();
         setBlogs(response.data || []);
       } catch (error) {
         console.error('Error fetching blogs:', error);
