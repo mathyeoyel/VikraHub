@@ -54,6 +54,9 @@ urlpatterns = [
     # Root API info endpoint
     path('', api_root, name='api_root'),
     
+    # API status endpoint (for testing)
+    path('api/', api_root, name='api_status'),
+    
     # API endpoints
     path('api/', include('core.urls')),
     path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
