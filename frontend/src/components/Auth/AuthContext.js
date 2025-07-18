@@ -32,6 +32,8 @@ export const AuthProvider = ({ children }) => {
     
     try {
       const apiUrl = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000/api/';
+      console.log('Fetching user from:', `${apiUrl}users/me/`);
+      
       const response = await axios.get(`${apiUrl}users/me/`, {
         headers: {
           'Authorization': `Bearer ${tokenToUse}`,
@@ -39,9 +41,16 @@ export const AuthProvider = ({ children }) => {
         }
       });
       setUser(response.data);
+      console.log('User fetched successfully:', response.data);
     } catch (error) {
       console.error('Failed to fetch user:', error);
-      logout();
+      console.error('Error response:', error.response?.data);
+      console.error('Error status:', error.response?.status);
+      
+      // Only logout if it's an authentication error, not a network error
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        logout();
+      }
     } finally {
       setLoading(false);
     }

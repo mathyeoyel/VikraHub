@@ -15,12 +15,14 @@ import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import AssetsMarketplace from "./components/Marketplace/AssetsMarketplace";
 import AssetUpload from "./components/Marketplace/AssetUpload";
 import Login from "./Login";
+import APIDebugger from "./components/APIDebugger";
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Layout>
+          <APIDebugger />
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
