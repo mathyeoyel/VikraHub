@@ -1,0 +1,35 @@
+<svg width="500" height="400" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="500" height="400" fill="#fffafe"/>
+  
+  <!-- Grid pattern -->
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#ffa000" stroke-width="0.5" opacity="0.2"/>
+    </pattern>
+  </defs>
+  <rect width="500" height="400" fill="url(#grid)"/>
+  
+  <!-- Central design -->
+  <circle cx="250" cy="200" r="120" fill="#000223" opacity="0.1"/>
+  <circle cx="250" cy="200" r="80" fill="#ffa000" opacity="0.3"/>
+  <circle cx="250" cy="200" r="40" fill="#7c521b" opacity="0.5"/>
+  
+  <!-- VikraHub text -->
+  <text x="250" y="200" text-anchor="middle" dominant-baseline="middle" 
+        font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#000223">
+    VikraHub
+  </text>
+  
+  <!-- Decorative elements -->
+  <rect x="100" y="100" width="40" height="40" rx="8" fill="#ffa000" opacity="0.6"/>
+  <rect x="360" y="120" width="30" height="30" rx="6" fill="#7c521b" opacity="0.6"/>
+  <rect x="120" y="280" width="35" height="35" rx="7" fill="#000223" opacity="0.4"/>
+  <rect x="350" y="260" width="45" height="45" rx="10" fill="#ffa000" opacity="0.5"/>
+  
+  <!-- Text overlay -->
+  <text x="250" y="350" text-anchor="middle" font-family="Arial, sans-serif" 
+        font-size="16" fill="#7c521b" opacity="0.8">
+    Replace with your image
+  </text>
+</svg>

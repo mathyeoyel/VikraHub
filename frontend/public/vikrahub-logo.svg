@@ -1,0 +1,16 @@
+<svg width="45" height="45" viewBox="0 0 45 45" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="22.5" cy="22.5" r="22.5" fill="#000223"/>
+  
+  <!-- Main VikraHub icon -->
+  <rect x="8" y="12" width="29" height="21" rx="3" fill="#ffa000"/>
+  
+  <!-- Inner design -->
+  <rect x="12" y="16" width="21" height="13" rx="2" fill="#7c521b"/>
+  
+  <!-- Center element -->
+  <circle cx="22.5" cy="22.5" r="4" fill="#fffafe"/>
+  
+  <!-- V shape for VikraHub -->
+  <path d="M18 18 L22.5 26 L27 18" stroke="#fffafe" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
