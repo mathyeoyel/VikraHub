@@ -31,7 +31,8 @@ export const AuthProvider = ({ children }) => {
     if (!tokenToUse) return;
     
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/users/me/', {
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000/api/';
+      const response = await axios.get(`${apiUrl}users/me/`, {
         headers: {
           'Authorization': `Bearer ${tokenToUse}`,
           'Content-Type': 'application/json'
