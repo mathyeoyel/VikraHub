@@ -1,10 +1,18 @@
 import dj_database_url
 import os
 from pathlib import Path
-from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv(os.path.join(Path(__file__).resolve().parent.parent, '.env'))
+# Only load .env file if it exists (for local development)
+try:
+    from dotenv import load_dotenv
+    env_file = os.path.join(Path(__file__).resolve().parent.parent, '.env')
+    if os.path.exists(env_file):
+        load_dotenv(env_file)
+        print("Loaded .env file for local development")
+    else:
+        print("No .env file found - using environment variables from system")
+except ImportError:
+    print("python-dotenv not available - using environment variables from system")
 
 # ─── SETTINGS ──────────────────────────────────────────────────────────────────
 # Base directory of the project

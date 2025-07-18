@@ -8,6 +8,10 @@ echo "Starting build process..."
 echo "Installing Python dependencies..."
 pip install -r requirements.txt
 
+# Test Django configuration
+echo "Testing Django configuration..."
+python manage.py test_config
+
 # Collect static files
 echo "Collecting static files..."
 python manage.py collectstatic --no-input
