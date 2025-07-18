@@ -26,6 +26,7 @@ services:
       cd frontend
       npm ci
       npm run build
+      cp public/_redirects build/_redirects || echo "/*    /index.html   200" > build/_redirects
     staticPublishPath: frontend/build
     plan: free
     envVars:
