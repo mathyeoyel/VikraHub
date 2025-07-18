@@ -2,15 +2,15 @@
 # exit on error
 set -o errexit
 
-echo "Starting build process..."
+echo "Starting minimal build process..."
 
 # Install dependencies
 echo "Installing Python dependencies..."
 pip install -r requirements.txt
 
-# Test Django configuration
-echo "Testing Django configuration..."
-python manage.py test_config
+# Test basic Django functionality
+echo "Testing Django check..."
+python manage.py check
 
 # Collect static files
 echo "Collecting static files..."

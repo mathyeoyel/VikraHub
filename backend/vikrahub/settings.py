@@ -1,119 +1,38 @@
-import dj_database_url
 import os
 from pathlib import Path
 
-# Only load .env file if it exists (for local development)
-try:
-    from dotenv import load_dotenv
-    env_file = os.path.join(Path(__file__).resolve().parent.parent, '.env')
-    if os.path.exists(env_file):
-        load_dotenv(env_file)
-        print("Loaded .env file for local development")
-    else:
-        print("No .env file found - using environment variables from system")
-except ImportError:
-    print("python-dotenv not available - using environment variables from system")
-
-# ─── SETTINGS ──────────────────────────────────────────────────────────────────
-# Base directory of the project
-
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Database
-# Use DATABASE_URL if set, otherwise use local SQLite for dev
-DATABASES = {}
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev-secret-key-change-in-production')
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
-if DATABASE_URL:
-    import dj_database_url
-    DATABASES['default'] = dj_database_url.config(default=DATABASE_URL)
-else:
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-# Static files (CSS, JavaScript, Images)
-# Use Whitenoise for serving static files in production
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# ─── SECURITY ───────────────────────────────────────────────────────────────
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev-secret-key-1234567890')  # Use a secure key in production
+# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
-# Debug startup information
+# Print debug info
 print(f"Django starting with DEBUG={DEBUG}")
 print(f"SECRET_KEY configured: {'Yes' if SECRET_KEY else 'No'}")
-print(f"DATABASE_URL configured: {'Yes' if os.environ.get('DATABASE_URL') else 'No'}")
 
-# Add logging to see errors
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'root': {
-        'handlers': ['console'],
-        'level': 'INFO',
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-    },
-}
+ALLOWED_HOSTS = ['vikrahub-backend.onrender.com', '.onrender.com', 'localhost', '127.0.0.1']
 
-if not DEBUG:
-    SECURE_SSL_REDIRECT = True
-else:
-    SECURE_SSL_REDIRECT = False
-# Allowed hosts
-ALLOWED_HOSTS = ['vikrahub-backend.onrender.com', '.onrender.com', 'localhost', '127.0.0.1',
-                 'vikrahub.com', 'www.vikrahub.com']
-
-
+# Application definition
 INSTALLED_APPS = [
-    # Django built-ins (minimal for API)
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles', # Keep for admin interface
-    
-    # Third-party for API
+    'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    
-    # Your apps
     'core',
 ]
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
-    ],
-    'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser',
-        'rest_framework.parsers.MultiPartParser',
-        'rest_framework.parsers.FormParser',
-    ],
-}
-
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # for handling CORS
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -127,7 +46,7 @@ ROOT_URLCONF = 'vikrahub.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # No custom templates for API-only
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -141,9 +60,23 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'vikrahub.wsgi.application'
-# ─── AUTHENTICATION ────────────────────────────────────────────────────────────
-AUTH_USER_MODEL = 'auth.User'  # Use Django's built-in User model
 
+# Database
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if DATABASE_URL:
+    import dj_database_url
+    DATABASES = {'default': dj_database_url.config(default=DATABASE_URL)}
+    print("Using PostgreSQL database")
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+    print("Using SQLite database")
+
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
@@ -151,71 +84,54 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
+# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# ─── STATIC FILES ──────────────────────────────────────────────────────────────
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-
-# PROD: collectstatic will gather here for admin interface
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# ─── MEDIA FILES ──────────────────────────────────────────────────────────────
-# Local media files setup (Cloudinary URLs will be stored in database)
+# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# WhiteNoise configuration
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# ─── CLOUDINARY CONFIGURATION ─────────────────────────────────────────────────
-# Cloudinary settings for frontend direct upload
-# Frontend will upload files directly to Cloudinary and send URLs to Django
+# CORS Configuration - Allow all origins for now
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+print("CORS_ALLOW_ALL_ORIGINS = True")
+
+# REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+}
+
+# Cloudinary (optional)
 CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME', '')
 CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY', '')
 CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET', '')
 
-# Optional: Log if Cloudinary is not configured
-if not CLOUDINARY_CLOUD_NAME:
-    print("WARNING: Cloudinary not configured - file uploads will be disabled")
+if CLOUDINARY_CLOUD_NAME:
+    print(f"Cloudinary configured: {CLOUDINARY_CLOUD_NAME}")
 else:
-    print(f"Cloudinary configured with cloud name: {CLOUDINARY_CLOUD_NAME}")
-    
-# Don't fail if Cloudinary is not configured - just disable file uploads
-CLOUDINARY_CONFIGURED = bool(CLOUDINARY_CLOUD_NAME and CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET)
+    print("Cloudinary not configured - file uploads disabled")
 
-# CORS Configuration
-# Temporarily allow all origins to fix CORS issues
-CORS_ALLOW_ALL_ORIGINS = True
-print("CORS_ALLOW_ALL_ORIGINS = True (temporary for debugging)")
-
-# Production CORS settings (to be enabled later)
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:3001", 
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:3001",
-    "https://vikrahub-frontend.onrender.com",
-]
-
-# Additional CORS settings for production
-CORS_ALLOW_CREDENTIALS = True  # Allow cookies to be included in cross-origin requests (CORS)
-CORS_ALLOWED_HEADERS = [
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-]
-
-# Debug CORS configuration
-print(f"CORS_ALLOW_ALL_ORIGINS: {CORS_ALLOW_ALL_ORIGINS}")
-print(f"CORS_ALLOW_CREDENTIALS: {CORS_ALLOW_CREDENTIALS}")
+print("Django settings loaded successfully!")
