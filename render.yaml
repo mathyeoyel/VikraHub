@@ -3,7 +3,11 @@ services:
   - type: web
     name: vikrahub-backend
     runtime: python3
-    buildCommand: cd backend && ./build.sh
+    buildCommand: |
+      cd backend
+      pip install -r requirements.txt
+      python manage.py collectstatic --no-input
+      python manage.py migrate
     startCommand: cd backend && gunicorn vikrahub.wsgi:application
     plan: free
     env: python
@@ -16,10 +20,12 @@ services:
         value: 3.11.4
 
   # React Frontend  
-  - type: web
+  - type: static
     name: vikrahub-frontend
-    runtime: static
-    buildCommand: cd frontend && npm install && npm run build
+    buildCommand: |
+      cd frontend
+      npm ci
+      npm run build
     staticPublishPath: frontend/build
     plan: free
     envVars:
