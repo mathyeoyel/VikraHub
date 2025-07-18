@@ -10,7 +10,7 @@ const APIDebugger = () => {
 
   useEffect(() => {
     const testAPI = async () => {
-      const backendUrl = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000/api/';
+      const backendUrl = process.env.REACT_APP_API_URL || 'https://vikrahub.onrender.com/api/';
       console.log('Environment variables:', {
         REACT_APP_API_URL: process.env.REACT_APP_API_URL,
         NODE_ENV: process.env.NODE_ENV
