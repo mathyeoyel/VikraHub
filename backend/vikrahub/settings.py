@@ -32,6 +32,11 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev-secret-key-1234567890')  # Use a secure key in production
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
+# Debug startup information
+print(f"Django starting with DEBUG={DEBUG}")
+print(f"SECRET_KEY configured: {'Yes' if SECRET_KEY else 'No'}")
+print(f"DATABASE_URL configured: {'Yes' if os.environ.get('DATABASE_URL') else 'No'}")
+
 # Add logging to see errors
 LOGGING = {
     'version': 1,
@@ -162,9 +167,13 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # ─── CLOUDINARY CONFIGURATION ─────────────────────────────────────────────────
 # Cloudinary settings for frontend direct upload
 # Frontend will upload files directly to Cloudinary and send URLs to Django
-CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME')
-CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY')
-CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET')
+CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME', '')
+CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY', '')
+CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET', '')
+
+# Optional: Log if Cloudinary is not configured
+if not CLOUDINARY_CLOUD_NAME:
+    print("WARNING: Cloudinary not configured - file uploads will be disabled")
 
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = [
