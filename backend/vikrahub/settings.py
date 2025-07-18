@@ -59,7 +59,7 @@ if not DEBUG:
 else:
     SECURE_SSL_REDIRECT = False
 # Allowed hosts
-ALLOWED_HOSTS = ['vikrahub.onrender.com', '.onrender.com', 'localhost', '127.0.0.1',
+ALLOWED_HOSTS = ['vikrahub-backend.onrender.com', '.onrender.com', 'localhost', '127.0.0.1',
                  'vikrahub.com', 'www.vikrahub.com']
 
 

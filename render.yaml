@@ -18,6 +18,12 @@ services:
         value: False
       - key: PYTHON_VERSION
         value: 3.11.4
+      - key: CLOUDINARY_CLOUD_NAME
+        value: your-cloudinary-cloud-name
+      - key: CLOUDINARY_API_KEY
+        value: your-cloudinary-api-key
+      - key: CLOUDINARY_API_SECRET
+        value: your-cloudinary-api-secret
 
   # React Frontend  
   - type: static
