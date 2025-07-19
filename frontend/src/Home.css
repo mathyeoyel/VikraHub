@@ -78,12 +78,12 @@
 
 .hero-btn-secondary {
   background: transparent;
-  color: var(--dark-color);
-  border: 2px solid var(--secondary-color);
+  color: #000223;
+  border: 2px solid #000223;
 }
 
 .hero-btn-secondary:hover {
-  background: var(--secondary-color);
+  background: #000223;
   color: white;
   transform: translateY(-2px);
 }
@@ -603,7 +603,7 @@
 .hero-btn {
   display: inline-block;
   padding: 1rem 2rem;
-  border-radius: 8px;
+  border-radius: 50px;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.3s ease;
@@ -614,26 +614,29 @@
 }
 
 .hero-btn-primary {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: #000223;
   color: white;
+  box-shadow: 0 4px 15px rgba(255, 160, 0, 0.3);
 }
 
 .hero-btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 160, 0, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 160, 0, 0.4);
+  background: #000223;
   color: white;
   text-decoration: none;
 }
 
 .hero-btn-secondary {
   background: transparent;
-  color: var(--primary-color);
-  border: 2px solid var(--primary-color);
+  color: #000223;
+  border: 2px solid #000223;
 }
 
 .hero-btn-secondary:hover {
-  background: var(--primary-color);
+  background: #000223;
   color: white;
+  transform: translateY(-2px);
   text-decoration: none;
 }
 
