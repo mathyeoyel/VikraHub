@@ -21,8 +21,8 @@ function Home() {
               </div>
               <div className="hero-image">
                 <img 
-                  src="/hero-placeholder.jpg" 
-                  alt="VikraHub Digital Solutions" 
+                  src="/vikrahub-hero.jpg" 
+                  alt="VikraHub - Inspiring Every Creative Thought" 
                   className="hero-main-image"
                 />
                 <div className="hero-graphic">
