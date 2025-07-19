@@ -17,7 +17,6 @@ import AssetsMarketplace from "./components/Marketplace/AssetsMarketplace";
 import AssetUpload from "./components/Marketplace/AssetUpload";
 import Freelance from "./components/Freelance";
 import Login from "./Login";
-import APIDebugger from "./components/APIDebugger";
 
 function App() {
   return (
@@ -25,7 +24,6 @@ function App() {
       <AuthProvider>
         <HashRouter>
           <Layout>
-            <APIDebugger />
             <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
