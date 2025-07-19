@@ -47,7 +47,6 @@ const Layout = ({ children }) => {
             <Link to="/marketplace" className="nav-link" onClick={() => setIsMenuOpen(false)}>Marketplace</Link>
             <Link to="/freelance" className="nav-link" onClick={() => setIsMenuOpen(false)}>Freelance</Link>
             <Link to="/services" className="nav-link" onClick={() => setIsMenuOpen(false)}>Services</Link>
-            <Link to="/team" className="nav-link" onClick={() => setIsMenuOpen(false)}>Team</Link>
             
             {isAuthenticated ? (
               <div className="auth-section">
