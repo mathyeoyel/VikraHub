@@ -38,7 +38,7 @@ services:
     plan: free
     envVars:
       - key: REACT_APP_API_URL
-        value: https://vikrahub-backend.onrender.com/api/
+        value: https://vikrahub.onrender.com/api/
 
 # PostgreSQL Database
 databases:
