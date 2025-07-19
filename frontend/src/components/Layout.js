@@ -88,18 +88,52 @@ const Layout = ({ children }) => {
               </Link>
               <p>Empowering South Sudanese creatives with digital solutions and marketplace opportunities.</p>
             </div>
+            
             <div className="footer-section">
-              <h4>Services</h4>
+              <h4>Quick Links</h4>
               <ul>
-                <li><a href="/services">Web Development</a></li>
-                <li><a href="/services">Digital Marketing</a></li>
-                <li><a href="/services">UI/UX Design</a></li>
+                <li><Link to="/about">About</Link></li>
+                <li><Link to="/creators">Explore Creators</Link></li>
+                <li><Link to="/services">Services</Link></li>
+                <li><Link to="/collections">Collections</Link></li>
+                <li><Link to="/faq">FAQ</Link></li>
+                <li><Link to="/contact">Contact</Link></li>
               </ul>
             </div>
+            
             <div className="footer-section">
-              <h4>Contact</h4>
+              <h4>Our Services</h4>
+              <ul>
+                <li><Link to="/services">Creator Portfolios</Link></li>
+                <li><Link to="/services">Talent Discovery</Link></li>
+                <li><Link to="/services">Custom Commissions</Link></li>
+                <li><Link to="/services">Inspiration & Resources</Link></li>
+                <li><Link to="/services">Workshops & Events</Link></li>
+              </ul>
+            </div>
+            
+            <div className="footer-section">
+              <h4>Contact Info</h4>
               <p>Email: info@vikrahub.com</p>
-              <p>Phone: +1 (555) 123-4567</p>
+              <p>Tel: +211922931515 | 0988931515</p>
+              
+              <div className="social-media">
+                <h5>Follow Us</h5>
+                <div className="social-links">
+                  <a href="https://www.facebook.com/vikra.hub" target="_blank" rel="noopener noreferrer" className="social-link facebook">
+                    <i className="fab fa-facebook-f"></i>
+                  </a>
+                  <a href="https://www.instagram.com/vikrahub" target="_blank" rel="noopener noreferrer" className="social-link instagram">
+                    <i className="fab fa-instagram"></i>
+                  </a>
+                  <a href="https://www.linkedin.com/in/mathew-yel-0806my" target="_blank" rel="noopener noreferrer" className="social-link linkedin">
+                    <i className="fab fa-linkedin-in"></i>
+                  </a>
+                  <a href="https://x.com/mathyeoyel" target="_blank" rel="noopener noreferrer" className="social-link twitter">
+                    <i className="fab fa-x-twitter"></i>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
           <div className="footer-bottom">
