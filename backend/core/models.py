@@ -163,9 +163,9 @@ class CreativeAsset(models.Model):
     asset_type = models.CharField(max_length=20, choices=ASSET_TYPES)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     
-    # Asset files
-    preview_image = models.ImageField(upload_to='assets/previews/', help_text="Preview image for the asset")
-    asset_files = models.FileField(upload_to='assets/files/', help_text="Asset files (ZIP or individual files)")
+    # Asset files - using Cloudinary URLs for deployment compatibility
+    preview_image = models.URLField(blank=True, null=True, help_text="Cloudinary URL for preview image", validators=[validate_cloudinary_url])
+    asset_files = models.URLField(blank=True, null=True, help_text="Cloudinary URL for asset files (ZIP or individual files)", validators=[validate_cloudinary_url])
     
     # Metadata
     tags = models.CharField(max_length=500, help_text="Comma-separated tags")
