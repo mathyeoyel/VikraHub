@@ -375,49 +375,29 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  color: white;
+  color: #ffa000;
+  background: transparent;
+  border: 2px solid #ffa000;
   text-decoration: none;
   transition: all 0.3s ease;
   font-size: 1.2rem;
 }
 
-.social-link.facebook {
-  background: #1877f2;
-}
-
-.social-link.facebook:hover {
-  background: #166fe5;
+.social-link:hover {
+  color: white;
+  background: #ffa000;
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(24, 119, 242, 0.4);
+  box-shadow: 0 6px 20px rgba(255, 160, 0, 0.4);
 }
 
-.social-link.instagram {
-  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-}
-
-.social-link.instagram:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(225, 48, 108, 0.4);
-}
-
-.social-link.linkedin {
-  background: #0077b5;
-}
-
-.social-link.linkedin:hover {
-  background: #006396;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 119, 181, 0.4);
-}
-
-.social-link.twitter {
-  background: #000000;
-}
-
+.social-link.facebook:hover,
+.social-link.instagram:hover,
+.social-link.linkedin:hover,
 .social-link.twitter:hover {
-  background: #333333;
+  color: white;
+  background: #ffa000;
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 20px rgba(255, 160, 0, 0.4);
 }
 
 .footer-bottom {
