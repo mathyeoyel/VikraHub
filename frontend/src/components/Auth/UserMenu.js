@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import './Auth.css';
 
@@ -47,18 +48,18 @@ const UserMenu = () => {
             <br />
             <small>{user.email}</small>
           </div>
-          <a href="/dashboard" className="user-dropdown-item">
+          <Link to="/dashboard" className="user-dropdown-item">
             Dashboard
-          </a>
-          <a href="/profile" className="user-dropdown-item">
+          </Link>
+          <Link to="/profile" className="user-dropdown-item">
             Profile Settings
-          </a>
-          <a href="/marketplace" className="user-dropdown-item">
+          </Link>
+          <Link to="/marketplace" className="user-dropdown-item">
             Marketplace
-          </a>
-          <a href="/freelance" className="user-dropdown-item">
+          </Link>
+          <Link to="/freelance" className="user-dropdown-item">
             Freelance Hub
-          </a>
+          </Link>
           <button 
             onClick={handleLogout}
             className="user-dropdown-item logout"

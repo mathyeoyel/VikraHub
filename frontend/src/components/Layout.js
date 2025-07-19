@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from './Auth/AuthContext';
 import UserMenu from './Auth/UserMenu';
 import AuthModal from './Auth/AuthModal';
@@ -41,29 +42,29 @@ const Layout = ({ children }) => {
             <span></span>
           </button>
           <nav className={`nav ${isMenuOpen ? 'nav-open' : ''}`}>
-            <a href="/" className="nav-link" onClick={() => setIsMenuOpen(false)}>Home</a>
-            <a href="/members" className="nav-link" onClick={() => setIsMenuOpen(false)}>Members</a>
-            <a href="/marketplace" className="nav-link" onClick={() => setIsMenuOpen(false)}>Marketplace</a>
-            <a href="/freelance" className="nav-link" onClick={() => setIsMenuOpen(false)}>Freelance</a>
-            <a href="/services" className="nav-link" onClick={() => setIsMenuOpen(false)}>Services</a>
-            <a href="/team" className="nav-link" onClick={() => setIsMenuOpen(false)}>Team</a>
+            <Link to="/" className="nav-link" onClick={() => setIsMenuOpen(false)}>Home</Link>
+            <Link to="/members" className="nav-link" onClick={() => setIsMenuOpen(false)}>Members</Link>
+            <Link to="/marketplace" className="nav-link" onClick={() => setIsMenuOpen(false)}>Marketplace</Link>
+            <Link to="/freelance" className="nav-link" onClick={() => setIsMenuOpen(false)}>Freelance</Link>
+            <Link to="/services" className="nav-link" onClick={() => setIsMenuOpen(false)}>Services</Link>
+            <Link to="/team" className="nav-link" onClick={() => setIsMenuOpen(false)}>Team</Link>
             
             {isAuthenticated ? (
               <div className="auth-section">
-                <a href="/dashboard" className="nav-link" onClick={() => setIsMenuOpen(false)}>Dashboard</a>
-                <a href="/upload-asset" className="nav-link" onClick={() => setIsMenuOpen(false)}>Upload Asset</a>
+                <Link to="/dashboard" className="nav-link" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
+                <Link to="/upload-asset" className="nav-link" onClick={() => setIsMenuOpen(false)}>Upload Asset</Link>
                 {user && (user.is_staff || user.is_superuser) && (
-                  <a href="/admin" className="nav-link admin-link" onClick={() => setIsMenuOpen(false)}>
+                  <Link to="/admin" className="nav-link admin-link" onClick={() => setIsMenuOpen(false)}>
                     Admin
-                  </a>
+                  </Link>
                 )}
                 <UserMenu />
               </div>
             ) : (
               <div className="auth-buttons">
-                <a href="/login" className="nav-link login-btn">
+                <Link to="/login" className="nav-link login-btn">
                   Login
-                </a>
+                </Link>
                 <button 
                   className="nav-link signup-btn" 
                   onClick={() => openAuthModal('register')}

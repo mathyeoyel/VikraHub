@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './components/Auth/AuthContext';
 
 function Login() {
@@ -87,7 +87,7 @@ function Login() {
         </button>
       </form>
       <div style={{ marginTop: '20px', textAlign: 'center' }}>
-        <p>Don't have an account? <a href="/">Sign up using the modal</a></p>
+        <p>Don't have an account? <Link to="/">Sign up using the modal</Link></p>
       </div>
     </div>
   );
