@@ -249,7 +249,7 @@ body {
   color: var(--dark-color) !important;
   border: none;
   padding: 12px 24px;
-  border-radius: 25px;
+  border-radius: 50px;
   font-weight: 600;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(255, 160, 0, 0.3);
