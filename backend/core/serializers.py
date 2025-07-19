@@ -7,7 +7,7 @@ from .models import (
     ProjectContract, ProjectReview
 )
 from .cloudinary_utils import get_optimized_avatar_url, validate_cloudinary_url
-from .asset_utils import validate_asset_price, validate_asset_tags, get_asset_file_info
+from .asset_utils import validate_asset_price, validate_asset_tags
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -198,10 +198,11 @@ class CreativeAssetSerializer(serializers.ModelSerializer):
     def get_file_info(self, obj):
         """Get file information for the asset"""
         if obj.asset_files:
+            # Since asset_files is now a URLField, return basic info
             return {
-                'name': obj.asset_files.name,
-                'size': obj.asset_files.size,
-                'url': obj.asset_files.url
+                'name': obj.title + '_assets',  # Use title as name
+                'url': obj.asset_files,  # Direct URL
+                'type': 'cloudinary_url'
             }
         return None
     
@@ -221,27 +222,15 @@ class CreativeAssetSerializer(serializers.ModelSerializer):
         return validate_asset_tags(value)
     
     def validate_preview_image(self, value):
-        """Validate preview image file"""
+        """Validate preview image URL"""
         if value:
-            # Check file size (max 5MB)
-            if value.size > 5 * 1024 * 1024:
-                raise serializers.ValidationError("Preview image must be less than 5MB.")
-            
-            # Check file type
-            valid_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp']
-            file_extension = value.name.lower().split('.')[-1]
-            if f'.{file_extension}' not in valid_extensions:
-                raise serializers.ValidationError("Preview image must be a valid image format (JPG, PNG, GIF, WebP).")
-        
+            validate_cloudinary_url(value)
         return value
     
     def validate_asset_files(self, value):
-        """Validate asset files"""
+        """Validate asset files URL"""
         if value:
-            # Check file size (max 100MB)
-            if value.size > 100 * 1024 * 1024:
-                raise serializers.ValidationError("Asset file must be less than 100MB.")
-        
+            validate_cloudinary_url(value)
         return value
     
     def create(self, validated_data):
