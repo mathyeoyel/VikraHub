@@ -25,61 +25,19 @@ services:
       - key: CLOUDINARY_API_SECRET
         value: your-cloudinary-api-secret
 
-  # React Frontend  
-  - type: static
+  # React Frontend as Web Service with Express server
+  - type: web
     name: vikrahub-frontend
+    runtime: node
     buildCommand: |
       cd frontend
       npm ci
       echo "Building with REACT_APP_API_URL=${REACT_APP_API_URL}"
       npm run build
-      echo "Removing _redirects file to use render.yaml routes instead..."
-      rm -f build/_redirects
-      echo "Build directory contents:"
-      ls -la build/
-      rm -f build/netlify.toml
-    staticPublishPath: frontend/build
+      echo "Frontend built successfully, will serve with Express"
+    startCommand: cd frontend && npm run serve
     plan: free
-    routes:
-      - type: rewrite
-        source: "/members"
-        destination: "/index.html"
-      - type: rewrite
-        source: "/marketplace"
-        destination: "/index.html"
-      - type: rewrite
-        source: "/freelance"
-        destination: "/index.html"
-      - type: rewrite
-        source: "/services"
-        destination: "/index.html"
-      - type: rewrite
-        source: "/login"
-        destination: "/index.html"
-      - type: rewrite
-        source: "/portfolio"
-        destination: "/index.html"
-      - type: rewrite
-        source: "/blog"
-        destination: "/index.html"
-      - type: rewrite
-        source: "/team"
-        destination: "/index.html"
-      - type: rewrite
-        source: "/dashboard"
-        destination: "/index.html"
-      - type: rewrite
-        source: "/upload-asset"
-        destination: "/index.html"
-      - type: rewrite
-        source: "/admin"
-        destination: "/index.html"
-      - type: rewrite
-        source: "/profile/*"
-        destination: "/index.html"
-      - type: rewrite
-        source: "/*"
-        destination: "/index.html"
+    env: node
     envVars:
       - key: REACT_APP_API_URL
         value: https://vikrahub.onrender.com/api/
