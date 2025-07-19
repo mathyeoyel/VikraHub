@@ -376,11 +376,12 @@ body {
   height: 40px;
   border-radius: 50%;
   color: #ffa000;
-  background: transparent;
+  background: transparent !important;
   border: 2px solid #ffa000;
   text-decoration: none;
   transition: all 0.3s ease;
   font-size: 1.2rem;
+  box-shadow: none !important;
 }
 
 .social-link:hover {
