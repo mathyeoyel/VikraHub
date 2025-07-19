@@ -54,7 +54,7 @@ const Blog = () => {
                   <ul>
                     <li className="d-flex align-items-center">
                       <i className="bi bi-person"></i>
-                      <a href="#">{blog.author?.username}</a>
+                      <span>{blog.author?.username}</span>
                     </li>
                     <li className="d-flex align-items-center">
                       <i className="bi bi-clock"></i>

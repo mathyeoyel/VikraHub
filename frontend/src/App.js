@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './components/Auth/AuthContext';
 import Layout from './components/Layout';
+import ErrorBoundary from './components/ErrorBoundary';
 import Home from "./Home";
 import Team from "./Team";
 import Dashboard from "./components/Dashboard";
@@ -20,11 +21,12 @@ import APIDebugger from "./components/APIDebugger";
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Layout>
-          <APIDebugger />
-          <Routes>
+    <ErrorBoundary>
+      <AuthProvider>
+        <BrowserRouter>
+          <Layout>
+            <APIDebugger />
+            <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/services" element={<Services />} />
@@ -68,6 +70,7 @@ function App() {
         </Layout>
       </BrowserRouter>
     </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
