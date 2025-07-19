@@ -22,8 +22,12 @@ function Home() {
               <div className="hero-image">
                 <img 
                   src="/vikrahub-hero.jpg" 
-                  alt="VikraHub - Inspiring Every Creative Thought" 
+                  alt="VikraHub - Digital Solutions" 
                   className="hero-main-image"
+                  onError={(e) => {
+                    console.error('Hero image failed to load, falling back to placeholder');
+                    e.target.src = '/hero-placeholder.jpg';
+                  }}
                 />
                 <div className="hero-graphic">
                   <div className="floating-card card-1">💻</div>

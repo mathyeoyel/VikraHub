@@ -18,17 +18,36 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (token) {
-      // Fetch user data
-      fetchUser();
-    } else {
-      setLoading(false);
-    }
-  }, [token]);
+    const initializeAuth = async () => {
+      const storedToken = localStorage.getItem('access');
+      const storedRefreshToken = localStorage.getItem('refresh');
+      
+      if (storedToken) {
+        setToken(storedToken);
+        // Try to fetch user data, which will trigger token refresh if needed
+        await fetchUser(storedToken);
+      } else if (storedRefreshToken) {
+        // We have a refresh token but no access token, try to refresh
+        try {
+          await refreshToken();
+        } catch (error) {
+          console.error('Failed to refresh token on app load:', error);
+          logout();
+        }
+      } else {
+        setLoading(false);
+      }
+    };
+    
+    initializeAuth();
+  }, []); // Run only once on mount
 
   const fetchUser = async (accessToken = null) => {
     const tokenToUse = accessToken || token;
-    if (!tokenToUse) return;
+    if (!tokenToUse) {
+      setLoading(false);
+      return;
+    }
     
     try {
       const apiUrl = process.env.REACT_APP_API_URL || 'https://vikrahub.onrender.com/api/';
@@ -47,8 +66,9 @@ export const AuthProvider = ({ children }) => {
       console.error('Error response:', error.response?.data);
       console.error('Error status:', error.response?.status);
       
-      // Only logout if it's an authentication error, not a network error
+      // If it's a 401/403 and we've exhausted refresh attempts, logout
       if (error.response?.status === 401 || error.response?.status === 403) {
+        console.log('Authentication failed, logging out');
         logout();
       }
     } finally {

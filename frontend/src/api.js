@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAccessToken, removeTokens } from "./auth";
+import { getAccessToken, getRefreshToken, removeTokens, saveToken } from "./auth";
 
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || "https://vikrahub.onrender.com/api/", // Django API base URL
@@ -27,11 +27,31 @@ api.interceptors.request.use(
 // Response interceptor to handle token expiration
 api.interceptors.response.use(
   response => response,
-  error => {
-    if (error.response && error.response.status === 401) {
-      removeTokens();
-      // Don't automatically redirect - let the auth context handle it
+  async error => {
+    const originalRequest = error.config;
+    
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      
+      try {
+        const refreshToken = getRefreshToken();
+        if (refreshToken) {
+          const response = await api.post('auth/token/refresh/', { refresh: refreshToken });
+          const { access } = response.data;
+          
+          saveToken({ access, refresh: refreshToken });
+          
+          // Retry the original request with new token
+          originalRequest.headers.Authorization = `Bearer ${access}`;
+          return api(originalRequest);
+        }
+      } catch (refreshError) {
+        console.error('Token refresh failed:', refreshError);
+        removeTokens();
+        // Let the auth context handle the logout
+      }
     }
+    
     return Promise.reject(error);
   }
 );
