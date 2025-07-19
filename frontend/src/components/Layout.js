@@ -29,10 +29,10 @@ const Layout = ({ children }) => {
     <div className="layout">
       <header className="header">
         <div className="container">
-          <div className="logo">
+          <Link to="/" className="logo" onClick={() => setIsMenuOpen(false)}>
             <img src={logoImage} alt="VikraHub" className="logo-img" />
             <span className="logo-text">VikraHub</span>
-          </div>
+          </Link>
           <button 
             className="menu-toggle"
             onClick={toggleMenu}
@@ -82,7 +82,10 @@ const Layout = ({ children }) => {
         <div className="container">
           <div className="footer-content">
             <div className="footer-section">
-              <h3>VikraHub</h3>
+              <Link to="/" className="footer-logo">
+                <img src={logoImage} alt="VikraHub" className="footer-logo-img" />
+                <span className="footer-logo-text">VikraHub</span>
+              </Link>
               <p>Professional digital solutions for your business needs.</p>
             </div>
             <div className="footer-section">
