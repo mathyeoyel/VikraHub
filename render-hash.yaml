@@ -1,0 +1,46 @@
+services:
+  # Django Backend
+  - type: web
+    name: vikrahub-backend
+    runtime: python3
+    buildCommand: |
+      cd backend
+      pip install -r requirements.txt
+      python manage.py collectstatic --no-input
+      python manage.py migrate
+    startCommand: cd backend && gunicorn vikrahub.wsgi:application
+    plan: free
+    env: python
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: PYTHON_VERSION
+        value: 3.11.4
+      - key: CLOUDINARY_CLOUD_NAME
+        value: your-cloudinary-cloud-name
+      - key: CLOUDINARY_API_KEY
+        value: your-cloudinary-api-key
+      - key: CLOUDINARY_API_SECRET
+        value: your-cloudinary-api-secret
+
+  # React Frontend with Hash Router - Simple Static Hosting
+  - type: static
+    name: vikrahub-frontend
+    buildCommand: |
+      cd frontend
+      npm ci
+      echo "Building with REACT_APP_API_URL=${REACT_APP_API_URL}"
+      npm run build
+      echo "Using Hash Router - no server-side routing needed"
+    staticPublishPath: frontend/build
+    plan: free
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://vikrahub.onrender.com/api/
+
+# PostgreSQL Database
+databases:
+  - name: vikrahub-db
+    plan: free

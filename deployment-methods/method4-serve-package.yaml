@@ -1,0 +1,27 @@
+# Method 4: Static Site using serve package as web service
+
+services:
+  - type: web
+    name: vikrahub-frontend
+    runtime: node
+    buildCommand: |
+      cd frontend
+      npm ci
+      npm run build
+      npm install -g serve
+    startCommand: cd frontend && serve -s build -p $PORT
+    env: node
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://vikrahub.onrender.com/api/
+
+# Advantages:
+# - Uses the 'serve' package which handles SPA routing automatically
+# - No need for custom Express server
+# - Built-in SPA support with -s flag
+# - Lightweight solution
+
+# Package.json addition needed:
+# "scripts": {
+#   "serve-static": "serve -s build"
+# }

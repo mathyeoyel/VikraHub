@@ -1,5 +1,5 @@
 import React from "react";
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom'; // Changed from BrowserRouter
 import { AuthProvider } from './components/Auth/AuthContext';
 import Layout from './components/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -23,7 +23,7 @@ function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <HashRouter>
+        <HashRouter> {/* Changed from BrowserRouter */}
           <Layout>
             <APIDebugger />
             <Routes>

@@ -1,0 +1,35 @@
+# Method 5: Static Site with comprehensive headers and routing
+
+services:
+  - type: static
+    name: vikrahub-frontend
+    buildCommand: |
+      cd frontend
+      npm ci
+      npm run build
+      # Create comprehensive _headers file
+      echo "/*" > build/_headers
+      echo "  X-Frame-Options: DENY" >> build/_headers
+      echo "  X-Content-Type-Options: nosniff" >> build/_headers
+      echo "  Referrer-Policy: strict-origin-when-cross-origin" >> build/_headers
+      # Ensure proper _redirects
+      echo "/*    /index.html   200" > build/_redirects
+    staticPublishPath: frontend/build
+    headers:
+      - source: "/*"
+        headers:
+          - key: "Cache-Control"
+            value: "public, max-age=31536000, immutable"
+      - source: "/index.html"
+        headers:
+          - key: "Cache-Control"  
+            value: "no-cache"
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://vikrahub.onrender.com/api/
+
+# This method combines:
+# - Proper caching strategies
+# - Security headers
+# - SPA routing via _redirects
+# - Optimized static delivery

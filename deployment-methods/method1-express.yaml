@@ -1,0 +1,31 @@
+# Method 1: Express Web Service Configuration
+
+services:
+  - type: web
+    name: vikrahub-frontend
+    runtime: node
+    buildCommand: |
+      cd frontend
+      npm ci
+      npm run build
+    startCommand: cd frontend && npm run serve
+    env: node
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://vikrahub.onrender.com/api/
+
+# Requires server.js file:
+const express = require('express');
+const path = require('path');
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
