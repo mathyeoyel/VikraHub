@@ -1,6 +1,7 @@
 {
   "name": "frontend",
   "version": "0.1.0",
+  "homepage": "/",
   "private": true,
   "dependencies": {
     "@cloudinary/react": "^1.14.3",

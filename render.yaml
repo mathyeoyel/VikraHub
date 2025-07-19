@@ -33,7 +33,8 @@ services:
       npm ci
       echo "Building with REACT_APP_API_URL=${REACT_APP_API_URL}"
       npm run build
-      cp public/_redirects build/_redirects || echo "/*    /index.html   200" > build/_redirects
+      cp public/_redirects build/_redirects
+      rm -f build/netlify.toml
     staticPublishPath: frontend/build
     plan: free
     envVars:

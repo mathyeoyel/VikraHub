@@ -66,6 +66,9 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            
+            {/* Catch-all route for 404 - redirect to home */}
+            <Route path="*" element={<Home />} />
           </Routes>
         </Layout>
       </BrowserRouter>
