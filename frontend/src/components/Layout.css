@@ -203,6 +203,23 @@ body {
   transform: translateY(-3px);
 }
 
+.get-started-btn {
+  background: var(--primary-color);
+  color: var(--dark-color) !important;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 160, 0, 0.3);
+}
+
+.get-started-btn:hover {
+  background: var(--primary-dark);
+  box-shadow: 0 6px 20px rgba(255, 160, 0, 0.4);
+  transform: translateY(-3px);
+}
+
 /* Main Content */
 .main-content {
   flex: 1;

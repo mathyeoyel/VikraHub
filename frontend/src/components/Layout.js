@@ -62,14 +62,11 @@ const Layout = ({ children }) => {
               </div>
             ) : (
               <div className="auth-buttons">
-                <Link to="/login" className="nav-link login-btn">
-                  Login
-                </Link>
                 <button 
-                  className="nav-link signup-btn" 
-                  onClick={() => openAuthModal('register')}
+                  className="nav-link get-started-btn" 
+                  onClick={() => openAuthModal('login')}
                 >
-                  Sign Up
+                  Get Started
                 </button>
               </div>
             )}
