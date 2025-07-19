@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from './Auth/AuthContext';
 import UserMenu from './Auth/UserMenu';
 import AuthModal from './Auth/AuthModal';
+import logoImage from '../assets/images/logo.webp';
 import './Layout.css';
 
 const Layout = ({ children }) => {
@@ -29,7 +30,7 @@ const Layout = ({ children }) => {
       <header className="header">
         <div className="container">
           <div className="logo">
-            <img src="/vikrahub-logo.svg" alt="VikraHub" className="logo-img" />
+            <img src={logoImage} alt="VikraHub" className="logo-img" />
             <span className="logo-text">VikraHub</span>
           </div>
           <button 
