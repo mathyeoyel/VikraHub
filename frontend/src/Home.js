@@ -12,8 +12,8 @@ function Home() {
               <div className="hero-text">
                 <h1>Welcome to <span className="highlight">VikraHub</span></h1>
                 <p className="hero-subtitle">
-                  We create exceptional digital experiences that drive business growth 
-                  and transform ideas into reality.
+                  Discover, Connect, and Empower South Sudanese Creatives.
+                  Inspiring the next generation of creators, artists, and innovators from South Sudan.
                 </p>
                 <div className="hero-buttons">
                   <Link to="/marketplace" className="hero-btn hero-btn-primary">Get Started</Link>
@@ -23,7 +23,7 @@ function Home() {
               <div className="hero-image">
                 <img 
                   src="/vikrahub-hero.jpg" 
-                  alt="VikraHub - Digital Solutions" 
+                  alt="VikraHub - Empowering South Sudanese Creatives" 
                   className="hero-main-image"
                   onError={(e) => {
                     console.error('Hero image failed to load, falling back to placeholder');
@@ -118,11 +118,11 @@ function Home() {
               <div className="service-card">
                 <div className="service-icon">📈</div>
                 <h3>Digital Marketing</h3>
-                <p>Strategic marketing campaigns to boost your online presence and drive growth.</p>
+                <p>Amplify South Sudanese creative voices and businesses through strategic digital marketing campaigns.</p>
                 <ul className="service-features">
-                  <li>SEO Optimization</li>
-                  <li>Social Media</li>
-                  <li>Content Strategy</li>
+                  <li>Cultural Content Strategy</li>
+                  <li>Social Media Growth</li>
+                  <li>Local SEO Optimization</li>
                 </ul>
               </div>
               <div className="service-card">
@@ -142,8 +142,8 @@ function Home() {
         {/* Marketplace Preview Section */}
         <section className="marketplace-preview">
           <div className="container">
-            <h2 className="section-title">Digital Assets Marketplace</h2>
-            <p className="section-subtitle">Discover premium templates, designs, and digital resources</p>
+            <h2 className="section-title">South Sudanese Creative Marketplace</h2>
+            <p className="section-subtitle">Discover authentic designs, art, and digital resources from South Sudanese creators</p>
             <div className="marketplace-content">
               <div className="marketplace-features">
                 <div className="marketplace-feature">
@@ -153,8 +153,8 @@ function Home() {
                 </div>
                 <div className="marketplace-feature">
                   <div className="feature-icon">💎</div>
-                  <h3>Digital Assets</h3>
-                  <p>Icons, graphics, fonts, and multimedia resources from talented creators worldwide.</p>
+                  <h3>Cultural Assets</h3>
+                  <p>Authentic South Sudanese art, patterns, music, and multimedia resources celebrating our rich heritage.</p>
                 </div>
                 <div className="marketplace-feature">
                   <div className="feature-icon">🚀</div>

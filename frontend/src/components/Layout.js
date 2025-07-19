@@ -86,7 +86,7 @@ const Layout = ({ children }) => {
                 <img src={logoImage} alt="VikraHub" className="footer-logo-img" />
                 <span className="footer-logo-text">VikraHub</span>
               </Link>
-              <p>Professional digital solutions for your business needs.</p>
+              <p>Empowering South Sudanese creatives with digital solutions and marketplace opportunities.</p>
             </div>
             <div className="footer-section">
               <h4>Services</h4>
