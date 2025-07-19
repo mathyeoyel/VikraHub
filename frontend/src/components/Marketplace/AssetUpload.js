@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { assetAPI } from '../../api';
 import { useAuth } from '../Auth/AuthContext';
+import { uploadToCloudinary, uploadRawToCloudinary } from '../../utils/cloudinary';
 import './AssetUpload.css';
 
 const AssetUpload = ({ onAssetCreated }) => {
@@ -105,24 +106,33 @@ const AssetUpload = ({ onAssetCreated }) => {
     setLoading(true);
     
     try {
-      // Create FormData for file upload
-      const uploadData = new FormData();
+      // Upload files to Cloudinary first
+      const [previewUpload, assetUpload] = await Promise.all([
+        uploadToCloudinary(formData.preview_file, {
+          folder: 'vikrahub/assets/previews',
+          tags: 'asset_preview'
+        }),
+        uploadRawToCloudinary(formData.asset_file, {
+          folder: 'vikrahub/assets/files',
+          tags: 'asset_file'
+        })
+      ]);
+
+      // Create asset data with Cloudinary URLs
+      const assetData = {
+        title: formData.title,
+        description: formData.description,
+        category_id: formData.category,
+        asset_type: formData.asset_type,
+        price: formData.price,
+        tags: formData.tags,
+        software_used: formData.software_used,
+        file_formats: formData.file_formats,
+        preview_image: previewUpload.secure_url,
+        asset_files: assetUpload.secure_url
+      };
       
-      // Add form fields
-      uploadData.append('title', formData.title);
-      uploadData.append('description', formData.description);
-      uploadData.append('category_id', formData.category);
-      uploadData.append('asset_type', formData.asset_type);
-      uploadData.append('price', formData.price);
-      uploadData.append('tags', formData.tags);
-      uploadData.append('software_used', formData.software_used);
-      uploadData.append('file_formats', formData.file_formats);
-      
-      // Add files
-      uploadData.append('preview_image', formData.preview_file);
-      uploadData.append('asset_files', formData.asset_file);
-      
-      const response = await assetAPI.create(uploadData);
+      const response = await assetAPI.create(assetData);
       alert('Asset uploaded successfully!');
       
       // Reset form
