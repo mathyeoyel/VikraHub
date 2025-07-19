@@ -4,14 +4,19 @@ import { serviceAPI } from '../api';
 const Services = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
+        console.log('Fetching services...');
         const response = await serviceAPI.getAll();
+        console.log('Services response:', response.data);
         setServices(response.data || []);
+        setError(null);
       } catch (error) {
         console.error('Error fetching services:', error);
+        setError(error.message || 'Failed to load services');
       } finally {
         setLoading(false);
       }
@@ -22,6 +27,16 @@ const Services = () => {
 
   if (loading) {
     return <div className="text-center">Loading services...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="error-message text-center">
+        <h3>Error Loading Services</h3>
+        <p>{error}</p>
+        <button onClick={() => window.location.reload()}>Retry</button>
+      </div>
+    );
   }
 
   return (
