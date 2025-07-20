@@ -5,7 +5,7 @@
 
 /* Services Hero Section */
 .services-hero {
-  background: linear-gradient(135deg, #000223 0%, #1a0b47 100%);
+  background: #000223;
   color: white;
   padding: 8rem 0 6rem;
   position: relative;
@@ -19,13 +19,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 2px,
-    rgba(255, 255, 255, 0.1) 2px,
-    rgba(255, 255, 255, 0.1) 4px
-  );
+  background: #000223;
   opacity: 0.1;
   z-index: 1;
 }
@@ -79,7 +73,7 @@
 .service-card {
   background: white;
   border-radius: 20px;
-  padding: 2.5rem;
+  padding: 1.8rem;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   border: 1px solid #e9ecef;
@@ -94,7 +88,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(135deg, #ffa000, #7c521b);
+  background: #000223;
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
@@ -126,46 +120,46 @@
 }
 
 .service-icon {
-  font-size: 3.5rem;
-  margin-bottom: 1.5rem;
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
   display: block;
 }
 
 .service-card h3 {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem;
   color: #000223;
 }
 
 .service-card > p {
   color: #666;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1.2rem;
+  font-size: 0.95rem;
 }
 
 .service-features {
   list-style: none;
   padding: 0;
-  margin: 0 0 2rem 0;
+  margin: 0 0 1rem 0;
 }
 
 .service-features li {
-  padding: 0.75rem 0;
+  padding: 0.5rem 0;
   color: #444;
   position: relative;
-  padding-left: 2rem;
-  font-size: 0.95rem;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
 }
 
 .service-features li::before {
-  content: "✓";
+  content: "•";
   position: absolute;
   left: 0;
   color: #ffa000;
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 
 .service-pricing {
@@ -223,7 +217,7 @@
   display: inline-block;
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, #ffa000, #7c521b);
+  background: #000223;
   color: white;
   border-radius: 50%;
   font-size: 1.5rem;
@@ -442,7 +436,7 @@
 /* Services CTA Section */
 .services-cta {
   padding: 6rem 0;
-  background: linear-gradient(135deg, #000223 0%, #1a0b47 100%);
+  background: #000223;
   color: white;
 }
 
@@ -506,8 +500,8 @@
   transform: translateY(-2px);
 }
 
-/* Button Styles */
-.btn {
+/* Button Styles - Services Page Specific */
+.services .btn {
   display: inline-block;
   padding: 1rem 2rem;
   border-radius: 50px;
@@ -520,32 +514,32 @@
   text-align: center;
 }
 
-.btn-primary {
-  background: #ffa000;
-  color: white;
+.services .btn-primary {
+  background: #7c521b !important;
+  color: white !important;
 }
 
-.btn-primary:hover {
-  background: #000223;
+.services .btn-primary:hover {
+  background: #000223 !important;
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 160, 0, 0.3);
-  color: white;
+  box-shadow: 0 8px 25px rgba(124, 82, 27, 0.3);
+  color: white !important;
   text-decoration: none;
 }
 
-.btn-secondary {
-  background: transparent;
-  color: #ffa000;
-  border: 2px solid #ffa000;
+.services .btn-secondary {
+  background: transparent !important;
+  color: #7c521b !important;
+  border: 2px solid #7c521b !important;
 }
 
-.btn-secondary:hover {
-  background: #ffa000;
-  color: white;
+.services .btn-secondary:hover {
+  background: #7c521b !important;
+  color: white !important;
   text-decoration: none;
 }
 
-.btn-large {
+.services .btn-large {
   padding: 1.25rem 2.5rem;
   font-size: 1.1rem;
 }
@@ -669,5 +663,193 @@
   
   .story-stats span {
     text-align: center;
+  }
+}
+
+/* Why Choose VikraHub Section */
+.why-choose {
+  padding: 6rem 0;
+  background: #000223;
+  color: white;
+}
+
+.why-choose .section-title {
+  color: #ffa000;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.why-choose .features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.why-choose .feature-card {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 160, 0, 0.3);
+  border-radius: 15px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.why-choose .feature-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-5px);
+  border-color: #ffa000;
+}
+
+.why-choose .feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.why-choose .feature-card h3 {
+  color: #ffa000;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.why-choose .feature-card p {
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+}
+
+/* Enhanced CTA Section */
+.services-cta .cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-btn.tertiary {
+  background: transparent;
+  color: #ffa000;
+  border: 2px solid #ffa000;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.cta-btn.tertiary:hover {
+  background: #ffa000;
+  color: #000223;
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+/* Contact Section */
+.contact-section {
+  padding: 4rem 0;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+.contact-content {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contact-content h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #000223;
+}
+
+.contact-content p {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.contact-info {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.contact-method {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: white;
+  padding: 1rem 1.5rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.contact-method:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.contact-icon {
+  font-size: 1.2rem;
+}
+
+.contact-method a {
+  color: #000223;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.contact-method a:hover {
+  color: #ffa000;
+  text-decoration: none;
+}
+
+/* Additional Responsive Design for New Sections */
+@media (max-width: 768px) {
+  .why-choose .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .contact-info {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .services-cta .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .cta-btn {
+    width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .why-choose {
+    padding: 4rem 0;
+  }
+  
+  .contact-section {
+    padding: 3rem 0;
+  }
+  
+  .contact-content h2 {
+    font-size: 1.5rem;
+  }
+  
+  .contact-method {
+    width: 100%;
+    justify-content: center;
   }
 }
