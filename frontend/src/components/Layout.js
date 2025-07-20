@@ -44,8 +44,8 @@ const Layout = ({ children }) => {
           </button>
           <nav className={`nav ${isMenuOpen ? 'nav-open' : ''}`}>
             <Link to="/" className="nav-link" onClick={() => setIsMenuOpen(false)}>Home</Link>
-            <Link to="/members" className="nav-link" onClick={() => setIsMenuOpen(false)}>Members</Link>
-            <Link to="/marketplace" className="nav-link" onClick={() => setIsMenuOpen(false)}>Marketplace</Link>
+            <Link to="/members" className="nav-link" onClick={() => setIsMenuOpen(false)}>Explore Creators</Link>
+            <Link to="/marketplace" className="nav-link" onClick={() => setIsMenuOpen(false)}>Inspiration</Link>
             <Link to="/freelance" className="nav-link" onClick={() => setIsMenuOpen(false)}>Freelance</Link>
             <Link to="/services" className="nav-link" onClick={() => setIsMenuOpen(false)}>Services</Link>
             

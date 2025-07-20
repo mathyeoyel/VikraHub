@@ -55,7 +55,7 @@ const UserMenu = () => {
             Profile Settings
           </Link>
           <Link to="/marketplace" className="user-dropdown-item">
-            Marketplace
+            Inspiration
           </Link>
           <Link to="/freelance" className="user-dropdown-item">
             Freelance Hub
