@@ -29,10 +29,13 @@ const Layout = ({ children }) => {
     <div className="layout">
       <header className="header">
         <div className="container">
-          <Link to="/" className="logo" onClick={() => setIsMenuOpen(false)}>
+          <a href="/" className="logo" onClick={() => {
+            setIsMenuOpen(false);
+            window.location.reload();
+          }}>
             <img src={logoImage} alt="VikraHub" className="logo-img" />
             <span className="logo-text">VikraHub</span>
-          </Link>
+          </a>
           <button 
             className="menu-toggle"
             onClick={toggleMenu}
@@ -51,8 +54,6 @@ const Layout = ({ children }) => {
             
             {isAuthenticated ? (
               <div className="auth-section">
-                <Link to="/dashboard" className="nav-link" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
-                <Link to="/upload-asset" className="nav-link" onClick={() => setIsMenuOpen(false)}>Upload Asset</Link>
                 {user && (user.is_staff || user.is_superuser) && (
                   <Link to="/admin" className="nav-link admin-link" onClick={() => setIsMenuOpen(false)}>
                     Admin

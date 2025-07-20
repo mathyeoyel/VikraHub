@@ -38,32 +38,42 @@ const UserMenu = () => {
         onClick={() => setIsOpen(!isOpen)}
         title={`${user.first_name} ${user.last_name}` || user.username}
       >
-        {getInitials(user)}
+        <span className="user-icon">👤</span>
+        <span className="user-initials">{getInitials(user)}</span>
       </div>
       
       {isOpen && (
         <div className="user-dropdown">
-          <div className="user-dropdown-item">
-            <strong>{user.username}</strong>
+          <div className="user-dropdown-item user-info">
+            <strong>{user.first_name && user.last_name ? 
+              `${user.first_name} ${user.last_name}` : 
+              user.username}</strong>
             <br />
             <small>{user.email}</small>
           </div>
-          <Link to="/dashboard" className="user-dropdown-item">
+          <div className="dropdown-divider"></div>
+          <Link to="/profile" className="user-dropdown-item" onClick={() => setIsOpen(false)}>
+            <span className="dropdown-icon">👤</span>
+            My Profile
+          </Link>
+          <Link to="/profile" className="user-dropdown-item" onClick={() => setIsOpen(false)}>
+            <span className="dropdown-icon">📊</span>
             Dashboard
           </Link>
-          <Link to="/profile" className="user-dropdown-item">
-            Profile Settings
-          </Link>
-          <Link to="/marketplace" className="user-dropdown-item">
+          <Link to="/marketplace" className="user-dropdown-item" onClick={() => setIsOpen(false)}>
+            <span className="dropdown-icon">🎨</span>
             Inspiration
           </Link>
-          <Link to="/freelance" className="user-dropdown-item">
+          <Link to="/freelance" className="user-dropdown-item" onClick={() => setIsOpen(false)}>
+            <span className="dropdown-icon">💼</span>
             Freelance Hub
           </Link>
+          <div className="dropdown-divider"></div>
           <button 
             onClick={handleLogout}
             className="user-dropdown-item logout"
           >
+            <span className="dropdown-icon">🚪</span>
             Logout
           </button>
         </div>
