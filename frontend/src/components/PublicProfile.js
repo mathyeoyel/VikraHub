@@ -35,8 +35,8 @@ const PublicProfile = () => {
         const allAssets = response.data.results || response.data || [];
         
         // Filter assets to only show those created/sold by this specific user
-        // The backend uses 'seller' field for the asset creator
-        const userAssets = allAssets.filter(asset => asset.seller === userId);
+        // The backend uses 'seller' field for the asset creator, seller is an object with id
+        const userAssets = allAssets.filter(asset => asset.seller && asset.seller.id === userId);
         
         console.log(`Found ${userAssets.length} assets for user ${userId}`);
         setAssets(userAssets);

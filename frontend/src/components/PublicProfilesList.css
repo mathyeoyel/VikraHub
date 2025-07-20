@@ -1,6 +1,6 @@
 .public-profiles-list {
   min-height: 100vh;
-  background: #000223;
+  background: #f8f9fa;
   padding: 2rem 0;
 }
 
@@ -11,7 +11,7 @@
 }
 
 .avatar-placeholder {
-  background: #000223;
+  background: #6c757d;
   color: white;
   display: flex;
   align-items: center;
@@ -23,7 +23,7 @@
 .page-header {
   text-align: center;
   margin-bottom: 3rem;
-  color: white;
+  color: #2c3e50;
 }
 
 .page-header h1 {
@@ -70,7 +70,7 @@
 }
 
 .search-button {
-  background: #000223;
+  background: #495057;
   color: white;
   border: none;
   padding: 1rem 1.5rem;
@@ -103,10 +103,10 @@
 
 .filter-btn:hover,
 .filter-btn.active {
-  background: #000223;
+  background: #495057;
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 2, 35, 0.3);
+  box-shadow: 0 8px 20px rgba(73, 80, 87, 0.3);
 }
 
 .loading-state,
@@ -127,7 +127,7 @@
   width: 40px;
   height: 40px;
   border: 4px solid #f3f3f3;
-  border-top: 4px solid #000223;
+  border-top: 4px solid #495057;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
@@ -183,11 +183,11 @@
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #000223;
+  border: 3px solid #6c757d;
 }
 
 .avatar-placeholder {
-  background: #000223;
+  background: #6c757d;
   color: white;
   display: flex;
   align-items: center;
@@ -206,7 +206,7 @@
 
 .username {
   text-align: center;
-  color: #000223;
+  color: #495057;
   font-weight: 500;
   margin: 0 0 1rem 0;
 }
@@ -224,7 +224,7 @@
 }
 
 .user-type-label {
-  background: #000223;
+  background: #495057;
   color: white;
   padding: 0.25rem 0.75rem;
   border-radius: 15px;
@@ -249,7 +249,7 @@
 }
 
 .skill-tag {
-  background: #000223;
+  background: #495057;
   color: white;
   padding: 0.25rem 0.75rem;
   border-radius: 15px;
@@ -258,7 +258,7 @@
 }
 
 .more-skills {
-  color: #000223;
+  color: #495057;
   font-size: 0.8rem;
   font-weight: 500;
 }

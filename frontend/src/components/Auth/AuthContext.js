@@ -62,14 +62,16 @@ export const AuthProvider = ({ children }) => {
       setUser(response.data);
       console.log('User fetched successfully:', response.data);
     } catch (error) {
-      console.error('Failed to fetch user:', error);
-      console.error('Error response:', error.response?.data);
-      console.error('Error status:', error.response?.status);
+      console.warn('Failed to fetch user:', error.message);
       
-      // If it's a 401/403 and we've exhausted refresh attempts, logout
-      if (error.response?.status === 401 || error.response?.status === 403) {
-        console.log('Authentication failed, logging out');
+      // Only logout if it's a definitive auth failure and we have tokens stored
+      if (error.response?.status === 401 && (localStorage.getItem('access') || localStorage.getItem('refresh'))) {
+        console.log('Authentication failed with stored tokens, logging out');
         logout();
+      } else {
+        // For other errors or when no tokens are stored, just clear user state
+        setUser(null);
+        setToken(null);
       }
     } finally {
       setLoading(false);
