@@ -11,8 +11,18 @@ const api = axios.create({
 // Request interceptor to add JWT token
 api.interceptors.request.use(
   config => {
-    const token = getAccessToken();
-    if (token) config.headers.Authorization = `Bearer ${token}`;
+    // Skip authentication for public routes
+    const publicRoutes = [
+      'public-profiles/',
+      'creative-assets/' // Creative assets should be publicly viewable
+    ];
+    
+    const isPublicRoute = publicRoutes.some(route => config.url.includes(route));
+    
+    if (!isPublicRoute) {
+      const token = getAccessToken();
+      if (token) config.headers.Authorization = `Bearer ${token}`;
+    }
     
     // For FormData uploads, let the browser set the Content-Type automatically
     if (config.data instanceof FormData) {
@@ -30,7 +40,15 @@ api.interceptors.response.use(
   async error => {
     const originalRequest = error.config;
     
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Skip token refresh for public routes
+    const publicRoutes = [
+      'public-profiles/',
+      'creative-assets/'
+    ];
+    
+    const isPublicRoute = publicRoutes.some(route => originalRequest.url.includes(route));
+    
+    if (error.response?.status === 401 && !originalRequest._retry && !isPublicRoute) {
       originalRequest._retry = true;
       
       try {
