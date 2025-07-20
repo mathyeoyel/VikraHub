@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { publicProfileAPI } from '../api';
+import { publicProfileAPI, assetAPI } from '../api';
 import './PublicProfile.css';
 
 const PublicProfile = () => {
   const { username } = useParams();
   const [profile, setProfile] = useState(null);
+  const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [assetsLoading, setAssetsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -15,10 +17,27 @@ const PublicProfile = () => {
         setLoading(true);
         const response = await publicProfileAPI.getByUsername(username);
         setProfile(response.data);
+        
+        // Fetch user's uploaded assets
+        await fetchUserAssets(response.data.user.id);
       } catch (err) {
         setError(err.response?.data?.detail || 'Profile not found');
       } finally {
         setLoading(false);
+      }
+    };
+
+    const fetchUserAssets = async (userId) => {
+      try {
+        setAssetsLoading(true);
+        // Fetch all assets and filter by user
+        const response = await assetAPI.getAll({ created_by: userId });
+        setAssets(response.data.results || response.data || []);
+      } catch (err) {
+        console.warn('Failed to fetch user assets:', err);
+        setAssets([]);
+      } finally {
+        setAssetsLoading(false);
       }
     };
 
@@ -237,6 +256,71 @@ const PublicProfile = () => {
               </div>
             ) : (
               <p className="no-content">No portfolio items to display yet.</p>
+            )}
+          </div>
+
+          {/* Marketplace Assets Section */}
+          <div className="profile-section">
+            <h3>Marketplace Assets</h3>
+            {assetsLoading ? (
+              <div className="loading-state">
+                <div className="loading-spinner"></div>
+                <p>Loading assets...</p>
+              </div>
+            ) : assets.length > 0 ? (
+              <div className="assets-grid">
+                {assets.map((asset) => (
+                  <div key={asset.id} className="asset-card">
+                    <div className="asset-image">
+                      {asset.preview_image ? (
+                        <img 
+                          src={asset.preview_image} 
+                          alt={asset.title}
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'flex';
+                          }}
+                        />
+                      ) : null}
+                      <div 
+                        className="asset-placeholder"
+                        style={{display: asset.preview_image ? 'none' : 'flex'}}
+                      >
+                        <i className="fas fa-cube"></i>
+                      </div>
+                    </div>
+                    <div className="asset-info">
+                      <h4>{asset.title}</h4>
+                      <p className="asset-description">{asset.description}</p>
+                      <div className="asset-meta">
+                        <span className="asset-type">{asset.asset_type}</span>
+                        {asset.price && (
+                          <span className="asset-price">${asset.price}</span>
+                        )}
+                      </div>
+                      <div className="asset-stats">
+                        {asset.download_count > 0 && (
+                          <span className="stat">
+                            <i className="fas fa-download"></i>
+                            {asset.download_count}
+                          </span>
+                        )}
+                        <span className="stat">
+                          <i className="fas fa-calendar"></i>
+                          {new Date(asset.created_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="no-assets">
+                <div className="no-assets-icon">
+                  <i className="fas fa-box-open"></i>
+                </div>
+                <p>No marketplace assets uploaded yet</p>
+              </div>
             )}
           </div>
 

@@ -263,6 +263,28 @@
   font-weight: 500;
 }
 
+.asset-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  margin: 0.75rem 0;
+  border: 1px solid #e9ecef;
+}
+
+.asset-count-icon {
+  font-size: 1rem;
+}
+
+.asset-count-text {
+  color: #495057;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
 .member-since {
   text-align: center;
   color: #718096;

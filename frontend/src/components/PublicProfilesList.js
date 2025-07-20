@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { publicProfileAPI } from '../api';
+import { publicProfileAPI, assetAPI } from '../api';
 import './PublicProfilesList.css';
 
 const PublicProfilesList = () => {
@@ -9,6 +9,7 @@ const PublicProfilesList = () => {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [userTypeFilter, setUserTypeFilter] = useState('');
+  const [assetCounts, setAssetCounts] = useState({});
 
   useEffect(() => {
     fetchProfiles();
@@ -25,7 +26,24 @@ const PublicProfilesList = () => {
         ? await publicProfileAPI.search(params)
         : await publicProfileAPI.getAll();
       
-      setProfiles(response.data.results || response.data);
+      const profilesData = response.data.results || response.data;
+      setProfiles(profilesData);
+
+      // Fetch asset counts for each profile
+      const counts = {};
+      await Promise.all(
+        profilesData.map(async (profile) => {
+          try {
+            const assetResponse = await assetAPI.getAll({ created_by: profile.user.id });
+            const assets = assetResponse.data.results || assetResponse.data || [];
+            counts[profile.user.id] = assets.length;
+          } catch (err) {
+            console.warn(`Failed to fetch asset count for user ${profile.user.id}:`, err);
+            counts[profile.user.id] = 0;
+          }
+        })
+      );
+      setAssetCounts(counts);
     } catch (err) {
       setError('Failed to load profiles');
     } finally {
@@ -187,6 +205,17 @@ const PublicProfilesList = () => {
                     )}
                   </div>
                 )}
+
+                {/* Asset Count */}
+                <div className="asset-count">
+                  <span className="asset-count-icon">📦</span>
+                  <span className="asset-count-text">
+                    {assetCounts[profile.user.id] !== undefined 
+                      ? `${assetCounts[profile.user.id]} asset${assetCounts[profile.user.id] !== 1 ? 's' : ''}`
+                      : 'Loading assets...'
+                    }
+                  </span>
+                </div>
 
                 <p className="member-since">
                   Member since {formatDate(profile.member_since)}
