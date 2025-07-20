@@ -287,8 +287,8 @@ body {
 
 .footer-content {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 3rem;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2.5rem;
   margin-bottom: 2rem;
   position: relative;
   z-index: 1;
@@ -350,55 +350,34 @@ body {
 }
 
 /* Social Media Styles */
-.social-media {
-  margin-top: 1.5rem;
-}
-
-.social-media h5 {
-  color: white;
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  letter-spacing: 0.5px;
-}
-
 .social-links {
   display: flex;
-  gap: 1rem;
-  align-items: center;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
 }
 
 .social-link {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  color: #ffa000;
-  background: transparent !important;
-  border: 2px solid #ffa000;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
   transition: all 0.3s ease;
-  font-size: 1.2rem;
-  box-shadow: none !important;
+  font-size: 0.9rem;
+  padding: 0.25rem 0;
 }
 
 .social-link:hover {
-  color: white;
-  background: #ffa000;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(255, 160, 0, 0.4);
+  color: var(--primary-color);
+  transform: translateX(5px);
 }
 
-.social-link.facebook:hover,
-.social-link.instagram:hover,
-.social-link.linkedin:hover,
-.social-link.twitter:hover {
-  color: white;
-  background: #ffa000;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(255, 160, 0, 0.4);
+.social-link svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  flex-shrink: 0;
 }
 
 .footer-bottom {
@@ -411,6 +390,13 @@ body {
 }
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .footer-content {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
 @media (max-width: 1024px) {
   .footer-content {
     grid-template-columns: repeat(2, 1fr);
@@ -488,10 +474,6 @@ body {
     text-align: left;
     gap: 2rem;
   }
-  
-  .social-links {
-    justify-content: flex-start;
-  }
 }
 
 @media (max-width: 480px) {
@@ -520,6 +502,7 @@ body {
   
   .social-links {
     justify-content: center;
+    align-items: center;
   }
   
   .container {
