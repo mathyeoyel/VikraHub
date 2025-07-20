@@ -82,7 +82,7 @@ function Home() {
         </section>
 
         {/* Our Services Section */}
-        <section className="services-section">
+        <section className="services-overview">
           <div className="container">
             <div className="section-header">
               <h2>Our Services</h2>
@@ -110,7 +110,7 @@ function Home() {
                 <p>Access curated galleries, creative guides, and resources made for and by local talent.</p>
               </div>
               <div className="service-card">
-                <div className="service-icon">�</div>
+                <div className="service-icon">🎓</div>
                 <h3>Workshops & Events</h3>
                 <p>Participate in exclusive skill-building workshops, creative challenges, and community events.</p>
               </div>

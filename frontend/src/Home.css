@@ -445,6 +445,33 @@
   font-weight: bold;
 }
 
+/* Services CTA */
+.services-cta {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.services-btn {
+  display: inline-block;
+  background: var(--primary-color);
+  color: var(--dark-color);
+  padding: 1rem 2.5rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 160, 0, 0.3);
+}
+
+.services-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 160, 0, 0.4);
+  color: var(--dark-color);
+  text-decoration: none;
+}
+
 /* Marketplace Preview Section */
 .marketplace-preview {
   padding: 5rem 0;
