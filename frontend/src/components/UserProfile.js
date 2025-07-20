@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from './Auth/AuthContext';
-import { userAPI, notificationAPI, blogAPI, portfolioAPI } from '../api';
+import { userAPI, notificationAPI, blogAPI, portfolioAPI, assetAPI } from '../api';
 import EditProfile from './EditProfile';
 import AssetUpload from './Marketplace/AssetUpload';
 import './UserProfile.css';
@@ -19,10 +19,10 @@ const UserProfile = () => {
     totalEarnings: 0,
     totalPurchases: 0,
     portfolioItems: 0,
-    blogPosts: 0
+    blogPosts: 0,
+    uploadedAssets: 0
   });
   const [loading, setLoading] = useState(true);
-  const [showEditProfile, setShowEditProfile] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [updateNotification, setUpdateNotification] = useState(null);
@@ -39,16 +39,46 @@ const UserProfile = () => {
     try {
       if (showLoader) setLoading(true);
       
-      const [profileRes, notificationsRes, blogRes, portfolioRes] = await Promise.all([
+      console.log('Fetching dashboard data for user:', user.username);
+      
+      const [profileRes, notificationsRes, blogRes, portfolioRes, assetsRes] = await Promise.all([
         userAPI.getMyProfile(),
-        notificationAPI.getAll(),
-        blogAPI.getMyPosts(),
-        portfolioAPI.getAll()
+        notificationAPI.getAll().catch(err => {
+          console.warn('Failed to fetch notifications:', err);
+          return { data: [] };
+        }),
+        blogAPI.getMyPosts().catch(err => {
+          console.warn('Failed to fetch blog posts:', err);
+          return { data: [] };
+        }),
+        portfolioAPI.getAll().catch(err => {
+          console.warn('Failed to fetch portfolio:', err);
+          return { data: [] };
+        }),
+        assetAPI.getMyAssets().catch(err => {
+          console.warn('Failed to fetch assets:', err);
+          return { data: [] };
+        })
       ]);
 
       // Only update state if component is still active
       if (isActiveRef.current) {
-        setProfile(profileRes.data);
+        const profileData = profileRes.data;
+        setProfile(profileData);
+        
+        // Enhanced debug logging
+        console.log('Complete Profile data received:', {
+          profileData,
+          avatar: profileData?.avatar,
+          avatar_small: profileData?.avatar_small,
+          avatar_medium: profileData?.avatar_medium,
+          avatar_large: profileData?.avatar_large,
+          user: profileData?.user,
+          first_name: profileData?.first_name,
+          last_name: profileData?.last_name,
+          email: profileData?.email
+        });
+        
         setNotifications(notificationsRes.data?.slice(0, 5) || []);
         setRecentActivity([
           ...blogRes.data?.slice(0, 3).map(post => ({
@@ -62,6 +92,12 @@ const UserProfile = () => {
             title: `Added to portfolio: ${item.title}`,
             date: item.created_at,
             icon: '🎨'
+          })) || [],
+          ...assetsRes.data?.slice(0, 3).map(asset => ({
+            type: 'asset',
+            title: `Uploaded asset: ${asset.title}`,
+            date: asset.created_at,
+            icon: '🎨'
           })) || []
         ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5));
 
@@ -71,16 +107,31 @@ const UserProfile = () => {
           totalEarnings: 0,
           totalPurchases: 0,
           portfolioItems: portfolioRes.data?.length || 0,
-          blogPosts: blogRes.data?.length || 0
+          blogPosts: blogRes.data?.length || 0,
+          uploadedAssets: assetsRes.data?.length || 0
         });
 
         setLastUpdated(new Date());
       }
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
+      
+      // More detailed error logging
+      if (error.response) {
+        console.error('API Error Response:', {
+          status: error.response.status,
+          statusText: error.response.statusText,
+          data: error.response.data
+        });
+      }
+      
       // Show user-friendly error message for network issues
       if (!navigator.onLine) {
         console.warn('User is offline, will retry when back online');
+      } else if (error.response?.status === 401) {
+        console.warn('User authentication expired, please login again');
+      } else if (error.response?.status >= 500) {
+        console.warn('Server error, will retry automatically');
       }
     } finally {
       if (showLoader && isActiveRef.current) {
@@ -122,6 +173,10 @@ const UserProfile = () => {
             case 'portfolio_updated':
               fetchDashboardData(false); // Refresh all data
               showUpdateNotification('Portfolio updated');
+              break;
+            case 'asset_uploaded':
+              fetchDashboardData(false); // Refresh all data
+              showUpdateNotification('New asset uploaded');
               break;
             case 'stats_updated':
               setStats(prev => ({ ...prev, ...data.stats }));
@@ -183,6 +238,21 @@ const UserProfile = () => {
     };
   }, [fetchDashboardData, setupWebSocket]);
 
+  // Periodic refresh function
+  const startPeriodicRefresh = useCallback(() => {
+    // Clear existing interval
+    if (refreshIntervalRef.current) {
+      clearInterval(refreshIntervalRef.current);
+    }
+
+    // Set up new interval for periodic refresh (every 30 seconds)
+    refreshIntervalRef.current = setInterval(() => {
+      if (isActiveRef.current && navigator.onLine) {
+        fetchDashboardData(false);
+      }
+    }, 30000); // 30 seconds
+  }, [fetchDashboardData]);
+
   // Handle page visibility changes (pause updates when tab is not active)
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -203,23 +273,9 @@ const UserProfile = () => {
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [fetchDashboardData]);
+  }, [fetchDashboardData, startPeriodicRefresh]);
 
-  // Periodic refresh function
-  const startPeriodicRefresh = useCallback(() => {
-    // Clear existing interval
-    if (refreshIntervalRef.current) {
-      clearInterval(refreshIntervalRef.current);
-    }
-
-    // Set up new interval for periodic refresh (every 30 seconds)
-    refreshIntervalRef.current = setInterval(() => {
-      if (isActiveRef.current && navigator.onLine) {
-        fetchDashboardData(false);
-      }
-    }, 30000); // 30 seconds
-  }, [fetchDashboardData]);
-
+  // Handle visibility changes
   useEffect(() => {
     if (user) {
       fetchDashboardData(true);
@@ -258,8 +314,12 @@ const UserProfile = () => {
   };
 
   const handleProfileUpdate = (updatedProfile) => {
+    console.log('Profile updated:', updatedProfile);
     setProfile(updatedProfile);
-    fetchDashboardData(false);
+    // Also refresh to get any server-side processed data
+    setTimeout(() => {
+      refreshProfileData();
+    }, 1000);
   };
 
   const getWelcomeMessage = () => {
@@ -291,7 +351,22 @@ const UserProfile = () => {
 
   // Manual refresh function
   const handleManualRefresh = () => {
+    console.log('Manual refresh triggered');
     fetchDashboardData(true);
+  };
+
+  // Profile-specific refresh function
+  const refreshProfileData = async () => {
+    if (!user) return;
+    
+    try {
+      console.log('Refreshing profile data specifically...');
+      const profileRes = await userAPI.getMyProfile();
+      setProfile(profileRes.data);
+      console.log('Profile refreshed:', profileRes.data);
+    } catch (error) {
+      console.error('Failed to refresh profile:', error);
+    }
   };
 
   // Show temporary notification for updates
@@ -335,25 +410,61 @@ const UserProfile = () => {
         <div className="profile-header">
           <div className="profile-info">
             <div className="avatar-container">
-              {profile?.avatar ? (
-                <img src={profile.avatar} alt={user?.username} className="profile-avatar" />
-              ) : (
-                <div className="default-avatar">
-                  {user?.first_name?.[0] || user?.username?.[0] || 'U'}
-                </div>
-              )}
+              {(profile?.avatar || profile?.avatar_medium || profile?.avatar_small) ? (
+                <img 
+                  src={profile?.avatar_medium || profile?.avatar || profile?.avatar_small} 
+                  alt={user?.username || profile?.first_name || 'User'} 
+                  className="profile-avatar"
+                  onError={(e) => {
+                    console.log('Primary avatar failed to load, trying fallback...');
+                    const fallbacks = [
+                      profile?.avatar_small,
+                      profile?.avatar_large,
+                      profile?.avatar
+                    ].filter(Boolean);
+                    
+                    if (fallbacks.length > 0 && e.target.src !== fallbacks[0]) {
+                      e.target.src = fallbacks[0];
+                    } else {
+                      console.log('All avatar sources failed, showing default avatar');
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }
+                  }}
+                  onLoad={() => {
+                    console.log('Avatar loaded successfully:', profile?.avatar_medium || profile?.avatar || profile?.avatar_small);
+                  }}
+                />
+              ) : null}
+              <div 
+                className="default-avatar"
+                style={{ 
+                  display: (profile?.avatar || profile?.avatar_medium || profile?.avatar_small) ? 'none' : 'flex' 
+                }}
+              >
+                {profile?.first_name?.[0] || user?.first_name?.[0] || user?.username?.[0] || 'U'}
+              </div>
             </div>
             <div className="user-details">
-              <h1>{user?.first_name && user?.last_name ? 
-                `${user.first_name} ${user.last_name}` : 
-                user?.username}</h1>
-              <p className="user-email">{user?.email}</p>
+              <h1>
+                {(profile?.first_name && profile?.last_name) ? 
+                  `${profile.first_name} ${profile.last_name}` :
+                  (user?.first_name && user?.last_name) ? 
+                    `${user.first_name} ${user.last_name}` : 
+                    (profile?.first_name || user?.first_name) ?
+                      (profile?.first_name || user?.first_name) :
+                      user?.username}
+              </h1>
+              <p className="user-email">{profile?.email || user?.email}</p>
               <div className="user-stats">
                 <span className="stat-item">
                   <strong>{stats.portfolioItems}</strong> Portfolio Items
                 </span>
                 <span className="stat-item">
                   <strong>{stats.blogPosts}</strong> Blog Posts
+                </span>
+                <span className="stat-item">
+                  <strong>{stats.uploadedAssets}</strong> Uploaded Assets
                 </span>
               </div>
             </div>
@@ -378,6 +489,21 @@ const UserProfile = () => {
                 title="Refresh data"
               >
                 {loading ? '↻' : '🔄'}
+              </button>
+              <button 
+                className="profile-refresh-btn"
+                onClick={refreshProfileData}
+                title="Refresh profile data"
+                style={{
+                  marginLeft: '0.5rem',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  opacity: 0.7
+                }}
+              >
+                👤
               </button>
             </div>
           </div>
@@ -420,6 +546,13 @@ const UserProfile = () => {
                   <div className="stat-info">
                     <h3>{stats.blogPosts}</h3>
                     <p>Blog Posts</p>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon">🏪</div>
+                  <div className="stat-info">
+                    <h3>{stats.uploadedAssets}</h3>
+                    <p>Uploaded Assets</p>
                   </div>
                 </div>
                 <div className="stat-card">

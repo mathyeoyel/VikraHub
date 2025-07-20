@@ -96,6 +96,15 @@
   border-radius: 50%;
   object-fit: cover;
   border: 4px solid var(--primary-color);
+  background: #f0f0f0;
+  display: block;
+}
+
+.profile-avatar:not([src]),
+.profile-avatar[src=""],
+.profile-avatar[src="null"],
+.profile-avatar[src="undefined"] {
+  display: none;
 }
 
 .default-avatar {
