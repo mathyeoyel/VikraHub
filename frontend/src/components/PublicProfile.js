@@ -30,9 +30,16 @@ const PublicProfile = () => {
     const fetchUserAssets = async (userId) => {
       try {
         setAssetsLoading(true);
-        // Fetch all assets and filter by user
-        const response = await assetAPI.getAll({ created_by: userId });
-        setAssets(response.data.results || response.data || []);
+        // Fetch all assets and filter by the specific user
+        const response = await assetAPI.getAll();
+        const allAssets = response.data.results || response.data || [];
+        
+        // Filter assets to only show those created/sold by this specific user
+        // The backend uses 'seller' field for the asset creator
+        const userAssets = allAssets.filter(asset => asset.seller === userId);
+        
+        console.log(`Found ${userAssets.length} assets for user ${userId}`);
+        setAssets(userAssets);
       } catch (err) {
         console.warn('Failed to fetch user assets:', err);
         setAssets([]);
