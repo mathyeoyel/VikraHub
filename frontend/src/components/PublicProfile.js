@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { publicProfileAPI } from '../api';
+import { publicProfileAPI, assetAPI } from '../api';
 import './PublicProfile.css';
 
 const PublicProfile = () => {
@@ -8,6 +8,8 @@ const PublicProfile = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [assets, setAssets] = useState([]);
+  const [assetsLoading, setAssetsLoading] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -15,10 +17,27 @@ const PublicProfile = () => {
         setLoading(true);
         const response = await publicProfileAPI.getByUsername(username);
         setProfile(response.data);
+        
+        // Fetch user's uploaded assets to include in portfolio
+        await fetchUserAssets(response.data.user.id);
       } catch (err) {
         setError(err.response?.data?.detail || 'Profile not found');
       } finally {
         setLoading(false);
+      }
+    };
+
+    const fetchUserAssets = async (userId) => {
+      try {
+        setAssetsLoading(true);
+        // Fetch all assets and filter by user
+        const response = await assetAPI.getAll({ created_by: userId });
+        setAssets(response.data.results || response.data || []);
+      } catch (err) {
+        console.warn('Failed to fetch user assets:', err);
+        setAssets([]);
+      } finally {
+        setAssetsLoading(false);
       }
     };
 
@@ -200,43 +219,113 @@ const PublicProfile = () => {
           {/* Portfolio Section */}
           <div className="profile-section">
             <h3>Portfolio</h3>
-            {profile.portfolio_items && profile.portfolio_items.length > 0 ? (
-              <div className="portfolio-grid">
-                {profile.portfolio_items.map((item) => (
-                  <div key={item.id} className="portfolio-item">
-                    {item.image && (
-                      <div className="portfolio-image">
-                        <img src={item.image} alt={item.title} />
-                      </div>
-                    )}
-                    <div className="portfolio-content">
-                      <h4>{item.title}</h4>
-                      <p>{item.description}</p>
-                      {item.tags_list && item.tags_list.length > 0 && (
-                        <div className="portfolio-tags">
-                          {item.tags_list.map((tag, index) => (
-                            <span key={index} className="portfolio-tag">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                      {item.url && (
-                        <a 
-                          href={item.url} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="portfolio-link"
-                        >
-                          View Project →
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                ))}
+            {assetsLoading ? (
+              <div className="loading-state">
+                <div className="loading-spinner"></div>
+                <p>Loading portfolio...</p>
               </div>
             ) : (
-              <p className="no-content">No portfolio items to display yet.</p>
+              <>
+                {/* Manual Portfolio Items */}
+                {profile.portfolio_items && profile.portfolio_items.length > 0 && (
+                  <div className="portfolio-subsection">
+                    <h4 className="portfolio-subsection-title">Projects</h4>
+                    <div className="portfolio-grid">
+                      {profile.portfolio_items.map((item) => (
+                        <div key={`portfolio-${item.id}`} className="portfolio-item">
+                          {item.image && (
+                            <div className="portfolio-image">
+                              <img src={item.image} alt={item.title} />
+                            </div>
+                          )}
+                          <div className="portfolio-content">
+                            <h4>{item.title}</h4>
+                            <p>{item.description}</p>
+                            {item.tags_list && item.tags_list.length > 0 && (
+                              <div className="portfolio-tags">
+                                {item.tags_list.map((tag, index) => (
+                                  <span key={index} className="portfolio-tag">
+                                    {tag}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                            {item.url && (
+                              <a 
+                                href={item.url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="portfolio-link"
+                              >
+                                View Project →
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Marketplace Assets */}
+                {assets && assets.length > 0 && (
+                  <div className="portfolio-subsection">
+                    <h4 className="portfolio-subsection-title">Marketplace Assets</h4>
+                    <div className="portfolio-grid">
+                      {assets.map((asset) => (
+                        <div key={`asset-${asset.id}`} className="portfolio-item asset-item">
+                          <div className="portfolio-image">
+                            {asset.preview_image ? (
+                              <img 
+                                src={asset.preview_image} 
+                                alt={asset.title}
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  e.target.nextSibling.style.display = 'flex';
+                                }}
+                              />
+                            ) : null}
+                            <div 
+                              className="asset-placeholder"
+                              style={{display: asset.preview_image ? 'none' : 'flex'}}
+                            >
+                              <i className="fas fa-cube"></i>
+                            </div>
+                          </div>
+                          <div className="portfolio-content">
+                            <h4>{asset.title}</h4>
+                            <p>{asset.description}</p>
+                            <div className="asset-meta">
+                              <span className="asset-type-badge">{asset.asset_type}</span>
+                              {asset.price && (
+                                <span className="asset-price">${asset.price}</span>
+                              )}
+                            </div>
+                            <div className="asset-stats">
+                              {asset.download_count > 0 && (
+                                <span className="stat">
+                                  <i className="fas fa-download"></i>
+                                  {asset.download_count}
+                                </span>
+                              )}
+                              <span className="stat">
+                                <i className="fas fa-calendar"></i>
+                                {new Date(asset.created_at).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* No Portfolio Content */}
+                {(!profile.portfolio_items || profile.portfolio_items.length === 0) && 
+                 (!assets || assets.length === 0) && (
+                  <p className="no-content">No portfolio items to display yet.</p>
+                )}
+              </>
             )}
           </div>
 
