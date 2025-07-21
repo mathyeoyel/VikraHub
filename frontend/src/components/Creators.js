@@ -46,67 +46,115 @@ const Creators = () => {
     },
     {
       id: 4,
-      name: "Mary Adut",
-      title: "Fashion Designer",
+      name: "Buay Moses",
+      title: "Entrepreneur",
       location: "Juba",
-      category: "Fashion",
+      category: "Business",
       image: "/assets/creator-placeholder.jpg",
-      bio: "I create clothing that celebrates our rich cultural heritage while embracing modern trends.",
-      specialties: ["Traditional Wear", "Modern Fashion", "Textile Design"],
-      yearsExperience: 3,
+      bio: "Building innovative businesses that drive economic growth and create opportunities in South Sudan.",
+      specialties: ["Business Development", "Startup Strategy", "Innovation"],
+      yearsExperience: 5,
       featured: false
     },
     {
       id: 5,
-      name: "John Garang",
-      title: "Musician & Producer",
-      location: "Wau",
-      category: "Music",
+      name: "John Marit",
+      title: "Developer",
+      location: "Juba",
+      category: "Technology",
       image: "/assets/creator-placeholder.jpg",
-      bio: "Music is the heartbeat of our culture. I compose melodies that tell our stories.",
-      specialties: ["Music Production", "Traditional Instruments", "Sound Engineering"],
-      yearsExperience: 8,
-      featured: false
-    },
-    {
-      id: 6,
-      name: "Rebecca Deng",
-      title: "Writer & Storyteller",
-      location: "Malakal",
-      category: "Writing",
-      image: "/assets/creator-placeholder.jpg",
-      bio: "Words are my paintbrush. I craft stories that preserve our history and inspire our future.",
-      specialties: ["Creative Writing", "Journalism", "Oral History"],
-      yearsExperience: 7,
-      featured: false
-    },
-    {
-      id: 7,
-      name: "David Majok",
-      title: "Video Creator",
-      location: "Bentiu",
-      category: "Video",
-      image: "/assets/creator-placeholder.jpg",
-      bio: "Through film, I capture the beauty and complexity of South Sudanese life.",
-      specialties: ["Documentary", "Music Videos", "Social Media Content"],
+      bio: "Developing cutting-edge software solutions that solve real-world problems in our community.",
+      specialties: ["Software Development", "Mobile Apps", "System Architecture"],
       yearsExperience: 4,
       featured: false
     },
     {
-      id: 8,
-      name: "Grace Nyong",
-      title: "Digital Artist",
-      location: "Torit",
+      id: 6,
+      name: "Ayen",
+      title: "Digital Creator",
+      location: "Juba",
       category: "Digital Art",
       image: "/assets/creator-placeholder.jpg",
-      bio: "I create digital masterpieces that blend traditional African art with modern techniques.",
-      specialties: ["Digital Painting", "3D Art", "Animation"],
+      bio: "Creating compelling digital content that tells our stories and connects with audiences worldwide.",
+      specialties: ["Content Creation", "Social Media", "Digital Marketing"],
       yearsExperience: 3,
+      featured: false
+    },
+    {
+      id: 7,
+      name: "Grace Paskal",
+      title: "Tech Enthusiast",
+      location: "Juba",
+      category: "Technology",
+      image: "/assets/creator-placeholder.jpg",
+      bio: "Passionate about leveraging technology to empower communities and drive positive change.",
+      specialties: ["Tech Innovation", "Community Outreach", "Digital Literacy"],
+      yearsExperience: 3,
+      featured: false
+    },
+    {
+      id: 8,
+      name: "James Mayen",
+      title: "Tech Enthusiast",
+      location: "Wau",
+      category: "Technology",
+      image: "/assets/creator-placeholder.jpg",
+      bio: "Exploring emerging technologies and their potential to transform our digital landscape.",
+      specialties: ["Emerging Tech", "Research", "Tech Education"],
+      yearsExperience: 2,
+      featured: false
+    },
+    {
+      id: 9,
+      name: "Barnabas Malek",
+      title: "Web Designer",
+      location: "Juba",
+      category: "Design",
+      image: "/assets/creator-placeholder.jpg",
+      bio: "Designing beautiful and functional websites that showcase the best of South Sudanese creativity.",
+      specialties: ["Web Design", "UI Design", "Responsive Design"],
+      yearsExperience: 4,
+      featured: false
+    },
+    {
+      id: 10,
+      name: "Pal James",
+      title: "Brand Specialist",
+      location: "Juba",
+      category: "Design",
+      image: "/assets/creator-placeholder.jpg",
+      bio: "Building strong brand identities that resonate with audiences and drive business success.",
+      specialties: ["Brand Strategy", "Visual Identity", "Brand Management"],
+      yearsExperience: 5,
+      featured: false
+    },
+    {
+      id: 11,
+      name: "Thomas Obotte",
+      title: "Cyber Analyst",
+      location: "Juba",
+      category: "Technology",
+      image: "/assets/creator-placeholder.jpg",
+      bio: "Protecting digital infrastructure and ensuring cybersecurity for a safer online environment.",
+      specialties: ["Cybersecurity", "Threat Analysis", "Digital Forensics"],
+      yearsExperience: 6,
+      featured: false
+    },
+    {
+      id: 12,
+      name: "Wai Mike",
+      title: "Digital Artist",
+      location: "Malakal",
+      category: "Digital Art",
+      image: "/assets/creator-placeholder.jpg",
+      bio: "Creating stunning digital artworks that blend traditional South Sudanese culture with modern techniques.",
+      specialties: ["Digital Illustration", "Concept Art", "Visual Effects"],
+      yearsExperience: 4,
       featured: false
     }
   ];
 
-  const categories = ['All', 'Photography', 'Design', 'Technology', 'Fashion', 'Music', 'Writing', 'Video', 'Digital Art'];
+  const categories = ['All', 'Photography', 'Design', 'Technology', 'Business', 'Digital Art'];
 
   // Filter creators based on category and search term
   const filteredCreators = creators.filter(creator => {
