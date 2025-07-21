@@ -166,31 +166,31 @@ function Home() {
             <div className="collections-grid">
               <div className="collection-card">
                 <div className="collection-image">
-                  <img src={require('./assets/img/urban_life_juba.jpg')} alt="Urban Life in Juba" />
+                  <img src="/assets/collection-urban.jpg" alt="Urban Life in Juba" />
                 </div>
                 <h3>Urban Life in Juba</h3>
               </div>
               <div className="collection-card">
                 <div className="collection-image">
-                  <img src={require('./assets/img/Traditional_patterns_&_motifs.jpg')} alt="Traditional Patterns & Motifs" />
+                  <img src="/assets/collection-patterns.jpg" alt="Traditional Patterns & Motifs" />
                 </div>
                 <h3>Traditional Patterns & Motifs</h3>
               </div>
               <div className="collection-card">
                 <div className="collection-image">
-                  <img src={require('./assets/img/youth_voices.jpg')} alt="Youth Voices" />
+                  <img src="/assets/collection-youth.jpg" alt="Youth Voices" />
                 </div>
                 <h3>Youth Voices</h3>
               </div>
               <div className="collection-card">
                 <div className="collection-image">
-                  <img src={require('./assets/img/sswildlife.jpg')} alt="Wildlife & Nature" />
+                  <img src="/assets/collection-wildlife.jpg" alt="Wildlife & Nature" />
                 </div>
                 <h3>Wildlife & Nature</h3>
               </div>
               <div className="collection-card">
                 <div className="collection-image">
-                  <img src={require('./assets/img/women_in_art.jpg')} alt="Women in Art" />
+                  <img src="/assets/collection-women.jpg" alt="Women in Art" />
                 </div>
                 <h3>Women in Art</h3>
               </div>
