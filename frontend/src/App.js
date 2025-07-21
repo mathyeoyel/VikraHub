@@ -15,6 +15,7 @@ import AdminDashboard from "./components/Admin/AdminDashboard";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import AssetsMarketplace from "./components/Marketplace/AssetsMarketplace";
 import Freelance from "./components/Freelance";
+import Creators from "./components/Creators";
 import Login from "./Login";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/team" element={<Team />} />
+            <Route path="/creators" element={<Creators />} />
             <Route path="/members" element={<PublicProfilesList />} />
             <Route path="/profile/:username" element={<PublicProfile />} />
             <Route path="/marketplace" element={<AssetsMarketplace />} />
