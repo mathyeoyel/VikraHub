@@ -50,7 +50,7 @@ const Creators = () => {
       title: "Entrepreneur",
       location: "Juba",
       category: "Business",
-      image: require('../assets/jacklham.jpg'),
+      image: require('../assets/buay_moses.jpg'),
       bio: "Building innovative businesses that drive economic growth and create opportunities in South Sudan.",
       specialties: ["Business Development", "Startup Strategy", "Innovation"],
       yearsExperience: 5,
