@@ -46,7 +46,10 @@ const Layout = ({ children }) => {
             <span></span>
           </button>
           <nav className={`nav ${isMenuOpen ? 'nav-open' : ''}`}>
-            <Link to="/" className="nav-link" onClick={() => setIsMenuOpen(false)}>Home</Link>
+            <a href="/" className="nav-link" onClick={() => {
+              setIsMenuOpen(false);
+              window.location.reload();
+            }}>Home</a>
             <Link to="/members" className="nav-link" onClick={() => setIsMenuOpen(false)}>Explore Creators</Link>
             <Link to="/marketplace" className="nav-link" onClick={() => setIsMenuOpen(false)}>Inspiration</Link>
             <Link to="/freelance" className="nav-link" onClick={() => setIsMenuOpen(false)}>Freelance</Link>
