@@ -8,7 +8,7 @@
 .cover-banner {
   position: relative;
   height: 300px;
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  background: #000223;
   overflow: hidden;
 }
 
@@ -24,7 +24,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+  background: #000223;
+  opacity: 0.1;
 }
 
 /* Profile Header Section */
@@ -135,12 +136,12 @@
 }
 
 .btn-primary {
-  background: #007bff;
+  background: #7c521b;
   color: white;
 }
 
 .btn-primary:hover {
-  background: #0056b3;
+  background: #7c521b;
   transform: translateY(-2px);
 }
 
