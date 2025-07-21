@@ -32,7 +32,6 @@ function App() {
             <Route path="/blog" element={<Blog />} />
             <Route path="/team" element={<Team />} />
             <Route path="/creators" element={<Creators />} />
-            <Route path="/members" element={<PublicProfilesList />} />
             <Route path="/profile/:username" element={<PublicProfile />} />
             <Route path="/marketplace" element={<AssetsMarketplace />} />
             <Route path="/freelance" element={<Freelance />} />

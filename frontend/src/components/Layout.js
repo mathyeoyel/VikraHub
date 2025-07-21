@@ -50,7 +50,7 @@ const Layout = ({ children }) => {
               setIsMenuOpen(false);
               window.location.reload();
             }}>Home</a>
-            <Link to="/members" className="nav-link" onClick={() => setIsMenuOpen(false)}>Explore Creators</Link>
+            <Link to="/creators" className="nav-link" onClick={() => setIsMenuOpen(false)}>Explore Creators</Link>
             <Link to="/marketplace" className="nav-link" onClick={() => setIsMenuOpen(false)}>Inspiration</Link>
             <Link to="/freelance" className="nav-link" onClick={() => setIsMenuOpen(false)}>Freelance</Link>
             <Link to="/services" className="nav-link" onClick={() => setIsMenuOpen(false)}>Services</Link>

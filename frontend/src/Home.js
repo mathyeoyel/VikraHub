@@ -17,7 +17,7 @@ function Home() {
                 </p>
                 <div className="hero-buttons">
                   <Link to="/marketplace" className="hero-btn hero-btn-primary">Get Started</Link>
-                  <Link to="/members" className="hero-btn hero-btn-secondary">Explore Creators</Link>
+                  <Link to="/creators" className="hero-btn hero-btn-secondary">Explore Creators</Link>
                 </div>
               </div>
               <div className="hero-image">
