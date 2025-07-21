@@ -133,23 +133,23 @@ function Home() {
                 </div>
                 <h3>Akon Peter</h3>
                 <p className="creator-title">Photographer | Juba</p>
-                <p className="creator-quote">"I capture the spirit and resilience of my community through my lens."</p>
+                <p className="creator-quote">"Through my lens, I tell stories of resilience and the vibrant spirit of my community."</p>
               </div>
               <div className="creator-card">
                 <div className="creator-avatar">
                   <img src="/assets/creator-placeholder.jpg" alt="Maduot Chongo" />
                 </div>
                 <h3>Maduot Chongo</h3>
-                <p className="creator-title">Illustrator | Gudele</p>
-                <p className="creator-quote">"Art is my language—I want the world to hear our stories."</p>
+                <p className="creator-title">Designer | Gudele</p>
+                <p className="creator-quote">"Art is my universal language—I use creativity to share our stories with the world."</p>
               </div>
               <div className="creator-card">
                 <div className="creator-avatar">
-                  <img src="/assets/creator-placeholder.jpg" alt="Nyadak Chol" />
+                  <img src="/assets/creator-placeholder.jpg" alt="Awut Paul" />
                 </div>
-                <h3>Nyadak Chol</h3>
-                <p className="creator-title">Fashion Designer | Munuki</p>
-                <p className="creator-quote">"I design clothing that celebrates our culture and heritage."</p>
+                <h3>Awut Paul</h3>
+                <p className="creator-title">Programmer | Munuki</p>
+                <p className="creator-quote">"I blend technology and culture, building digital solutions that reflect and celebrate our heritage."</p>
               </div>
             </div>
             <div className="creators-cta">
