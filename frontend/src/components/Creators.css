@@ -315,18 +315,6 @@
   border: 4px solid #ffa000;
 }
 
-.featured-badge {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: #ffa000;
-  color: white;
-  padding: 0.3rem 0.6rem;
-  border-radius: 15px;
-  font-size: 0.7rem;
-  font-weight: 600;
-}
-
 .creator-details h3 {
   font-size: 1.3rem;
   font-weight: 600;

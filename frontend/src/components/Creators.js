@@ -218,7 +218,6 @@ const Creators = () => {
               <div key={creator.id} className="creator-card">
                 <div className="creator-avatar">
                   <img src={creator.image} alt={creator.name} />
-                  {creator.featured && <span className="featured-badge">⭐ Featured</span>}
                 </div>
                 <div className="creator-details">
                   <h3>{creator.name}</h3>
