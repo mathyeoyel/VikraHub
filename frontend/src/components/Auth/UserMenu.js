@@ -56,7 +56,7 @@ const UserMenu = () => {
             <span className="dropdown-icon">👤</span>
             My Profile
           </Link>
-          <Link to="/profile" className="user-dropdown-item" onClick={() => setIsOpen(false)}>
+          <Link to="/dashboard" className="user-dropdown-item" onClick={() => setIsOpen(false)}>
             <span className="dropdown-icon">📊</span>
             Dashboard
           </Link>

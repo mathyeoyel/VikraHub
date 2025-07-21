@@ -5,12 +5,12 @@ import Layout from './components/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
 import Home from "./Home";
 import Team from "./Team";
-import UserProfile from "./components/UserProfile";
+import Profile from "./components/Profile";
+import Dashboard from "./components/Dashboard";
 import Services from "./components/Services";
 import Portfolio from "./components/Portfolio";
 import Blog from "./components/Blog";
 import PublicProfile from "./components/PublicProfile";
-import PublicProfilesList from "./components/PublicProfilesList";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import AssetsMarketplace from "./components/Marketplace/AssetsMarketplace";
@@ -42,7 +42,7 @@ function App() {
               path="/profile"
               element={
                 <ProtectedRoute>
-                  <UserProfile />
+                  <Profile />
                 </ProtectedRoute>
               }
             />
@@ -50,7 +50,7 @@ function App() {
               path="/dashboard"
               element={
                 <ProtectedRoute>
-                  <UserProfile />
+                  <Dashboard />
                 </ProtectedRoute>
               }
             />
@@ -58,7 +58,7 @@ function App() {
               path="/upload-asset"
               element={
                 <ProtectedRoute>
-                  <UserProfile />
+                  <Dashboard />
                 </ProtectedRoute>
               }
             />
