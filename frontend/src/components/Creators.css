@@ -38,11 +38,15 @@
   text-align: center;
 }
 
-.stat-number {
+.creators-hero .stat-number {
   display: block;
   font-size: 2.5rem;
   font-weight: 700;
   color: #ffffff !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-clip: initial !important;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   margin-bottom: 0.5rem;
 }
