@@ -132,6 +132,7 @@
   height: 60px;
   background: rgba(255, 160, 0, 0.1);
   -webkit-backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-radius: 15px;
   display: flex;

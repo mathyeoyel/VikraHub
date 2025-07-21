@@ -129,7 +129,7 @@ function Home() {
             <div className="creators-grid">
               <div className="creator-card">
                 <div className="creator-avatar">
-                  <img src="/assets/creator-placeholder.jpg" alt="Akon Peter" />
+                  <img src={require('./assets/Akon-peter.jpg')} alt="Akon Peter" />
                 </div>
                 <h3>Akon Peter</h3>
                 <p className="creator-title">Photographer | Juba</p>
@@ -137,7 +137,7 @@ function Home() {
               </div>
               <div className="creator-card">
                 <div className="creator-avatar">
-                  <img src="/assets/creator-placeholder.jpg" alt="Maduot Chongo" />
+                  <img src={require('./assets/Maduot_chongo.jpg')} alt="Maduot Chongo" />
                 </div>
                 <h3>Maduot Chongo</h3>
                 <p className="creator-title">Designer | Gudele</p>
@@ -145,7 +145,7 @@ function Home() {
               </div>
               <div className="creator-card">
                 <div className="creator-avatar">
-                  <img src="/assets/creator-placeholder.jpg" alt="Awut Paul" />
+                  <img src={require('./assets/Awut_paul.jpg')} alt="Awut Paul" />
                 </div>
                 <h3>Awut Paul</h3>
                 <p className="creator-title">Programmer | Munuki</p>
