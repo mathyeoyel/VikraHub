@@ -1,8 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from './components/Auth/AuthContext';
+import AuthModal from './components/Auth/AuthModal';
 import './Home.css';
 
 function Home() {
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState('login');
+  const { isAuthenticated } = useAuth();
+
+  const openAuthModal = (mode = 'login') => {
+    setAuthMode(mode);
+    setAuthModalOpen(true);
+  };
+
+  const closeAuthModal = () => {
+    setAuthModalOpen(false);
+  };
   return (
     <div className="home">
         {/* Hero Section */}
@@ -16,7 +30,16 @@ function Home() {
                   Join VikraHub and get inspired, get discovered, and connect with new opportunities!
                 </p>
                 <div className="hero-buttons">
-                  <Link to="/marketplace" className="hero-btn hero-btn-primary">Get Started</Link>
+                  {isAuthenticated ? (
+                    <Link to="/dashboard" className="hero-btn hero-btn-primary">Go to Dashboard</Link>
+                  ) : (
+                    <button 
+                      className="hero-btn hero-btn-primary"
+                      onClick={() => openAuthModal('register')}
+                    >
+                      Get Started
+                    </button>
+                  )}
                   <Link to="/creators" className="hero-btn hero-btn-secondary">Explore Creators</Link>
                 </div>
               </div>
@@ -270,13 +293,29 @@ function Home() {
                 Whether you're an artist, designer, photographer, storyteller, or simply passionate about creativity—VikraHub is your platform.
               </p>
               <div className="join-buttons">
-                <Link to="/register" className="join-btn primary">Sign Up Free</Link>
+                {isAuthenticated ? (
+                  <Link to="/dashboard" className="join-btn primary">Go to Dashboard</Link>
+                ) : (
+                  <button 
+                    className="join-btn primary"
+                    onClick={() => openAuthModal('register')}
+                  >
+                    Sign Up Free
+                  </button>
+                )}
                 <Link to="/contact" className="join-btn secondary">Contact Us</Link>
                 <Link to="/partners" className="join-btn tertiary">Partner with Us</Link>
               </div>
             </div>
           </div>
         </section>
+        
+        {/* Authentication Modal */}
+        <AuthModal 
+          isOpen={authModalOpen} 
+          onClose={closeAuthModal} 
+          initialMode={authMode} 
+        />
       </div>
   );
 }
