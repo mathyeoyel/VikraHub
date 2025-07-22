@@ -1,30 +1,37 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './components/Auth/AuthContext';
+import { NotificationProvider } from './components/common/NotificationContext';
+import NotificationContainer from './components/common/NotificationContainer';
 import Layout from './components/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
-import Home from "./Home";
-import Team from "./Team";
-import Profile from "./components/Profile";
-import Dashboard from "./components/Dashboard";
-import Services from "./components/Services";
-import Portfolio from "./components/Portfolio";
-import Blog from "./components/Blog";
-import PublicProfile from "./components/PublicProfile";
-import AdminDashboard from "./components/Admin/AdminDashboard";
+import LoadingSpinner from './components/common/LoadingSpinner';
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
-import AssetsMarketplace from "./components/Marketplace/AssetsMarketplace";
-import Freelance from "./components/Freelance";
-import Creators from "./components/Creators";
+import Home from "./Home";
 import Login from "./Login";
+
+// Lazy load components for better performance
+const Team = React.lazy(() => import("./Team"));
+const Profile = React.lazy(() => import("./components/Profile"));
+const Dashboard = React.lazy(() => import("./components/Dashboard"));
+const Services = React.lazy(() => import("./components/Services"));
+const Portfolio = React.lazy(() => import("./components/Portfolio"));
+const Blog = React.lazy(() => import("./components/Blog"));
+const PublicProfile = React.lazy(() => import("./components/PublicProfile"));
+const AdminDashboard = React.lazy(() => import("./components/Admin/AdminDashboard"));
+const AssetsMarketplace = React.lazy(() => import("./components/Marketplace/AssetsMarketplace"));
+const Freelance = React.lazy(() => import("./components/Freelance"));
+const Creators = React.lazy(() => import("./components/Creators"));
 
 function App() {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <HashRouter>
-          <Layout>
-            <Routes>
+      <NotificationProvider>
+        <AuthProvider>
+          <HashRouter>
+            <Layout>
+              <Suspense fallback={<LoadingSpinner message="Loading page..." />}>
+                <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/services" element={<Services />} />
@@ -76,9 +83,12 @@ function App() {
             {/* Catch-all route for 404 - redirect to home */}
             <Route path="*" element={<Home />} />
           </Routes>
-        </Layout>
-      </HashRouter>
-    </AuthProvider>
+            </Suspense>
+          </Layout>
+          <NotificationContainer />
+        </HashRouter>
+      </AuthProvider>
+    </NotificationProvider>
     </ErrorBoundary>
   );
 }

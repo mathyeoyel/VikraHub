@@ -1,11 +1,40 @@
 import os
 from pathlib import Path
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Environment validation
+def validate_environment():
+    """Validate required environment variables for production"""
+    required_vars = []
+    
+    # Check if we're in production (not debug mode)
+    debug_mode = os.environ.get('DEBUG', 'False').lower() == 'true'
+    
+    if not debug_mode:
+        if not os.environ.get('DJANGO_SECRET_KEY'):
+            required_vars.append('DJANGO_SECRET_KEY')
+        
+        if not os.environ.get('ALLOWED_HOSTS'):
+            print("Warning: ALLOWED_HOSTS not set, using defaults")
+    
+    if required_vars:
+        print(f"❌ Missing required environment variables: {', '.join(required_vars)}")
+        print("Please set these environment variables before running in production.")
+        if not debug_mode:
+            sys.exit(1)
+
+# Validate environment on startup
+validate_environment()
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev-secret-key-change-in-production')
+
+# Warn if using default secret key
+if SECRET_KEY == 'dev-secret-key-change-in-production':
+    print("⚠️  WARNING: Using default secret key! Set DJANGO_SECRET_KEY environment variable.")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
@@ -105,8 +134,28 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # WhiteNoise configuration
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# CORS Configuration - Allow all origins for now
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS Configuration - More secure settings
+DEBUG_MODE = os.environ.get('DEBUG', 'False').lower() == 'true'
+
+if DEBUG_MODE:
+    # Development: Allow all origins
+    CORS_ALLOW_ALL_ORIGINS = True
+    print("🔧 Development mode: CORS allows all origins")
+else:
+    # Production: Restrict to specific origins
+    CORS_ALLOWED_ORIGINS = [
+        "https://vikrahub.netlify.app",
+        "https://vikrahub-frontend.onrender.com",
+        # Add your frontend domains here
+    ]
+    
+    # Allow additional origins from environment variable
+    additional_origins = os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',')
+    if additional_origins and additional_origins[0]:
+        CORS_ALLOWED_ORIGINS.extend([origin.strip() for origin in additional_origins])
+    
+    print(f"🔒 Production mode: CORS restricted to: {CORS_ALLOWED_ORIGINS}")
+
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -132,6 +181,33 @@ CORS_PREFLIGHT_MAX_AGE = 86400
 print("CORS_ALLOW_ALL_ORIGINS = True")
 print("CORS configured for all methods and headers")
 
+# Security Headers
+if not DEBUG_MODE:
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    
+    # Only use HTTPS in production
+    if os.environ.get('USE_HTTPS', 'True').lower() == 'true':
+        SECURE_SSL_REDIRECT = True
+        SESSION_COOKIE_SECURE = True
+        CSRF_COOKIE_SECURE = True
+    
+    print("🔒 Security headers configured for production")
+
+# Session Configuration
+SESSION_COOKIE_AGE = 86400  # 24 hours
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+
+# CSRF Configuration
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = 'Lax'
+
 # REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -144,6 +220,55 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ],
 }
+
+# Logging Configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'django.log',
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'core': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
+# Create logs directory if it doesn't exist
+logs_dir = BASE_DIR / 'logs'
+logs_dir.mkdir(exist_ok=True)
 
 # Cloudinary (optional)
 CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME', '')
