@@ -8,3 +8,96 @@ INFO 2025-07-22 15:37:39,200 basehttp 8652 5396 "GET /api/freelancer-profiles/ H
 INFO 2025-07-22 15:49:08,810 basehttp 8652 10964 "GET /api/freelancer-profiles/ HTTP/1.1" 200 2292
 INFO 2025-07-22 16:10:55,832 basehttp 8652 4164 "GET /api/freelancer-profiles/ HTTP/1.1" 200 3464
 INFO 2025-07-22 16:11:06,280 basehttp 8652 4164 "GET /api/freelancer-profiles/ HTTP/1.1" 200 3464
+INFO 2025-07-22 16:13:35,835 basehttp 8652 24364 "GET /api/public-profiles/ HTTP/1.1" 200 8913
+INFO 2025-07-22 16:30:50,276 autoreload 8652 1876 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\admin.py changed, reloading.
+INFO 2025-07-22 16:30:53,952 autoreload 10404 4756 Watching for file changes with StatReloader
+INFO 2025-07-22 16:31:24,346 autoreload 10404 4756 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\admin.py changed, reloading.
+INFO 2025-07-22 16:31:26,445 autoreload 21420 25008 Watching for file changes with StatReloader
+INFO 2025-07-22 16:33:06,679 autoreload 5032 15776 Watching for file changes with StatReloader
+INFO 2025-07-22 16:33:27,916 autoreload 21420 25008 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\admin.py changed, reloading.
+INFO 2025-07-22 16:33:28,319 autoreload 5032 15776 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\admin.py changed, reloading.
+INFO 2025-07-22 16:33:30,321 autoreload 9640 15700 Watching for file changes with StatReloader
+INFO 2025-07-22 16:33:30,434 autoreload 15540 24440 Watching for file changes with StatReloader
+INFO 2025-07-22 16:34:25,784 autoreload 6036 22724 Watching for file changes with StatReloader
+INFO 2025-07-22 16:34:45,140 autoreload 6036 22724 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\admin.py changed, reloading.
+INFO 2025-07-22 16:34:45,367 autoreload 15540 24440 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\admin.py changed, reloading.
+INFO 2025-07-22 16:34:45,440 autoreload 9640 15700 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\admin.py changed, reloading.
+INFO 2025-07-22 16:34:47,051 autoreload 24060 10064 Watching for file changes with StatReloader
+INFO 2025-07-22 16:34:47,484 autoreload 11348 14676 Watching for file changes with StatReloader
+INFO 2025-07-22 16:34:47,596 autoreload 24224 22100 Watching for file changes with StatReloader
+INFO 2025-07-22 16:35:42,739 basehttp 24060 5032 "GET / HTTP/1.1" 200 1043
+INFO 2025-07-22 16:35:58,523 basehttp 24060 16012 "GET /admin HTTP/1.1" 301 0
+WARNING 2025-07-22 16:35:58,586 base 24060 7656 Session data corrupted
+INFO 2025-07-22 16:35:58,660 basehttp 24060 7656 "GET /admin/ HTTP/1.1" 302 0
+WARNING 2025-07-22 16:35:58,669 base 24060 7656 Session data corrupted
+INFO 2025-07-22 16:35:59,164 basehttp 24060 7656 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4173
+INFO 2025-07-22 16:35:59,770 basehttp 24060 17396 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-07-22 16:35:59,776 basehttp 24060 14132 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-07-22 16:35:59,817 basehttp 24060 7656 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-07-22 16:35:59,846 basehttp 24060 14132 "GET /static/admin/css/login.css HTTP/1.1" 200 951
+INFO 2025-07-22 16:35:59,853 basehttp 24060 7656 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-07-22 16:35:59,870 basehttp 24060 7656 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-07-22 16:35:59,876 basehttp 24060 17396 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+WARNING 2025-07-22 16:36:21,504 base 24060 2640 Session data corrupted
+INFO 2025-07-22 16:36:21,924 basehttp 24060 2640 "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4338
+WARNING 2025-07-22 16:36:36,323 base 24060 20876 Session data corrupted
+INFO 2025-07-22 16:36:36,708 basehttp 24060 20876 "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4338
+WARNING 2025-07-22 16:37:22,546 base 24060 15836 Session data corrupted
+INFO 2025-07-22 16:37:22,942 basehttp 24060 15836 "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4338
+INFO 2025-07-22 16:40:11,646 autoreload 15352 16912 Watching for file changes with StatReloader
+WARNING 2025-07-22 16:40:50,197 base 24060 11220 Session data corrupted
+INFO 2025-07-22 16:40:50,569 basehttp 24060 11220 "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4338
+WARNING 2025-07-22 16:41:05,386 base 24060 9500 Session data corrupted
+INFO 2025-07-22 16:41:05,402 basehttp 24060 9500 "GET /admin/ HTTP/1.1" 302 0
+WARNING 2025-07-22 16:41:05,441 base 24060 9500 Session data corrupted
+INFO 2025-07-22 16:41:05,471 basehttp 24060 9500 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4173
+WARNING 2025-07-22 16:41:17,171 base 24060 19468 Session data corrupted
+INFO 2025-07-22 16:41:17,810 basehttp 24060 19468 "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+INFO 2025-07-22 16:41:18,002 basehttp 24060 19468 "GET /admin/ HTTP/1.1" 200 12150
+INFO 2025-07-22 16:41:18,067 basehttp 24060 19468 "GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+INFO 2025-07-22 16:41:18,083 basehttp 24060 7924 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-07-22 16:41:18,086 basehttp 24060 19468 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-07-22 16:41:39,130 basehttp 24060 24968 "GET /admin/core/freelancerprofile/ HTTP/1.1" 200 20234
+INFO 2025-07-22 16:41:39,183 basehttp 24060 24028 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-07-22 16:41:39,184 basehttp 24060 24968 "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-07-22 16:41:39,198 basehttp 24060 24028 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-07-22 16:41:39,281 basehttp 24060 24028 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-07-22 16:41:39,284 basehttp 24060 24968 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-07-22 16:41:39,288 basehttp 24060 15600 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-07-22 16:41:39,289 basehttp 24060 22812 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-07-22 16:41:39,295 basehttp 24060 15600 "GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+INFO 2025-07-22 16:41:39,295 basehttp 24060 24968 "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-07-22 16:41:39,300 basehttp 24060 22948 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-07-22 16:41:39,304 basehttp 24060 15600 "GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+INFO 2025-07-22 16:41:39,386 basehttp 24060 7684 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-07-22 16:41:39,414 basehttp 24060 7684 "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-07-22 16:41:39,442 basehttp 24060 24028 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-07-22 16:41:39,475 basehttp 24060 7684 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-07-22 16:41:39,486 basehttp 24060 24028 "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-07-22 16:42:42,414 basehttp 24060 21064 "GET /admin/core/userprofile/ HTTP/1.1" 200 21840
+INFO 2025-07-22 16:42:42,622 basehttp 24060 21064 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-07-22 16:43:05,922 basehttp 24060 10820 "GET /admin/core/teammember/ HTTP/1.1" 200 13171
+INFO 2025-07-22 16:43:05,965 basehttp 24060 10820 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-07-22 16:43:07,799 basehttp 24060 10820 "GET /admin/core/service/ HTTP/1.1" 200 11842
+INFO 2025-07-22 16:43:07,851 basehttp 24060 10820 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-07-22 16:43:08,809 basehttp 24060 10820 "GET /admin/core/portfolioitem/ HTTP/1.1" 200 13506
+INFO 2025-07-22 16:43:08,841 basehttp 24060 10820 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-07-22 16:43:09,585 basehttp 24060 10820 "GET /admin/core/notification/ HTTP/1.1" 200 13656
+INFO 2025-07-22 16:43:09,612 basehttp 24060 10820 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-07-22 16:43:12,100 basehttp 24060 11368 "GET /admin/core/freelancerprofile/ HTTP/1.1" 200 20234
+INFO 2025-07-22 16:43:12,131 basehttp 24060 11368 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-07-22 16:43:13,117 basehttp 24060 11368 "GET /admin/core/creativeasset/ HTTP/1.1" 200 18446
+INFO 2025-07-22 16:43:13,147 basehttp 24060 11368 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-07-22 16:43:15,555 basehttp 24060 11368 "GET /admin/core/freelancerprofile/ HTTP/1.1" 200 20234
+INFO 2025-07-22 16:43:15,588 basehttp 24060 11368 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-07-22 16:43:26,194 basehttp 24060 4108 "GET /admin/ HTTP/1.1" 200 12150
+INFO 2025-07-22 16:43:31,868 basehttp 24060 23900 "GET /admin/auth/user/ HTTP/1.1" 200 24412
+INFO 2025-07-22 16:43:31,900 basehttp 24060 23900 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-07-22 16:43:31,920 basehttp 24060 23900 "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-07-22 16:43:44,827 basehttp 24060 25008 "GET /admin/auth/ HTTP/1.1" 200 6117
+INFO 2025-07-22 16:43:47,705 basehttp 24060 25008 "GET /admin/auth/ HTTP/1.1" 200 6117
+INFO 2025-07-22 16:43:50,978 basehttp 24060 25008 "GET /admin/auth/user/ HTTP/1.1" 200 24412
+INFO 2025-07-22 16:43:51,006 basehttp 24060 25008 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-07-22 16:43:52,661 basehttp 24060 24432 "GET /admin/ HTTP/1.1" 200 12150
+INFO 2025-07-22 16:44:27,291 basehttp 24060 5520 "GET /admin/core/freelancerprofile/ HTTP/1.1" 200 20234
+INFO 2025-07-22 16:44:27,440 basehttp 24060 5520 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
