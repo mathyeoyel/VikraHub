@@ -15,12 +15,8 @@ const Creators = () => {
     const fetchCreators = async () => {
       try {
         setLoading(true);
-        console.log('Fetching creators from API...');
         const response = await assetAPI.getCreators();
-        console.log('API Response:', response);
         const creatorsData = response.data.results || response.data;
-        console.log('Creators data:', creatorsData);
-        console.log('Number of creators:', creatorsData.length);
         setCreators(creatorsData);
         setError(null);
       } catch (err) {
@@ -269,9 +265,6 @@ const Creators = () => {
 
   // Use real data if available, otherwise fallback data
   const displayCreators = creators.length > 0 ? creators.map(mapCreatorData) : fallbackCreators;
-  
-  console.log('Display mode:', creators.length > 0 ? 'Real database data' : 'Fallback static data');
-  console.log('Number of display creators:', displayCreators.length);
 
   // Filter creators based on category and search term
   const filteredCreators = displayCreators.filter(creator => {
@@ -282,7 +275,8 @@ const Creators = () => {
     return matchesCategory && matchesSearch;
   });
 
-  const featuredCreators = displayCreators.filter(creator => creator.featured);
+  // Featured creators: first 3 creators from the database/display list
+  const featuredCreators = displayCreators.slice(0, 3);
 
   // Loading state
   if (loading) {
@@ -344,32 +338,37 @@ const Creators = () => {
       {/* Featured Creators Section */}
       <section className="featured-section">
         <div className="container">
-          <h2>Featured Creators</h2>
-          <p className="section-subtitle">Spotlight on exceptional talent making waves in their fields</p>
-          <div className="featured-grid">
+          <div className="section-header">
+            <h2>Featured Creators</h2>
+            <p className="section-subtitle">Spotlight on exceptional South Sudanese talent</p>
+          </div>
+          <div className="featured-creators-grid">
             {featuredCreators.map(creator => (
               <div key={creator.id} className="featured-creator-card">
-                <div className="creator-image">
-                  <img src={creator.image} alt={creator.name} />
-                  <div className="creator-overlay">
-                    <Link to={`/profile/${creator.name.toLowerCase().replace(' ', '-')}`} className="view-profile-btn">
-                      View Profile
-                    </Link>
-                  </div>
+                <div className="creator-avatar-featured">
+                  <img 
+                    src={creator.image} 
+                    alt={creator.name}
+                    onError={(e) => {
+                      e.target.src = `https://ui-avatars.com/api/?name=${creator.name}&background=000223&color=ffffff&size=200`;
+                    }}
+                  />
                 </div>
-                <div className="creator-info">
+                <div className="creator-info-featured">
                   <h3>{creator.name}</h3>
-                  <p className="creator-title">{creator.title}</p>
-                  <p className="creator-location">📍 {creator.location}</p>
-                  <p className="creator-bio">"{creator.bio}"</p>
-                  <div className="creator-specialties">
+                  <p className="creator-title-featured">{creator.title} | {creator.location}</p>
+                  <p className="creator-bio-featured">"{creator.bio}"</p>
+                  <div className="creator-specialties-featured">
                     {creator.specialties.slice(0, 2).map((specialty, index) => (
-                      <span key={index} className="specialty-tag">{specialty}</span>
+                      <span key={index} className="specialty-tag-featured">{specialty}</span>
                     ))}
                   </div>
                 </div>
               </div>
             ))}
+          </div>
+          <div className="featured-cta">
+            <p>Discover more talented creators in our directory below</p>
           </div>
         </div>
       </section>
