@@ -268,7 +268,7 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
               >
                 <option value="client">Client</option>
                 <option value="freelancer">Freelancer</option>
-                <option value="seller">Seller</option>
+                <option value="creator">Creator</option>
               </select>
             </div>
           </div>

@@ -10,7 +10,7 @@ const RegisterForm = ({ onClose, switchToLogin }) => {
     confirmPassword: '',
     first_name: '',
     last_name: '',
-    user_type: 'client' // client, freelancer, seller
+    user_type: 'client' // client, freelancer, creator
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -129,7 +129,7 @@ const RegisterForm = ({ onClose, switchToLogin }) => {
             >
               <option value="client">Hire freelancers & buy assets</option>
               <option value="freelancer">Work as a freelancer</option>
-              <option value="seller">Sell creative assets</option>
+              <option value="creator">Sell creative assets</option>
             </select>
           </div>
           

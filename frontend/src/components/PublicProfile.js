@@ -64,7 +64,7 @@ const PublicProfile = () => {
     switch (userType) {
       case 'freelancer':
         return '💼';
-      case 'seller':
+      case 'creator':
         return '🛍️';
       case 'client':
         return '👤';

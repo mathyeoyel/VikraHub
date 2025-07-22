@@ -54,7 +54,7 @@ const PublicProfilesList = () => {
     switch (userType) {
       case 'freelancer':
         return '💼';
-      case 'seller':
+      case 'creator':
         return '🛍️';
       case 'client':
         return '👤';
@@ -118,10 +118,10 @@ const PublicProfilesList = () => {
               💼 Freelancers
             </button>
             <button 
-              className={`filter-btn ${userTypeFilter === 'seller' ? 'active' : ''}`}
-              onClick={() => handleFilterChange('seller')}
+              className={`filter-btn ${userTypeFilter === 'creator' ? 'active' : ''}`}
+              onClick={() => handleFilterChange('creator')}
             >
-              🛍️ Sellers
+              🛍️ Creators
             </button>
             <button 
               className={`filter-btn ${userTypeFilter === 'client' ? 'active' : ''}`}

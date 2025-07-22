@@ -28,7 +28,7 @@ class UserProfile(models.Model):
     USER_TYPE_CHOICES = [
         ('client', 'Client'),
         ('freelancer', 'Freelancer'),
-        ('seller', 'Seller'),
+        ('creator', 'Creator'),
     ]
     
     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='client')
