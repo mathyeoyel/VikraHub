@@ -37,10 +37,10 @@ const Creators = () => {
     return {
       id: creator.id,
       name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username,
-      title: creator.title || 'Creative Professional',
-      location: userProfile.location || 'Location not specified',
+      title: creator.title || userProfile.headline || 'Creative Professional',
+      location: getLocationFromBio(userProfile.bio) || 'South Sudan',
       category: getCreatorCategory(userProfile.skills || creator.title),
-      image: userProfile.avatar || '/assets/default-avatar.jpg',
+      image: getProfileImage(userProfile.avatar, user.first_name, user.last_name),
       bio: userProfile.bio || 'Passionate creative professional.',
       specialties: getSkillsArray(userProfile.skills),
       yearsExperience: creator.years_experience || 0,
@@ -48,8 +48,48 @@ const Creators = () => {
       hourlyRate: creator.hourly_rate,
       rating: creator.rating || 0,
       availability: creator.availability || 'Available',
-      portfolioUrl: creator.portfolio_url
+      portfolioUrl: creator.portfolio_url,
+      // Additional profile information
+      headline: userProfile.headline,
+      website: userProfile.website,
+      social: {
+        twitter: userProfile.twitter,
+        instagram: userProfile.instagram,
+        facebook: userProfile.facebook,
+        linkedin: userProfile.linkedin,
+        github: userProfile.github
+      }
     };
+  };
+
+  // Extract location from bio text (since location field doesn't exist in model)
+  const getLocationFromBio = (bio) => {
+    if (!bio) return null;
+    
+    const locations = ['Juba', 'Gudele', 'Munuki', 'Wau', 'Malakal', 'South Sudan'];
+    for (const location of locations) {
+      if (bio.includes(location)) {
+        return location;
+      }
+    }
+    return null;
+  };
+
+  // Generate profile image (use avatar if available, otherwise generate placeholder)
+  const getProfileImage = (avatar, firstName, lastName) => {
+    // Try to use the Cloudinary avatar first
+    if (avatar && avatar.includes('cloudinary')) {
+      return avatar;
+    }
+    
+    // Fallback to UI Avatars API for professional-looking avatars
+    const name = `${firstName || ''} ${lastName || ''}`.trim();
+    if (name) {
+      return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=300&background=ffa000&color=ffffff&font-size=0.33&rounded=true`;
+    }
+    
+    // Final fallback to a default avatar
+    return '/assets/default-avatar.jpg';
   };
 
   // Extract category from skills or title

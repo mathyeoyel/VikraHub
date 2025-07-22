@@ -6,3 +6,5 @@ INFO 2025-07-22 15:35:22,142 autoreload 7332 2424 C:\Users\hp\Downloads\Projects
 INFO 2025-07-22 15:35:24,889 autoreload 8652 1876 Watching for file changes with StatReloader
 INFO 2025-07-22 15:37:39,200 basehttp 8652 5396 "GET /api/freelancer-profiles/ HTTP/1.1" 200 2
 INFO 2025-07-22 15:49:08,810 basehttp 8652 10964 "GET /api/freelancer-profiles/ HTTP/1.1" 200 2292
+INFO 2025-07-22 16:10:55,832 basehttp 8652 4164 "GET /api/freelancer-profiles/ HTTP/1.1" 200 3464
+INFO 2025-07-22 16:11:06,280 basehttp 8652 4164 "GET /api/freelancer-profiles/ HTTP/1.1" 200 3464
