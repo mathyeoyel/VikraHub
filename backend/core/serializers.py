@@ -293,8 +293,16 @@ class AssetReviewSerializer(serializers.ModelSerializer):
 
 
 # Freelancer Booking System Serializers
+class UserWithProfileSerializer(serializers.ModelSerializer):
+    userprofile = UserProfileSerializer(read_only=True)
+    
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'date_joined', 'userprofile']
+        read_only_fields = ['id', 'date_joined']
+
 class FreelancerProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = UserWithProfileSerializer(read_only=True)
     success_rate = serializers.ReadOnlyField()
     
     class Meta:
