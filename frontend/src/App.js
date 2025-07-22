@@ -17,6 +17,7 @@ const Dashboard = React.lazy(() => import("./components/Dashboard"));
 const Services = React.lazy(() => import("./components/Services"));
 const Portfolio = React.lazy(() => import("./components/Portfolio"));
 const Blog = React.lazy(() => import("./components/Blog"));
+const About = React.lazy(() => import("./components/About"));
 const PublicProfile = React.lazy(() => import("./components/PublicProfile"));
 const AdminDashboard = React.lazy(() => import("./components/Admin/AdminDashboard"));
 const AssetsMarketplace = React.lazy(() => import("./components/Marketplace/AssetsMarketplace"));
@@ -31,9 +32,10 @@ function App() {
           <HashRouter>
             <Layout>
               <Suspense fallback={<LoadingSpinner message="Loading page..." />}>
-                <Routes>
+                  <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
             <Route path="/services" element={<Services />} />
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/blog" element={<Blog />} />
@@ -42,9 +44,7 @@ function App() {
             <Route path="/profile/:username" element={<PublicProfile />} />
             <Route path="/marketplace" element={<AssetsMarketplace />} />
             <Route path="/freelance" element={<Freelance />} />
-            <Route path="/login" element={<Login />} />
-            
-            {/* Protected Routes */}
+            <Route path="/login" element={<Login />} />            {/* Protected Routes */}
             <Route
               path="/profile"
               element={
