@@ -20,7 +20,7 @@ python manage.py collectstatic --no-input
 echo "Running database migrations..."
 python manage.py migrate
 
-# Create sample data (if not exists)
+# Create sample data
 echo "Creating sample data..."
 python manage.py create_sample_data
 
