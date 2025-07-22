@@ -15,8 +15,13 @@ const Creators = () => {
     const fetchCreators = async () => {
       try {
         setLoading(true);
+        console.log('Fetching creators from API...');
         const response = await assetAPI.getCreators();
-        setCreators(response.data.results || response.data);
+        console.log('API Response:', response);
+        const creatorsData = response.data.results || response.data;
+        console.log('Creators data:', creatorsData);
+        console.log('Number of creators:', creatorsData.length);
+        setCreators(creatorsData);
         setError(null);
       } catch (err) {
         console.error('Error fetching creators:', err);
@@ -264,6 +269,9 @@ const Creators = () => {
 
   // Use real data if available, otherwise fallback data
   const displayCreators = creators.length > 0 ? creators.map(mapCreatorData) : fallbackCreators;
+  
+  console.log('Display mode:', creators.length > 0 ? 'Real database data' : 'Fallback static data');
+  console.log('Number of display creators:', displayCreators.length);
 
   // Filter creators based on category and search term
   const filteredCreators = displayCreators.filter(creator => {
