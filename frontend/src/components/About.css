@@ -13,7 +13,7 @@
 /* Hero Section */
 .about-hero {
   text-align: center;
-  padding: 100px 0 60px;
+  padding: 100px 60px 60px;
   background: #000223;
   color: white;
   margin-bottom: 60px;
@@ -359,7 +359,7 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .about-hero {
-    padding: 80px 0 40px;
+    padding: 80px 40px 40px;
   }
   
   .hero-content h1.page-title {
@@ -414,6 +414,10 @@
 @media (max-width: 480px) {
   .about-page .container {
     padding: 0 15px;
+  }
+  
+  .about-hero {
+    padding: 60px 20px 40px;
   }
   
   .hero-content h1.page-title {
