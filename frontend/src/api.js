@@ -14,7 +14,8 @@ api.interceptors.request.use(
     // Skip authentication for public routes
     const publicRoutes = [
       'public-profiles/',
-      'creative-assets/' // Creative assets should be publicly viewable
+      'creative-assets/', // Creative assets should be publicly viewable
+      'freelancer-profiles/' // Freelancer profiles should be publicly viewable
     ];
     
     const isPublicRoute = publicRoutes.some(route => config.url.includes(route));
@@ -159,6 +160,10 @@ export const assetAPI = {
   createReview: (data) => api.post("asset-reviews/", data),
   updateReview: (id, data) => api.patch(`asset-reviews/${id}/`, data),
   deleteReview: (id) => api.delete(`asset-reviews/${id}/`),
+  
+  // Creators/Freelancers
+  getCreators: (params) => api.get("freelancer-profiles/", { params }),
+  getCreator: (id) => api.get(`freelancer-profiles/${id}/`),
 };
 
 export default api;

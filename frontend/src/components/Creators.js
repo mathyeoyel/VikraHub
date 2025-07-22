@@ -1,13 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { assetAPI } from '../api';
 import './Creators.css';
 
 const Creators = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+  const [creators, setCreators] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Sample creators data - in a real app, this would come from an API
-  const creators = [
+  // Fetch creators data from backend
+  useEffect(() => {
+    const fetchCreators = async () => {
+      try {
+        setLoading(true);
+        const response = await assetAPI.getCreators();
+        setCreators(response.data.results || response.data);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching creators:', err);
+        setError('Failed to load creators. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCreators();
+  }, []);
+
+  // Map backend data to frontend format
+  const mapCreatorData = (creator) => {
+    const user = creator.user;
+    const userProfile = user.userprofile || {};
+    
+    return {
+      id: creator.id,
+      name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username,
+      title: creator.title || 'Creative Professional',
+      location: userProfile.location || 'Location not specified',
+      category: getCreatorCategory(userProfile.skills || creator.title),
+      image: userProfile.avatar || '/assets/default-avatar.jpg',
+      bio: userProfile.bio || 'Passionate creative professional.',
+      specialties: getSkillsArray(userProfile.skills),
+      yearsExperience: creator.years_experience || 0,
+      featured: creator.is_verified || false,
+      hourlyRate: creator.hourly_rate,
+      rating: creator.rating || 0,
+      availability: creator.availability || 'Available',
+      portfolioUrl: creator.portfolio_url
+    };
+  };
+
+  // Extract category from skills or title
+  const getCreatorCategory = (skills) => {
+    if (!skills) return 'Creative';
+    
+    const skillsLower = skills.toLowerCase();
+    if (skillsLower.includes('photo') || skillsLower.includes('camera')) return 'Photography';
+    if (skillsLower.includes('design') || skillsLower.includes('ui') || skillsLower.includes('ux')) return 'Design';
+    if (skillsLower.includes('video') || skillsLower.includes('film') || skillsLower.includes('editing')) return 'Video';
+    if (skillsLower.includes('write') || skillsLower.includes('content') || skillsLower.includes('copy')) return 'Writing';
+    if (skillsLower.includes('music') || skillsLower.includes('audio') || skillsLower.includes('sound')) return 'Music';
+    if (skillsLower.includes('tech') || skillsLower.includes('web') || skillsLower.includes('dev')) return 'Technology';
+    return 'Creative';
+  };
+
+  // Convert skills string to array
+  const getSkillsArray = (skills) => {
+    if (!skills) return ['Creative Services'];
+    return skills.split(',').map(skill => skill.trim()).slice(0, 3);
+  };
+
+  // Sample fallback data (to show during loading or if no real data)
+  const fallbackCreators = [
     {
       id: 1,
       name: "Akon Peter",
@@ -156,8 +222,11 @@ const Creators = () => {
 
   const categories = ['All', 'Photography', 'Design', 'Technology', 'Business', 'Digital Art'];
 
+  // Use real data if available, otherwise fallback data
+  const displayCreators = creators.length > 0 ? creators.map(mapCreatorData) : fallbackCreators;
+
   // Filter creators based on category and search term
-  const filteredCreators = creators.filter(creator => {
+  const filteredCreators = displayCreators.filter(creator => {
     const matchesCategory = selectedCategory === 'All' || creator.category === selectedCategory;
     const matchesSearch = creator.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          creator.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -165,7 +234,38 @@ const Creators = () => {
     return matchesCategory && matchesSearch;
   });
 
-  const featuredCreators = creators.filter(creator => creator.featured);
+  const featuredCreators = displayCreators.filter(creator => creator.featured);
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="creators-page">
+        <div className="container">
+          <div className="loading-state">
+            <div className="loading-spinner"></div>
+            <p>Loading amazing creators...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="creators-page">
+        <div className="container">
+          <div className="error-state">
+            <h2>Oops! Something went wrong</h2>
+            <p>{error}</p>
+            <button onClick={() => window.location.reload()} className="retry-button">
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="creators-page">
@@ -177,7 +277,7 @@ const Creators = () => {
             <p>Discover the talented artists, designers, photographers, and innovators from South Sudan who are shaping the creative landscape.</p>
             <div className="creators-stats">
               <div className="stat">
-                <span className="stat-number">{creators.length}+</span>
+                <span className="stat-number">{displayCreators.length}+</span>
                 <span className="stat-label">Creators</span>
               </div>
               <div className="stat">

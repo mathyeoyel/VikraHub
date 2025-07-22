@@ -529,3 +529,63 @@
     padding: 4rem 0;
   }
 }
+
+/* Loading and Error States */
+.loading-state,
+.error-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #ffa000;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-state p {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0;
+}
+
+.error-state h2 {
+  color: #d32f2f;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.error-state p {
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+.retry-button {
+  background: #ffa000;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.retry-button:hover {
+  background: #ff8f00;
+}
