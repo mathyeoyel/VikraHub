@@ -20,4 +20,12 @@ python manage.py collectstatic --no-input
 echo "Running database migrations..."
 python manage.py migrate
 
+# Create sample data (if not exists)
+echo "Creating sample data..."
+python manage.py create_sample_data
+
+# Create production superuser
+echo "Creating production superuser..."
+python manage.py create_production_superuser
+
 echo "Build completed successfully!"
