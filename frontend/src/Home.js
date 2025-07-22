@@ -1,13 +1,98 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from './components/Auth/AuthContext';
 import AuthModal from './components/Auth/AuthModal';
+import { assetAPI } from './api';
 import './Home.css';
 
 function Home() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login');
+  const [featuredCreators, setFeaturedCreators] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { isAuthenticated } = useAuth();
+
+  // Fetch featured creators (limit to 3)
+  useEffect(() => {
+    const fetchFeaturedCreators = async () => {
+      try {
+        setLoading(true);
+        const response = await assetAPI.getCreators();
+        const creatorsData = response.data.results || response.data;
+        
+        // Map and limit to first 3 creators
+        const mappedCreators = creatorsData.slice(0, 3).map(mapCreatorData);
+        setFeaturedCreators(mappedCreators);
+      } catch (err) {
+        console.error('Error fetching featured creators:', err);
+        // Use fallback data if API fails
+        setFeaturedCreators(getFallbackCreators().slice(0, 3));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedCreators();
+  }, [mapCreatorData]);
+
+  // Helper functions
+  const getLocationFromBio = useCallback((bio) => {
+    if (!bio) return null;
+    const locationMatch = bio.match(/(?:from|in|based in|located in)\s+([^.,\n]+)/i);
+    return locationMatch ? locationMatch[1].trim() : null;
+  }, []);
+
+  const getProfileImage = useCallback((avatar, firstName, lastName) => {
+    if (avatar && avatar.startsWith('http')) {
+      return avatar;
+    }
+    // Generate initials-based avatar as fallback
+    const initials = `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase() || 'SS';
+    return `https://ui-avatars.com/api/?name=${initials}&background=000223&color=ffffff&size=200`;
+  }, []);
+
+  // Map backend data to frontend format (similar to Creators component)
+  const mapCreatorData = useCallback((creator) => {
+    const user = creator.user;
+    const userProfile = user.userprofile || {};
+    
+    return {
+      id: creator.id,
+      name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username,
+      title: creator.title || userProfile.headline || 'Creative Professional',
+      location: getLocationFromBio(userProfile.bio) || 'South Sudan',
+      image: getProfileImage(userProfile.avatar, user.first_name, user.last_name),
+      bio: userProfile.bio || 'Passionate creative professional.',
+    };
+  }, [getLocationFromBio, getProfileImage]);
+
+  // Fallback data for development
+  const getFallbackCreators = () => [
+    {
+      id: 1,
+      name: 'Akon Peter',
+      title: 'Full-Stack Developer',
+      location: 'Juba',
+      image: '/assets/Akon-peter.jpg',
+      bio: 'Through my code, I tell stories of innovation and the bright future of technology in our community.'
+    },
+    {
+      id: 2,
+      name: 'Maduot Chongo',
+      title: 'Mobile App Developer',
+      location: 'Gudele',
+      image: '/assets/Maduot_chongo.jpg',
+      bio: 'Building mobile solutions that connect communities and solve real-world problems.'
+    },
+    {
+      id: 3,
+      name: 'Awut Paul',
+      title: 'UI/UX Designer',
+      location: 'Munuki',
+      image: '/assets/Awut_paul.jpg',
+      bio: 'I blend design and user experience, creating digital interfaces that reflect our culture and values.'
+    }
+  ];
 
   const openAuthModal = (mode = 'login') => {
     setAuthMode(mode);
@@ -149,32 +234,30 @@ function Home() {
           <div className="container">
             <h2 className="section-title">Featured Creators</h2>
             <p className="section-subtitle">Spotlight on South Sudanese Talent</p>
-            <div className="creators-grid">
-              <div className="creator-card">
-                <div className="creator-avatar">
-                  <img src={require('./assets/Akon-peter.jpg')} alt="Akon Peter" />
-                </div>
-                <h3>Akon Peter</h3>
-                <p className="creator-title">Photographer | Juba</p>
-                <p className="creator-quote">"Through my lens, I tell stories of resilience and the vibrant spirit of my community."</p>
+            {loading ? (
+              <div className="creators-loading">
+                <p>Loading featured creators...</p>
               </div>
-              <div className="creator-card">
-                <div className="creator-avatar">
-                  <img src={require('./assets/Maduot_chongo.jpg')} alt="Maduot Chongo" />
-                </div>
-                <h3>Maduot Chongo</h3>
-                <p className="creator-title">Designer | Gudele</p>
-                <p className="creator-quote">"Art is my universal language—I use creativity to share our stories with the world."</p>
+            ) : (
+              <div className="creators-grid">
+                {featuredCreators.map((creator) => (
+                  <div key={creator.id} className="creator-card">
+                    <div className="creator-avatar">
+                      <img 
+                        src={creator.image} 
+                        alt={creator.name}
+                        onError={(e) => {
+                          e.target.src = `https://ui-avatars.com/api/?name=${creator.name}&background=000223&color=ffffff&size=200`;
+                        }}
+                      />
+                    </div>
+                    <h3>{creator.name}</h3>
+                    <p className="creator-title">{creator.title} | {creator.location}</p>
+                    <p className="creator-quote">"{creator.bio}"</p>
+                  </div>
+                ))}
               </div>
-              <div className="creator-card">
-                <div className="creator-avatar">
-                  <img src={require('./assets/Awut_paul.jpg')} alt="Awut Paul" />
-                </div>
-                <h3>Awut Paul</h3>
-                <p className="creator-title">Programmer | Munuki</p>
-                <p className="creator-quote">"I blend technology and culture, building digital solutions that reflect and celebrate our heritage."</p>
-              </div>
-            </div>
+            )}
             <div className="creators-cta">
               <Link to="/creators" className="creators-btn">Meet All Creators</Link>
             </div>

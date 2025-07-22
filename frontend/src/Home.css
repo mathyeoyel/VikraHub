@@ -919,6 +919,13 @@
   text-align: center;
 }
 
+.creators-loading {
+  text-align: center;
+  padding: 3rem 0;
+  color: var(--gray-600);
+  font-size: 1.1rem;
+}
+
 .creators-btn {
   display: inline-block;
   padding: 15px 30px;
