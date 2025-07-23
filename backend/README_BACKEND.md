@@ -2,6 +2,8 @@
 
 This is the Django backend that serves as a REST API for the React frontend.
 
+<!-- Database Population: Sample data should be created during deployment via build.sh -->
+
 ## Structure
 ```
 📁 backend/ (Django Backend - Port 8000)

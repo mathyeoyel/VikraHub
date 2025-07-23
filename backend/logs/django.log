@@ -127,3 +127,121 @@ INFO 2025-07-22 16:52:59,799 basehttp 24060 23444 "GET /static/admin/css/unusabl
 INFO 2025-07-22 16:53:32,254 basehttp 24060 11244 "POST /admin/auth/user/14/password/ HTTP/1.1" 302 0
 INFO 2025-07-22 16:53:32,360 basehttp 24060 11244 "GET /admin/auth/user/14/change/ HTTP/1.1" 200 49392
 INFO 2025-07-22 16:53:32,420 basehttp 24060 11244 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-07-22 17:30:50,102 autoreload 24224 22100 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-22 17:30:50,110 autoreload 15352 16912 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-22 17:30:50,543 autoreload 11348 14676 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-22 17:30:50,586 autoreload 24060 10064 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-22 17:30:53,570 autoreload 23884 24840 Watching for file changes with StatReloader
+INFO 2025-07-22 17:30:53,571 autoreload 5532 21516 Watching for file changes with StatReloader
+INFO 2025-07-22 17:30:53,760 autoreload 12452 2332 Watching for file changes with StatReloader
+INFO 2025-07-22 17:30:54,315 autoreload 15452 4032 Watching for file changes with StatReloader
+INFO 2025-07-22 17:33:21,388 autoreload 23884 24840 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-22 17:33:21,575 autoreload 5532 21516 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-22 17:33:21,631 autoreload 15452 4032 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-22 17:33:22,059 autoreload 12452 2332 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-22 17:33:23,480 autoreload 7396 10596 Watching for file changes with StatReloader
+INFO 2025-07-22 17:33:23,609 autoreload 7592 2916 Watching for file changes with StatReloader
+INFO 2025-07-22 17:33:23,684 autoreload 3408 14904 Watching for file changes with StatReloader
+INFO 2025-07-22 17:33:24,193 autoreload 22620 19360 Watching for file changes with StatReloader
+INFO 2025-07-22 17:36:16,785 basehttp 3408 18928 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+WARNING 2025-07-22 17:45:33,312 log 3408 24028 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:45:33,326 basehttp 3408 24028 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:45:38,652 log 3408 11416 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:45:38,653 basehttp 3408 11416 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:45:43,999 log 3408 10312 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:45:44,000 basehttp 3408 10312 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:45:49,333 log 3408 2384 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:45:49,333 basehttp 3408 2384 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:45:54,663 log 3408 19516 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:45:54,663 basehttp 3408 19516 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:45:59,998 log 3408 20916 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:45:59,999 basehttp 3408 20916 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:46:05,339 log 3408 21052 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:46:05,340 basehttp 3408 21052 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:46:10,753 log 3408 10624 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:46:10,754 basehttp 3408 10624 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:46:16,103 log 3408 17776 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:46:16,104 basehttp 3408 17776 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:46:21,450 log 3408 2832 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:46:21,450 basehttp 3408 2832 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:46:26,817 log 3408 22000 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:46:26,817 basehttp 3408 22000 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:46:32,235 log 3408 9064 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:46:32,236 basehttp 3408 9064 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:48:23,967 log 3408 11116 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:48:23,977 basehttp 3408 11116 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:48:29,298 log 3408 20544 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:48:29,300 basehttp 3408 20544 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:48:34,630 log 3408 22536 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:48:34,631 basehttp 3408 22536 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:48:39,946 log 3408 9192 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:48:39,947 basehttp 3408 9192 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:48:45,265 log 3408 22500 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:48:45,266 basehttp 3408 22500 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:54:24,412 log 3408 7992 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:54:24,419 basehttp 3408 7992 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:54:29,742 log 3408 23340 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:54:29,742 basehttp 3408 23340 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:54:35,056 log 3408 24364 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:54:35,056 basehttp 3408 24364 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:54:40,377 log 3408 688 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:54:40,378 basehttp 3408 688 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:54:45,701 log 3408 25588 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:54:45,702 basehttp 3408 25588 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:54:51,039 log 3408 784 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:54:51,041 basehttp 3408 784 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:54:55,077 log 3408 24268 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:54:55,077 basehttp 3408 24268 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 17:55:01,188 log 3408 20876 Not Found: /ws/profile/16/
+WARNING 2025-07-22 17:55:01,189 basehttp 3408 20876 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+INFO 2025-07-22 17:56:45,979 autoreload 22620 19360 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\models.py changed, reloading.
+INFO 2025-07-22 17:56:46,027 autoreload 7396 10596 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\models.py changed, reloading.
+INFO 2025-07-22 17:56:46,296 autoreload 3408 14904 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\models.py changed, reloading.
+INFO 2025-07-22 17:56:46,389 autoreload 7592 2916 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\models.py changed, reloading.
+INFO 2025-07-22 17:56:48,469 autoreload 23804 21456 Watching for file changes with StatReloader
+INFO 2025-07-22 17:56:48,470 autoreload 22428 20608 Watching for file changes with StatReloader
+INFO 2025-07-22 17:56:48,470 autoreload 2160 19328 Watching for file changes with StatReloader
+INFO 2025-07-22 17:56:48,471 autoreload 3328 15204 Watching for file changes with StatReloader
+INFO 2025-07-22 18:23:00,192 autoreload 2160 19328 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\models.py changed, reloading.
+INFO 2025-07-22 18:23:00,675 autoreload 3328 15204 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\models.py changed, reloading.
+INFO 2025-07-22 18:23:00,710 autoreload 23804 21456 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\models.py changed, reloading.
+INFO 2025-07-22 18:23:00,812 autoreload 22428 20608 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\models.py changed, reloading.
+INFO 2025-07-22 18:23:04,278 autoreload 24284 9684 Watching for file changes with StatReloader
+INFO 2025-07-22 18:23:04,670 autoreload 26496 9576 Watching for file changes with StatReloader
+INFO 2025-07-22 18:23:04,699 autoreload 25812 1528 Watching for file changes with StatReloader
+INFO 2025-07-22 18:23:04,862 autoreload 25924 14668 Watching for file changes with StatReloader
+INFO 2025-07-22 18:49:13,447 basehttp 24284 22592 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-22 18:49:13,506 basehttp 24284 22592 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-22 18:49:15,879 basehttp 24284 22592 "GET /api/asset-categories/ HTTP/1.1" 200 1239
+INFO 2025-07-22 18:49:15,891 basehttp 24284 25724 "GET /api/creative-assets/trending/?limit=6 HTTP/1.1" 200 2
+INFO 2025-07-22 18:49:15,900 basehttp 24284 20608 "GET /api/creative-assets/?sort=relevance HTTP/1.1" 200 880
+INFO 2025-07-22 18:49:15,906 basehttp 24284 22592 "GET /api/asset-categories/ HTTP/1.1" 200 1239
+INFO 2025-07-22 18:49:15,909 basehttp 24284 2424 "GET /api/creative-assets/trending/?limit=6 HTTP/1.1" 200 2
+INFO 2025-07-22 18:49:15,923 basehttp 24284 20608 "GET /api/creative-assets/?sort=relevance HTTP/1.1" 200 880
+INFO 2025-07-22 18:49:15,940 basehttp 24284 20608 "GET /api/creative-assets/?sort=relevance HTTP/1.1" 200 880
+INFO 2025-07-22 18:49:15,957 basehttp 24284 20608 "GET /api/creative-assets/?sort=relevance HTTP/1.1" 200 880
+WARNING 2025-07-22 19:13:39,230 log 24284 9244 Not Found: /ws/profile/16/
+WARNING 2025-07-22 19:13:39,250 basehttp 24284 9244 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 19:13:44,592 log 24284 22124 Not Found: /ws/profile/16/
+WARNING 2025-07-22 19:13:44,593 basehttp 24284 22124 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 19:13:50,940 log 24284 23504 Not Found: /ws/profile/16/
+WARNING 2025-07-22 19:13:50,943 basehttp 24284 23504 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 19:13:56,275 log 24284 22840 Not Found: /ws/profile/16/
+WARNING 2025-07-22 19:13:56,276 basehttp 24284 22840 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+WARNING 2025-07-22 19:14:01,590 log 24284 23564 Not Found: /ws/profile/16/
+WARNING 2025-07-22 19:14:01,591 basehttp 24284 23564 "GET /ws/profile/16/ HTTP/1.1" 404 3233
+INFO 2025-07-22 19:26:18,129 basehttp 24284 22692 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-22 19:28:19,269 basehttp 24284 5332 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-22 19:28:19,598 basehttp 24284 25164 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-22 19:33:13,794 basehttp 24284 23324 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-22 19:33:13,837 basehttp 24284 24060 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-22 19:33:25,825 basehttp 24284 1668 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-22 19:35:04,772 basehttp 24284 25392 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-22 19:35:04,816 basehttp 24284 26428 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-22 19:41:49,860 basehttp 24284 9952 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-22 19:41:49,888 basehttp 24284 24948 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-23 10:36:09,726 autoreload 23200 15724 Watching for file changes with StatReloader
+INFO 2025-07-23 10:36:17,259 basehttp 23200 26532 "GET / HTTP/1.1" 200 1043
+WARNING 2025-07-23 10:36:17,577 log 23200 26532 Not Found: /favicon.ico
+WARNING 2025-07-23 10:36:17,577 basehttp 23200 26532 "GET /favicon.ico HTTP/1.1" 404 3224
+INFO 2025-07-23 10:36:23,442 basehttp 23200 11704 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
