@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from './Auth/AuthContext';
 import { userAPI } from '../api';
 import EditProfile from './EditProfile';
+import ClientProfile from './ClientProfile';
 import './Profile.css';
 
 const Profile = () => {
@@ -146,6 +147,11 @@ const Profile = () => {
         </div>
       </div>
     );
+  }
+
+  // Show ClientProfile component for client users
+  if (profile?.user_type === 'client') {
+    return <ClientProfile />;
   }
 
   const filteredWorks = activePortfolioTab === 'All' 
