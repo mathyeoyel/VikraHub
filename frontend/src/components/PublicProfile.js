@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { publicProfileAPI, assetAPI } from '../api';
+import PublicClientProfile from './PublicClientProfile';
 import './PublicProfile.css';
 
 const PublicProfile = () => {
@@ -157,6 +158,20 @@ const PublicProfile = () => {
           </div>
         </div>
       </div>
+    );
+  }
+
+  // If the user is a client, use the dedicated PublicClientProfile component
+  if (profile && profile.user_type === 'client') {
+    return (
+      <PublicClientProfile 
+        profile={profile} 
+        username={username}
+        isFollowing={isFollowing}
+        setIsFollowing={setIsFollowing}
+        followerCount={followerCount}
+        followingCount={followingCount}
+      />
     );
   }
 

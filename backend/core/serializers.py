@@ -137,21 +137,50 @@ class PublicUserProfileSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField()
     member_since = serializers.DateTimeField(source='user.date_joined', read_only=True)
     portfolio_items = serializers.SerializerMethodField()
+    client_profile = serializers.SerializerMethodField()
     
     class Meta:
         model = UserProfile
         fields = ['id', 'user', 'user_type', 'avatar', 'cover_photo', 'bio', 'website', 'headline',
                  'skills', 'location', 'achievements', 'services_offered', 'full_name', 'member_since', 'portfolio_items',
-                 'facebook', 'instagram', 'twitter', 'linkedin', 'github']
+                 'facebook', 'instagram', 'twitter', 'linkedin', 'github', 'client_profile']
         read_only_fields = ['id', 'user', 'user_type', 'avatar', 'cover_photo', 'bio', 'website', 'headline',
                            'skills', 'location', 'achievements', 'services_offered', 'full_name', 'member_since', 'portfolio_items',
-                           'facebook', 'instagram', 'twitter', 'linkedin', 'github']
+                           'facebook', 'instagram', 'twitter', 'linkedin', 'github', 'client_profile']
     
     def get_full_name(self, obj):
         """Get user's full name"""
         if obj.user.first_name and obj.user.last_name:
             return f"{obj.user.first_name} {obj.user.last_name}"
         return obj.user.username
+    
+    def get_client_profile(self, obj):
+        """Get client profile data for public viewing (limited fields)"""
+        if obj.user_type == 'client':
+            try:
+                client_profile = obj.user.client_profile
+                return {
+                    'client_type': client_profile.client_type,
+                    'client_type_display': client_profile.get_client_type_display(),
+                    'company_name': client_profile.company_name,
+                    'company_size': client_profile.company_size,
+                    'industry': client_profile.industry,
+                    'business_address': client_profile.business_address,
+                    'contact_person': client_profile.contact_person,
+                    'phone_number': client_profile.phone_number,
+                    'typical_budget_range': client_profile.typical_budget_range,
+                    'project_types': client_profile.project_types,
+                    'preferred_communication': client_profile.preferred_communication,
+                    'projects_posted': client_profile.projects_posted,
+                    'projects_completed': client_profile.projects_completed,
+                    'completion_rate': client_profile.completion_rate,
+                    'total_spent': float(client_profile.total_spent) if client_profile.total_spent else 0.0,
+                    'is_verified': client_profile.is_verified,
+                    'payment_verified': client_profile.payment_verified,
+                }
+            except:
+                return None
+        return None
     
     def get_portfolio_items(self, obj):
         """Get user's portfolio items"""
