@@ -10,6 +10,9 @@ const PublicProfile = () => {
   const [error, setError] = useState(null);
   const [assets, setAssets] = useState([]);
   const [assetsLoading, setAssetsLoading] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followerCount, setFollowerCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -17,6 +20,10 @@ const PublicProfile = () => {
         setLoading(true);
         const response = await publicProfileAPI.getByUsername(username);
         setProfile(response.data);
+        
+        // Initialize follower/following counts (placeholder values)
+        setFollowerCount(Math.floor(Math.random() * 100) + 10); // Random for demo
+        setFollowingCount(Math.floor(Math.random() * 50) + 5);   // Random for demo
         
         // Fetch user's uploaded assets to include in portfolio
         await fetchUserAssets(response.data.user.id);
@@ -93,6 +100,40 @@ const PublicProfile = () => {
     alert('Contact functionality will be implemented soon!');
   };
 
+  const handleFollow = async () => {
+    try {
+      // TODO: Implement follow/unfollow API calls
+      setIsFollowing(!isFollowing);
+      setFollowerCount(prev => isFollowing ? prev - 1 : prev + 1);
+      
+      // Show temporary feedback
+      const action = isFollowing ? 'Unfollowed' : 'Following';
+      alert(`${action} ${profile.full_name}!`);
+    } catch (error) {
+      console.error('Error following/unfollowing user:', error);
+      alert('Unable to complete action. Please try again.');
+    }
+  };
+
+  const handleMessage = () => {
+    // TODO: Implement messaging functionality
+    alert('Messaging functionality will be implemented soon!');
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: `${profile.full_name} - VikraHub Profile`,
+        text: `Check out ${profile.full_name}'s profile on VikraHub!`,
+        url: window.location.href,
+      });
+    } else {
+      // Fallback to clipboard
+      navigator.clipboard.writeText(window.location.href);
+      alert('Profile link copied to clipboard!');
+    }
+  };
+
   if (loading) {
     return (
       <div className="public-profile">
@@ -122,40 +163,92 @@ const PublicProfile = () => {
   return (
     <div className="public-profile">
       <div className="container">
-        {/* Profile Header */}
-        <div className="profile-header">
-          <div className="profile-avatar">
-            {profile.avatar ? (
-              <img src={profile.avatar} alt={profile.full_name} />
+        {/* Cover Photo Section */}
+        <div className="profile-cover">
+          <div className="cover-image">
+            {profile.cover_photo ? (
+              <img src={profile.cover_photo} alt="Cover" className="cover-img" />
             ) : (
-              <div className="avatar-placeholder">
-                {profile.full_name.charAt(0).toUpperCase()}
+              <div className="cover-placeholder">
+                <div className="cover-gradient"></div>
               </div>
             )}
           </div>
-          <div className="profile-info">
-            <h1 className="profile-name">{profile.full_name}</h1>
-            <p className="username">@{profile.user.username}</p>
-            
-            {/* Headline/Tagline */}
-            {profile.headline && (
-              <p className="profile-headline">{profile.headline}</p>
-            )}
-            
-            <div className="profile-meta">
-              <div className="user-type">
-                <span className="user-type-icon">{getUserTypeIcon(profile.user_type)}</span>
-                <span className="user-type-label">{getUserTypeLabel(profile.user_type)}</span>
+          
+          {/* Profile Header with Avatar */}
+          <div className="profile-header">
+            <div className="profile-avatar-section">
+              <div className="profile-avatar">
+                {profile.avatar ? (
+                  <img src={profile.avatar} alt={profile.full_name} />
+                ) : (
+                  <div className="avatar-placeholder">
+                    {profile.full_name.charAt(0).toUpperCase()}
+                  </div>
+                )}
               </div>
-              <p className="member-since">
-                Member since {formatDate(profile.member_since)}
-              </p>
+              
+              {/* Action Buttons */}
+              <div className="profile-actions">
+                <button className="action-btn follow-btn" onClick={handleFollow}>
+                  {isFollowing ? (
+                    <>
+                      <span className="btn-icon">✓</span>
+                      Following
+                    </>
+                  ) : (
+                    <>
+                      <span className="btn-icon">+</span>
+                      Follow
+                    </>
+                  )}
+                </button>
+                <button className="action-btn message-btn" onClick={handleMessage}>
+                  <span className="btn-icon">💬</span>
+                  Message
+                </button>
+                <button className="action-btn share-btn" onClick={handleShare}>
+                  <span className="btn-icon">📤</span>
+                  Share
+                </button>
+              </div>
             </div>
             
-            {/* Contact Button */}
-            <button className="contact-btn" onClick={handleContact}>
-              💬 Contact Me
-            </button>
+            <div className="profile-info">
+              <h1 className="profile-name">{profile.full_name}</h1>
+              <p className="username">@{profile.user.username}</p>
+              
+              {/* Headline/Tagline */}
+              {profile.headline && (
+                <p className="profile-headline">{profile.headline}</p>
+              )}
+              
+              <div className="profile-meta">
+                <div className="user-type">
+                  <span className="user-type-icon">{getUserTypeIcon(profile.user_type)}</span>
+                  <span className="user-type-label">{getUserTypeLabel(profile.user_type)}</span>
+                </div>
+                <p className="member-since">
+                  Member since {formatDate(profile.member_since)}
+                </p>
+              </div>
+              
+              {/* Stats Row */}
+              <div className="profile-stats">
+                <div className="stat-item">
+                  <span className="stat-number">{followerCount}</span>
+                  <span className="stat-label">Followers</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-number">{followingCount}</span>
+                  <span className="stat-label">Following</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-number">{assets.length}</span>
+                  <span className="stat-label">Projects</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -209,10 +302,10 @@ const PublicProfile = () => {
             )}
           </div>
 
-          {/* Skills & Services */}
+          {/* Skills & Expertise */}
           {profile.skills && (
             <div className="profile-section">
-              <h3>Skills & Services</h3>
+              <h3>Skills & Expertise</h3>
               <div className="skills-list">
                 {profile.skills.split(',').map((skill, index) => (
                   <span key={index} className="skill-tag">
@@ -223,9 +316,53 @@ const PublicProfile = () => {
             </div>
           )}
 
+          {/* Experience & Background */}
+          <div className="profile-section">
+            <h3>Experience & Background</h3>
+            <div className="experience-grid">
+              {profile.location && (
+                <div className="experience-item">
+                  <div className="experience-icon">📍</div>
+                  <div className="experience-content">
+                    <h4>Location</h4>
+                    <p>{profile.location}</p>
+                  </div>
+                </div>
+              )}
+              
+              <div className="experience-item">
+                <div className="experience-icon">📅</div>
+                <div className="experience-content">
+                  <h4>Member Since</h4>
+                  <p>{formatDate(profile.member_since)}</p>
+                </div>
+              </div>
+              
+              {profile.user_type === 'creator' && (
+                <div className="experience-item">
+                  <div className="experience-icon">🎨</div>
+                  <div className="experience-content">
+                    <h4>Creator Type</h4>
+                    <p>{getUserTypeLabel(profile.user_type)}</p>
+                  </div>
+                </div>
+              )}
+              
+              {profile.user_type === 'freelancer' && (
+                <div className="experience-item">
+                  <div className="experience-icon">💼</div>
+                  <div className="experience-content">
+                    <h4>Professional</h4>
+                    <p>Freelancer</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Portfolio Section */}
           <div className="profile-section">
-            <h3>Portfolio</h3>
+            <h3>Portfolio & Work</h3>
             {assetsLoading ? (
               <div className="loading-state">
                 <div className="loading-spinner"></div>
@@ -233,6 +370,54 @@ const PublicProfile = () => {
               </div>
             ) : (
               <>
+                {/* Featured Work Section */}
+                {(profile.portfolio_items?.length > 0 || assets.length > 0) && (
+                  <div className="featured-work-section">
+                    <h4 className="featured-work-title">✨ Featured Work</h4>
+                    <div className="featured-work-grid">
+                      {/* Show first portfolio item if exists */}
+                      {profile.portfolio_items?.[0] && (
+                        <div className="featured-work-item">
+                          {profile.portfolio_items[0].image && (
+                            <div className="featured-work-image">
+                              <img src={profile.portfolio_items[0].image} alt={profile.portfolio_items[0].title} />
+                              <div className="featured-work-overlay">
+                                <span className="featured-badge">Featured</span>
+                              </div>
+                            </div>
+                          )}
+                          <div className="featured-work-content">
+                            <h5>{profile.portfolio_items[0].title}</h5>
+                            <p>{profile.portfolio_items[0].description}</p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Show first asset if exists and no portfolio item */}
+                      {!profile.portfolio_items?.[0] && assets[0] && (
+                        <div className="featured-work-item">
+                          <div className="featured-work-image">
+                            {assets[0].preview_image ? (
+                              <img src={assets[0].preview_image} alt={assets[0].title} />
+                            ) : (
+                              <div className="asset-placeholder">
+                                <i className="fas fa-cube"></i>
+                              </div>
+                            )}
+                            <div className="featured-work-overlay">
+                              <span className="featured-badge">Latest</span>
+                            </div>
+                          </div>
+                          <div className="featured-work-content">
+                            <h5>{assets[0].title}</h5>
+                            <p>{assets[0].description}</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {/* Manual Portfolio Items */}
                 {profile.portfolio_items && profile.portfolio_items.length > 0 && (
                   <div className="portfolio-subsection">
@@ -330,7 +515,11 @@ const PublicProfile = () => {
                 {/* No Portfolio Content */}
                 {(!profile.portfolio_items || profile.portfolio_items.length === 0) && 
                  (!assets || assets.length === 0) && (
-                  <p className="no-content">No portfolio items to display yet.</p>
+                  <div className="no-content-state">
+                    <div className="no-content-icon">📁</div>
+                    <h4>No Portfolio Items</h4>
+                    <p>This creator hasn't uploaded any portfolio items yet.</p>
+                  </div>
                 )}
               </>
             )}
@@ -338,8 +527,67 @@ const PublicProfile = () => {
 
           {/* Client Reviews/Testimonials Section */}
           <div className="profile-section">
-            <h3>Client Reviews & Testimonials</h3>
-            <p className="no-content">Reviews and testimonials will be displayed here once implemented.</p>
+            <h3>Reviews & Testimonials</h3>
+            <div className="reviews-placeholder">
+              <div className="review-item">
+                <div className="review-header">
+                  <div className="reviewer-avatar">👤</div>
+                  <div className="reviewer-info">
+                    <h4>Sample Review</h4>
+                    <div className="review-rating">⭐⭐⭐⭐⭐</div>
+                  </div>
+                </div>
+                <p>"This is a placeholder for client reviews and testimonials. The review system will be implemented to show real feedback from clients and collaborators."</p>
+              </div>
+            </div>
+            <p className="no-content">Reviews and testimonials will be displayed here once the review system is implemented.</p>
+          </div>
+
+          {/* Recent Activity Section */}
+          <div className="profile-section">
+            <h3>Recent Activity</h3>
+            <div className="activity-feed">
+              <div className="activity-item">
+                <div className="activity-icon">🎨</div>
+                <div className="activity-content">
+                  <p><strong>Joined VikraHub</strong></p>
+                  <span className="activity-date">{formatDate(profile.member_since)}</span>
+                </div>
+              </div>
+              {assets.length > 0 && (
+                <div className="activity-item">
+                  <div className="activity-icon">📁</div>
+                  <div className="activity-content">
+                    <p><strong>Added {assets.length} portfolio item{assets.length !== 1 ? 's' : ''}</strong></p>
+                    <span className="activity-date">Various dates</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Contact & Collaboration Section */}
+          <div className="profile-section">
+            <h3>Let's Work Together</h3>
+            <div className="collaboration-section">
+              <p>Interested in collaborating or hiring {profile.full_name.split(' ')[0]}? Get in touch!</p>
+              <div className="contact-methods">
+                <button className="contact-method-btn primary" onClick={handleMessage}>
+                  <span className="method-icon">💬</span>
+                  <div className="method-info">
+                    <h4>Send Message</h4>
+                    <p>Start a conversation</p>
+                  </div>
+                </button>
+                <button className="contact-method-btn secondary" onClick={handleContact}>
+                  <span className="method-icon">📧</span>
+                  <div className="method-info">
+                    <h4>Contact Directly</h4>
+                    <p>Professional inquiry</p>
+                  </div>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
