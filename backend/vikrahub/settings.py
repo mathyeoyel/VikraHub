@@ -47,7 +47,18 @@ DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 print(f"Django starting with DEBUG={DEBUG}")
 print(f"SECRET_KEY configured: {'Yes' if SECRET_KEY else 'No'}")
 
-ALLOWED_HOSTS = ['vikrahub-backend.onrender.com', '.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    # Custom domain
+    'vikrahub.com',
+    'www.vikrahub.com', 
+    'api.vikrahub.com',
+    # Render domains
+    'vikrahub-backend.onrender.com', 
+    '.onrender.com', 
+    # Local development
+    'localhost', 
+    '127.0.0.1'
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -148,9 +159,14 @@ if DEBUG_MODE:
 else:
     # Production: Restrict to specific origins
     CORS_ALLOWED_ORIGINS = [
+        # Custom domain
+        "https://vikrahub.com",
+        "https://www.vikrahub.com",
+        # Deployment domains
         "https://vikrahub.netlify.app",
         "https://vikrahub-frontend.onrender.com",
-        # Add your frontend domains here
+        # Local development
+        "http://localhost:3000",
     ]
     
     # Allow additional origins from environment variable
@@ -211,6 +227,15 @@ SESSION_COOKIE_SAMESITE = 'Lax'
 # CSRF Configuration
 CSRF_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SAMESITE = 'Lax'
+
+# CSRF trusted origins for custom domain
+CSRF_TRUSTED_ORIGINS = [
+    'https://vikrahub.com',
+    'https://www.vikrahub.com',
+    'https://api.vikrahub.com',
+    'https://vikrahub.netlify.app',
+    'https://vikrahub-frontend.onrender.com',
+]
 
 # REST Framework
 REST_FRAMEWORK = {
