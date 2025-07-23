@@ -140,11 +140,11 @@ class PublicUserProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = UserProfile
-        fields = ['id', 'user', 'user_type', 'avatar', 'bio', 'website', 'headline',
-                 'skills', 'full_name', 'member_since', 'portfolio_items',
+        fields = ['id', 'user', 'user_type', 'avatar', 'cover_photo', 'bio', 'website', 'headline',
+                 'skills', 'location', 'achievements', 'services_offered', 'full_name', 'member_since', 'portfolio_items',
                  'facebook', 'instagram', 'twitter', 'linkedin', 'github']
-        read_only_fields = ['id', 'user', 'user_type', 'avatar', 'bio', 'website', 'headline',
-                           'skills', 'full_name', 'member_since', 'portfolio_items',
+        read_only_fields = ['id', 'user', 'user_type', 'avatar', 'cover_photo', 'bio', 'website', 'headline',
+                           'skills', 'location', 'achievements', 'services_offered', 'full_name', 'member_since', 'portfolio_items',
                            'facebook', 'instagram', 'twitter', 'linkedin', 'github']
     
     def get_full_name(self, obj):

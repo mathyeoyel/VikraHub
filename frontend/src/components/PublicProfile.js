@@ -316,6 +316,40 @@ const PublicProfile = () => {
             </div>
           )}
 
+          {/* Achievements */}
+          {profile.achievements && (
+            <div className="profile-section">
+              <h3>Achievements & Recognition</h3>
+              <div className="achievements-content">
+                <div className="achievements-text">
+                  {profile.achievements.split('\n').map((achievement, index) => (
+                    <div key={index} className="achievement-item">
+                      <span className="achievement-icon">🏆</span>
+                      <p>{achievement.trim()}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Services Offered */}
+          {profile.services_offered && (
+            <div className="profile-section">
+              <h3>Services & Commissions</h3>
+              <div className="services-content">
+                <div className="services-text">
+                  {profile.services_offered.split('\n').map((service, index) => (
+                    <div key={index} className="service-item">
+                      <span className="service-icon">⚡</span>
+                      <p>{service.trim()}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Experience & Background */}
           <div className="profile-section">
             <h3>Experience & Background</h3>
