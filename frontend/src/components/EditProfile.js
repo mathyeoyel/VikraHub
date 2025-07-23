@@ -12,6 +12,7 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
     email: '',
     user_type: 'client',
     bio: '',
+    location: '',
     website: '',
     twitter: '',
     instagram: '',
@@ -20,13 +21,17 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
     github: '',
     skills: '',
     headline: '',
-    avatar: ''  // Will store Cloudinary URL instead of File object
+    achievements: '',
+    services_offered: '',
+    avatar: '',  // Will store Cloudinary URL instead of File object
+    cover_photo: ''  // Will store Cloudinary URL for cover photo
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [avatarPreview, setAvatarPreview] = useState(null);
+  const [coverPreview, setCoverPreview] = useState(null);
 
   useEffect(() => {
     fetchProfile();
@@ -43,6 +48,7 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
         email: profileData.email || '',
         user_type: profileData.user_type || 'client',
         bio: profileData.bio || '',
+        location: profileData.location || '',
         website: profileData.website || '',
         twitter: profileData.twitter || '',
         instagram: profileData.instagram || '',
@@ -51,11 +57,18 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
         github: profileData.github || '',
         skills: profileData.skills || '',
         headline: profileData.headline || '',
-        avatar: profileData.avatar || ''  // Cloudinary URL
+        achievements: profileData.achievements || '',
+        services_offered: profileData.services_offered || '',
+        avatar: profileData.avatar || '',  // Cloudinary URL
+        cover_photo: profileData.cover_photo || ''  // Cloudinary URL
       });
       
       if (profileData.avatar) {
         setAvatarPreview(profileData.avatar);
+      }
+      
+      if (profileData.cover_photo) {
+        setCoverPreview(profileData.cover_photo);
       }
       
       setLoading(false);
@@ -105,6 +118,41 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
       } catch (error) {
         console.error('Upload error:', error);
         setError(`Upload failed: ${error.message}`);
+        // Reset file input
+        e.target.value = '';
+      }
+    }
+  };
+
+  const handleCoverPhotoChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      try {
+        setError('');
+        setSuccess('');
+        
+        // Show uploading state
+        setCoverPreview(URL.createObjectURL(file));
+        
+        // Upload to Cloudinary
+        const uploadResult = await uploadToCloudinary(file, {
+          folder: 'cover_photos',
+          tags: ['cover_photo', 'profile']
+        });
+        
+        // Update form data with Cloudinary URL
+        setFormData(prev => ({
+          ...prev,
+          cover_photo: uploadResult.secure_url
+        }));
+        
+        // Update preview with Cloudinary URL
+        setCoverPreview(uploadResult.secure_url);
+        
+        setSuccess('Cover photo uploaded successfully!');
+      } catch (error) {
+        console.error('Upload error:', error);
+        setError(`Cover photo upload failed: ${error.message}`);
         // Reset file input
         e.target.value = '';
       }
@@ -224,6 +272,35 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
             </div>
           </div>
 
+          {/* Cover Photo Section */}
+          <div className="form-section">
+            <h3>Cover Photo</h3>
+            <div className="cover-photo-section">
+              <div className="cover-photo-preview">
+                {coverPreview ? (
+                  <img src={coverPreview} alt="Cover photo preview" />
+                ) : (
+                  <div className="cover-photo-placeholder">
+                    <span>Upload a cover photo to personalize your profile</span>
+                  </div>
+                )}
+              </div>
+              <div className="cover-photo-upload">
+                <label htmlFor="cover-photo-input" className="upload-btn">
+                  Change Cover Photo
+                </label>
+                <input
+                  id="cover-photo-input"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCoverPhotoChange}
+                  style={{ display: 'none' }}
+                />
+                <small>JPG, PNG, or GIF (Max 5MB) - Recommended: 1920x400px</small>
+              </div>
+            </div>
+          </div>
+
           {/* Basic Information */}
           <div className="form-section">
             <h3>Basic Information</h3>
@@ -276,6 +353,18 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
                 <option value="client">Client</option>
                 <option value="freelancer">Freelancer</option>
               </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="location">Location</label>
+              <input
+                type="text"
+                id="location"
+                name="location"
+                value={formData.location}
+                onChange={handleInputChange}
+                placeholder="City, Country"
+              />
             </div>
           </div>
 
@@ -395,6 +484,40 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
                 onChange={handleInputChange}
                 placeholder="github.com/username"
               />
+            </div>
+          </div>
+
+          {/* Achievements & Recognition */}
+          <div className="form-section">
+            <h3>Achievements & Recognition</h3>
+            <div className="form-group">
+              <label htmlFor="achievements">Awards, Recognition & Notable Achievements</label>
+              <textarea
+                id="achievements"
+                name="achievements"
+                value={formData.achievements}
+                onChange={handleInputChange}
+                placeholder="Share your awards, recognitions, certifications, or notable achievements..."
+                rows={4}
+              />
+              <small>Highlight any awards, certifications, features, or professional recognition you've received</small>
+            </div>
+          </div>
+
+          {/* Services & Commissions */}
+          <div className="form-section">
+            <h3>Services & Commissions</h3>
+            <div className="form-group">
+              <label htmlFor="services_offered">Services & Commissions Offered</label>
+              <textarea
+                id="services_offered"
+                name="services_offered"
+                value={formData.services_offered}
+                onChange={handleInputChange}
+                placeholder="Describe the services and commissions you offer, including pricing and process details..."
+                rows={4}
+              />
+              <small>Detail what services you provide, types of commissions you accept, pricing ranges, or any special offerings</small>
             </div>
           </div>
 

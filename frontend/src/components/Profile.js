@@ -51,20 +51,40 @@ const Profile = () => {
     ...(profile?.website ? [{ platform: 'Website', url: profile.website.startsWith('http') ? profile.website : `https://${profile.website}`, icon: '🌐' }] : [])
   ];
 
-  // Mock services data - TODO: Add services to backend model
-  const services = [
-    { name: "Portrait Photography", price: "From $50", description: "Professional portrait sessions" },
-    { name: "Event Photography", price: "From $150", description: "Weddings, celebrations, corporate events" },
-    { name: "Brand Design", price: "From $100", description: "Logo and brand identity creation" },
-    { name: "Digital Art Commission", price: "From $75", description: "Custom digital artwork" }
-  ];
+  // Mock services data - Replace with real services from profile
+  const services = profile?.services_offered && profile.services_offered.trim() 
+    ? profile.services_offered.split('\n').filter(line => line.trim()).map((service, index) => {
+        // Try to parse if it contains price information
+        const parts = service.split(' - ');
+        return {
+          name: parts[0] || service,
+          description: parts[1] || '',
+          price: "Contact for pricing"
+        };
+      })
+    : [
+        { name: "Portrait Photography", price: "From $50", description: "Professional portrait sessions" },
+        { name: "Event Photography", price: "From $150", description: "Weddings, celebrations, corporate events" },
+        { name: "Brand Design", price: "From $100", description: "Logo and brand identity creation" },
+        { name: "Digital Art Commission", price: "From $75", description: "Custom digital artwork" }
+      ];
 
-  // Mock achievements data - TODO: Add achievements to backend model
-  const achievements = [
-    { title: "Featured Creator", year: "2024", description: "VikraHub Creator of the Month" },
-    { title: "Cultural Heritage Award", year: "2023", description: "South Sudan Arts Council" },
-    { title: "Photography Exhibition", year: "2023", description: "Juba Contemporary Arts Center" }
-  ];
+  // Use real achievements from profile
+  const achievements = profile?.achievements && profile.achievements.trim()
+    ? profile.achievements.split('\n').filter(line => line.trim()).map((achievement, index) => {
+        // Try to parse if it contains year information
+        const parts = achievement.split(' - ');
+        return {
+          title: parts[0] || achievement,
+          description: parts[1] || '',
+          year: new Date().getFullYear().toString() // Default to current year
+        };
+      })
+    : [
+        { title: "Featured Creator", year: "2024", description: "VikraHub Creator of the Month" },
+        { title: "Cultural Heritage Award", year: "2023", description: "South Sudan Arts Council" },
+        { title: "Photography Exhibition", year: "2023", description: "Juba Contemporary Arts Center" }
+      ];
 
   const testimonials = [
     {
@@ -123,7 +143,7 @@ const Profile = () => {
       {/* Cover Banner */}
       <div className="cover-banner">
         <img 
-          src={profile?.cover_image || '/assets/default-cover.jpg'} 
+          src={profile?.cover_photo || '/assets/default-cover.jpg'} 
           alt="Cover"
           className="cover-image"
         />
