@@ -14,28 +14,28 @@ const PublicClientProfile = () => {
   const [followerCount, setFollowerCount] = useState(0);
 
   useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setLoading(true);
+        const response = await publicProfileAPI.getByUsername(username);
+        setProfile(response.data);
+        
+        // Set client-specific data if available
+        if (response.data.client_profile) {
+          setClientProfile(response.data.client_profile);
+        }
+        
+        // Initialize follower count (placeholder)
+        setFollowerCount(Math.floor(Math.random() * 100) + 10);
+      } catch (err) {
+        setError(err.response?.data?.detail || 'Client profile not found');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchProfile();
   }, [username]);
-
-  const fetchProfile = async () => {
-    try {
-      setLoading(true);
-      const response = await publicProfileAPI.getByUsername(username);
-      setProfile(response.data);
-      
-      // Set client-specific data if available
-      if (response.data.client_profile) {
-        setClientProfile(response.data.client_profile);
-      }
-      
-      // Initialize follower count (placeholder)
-      setFollowerCount(Math.floor(Math.random() * 100) + 10);
-    } catch (err) {
-      setError(err.response?.data?.detail || 'Client profile not found');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Sample projects data (in real app, this would come from backend)
   const sampleProjects = [
