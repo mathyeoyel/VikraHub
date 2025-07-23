@@ -30,66 +30,20 @@ const Profile = () => {
     }
   };
 
-  // Mock portfolio data - in real app, this would come from API
-  const portfolioWorks = [
-    {
-      id: 1,
-      title: "Heritage Photography Series",
-      category: "Photography",
-      image: "/assets/portfolio/heritage-1.jpg",
-      description: "Capturing the beauty and resilience of South Sudanese culture through portrait photography.",
-      tags: ["Portrait", "Culture", "Documentary"]
-    },
-    {
-      id: 2,
-      title: "Digital Art Collection",
-      category: "Digital Art",
-      image: "/assets/portfolio/digital-1.jpg",
-      description: "Modern interpretations of traditional South Sudanese patterns and symbols.",
-      tags: ["Digital", "Traditional", "Modern"]
-    },
-    {
-      id: 3,
-      title: "Brand Identity Design",
-      category: "Design",
-      image: "/assets/portfolio/brand-1.jpg",
-      description: "Creating visual identities that celebrate local businesses and entrepreneurs.",
-      tags: ["Branding", "Logo", "Identity"]
-    },
-    {
-      id: 4,
-      title: "Cultural Festival Documentation",
-      category: "Photography",
-      image: "/assets/portfolio/festival-1.jpg",
-      description: "Documenting traditional celebrations and cultural events across South Sudan.",
-      tags: ["Events", "Culture", "Community"]
-    },
-    {
-      id: 5,
-      title: "Modern Logo Designs",
-      category: "Design",
-      image: "/assets/portfolio/logo-1.jpg",
-      description: "Contemporary logo designs for South Sudanese businesses and organizations.",
-      tags: ["Logo", "Modern", "Business"]
-    },
-    {
-      id: 6,
-      title: "Digital Illustrations",
-      category: "Digital Art",
-      image: "/assets/portfolio/illustration-1.jpg",
-      description: "Digital artwork celebrating South Sudanese stories and traditions.",
-      tags: ["Illustration", "Stories", "Digital"]
-    }
-  ];
+  // Get portfolio works from profile data
+  const portfolioWorks = profile?.portfolio_items || [];
 
+  // Get real social links from profile
   const socialLinks = [
-    { platform: 'Instagram', url: '#', icon: '📷' },
-    { platform: 'Facebook', url: '#', icon: '📘' },
-    { platform: 'Twitter', url: '#', icon: '🐦' },
-    { platform: 'LinkedIn', url: '#', icon: '💼' },
-    { platform: 'WhatsApp', url: '#', icon: '📱' }
+    ...(profile?.instagram ? [{ platform: 'Instagram', url: profile.instagram.startsWith('http') ? profile.instagram : `https://instagram.com/${profile.instagram}`, icon: '📷' }] : []),
+    ...(profile?.facebook ? [{ platform: 'Facebook', url: profile.facebook.startsWith('http') ? profile.facebook : `https://facebook.com/${profile.facebook}`, icon: '📘' }] : []),
+    ...(profile?.twitter ? [{ platform: 'Twitter', url: profile.twitter.startsWith('http') ? profile.twitter : `https://twitter.com/${profile.twitter}`, icon: '🐦' }] : []),
+    ...(profile?.linkedin ? [{ platform: 'LinkedIn', url: profile.linkedin.startsWith('http') ? profile.linkedin : `https://linkedin.com/in/${profile.linkedin}`, icon: '💼' }] : []),
+    ...(profile?.github ? [{ platform: 'GitHub', url: profile.github.startsWith('http') ? profile.github : `https://github.com/${profile.github}`, icon: '🐙' }] : []),
+    ...(profile?.website ? [{ platform: 'Website', url: profile.website.startsWith('http') ? profile.website : `https://${profile.website}`, icon: '🌐' }] : [])
   ];
 
+  // Mock services data - TODO: Add services to backend model
   const services = [
     { name: "Portrait Photography", price: "From $50", description: "Professional portrait sessions" },
     { name: "Event Photography", price: "From $150", description: "Weddings, celebrations, corporate events" },
@@ -97,6 +51,7 @@ const Profile = () => {
     { name: "Digital Art Commission", price: "From $75", description: "Custom digital artwork" }
   ];
 
+  // Mock achievements data - TODO: Add achievements to backend model
   const achievements = [
     { title: "Featured Creator", year: "2024", description: "VikraHub Creator of the Month" },
     { title: "Cultural Heritage Award", year: "2023", description: "South Sudan Arts Council" },
@@ -185,13 +140,25 @@ const Profile = () => {
             
             <div className="profile-info-header">
               <h1 className="profile-name">
-                {profile?.user?.first_name || ''} {profile?.user?.last_name || ''}
+                {profile?.user?.first_name && profile?.user?.last_name 
+                  ? `${profile.user.first_name} ${profile.user.last_name}`
+                  : profile?.user?.username || 'User'
+                }
               </h1>
               <p className="profile-username">@{profile?.user?.username || 'unknown'}</p>
-              <p className="profile-role">{profile?.title || 'Creative Professional'}</p>
-              <p className="profile-location">📍 {profile?.location || 'South Sudan'}</p>
+              <p className="profile-role">
+                {profile?.headline || 
+                 (profile?.user_type === 'creator' ? 'Creative Professional' :
+                  profile?.user_type === 'freelancer' ? 'Freelancer' :
+                  profile?.user_type === 'client' ? 'Client' : 'Professional')
+                }
+              </p>
+              <p className="profile-location">📍 {profile?.location || 'Location not specified'}</p>
               <p className="profile-tagline">
-                {profile?.tagline || "Telling stories through creativity and celebrating our heritage"}
+                {profile?.bio ? 
+                  (profile.bio.length > 100 ? profile.bio.substring(0, 100) + '...' : profile.bio) :
+                  "Welcome to my profile"
+                }
               </p>
             </div>
 
@@ -239,21 +206,25 @@ const Profile = () => {
 
             <div className="social-links-section">
               <h3>Connect With Me</h3>
-              <div className="social-links">
-                {socialLinks.map((social, index) => (
-                  <a 
-                    key={index}
-                    href={social.url} 
-                    className="social-link"
-                    title={social.platform}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <span className="social-icon">{social.icon}</span>
-                    <span className="social-name">{social.platform}</span>
-                  </a>
-                ))}
-              </div>
+              {socialLinks.length > 0 ? (
+                <div className="social-links">
+                  {socialLinks.map((social, index) => (
+                    <a 
+                      key={index}
+                      href={social.url} 
+                      className="social-link"
+                      title={social.platform}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span className="social-icon">{social.icon}</span>
+                      <span className="social-name">{social.platform}</span>
+                    </a>
+                  ))}
+                </div>
+              ) : (
+                <p>No social links added yet. Update your profile to connect with others!</p>
+              )}
             </div>
           </div>
 
@@ -261,34 +232,48 @@ const Profile = () => {
           <div className="portfolio-section">
             <div className="section-header">
               <h2>Portfolio</h2>
-              <div className="portfolio-tabs">
-                {['All', 'Photography', 'Design', 'Digital Art'].map(tab => (
-                  <button
-                    key={tab}
-                    className={`tab-btn ${activePortfolioTab === tab ? 'active' : ''}`}
-                    onClick={() => setActivePortfolioTab(tab)}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
+              {portfolioWorks.length > 0 && (
+                <div className="portfolio-tabs">
+                  {['All', ...new Set(portfolioWorks.map(work => work.category || 'General'))].map(tab => (
+                    <button
+                      key={tab}
+                      className={`tab-btn ${activePortfolioTab === tab ? 'active' : ''}`}
+                      onClick={() => setActivePortfolioTab(tab)}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             
-            <div className="portfolio-grid">
-              {filteredWorks.map(work => (
-                <div 
-                  key={work.id} 
-                  className="portfolio-item"
-                  onClick={() => setSelectedWork(work)}
-                >
-                  <img src={work.image} alt={work.title} />
-                  <div className="portfolio-overlay">
-                    <h4>{work.title}</h4>
-                    <p>{work.category}</p>
+            {portfolioWorks.length > 0 ? (
+              <div className="portfolio-grid">
+                {filteredWorks.map(work => (
+                  <div 
+                    key={work.id} 
+                    className="portfolio-item"
+                    onClick={() => setSelectedWork(work)}
+                  >
+                    <img 
+                      src={work.image || '/assets/default-portfolio.jpg'} 
+                      alt={work.title}
+                      onError={(e) => {
+                        e.target.src = '/assets/default-portfolio.jpg';
+                      }}
+                    />
+                    <div className="portfolio-overlay">
+                      <h4>{work.title}</h4>
+                      <p>{work.category || 'General'}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="portfolio-empty">
+                <p>No portfolio items to display yet. Add some work to showcase your skills!</p>
+              </div>
+            )}
           </div>
 
           {/* About/Story Section */}
@@ -296,25 +281,21 @@ const Profile = () => {
             <h2>About Me</h2>
             <div className="about-content">
               <div className="bio-text">
-                <p>
-                  {profile?.bio || 
-                    "I am a passionate creative professional from South Sudan, dedicated to telling our stories through visual art and celebrating the rich heritage of our nation. My work focuses on capturing the beauty, resilience, and spirit of our people."
-                  }
-                </p>
-                <p>
-                  Through my creative journey, I aim to bridge traditional South Sudanese culture with contemporary artistic expression, 
-                  creating work that resonates both locally and globally. Every project is an opportunity to showcase the incredible 
-                  talent and potential that exists within our communities.
-                </p>
+                {profile?.bio ? (
+                  <p>{profile.bio}</p>
+                ) : (
+                  <p>No bio information available. Update your profile to share more about yourself!</p>
+                )}
               </div>
               
-              <div className="creative-statement">
-                <h3>Creative Vision</h3>
-                <blockquote>
-                  "Art is the universal language that connects us all. Through my work, I strive to share the stories, 
-                  dreams, and aspirations of South Sudanese people with the world."
-                </blockquote>
-              </div>
+              {profile?.headline && (
+                <div className="creative-statement">
+                  <h3>Professional Headline</h3>
+                  <blockquote>
+                    "{profile.headline}"
+                  </blockquote>
+                </div>
+              )}
             </div>
           </div>
 
@@ -387,16 +368,43 @@ const Profile = () => {
         <div className="portfolio-modal" onClick={() => setSelectedWork(null)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setSelectedWork(null)}>×</button>
-            <img src={selectedWork.image} alt={selectedWork.title} />
+            {selectedWork.image && (
+              <img 
+                src={selectedWork.image} 
+                alt={selectedWork.title}
+                onError={(e) => {
+                  e.target.src = '/assets/default-portfolio.jpg';
+                }}
+              />
+            )}
             <div className="modal-info">
               <h3>{selectedWork.title}</h3>
-              <p className="modal-category">{selectedWork.category}</p>
+              <p className="modal-category">{selectedWork.category || 'General'}</p>
               <p className="modal-description">{selectedWork.description}</p>
-              <div className="modal-tags">
-                {selectedWork.tags.map((tag, index) => (
-                  <span key={index} className="tag">{tag}</span>
-                ))}
-              </div>
+              {selectedWork.url && (
+                <a 
+                  href={selectedWork.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="modal-link"
+                >
+                  View Project
+                </a>
+              )}
+              {selectedWork.tags_list && selectedWork.tags_list.length > 0 && (
+                <div className="modal-tags">
+                  {selectedWork.tags_list.map((tag, index) => (
+                    <span key={index} className="tag">{tag}</span>
+                  ))}
+                </div>
+              )}
+              {selectedWork.tags && typeof selectedWork.tags === 'string' && (
+                <div className="modal-tags">
+                  {selectedWork.tags.split(',').map((tag, index) => (
+                    <span key={index} className="tag">{tag.trim()}</span>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

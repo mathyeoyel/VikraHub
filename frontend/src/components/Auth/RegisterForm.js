@@ -10,7 +10,7 @@ const RegisterForm = ({ onClose, switchToLogin }) => {
     confirmPassword: '',
     first_name: '',
     last_name: '',
-    user_type: 'client' // client, freelancer, creator
+    user_type: 'creator' // creator, client, freelancer
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -119,7 +119,7 @@ const RegisterForm = ({ onClose, switchToLogin }) => {
           </div>
           
           <div className="form-group">
-            <label htmlFor="user_type">I want to</label>
+            <label htmlFor="user_type">Account Type</label>
             <select
               id="user_type"
               name="user_type"
@@ -127,9 +127,9 @@ const RegisterForm = ({ onClose, switchToLogin }) => {
               onChange={handleChange}
               required
             >
-              <option value="client">Hire freelancers & buy assets</option>
-              <option value="freelancer">Work as a freelancer</option>
-              <option value="creator">Sell creative assets</option>
+              <option value="creator">Creator</option>
+              <option value="client">Client</option>
+              <option value="freelancer">Freelancer</option>
             </select>
           </div>
           

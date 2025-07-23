@@ -890,3 +890,38 @@
     margin-top: -100px;
   }
 }
+
+/* Empty States */
+.portfolio-empty {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.portfolio-empty p {
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Modal Link Styles */
+.modal-link {
+  display: inline-block;
+  background: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  margin: 15px 0;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.modal-link:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+  text-decoration: none;
+  color: white;
+}
