@@ -162,8 +162,11 @@ export const assetAPI = {
   deleteReview: (id) => api.delete(`asset-reviews/${id}/`),
   
   // Creators/Freelancers
-  getCreators: (params) => api.get("freelancer-profiles/", { params }),
-  getCreator: (id) => api.get(`freelancer-profiles/${id}/`),
+  getCreators: (params) => api.get("creator-profiles/", { params }),
+  getCreator: (id) => api.get(`creator-profiles/${id}/`),
+  getFeaturedCreators: () => api.get("creator-profiles/featured/"),
+  getFreelancers: (params) => api.get("freelancer-profiles/", { params }),
+  getFreelancer: (id) => api.get(`freelancer-profiles/${id}/`),
 };
 
 export default api;

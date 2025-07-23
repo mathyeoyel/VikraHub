@@ -28,7 +28,7 @@ function Home() {
     return `https://ui-avatars.com/api/?name=${initials}&background=000223&color=ffffff&size=200`;
   }, []);
 
-  // Map backend data to frontend format (similar to Creators component)
+  // Map backend data to frontend format (for CreatorProfile)
   const mapCreatorData = useCallback((creator) => {
     const user = creator.user;
     const userProfile = user.userprofile || {};
@@ -36,10 +36,10 @@ function Home() {
     return {
       id: creator.id,
       name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username,
-      title: creator.title || userProfile.headline || 'Creative Professional',
+      title: creator.artistic_style || userProfile.headline || `${creator.creator_type_display || 'Creative Professional'}`,
       location: getLocationFromBio(userProfile.bio) || 'South Sudan',
       image: getProfileImage(userProfile.avatar, user.first_name, user.last_name),
-      bio: userProfile.bio || 'Passionate creative professional.',
+      bio: creator.art_statement || userProfile.bio || 'Passionate creative professional.',
     };
   }, [getLocationFromBio, getProfileImage]);
 
@@ -76,10 +76,11 @@ function Home() {
     const fetchFeaturedCreators = async () => {
       try {
         setLoading(true);
-        const response = await assetAPI.getCreators();
-        const creatorsData = response.data.results || response.data;
+        // Use the specific featured creators endpoint
+        const response = await assetAPI.getFeaturedCreators();
+        const creatorsData = response.data || [];
         
-        // Map and limit to first 3 creators
+        // Map creators data (already limited to featured creators from backend)
         const mappedCreators = creatorsData.slice(0, 3).map(mapCreatorData);
         setFeaturedCreators(mappedCreators);
       } catch (err) {

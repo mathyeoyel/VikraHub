@@ -260,3 +260,24 @@ INFO 2025-07-23 11:16:57,898 autoreload 22108 5984 C:\Users\hp\Downloads\Project
 INFO 2025-07-23 11:16:58,507 autoreload 14528 9760 Watching for file changes with StatReloader
 INFO 2025-07-23 11:22:31,512 basehttp 14528 3192 "GET /admin/?id=b8e550cd-2877-4067-af50-5ef260dada82&vscodeBrowserReqId=1753262551355 HTTP/1.1" 302 0
 INFO 2025-07-23 11:22:31,878 basehttp 14528 3192 "GET /admin/login/?next=/admin/%3Fid%3Db8e550cd-2877-4067-af50-5ef260dada82%26vscodeBrowserReqId%3D1753262551355 HTTP/1.1" 200 4331
+INFO 2025-07-23 11:38:34,319 autoreload 14528 9760 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-23 11:38:38,039 autoreload 16972 5648 Watching for file changes with StatReloader
+INFO 2025-07-23 11:38:56,189 autoreload 16972 5648 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-23 11:38:56,809 autoreload 4804 25332 Watching for file changes with StatReloader
+INFO 2025-07-23 11:39:26,967 autoreload 4804 25332 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\api_views.py changed, reloading.
+INFO 2025-07-23 11:39:27,576 autoreload 24756 23752 Watching for file changes with StatReloader
+INFO 2025-07-23 11:39:37,723 autoreload 24756 23752 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\api_views.py changed, reloading.
+INFO 2025-07-23 11:39:38,333 autoreload 16660 25536 Watching for file changes with StatReloader
+INFO 2025-07-23 11:40:06,408 autoreload 16660 25536 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\api_views.py changed, reloading.
+INFO 2025-07-23 11:40:06,995 autoreload 19372 8552 Watching for file changes with StatReloader
+INFO 2025-07-23 11:40:19,214 autoreload 19372 8552 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\urls.py changed, reloading.
+INFO 2025-07-23 11:40:19,835 autoreload 4840 11492 Watching for file changes with StatReloader
+INFO 2025-07-23 11:40:36,265 autoreload 4840 11492 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\urls.py changed, reloading.
+INFO 2025-07-23 11:40:36,841 autoreload 18884 9760 Watching for file changes with StatReloader
+INFO 2025-07-23 11:42:02,246 basehttp 18884 22932 "GET /api/creator-profiles/ HTTP/1.1" 200 2
+INFO 2025-07-23 11:43:33,519 basehttp 18884 14384 "GET /api/creator-profiles/ HTTP/1.1" 200 2
+INFO 2025-07-23 11:43:33,528 basehttp 18884 14384 "GET /api/creator-profiles/ HTTP/1.1" 200 2
+INFO 2025-07-23 11:48:59,611 basehttp 18884 25360 "GET /api/creator-profiles/ HTTP/1.1" 200 6515
+INFO 2025-07-23 11:49:32,786 basehttp 18884 25360 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 6515
+INFO 2025-07-23 11:50:25,083 basehttp 18884 17336 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 6515
+INFO 2025-07-23 11:50:25,108 basehttp 18884 18476 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 6515

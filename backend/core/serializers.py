@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from .models import (
     TeamMember, Service, PortfolioItem, BlogPost, UserProfile, Notification,
     AssetCategory, CreativeAsset, AssetPurchase, AssetReview,
-    FreelancerProfile, ProjectCategory, Project, ProjectApplication, 
-    ProjectContract, ProjectReview
+    FreelancerProfile, CreatorProfile, ClientProfile, ProjectCategory, Project, 
+    ProjectApplication, ProjectContract, ProjectReview
 )
 from .cloudinary_utils import get_optimized_avatar_url, validate_cloudinary_url
 from .asset_utils import validate_asset_price, validate_asset_tags
@@ -309,6 +309,26 @@ class FreelancerProfileSerializer(serializers.ModelSerializer):
         model = FreelancerProfile
         fields = '__all__'
         read_only_fields = ['id', 'user', 'rating', 'total_jobs', 'completed_jobs', 'created_at']
+
+class CreatorProfileSerializer(serializers.ModelSerializer):
+    user = UserWithProfileSerializer(read_only=True)
+    creator_type_display = serializers.CharField(source='get_creator_type_display', read_only=True)
+    experience_level_display = serializers.CharField(source='get_experience_level_display', read_only=True)
+    
+    class Meta:
+        model = CreatorProfile
+        fields = '__all__'
+        read_only_fields = ['id', 'user', 'followers_count', 'created_at']
+
+class ClientProfileSerializer(serializers.ModelSerializer):
+    user = UserWithProfileSerializer(read_only=True)
+    client_type_display = serializers.CharField(source='get_client_type_display', read_only=True)
+    completion_rate = serializers.ReadOnlyField()
+    
+    class Meta:
+        model = ClientProfile
+        fields = '__all__'
+        read_only_fields = ['id', 'user', 'projects_posted', 'projects_completed', 'total_spent', 'created_at']
 
 class ProjectCategorySerializer(serializers.ModelSerializer):
     class Meta:

@@ -5,8 +5,9 @@ from .api_views import (
     TeamMemberViewSet, ServiceViewSet, PortfolioItemViewSet, 
     BlogPostViewSet, NotificationViewSet, AssetCategoryViewSet, 
     CreativeAssetViewSet, AssetPurchaseViewSet, AssetReviewViewSet, 
-    FreelancerProfileViewSet, ProjectCategoryViewSet, ProjectViewSet, 
-    ProjectApplicationViewSet, ProjectContractViewSet, ProjectReviewViewSet
+    FreelancerProfileViewSet, CreatorProfileViewSet, ClientProfileViewSet,
+    ProjectCategoryViewSet, ProjectViewSet, ProjectApplicationViewSet, 
+    ProjectContractViewSet, ProjectReviewViewSet
 )
 
 # API Router for DRF ViewSets
@@ -28,6 +29,8 @@ router.register(r'asset-reviews', AssetReviewViewSet)
 
 # Freelancer Booking System
 router.register(r'freelancer-profiles', FreelancerProfileViewSet)
+router.register(r'creator-profiles', CreatorProfileViewSet)
+router.register(r'client-profiles', ClientProfileViewSet)
 router.register(r'project-categories', ProjectCategoryViewSet)
 router.register(r'projects', ProjectViewSet)
 router.register(r'project-applications', ProjectApplicationViewSet)

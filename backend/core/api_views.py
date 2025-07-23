@@ -11,16 +11,17 @@ from .asset_utils import (
 from .models import (
     TeamMember, Service, PortfolioItem, BlogPost, UserProfile, Notification,
     AssetCategory, CreativeAsset, AssetPurchase, AssetReview,
-    FreelancerProfile, ProjectCategory, Project, ProjectApplication, 
-    ProjectContract, ProjectReview
+    FreelancerProfile, CreatorProfile, ClientProfile, ProjectCategory, Project, 
+    ProjectApplication, ProjectContract, ProjectReview
 )
 from .serializers import (
     UserSerializer, UserProfileSerializer, PublicUserProfileSerializer,
     TeamMemberSerializer, ServiceSerializer, PortfolioItemSerializer, 
     BlogPostSerializer, NotificationSerializer, AssetCategorySerializer, 
     CreativeAssetSerializer, AssetPurchaseSerializer, AssetReviewSerializer, 
-    FreelancerProfileSerializer, ProjectCategorySerializer, ProjectSerializer, 
-    ProjectApplicationSerializer, ProjectContractSerializer, ProjectReviewSerializer
+    FreelancerProfileSerializer, CreatorProfileSerializer, ClientProfileSerializer,
+    ProjectCategorySerializer, ProjectSerializer, ProjectApplicationSerializer, 
+    ProjectContractSerializer, ProjectReviewSerializer
 )
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -511,6 +512,89 @@ class FreelancerProfileViewSet(viewsets.ModelViewSet):
         except FreelancerProfile.DoesNotExist:
             return Response(
                 {'error': 'Freelancer profile not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+class CreatorProfileViewSet(viewsets.ModelViewSet):
+    queryset = CreatorProfile.objects.filter(is_featured=True)
+    serializer_class = CreatorProfileSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    def get_queryset(self):
+        queryset = CreatorProfile.objects.all()
+        creator_type = self.request.query_params.get('creator_type', None)
+        experience_level = self.request.query_params.get('experience_level', None)
+        available_for_commissions = self.request.query_params.get('available_for_commissions', None)
+        featured = self.request.query_params.get('featured', None)
+        
+        if creator_type:
+            queryset = queryset.filter(creator_type=creator_type)
+        if experience_level:
+            queryset = queryset.filter(experience_level=experience_level)
+        if available_for_commissions is not None:
+            queryset = queryset.filter(available_for_commissions=available_for_commissions.lower() == 'true')
+        if featured is not None:
+            queryset = queryset.filter(is_featured=featured.lower() == 'true')
+            
+        # Order by featured first, then by followers count
+        return queryset.order_by('-is_featured', '-followers_count', '-created_at')
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+    
+    @action(detail=False, methods=['get'])
+    def my_profile(self, request):
+        """Get current user's creator profile"""
+        try:
+            profile = CreatorProfile.objects.get(user=request.user)
+            serializer = self.get_serializer(profile)
+            return Response(serializer.data)
+        except CreatorProfile.DoesNotExist:
+            return Response(
+                {'error': 'Creator profile not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+    
+    @action(detail=False, methods=['get'])
+    def featured(self, request):
+        """Get featured creators for homepage"""
+        featured_creators = CreatorProfile.objects.filter(is_featured=True)[:3]
+        serializer = self.get_serializer(featured_creators, many=True)
+        return Response(serializer.data)
+
+class ClientProfileViewSet(viewsets.ModelViewSet):
+    queryset = ClientProfile.objects.all()
+    serializer_class = ClientProfileSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        client_type = self.request.query_params.get('client_type', None)
+        company_size = self.request.query_params.get('company_size', None)
+        is_verified = self.request.query_params.get('is_verified', None)
+        
+        if client_type:
+            queryset = queryset.filter(client_type=client_type)
+        if company_size:
+            queryset = queryset.filter(company_size=company_size)
+        if is_verified is not None:
+            queryset = queryset.filter(is_verified=is_verified.lower() == 'true')
+            
+        return queryset.order_by('-is_verified', '-total_spent', '-created_at')
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+    
+    @action(detail=False, methods=['get'])
+    def my_profile(self, request):
+        """Get current user's client profile"""
+        try:
+            profile = ClientProfile.objects.get(user=request.user)
+            serializer = self.get_serializer(profile)
+            return Response(serializer.data)
+        except ClientProfile.DoesNotExist:
+            return Response(
+                {'error': 'Client profile not found'}, 
                 status=status.HTTP_404_NOT_FOUND
             )
 
