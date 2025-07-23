@@ -281,3 +281,12 @@ INFO 2025-07-23 11:48:59,611 basehttp 18884 25360 "GET /api/creator-profiles/ HT
 INFO 2025-07-23 11:49:32,786 basehttp 18884 25360 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 6515
 INFO 2025-07-23 11:50:25,083 basehttp 18884 17336 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 6515
 INFO 2025-07-23 11:50:25,108 basehttp 18884 18476 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 6515
+INFO 2025-07-23 11:57:37,578 autoreload 18884 9760 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\api_views.py changed, reloading.
+INFO 2025-07-23 11:57:40,921 autoreload 13952 25244 Watching for file changes with StatReloader
+INFO 2025-07-23 12:09:29,408 basehttp 13952 14436 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 6515
+INFO 2025-07-23 12:16:01,784 autoreload 12012 4836 Watching for file changes with StatReloader
+INFO 2025-07-23 12:16:14,582 basehttp 13952 13696 "GET / HTTP/1.1" 200 1043
+INFO 2025-07-23 12:16:23,750 basehttp 13952 6936 "GET /api/public-profiles/akon_peter/ HTTP/1.1" 200 1024
+INFO 2025-07-23 12:16:54,730 autoreload 7600 26112 Watching for file changes with StatReloader
+WARNING 2025-07-23 12:18:32,205 log 7600 10532 Not Found: /api/public-profiles/akon-peter/
+WARNING 2025-07-23 12:18:32,208 basehttp 7600 10532 "GET /api/public-profiles/akon-peter/ HTTP/1.1" 404 52

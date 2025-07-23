@@ -35,6 +35,7 @@ function Home() {
     
     return {
       id: creator.id,
+      username: user.username, // Add username for potential profile links
       name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username,
       title: creator.artistic_style || userProfile.headline || `${creator.creator_type_display || 'Creative Professional'}`,
       location: getLocationFromBio(userProfile.bio) || 'South Sudan',

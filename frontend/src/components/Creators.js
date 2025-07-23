@@ -37,6 +37,7 @@ const Creators = () => {
     
     return {
       id: creator.id,
+      username: user.username, // Add username for profile links
       name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username,
       title: creator.title || userProfile.headline || 'Creative Professional',
       location: getLocationFromBio(userProfile.bio) || 'South Sudan',
@@ -425,7 +426,7 @@ const Creators = () => {
                     ))}
                   </div>
                   <div className="creator-actions">
-                    <Link to={`/profile/${creator.name.toLowerCase().replace(' ', '-')}`} className="view-profile-link">
+                    <Link to={`/profile/${creator.username}`} className="view-profile-link">
                       View Profile
                     </Link>
                     <button className="contact-btn">Contact</button>
