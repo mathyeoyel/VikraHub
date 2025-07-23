@@ -7,7 +7,7 @@
 /* Header Section */
 .client-header-section {
   position: relative;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #000223;
   color: white;
   overflow: hidden;
 }
@@ -34,7 +34,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+  background: rgba(0, 2, 35, 0.8);
 }
 
 .client-header-content {
@@ -255,7 +255,7 @@
 }
 
 .stat-card {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: #f8f9fa;
   padding: 24px;
   border-radius: 12px;
   text-align: center;

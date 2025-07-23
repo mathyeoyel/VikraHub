@@ -1,7 +1,7 @@
 /* About Page Styles */
 .about-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: #000223;
 }
 
 .about-page .container {
@@ -70,7 +70,7 @@
   transform: translateX(-50%);
   width: 60px;
   height: 4px;
-  background: linear-gradient(90deg, #000223, #1a237e);
+  background: #000223;
   border-radius: 2px;
 }
 
@@ -185,7 +185,7 @@
 }
 
 .audience-card {
-  background: linear-gradient(135deg, #000223 0%, #1a237e 100%);
+  background: #000223;
   color: white;
   padding: 40px 30px;
   border-radius: 15px;
@@ -264,7 +264,7 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #000223 0%, #1a237e 100%);
+  background: #000223;
   color: white;
   border: none;
 }
@@ -341,7 +341,7 @@
 .closing-section {
   text-align: center;
   padding: 60px 0;
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  background: #000223;
   color: white;
   border-radius: 15px;
   margin-bottom: 0;
