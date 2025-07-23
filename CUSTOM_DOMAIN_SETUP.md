@@ -13,15 +13,20 @@ Your VikraHub application has two parts:
 ## 📋 Prerequisites
 
 - [x] Domain purchased: `vikrahub.com`
-- [ ] Access to domain registrar's DNS management
+- [x] Domain registrar: Namecheap ✅ (Fully supported!)
+- [ ] Access to Namecheap DNS management
 - [ ] Hosting platform chosen (Render or Netlify)
 - [ ] SSL certificate (automatically provided by hosting platforms)
+
+> **Note**: This setup works perfectly with **Namecheap**! See `NAMECHEAP_DNS_SETUP.md` for detailed Namecheap-specific instructions.
 
 ## 🚀 Option 1: Deployment with Render (Recommended)
 
 ### Step 1: Configure DNS at Your Domain Registrar
 
-Add these DNS records at your domain registrar (GoDaddy, Namecheap, etc.):
+Add these DNS records at **Namecheap** (or your domain registrar):
+
+> **For Namecheap users**: See detailed step-by-step instructions in `NAMECHEAP_DNS_SETUP.md`
 
 ```dns
 Type    Name        Value                           TTL
@@ -30,6 +35,11 @@ CNAME   api         cname.render.com                3600
 A       @           216.24.57.1                     3600
 A       @           216.24.57.2                     3600
 ```
+
+**Namecheap-specific notes:**
+- Use "Advanced DNS" tab in your domain management
+- Host field: Use "@" for root domain, "www" for www subdomain
+- TTL: Use "Automatic" or 3600 seconds
 
 ### Step 2: Update Render Configuration
 
@@ -126,10 +136,10 @@ REACT_APP_API_URL=https://api.vikrahub.com/api/
 ## 📝 Step-by-Step Implementation
 
 ### Phase 1: DNS Configuration (Do this first)
-1. **Login to your domain registrar**
-2. **Navigate to DNS management**
-3. **Add the DNS records** (see above based on your hosting choice)
-4. **Wait 24-48 hours** for DNS propagation
+1. **Login to Namecheap** (or your domain registrar)
+2. **Navigate to Advanced DNS** management for vikrahub.com
+3. **Add the DNS records** (see NAMECHEAP_DNS_SETUP.md for detailed steps)
+4. **Wait 2-48 hours** for DNS propagation (Namecheap average: 2-24 hours)
 
 ### Phase 2: Update Code
 1. **Update Django settings** (ALLOWED_HOSTS, CORS, CSRF)
