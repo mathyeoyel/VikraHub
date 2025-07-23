@@ -16,7 +16,10 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
     twitter: '',
     instagram: '',
     facebook: '',
+    linkedin: '',
+    github: '',
     skills: '',
+    headline: '',
     avatar: ''  // Will store Cloudinary URL instead of File object
   });
   const [loading, setLoading] = useState(true);
@@ -44,7 +47,10 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
         twitter: profileData.twitter || '',
         instagram: profileData.instagram || '',
         facebook: profileData.facebook || '',
+        linkedin: profileData.linkedin || '',
+        github: profileData.github || '',
         skills: profileData.skills || '',
+        headline: profileData.headline || '',
         avatar: profileData.avatar || ''  // Cloudinary URL
       });
       
@@ -259,16 +265,16 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="user_type">User Type</label>
+              <label htmlFor="user_type">Account Type</label>
               <select
                 id="user_type"
                 name="user_type"
                 value={formData.user_type}
                 onChange={handleInputChange}
               >
+                <option value="creator">Creator</option>
                 <option value="client">Client</option>
                 <option value="freelancer">Freelancer</option>
-                <option value="creator">Creator</option>
               </select>
             </div>
           </div>
@@ -276,6 +282,18 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
           {/* About Section */}
           <div className="form-section">
             <h3>About</h3>
+            <div className="form-group">
+              <label htmlFor="headline">Professional Headline</label>
+              <input
+                type="text"
+                id="headline"
+                name="headline"
+                value={formData.headline}
+                onChange={handleInputChange}
+                placeholder="e.g., Creative Director | Photographer | Designer"
+              />
+            </div>
+
             <div className="form-group">
               <label htmlFor="bio">Bio</label>
               <textarea
@@ -296,7 +314,7 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
                 name="skills"
                 value={formData.skills}
                 onChange={handleInputChange}
-                placeholder="e.g., JavaScript, React, Node.js (comma-separated)"
+                placeholder="e.g., Photography, Graphic Design, UI/UX (comma-separated)"
               />
               <small>Separate skills with commas</small>
             </div>
@@ -342,15 +360,40 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
               </div>
             </div>
 
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="facebook">Facebook</label>
+                <input
+                  type="text"
+                  id="facebook"
+                  name="facebook"
+                  value={formData.facebook}
+                  onChange={handleInputChange}
+                  placeholder="facebook.com/username"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="linkedin">LinkedIn</label>
+                <input
+                  type="text"
+                  id="linkedin"
+                  name="linkedin"
+                  value={formData.linkedin}
+                  onChange={handleInputChange}
+                  placeholder="linkedin.com/in/username"
+                />
+              </div>
+            </div>
+
             <div className="form-group">
-              <label htmlFor="facebook">Facebook</label>
+              <label htmlFor="github">GitHub</label>
               <input
                 type="text"
-                id="facebook"
-                name="facebook"
-                value={formData.facebook}
+                id="github"
+                name="github"
+                value={formData.github}
                 onChange={handleInputChange}
-                placeholder="facebook.com/username"
+                placeholder="github.com/username"
               />
             </div>
           </div>

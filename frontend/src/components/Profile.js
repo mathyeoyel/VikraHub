@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './Auth/AuthContext';
 import { userAPI } from '../api';
+import EditProfile from './EditProfile';
 import './Profile.css';
 
 const Profile = () => {
@@ -28,6 +29,13 @@ const Profile = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleProfileUpdate = (updatedProfile) => {
+    setProfile(updatedProfile);
+    setEditing(false);
+    // Show a success message or notification
+    console.log('Profile updated successfully:', updatedProfile);
   };
 
   // Get portfolio works from profile data
@@ -412,22 +420,10 @@ const Profile = () => {
 
       {/* Edit Profile Modal */}
       {editing && (
-        <div className="edit-modal-overlay">
-          <div className="edit-modal-container">
-            <h3>Edit Profile</h3>
-            <p>Comprehensive profile editing functionality will be implemented here.</p>
-            <p>This will include sections for:</p>
-            <ul>
-              <li>Personal Information & Bio</li>
-              <li>Skills & Expertise</li>
-              <li>Portfolio Management</li>
-              <li>Social Media Links</li>
-              <li>Services & Pricing</li>
-              <li>Cover Photo & Avatar</li>
-            </ul>
-            <button onClick={() => setEditing(false)}>Close</button>
-          </div>
-        </div>
+        <EditProfile 
+          onClose={() => setEditing(false)}
+          onProfileUpdate={handleProfileUpdate}
+        />
       )}
     </div>
   );
