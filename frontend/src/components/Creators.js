@@ -17,11 +17,14 @@ const Creators = () => {
         setLoading(true);
         const response = await assetAPI.getCreators();
         const creatorsData = response.data.results || response.data;
+        console.log('Creator profiles received:', creatorsData);
         setCreators(creatorsData);
         setError(null);
       } catch (err) {
         console.error('Error fetching creators:', err);
         setError('Failed to load creators. Please try again later.');
+        // Use fallback data if API fails
+        setCreators([]);
       } finally {
         setLoading(false);
       }
@@ -30,27 +33,33 @@ const Creators = () => {
     fetchCreators();
   }, []);
 
-  // Map backend data to frontend format
-  const mapCreatorData = (creator) => {
-    const user = creator.user;
+  // Map backend CreatorProfile data to frontend format
+  const mapCreatorData = (creatorProfile) => {
+    const user = creatorProfile.user;
     const userProfile = user.userprofile || {};
     
     return {
-      id: creator.id,
-      username: user.username, // Add username for profile links
+      id: creatorProfile.id,
+      username: user.username,
       name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username,
-      title: creator.title || userProfile.headline || 'Creative Professional',
+      title: creatorProfile.creator_type_display || 'Creative Professional',
       location: getLocationFromBio(userProfile.bio) || 'South Sudan',
-      category: getCreatorCategory(userProfile.skills || creator.title),
+      category: mapCreatorTypeToCategory(creatorProfile.creator_type),
       image: getProfileImage(userProfile.avatar, user.first_name, user.last_name),
-      bio: userProfile.bio || 'Passionate creative professional.',
+      bio: creatorProfile.art_statement || userProfile.bio || 'Passionate creative professional.',
       specialties: getSkillsArray(userProfile.skills),
-      yearsExperience: creator.years_experience || 0,
-      featured: creator.is_verified || false,
-      hourlyRate: creator.hourly_rate,
-      rating: creator.rating || 0,
-      availability: creator.availability || 'Available',
-      portfolioUrl: creator.portfolio_url,
+      yearsExperience: creatorProfile.years_active || 0,
+      featured: creatorProfile.is_featured || false,
+      verified: creatorProfile.is_verified || false,
+      hourlyRate: creatorProfile.price_range || 'Contact for pricing',
+      rating: 0, // TODO: Calculate from reviews
+      availability: creatorProfile.available_for_commissions ? 'Available' : 'Unavailable',
+      portfolioUrl: creatorProfile.portfolio_url || userProfile.website,
+      experienceLevel: creatorProfile.experience_level_display,
+      artisticStyle: creatorProfile.artistic_style,
+      commissionsOpen: creatorProfile.available_for_commissions,
+      commissionTypes: creatorProfile.commission_types,
+      followersCount: creatorProfile.followers_count || 0,
       // Additional profile information
       headline: userProfile.headline,
       website: userProfile.website,
@@ -62,6 +71,22 @@ const Creators = () => {
         github: userProfile.github
       }
     };
+  };
+
+  // Map creator type to display category
+  const mapCreatorTypeToCategory = (creatorType) => {
+    const typeMap = {
+      'photographer': 'Photography',
+      'designer': 'Design',
+      'artist': 'Art',
+      'digital_artist': 'Digital Art',
+      'traditional_artist': 'Art',
+      'writer': 'Writing',
+      'musician': 'Music',
+      'filmmaker': 'Video',
+      'other': 'Creative'
+    };
+    return typeMap[creatorType] || 'Creative';
   };
 
   // Extract location from bio text (since location field doesn't exist in model)
@@ -92,20 +117,6 @@ const Creators = () => {
     
     // Final fallback to a default avatar
     return '/assets/default-avatar.jpg';
-  };
-
-  // Extract category from skills or title
-  const getCreatorCategory = (skills) => {
-    if (!skills) return 'Creative';
-    
-    const skillsLower = skills.toLowerCase();
-    if (skillsLower.includes('photo') || skillsLower.includes('camera')) return 'Photography';
-    if (skillsLower.includes('design') || skillsLower.includes('ui') || skillsLower.includes('ux')) return 'Design';
-    if (skillsLower.includes('video') || skillsLower.includes('film') || skillsLower.includes('editing')) return 'Video';
-    if (skillsLower.includes('write') || skillsLower.includes('content') || skillsLower.includes('copy')) return 'Writing';
-    if (skillsLower.includes('music') || skillsLower.includes('audio') || skillsLower.includes('sound')) return 'Music';
-    if (skillsLower.includes('tech') || skillsLower.includes('web') || skillsLower.includes('dev')) return 'Technology';
-    return 'Creative';
   };
 
   // Convert skills string to array
@@ -262,7 +273,7 @@ const Creators = () => {
     }
   ];
 
-  const categories = ['All', 'Photography', 'Design', 'Technology', 'Business', 'Digital Art'];
+  const categories = ['All', 'Photography', 'Design', 'Art', 'Digital Art', 'Writing', 'Music', 'Video', 'Creative'];
 
   // Use real data if available, otherwise fallback data
   const displayCreators = creators.length > 0 ? creators.map(mapCreatorData) : fallbackCreators;
