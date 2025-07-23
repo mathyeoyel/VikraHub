@@ -80,14 +80,13 @@ const Profile = () => {
   // Use real achievements from profile - Only for Creator and Freelancer
   const achievements = (profile?.user_type === 'creator' || profile?.user_type === 'freelancer') && profile?.achievements && profile.achievements.trim()
     ? profile.achievements.split('\n').filter(line => line.trim()).map((achievement, index) => {
-        // Try to parse if it contains year information
         const parts = achievement.split(' - ');
         return {
           title: parts[0] || achievement,
           description: parts[1] || '',
-          year: new Date().getFullYear().toString() // Default to current year
+          year: new Date().getFullYear().toString()
         };
-      ])
+      })
     : (profile?.user_type === 'creator' || profile?.user_type === 'freelancer') ? [
         ...(profile?.user_type === 'creator' ? [
           { title: "Featured Creator", year: "2024", description: "VikraHub Creator of the Month" },
