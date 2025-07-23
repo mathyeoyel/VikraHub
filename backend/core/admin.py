@@ -3,8 +3,9 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from .models import (
     Service, PortfolioItem, BlogPost, TeamMember, AssetCategory, CreativeAsset,
-    UserProfile, FreelancerProfile, Notification, ProjectCategory, Project,
-    ProjectApplication, ProjectContract, ProjectReview, AssetPurchase, AssetReview
+    UserProfile, FreelancerProfile, CreatorProfile, ClientProfile, Notification, 
+    ProjectCategory, Project, ProjectApplication, ProjectContract, ProjectReview, 
+    AssetPurchase, AssetReview
 )
 
 # Register your models here.
@@ -21,6 +22,20 @@ class FreelancerProfileInline(admin.StackedInline):
     model = FreelancerProfile
     can_delete = False
     verbose_name_plural = 'Freelancer Profile'
+    fk_name = 'user'
+
+# Creator Profile Inline
+class CreatorProfileInline(admin.StackedInline):
+    model = CreatorProfile
+    can_delete = False
+    verbose_name_plural = 'Creator Profile'
+    fk_name = 'user'
+
+# Client Profile Inline
+class ClientProfileInline(admin.StackedInline):
+    model = ClientProfile
+    can_delete = False
+    verbose_name_plural = 'Client Profile'
     fk_name = 'user'
 
 # Custom User Admin
@@ -73,6 +88,82 @@ class FreelancerProfileAdmin(admin.ModelAdmin):
         ('Performance Metrics', {
             'fields': ('rating', 'total_jobs', 'completed_jobs'),
             'classes': ('collapse',)
+        }),
+        ('Timestamps', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)
+        })
+    )
+
+# CreatorProfile Admin
+@admin.register(CreatorProfile)
+class CreatorProfileAdmin(admin.ModelAdmin):
+    list_display = ['user', 'creator_type', 'experience_level', 'available_for_commissions', 'is_featured', 'is_verified']
+    list_filter = ['creator_type', 'experience_level', 'available_for_commissions', 'is_featured', 'is_verified', 'created_at']
+    search_fields = ['user__username', 'user__first_name', 'user__last_name', 'artistic_style', 'art_statement']
+    readonly_fields = ['followers_count', 'created_at']
+    
+    fieldsets = (
+        ('User Information', {
+            'fields': ('user',)
+        }),
+        ('Creative Details', {
+            'fields': ('creator_type', 'artistic_style', 'experience_level', 'years_active')
+        }),
+        ('Portfolio & Showcase', {
+            'fields': ('portfolio_url', 'featured_work', 'art_statement')
+        }),
+        ('Professional Background', {
+            'fields': ('exhibitions', 'awards'),
+            'classes': ('collapse',)
+        }),
+        ('Commission Settings', {
+            'fields': ('available_for_commissions', 'commission_types', 'price_range')
+        }),
+        ('Status & Verification', {
+            'fields': ('is_featured', 'is_verified')
+        }),
+        ('Social Metrics', {
+            'fields': ('followers_count',),
+            'classes': ('collapse',)
+        }),
+        ('Timestamps', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)
+        })
+    )
+
+# ClientProfile Admin
+@admin.register(ClientProfile)
+class ClientProfileAdmin(admin.ModelAdmin):
+    list_display = ['user', 'client_type', 'company_name', 'company_size', 'projects_posted', 'is_verified', 'payment_verified']
+    list_filter = ['client_type', 'company_size', 'is_verified', 'payment_verified', 'created_at']
+    search_fields = ['user__username', 'user__first_name', 'user__last_name', 'company_name', 'contact_person', 'industry']
+    readonly_fields = ['projects_posted', 'projects_completed', 'total_spent', 'created_at']
+    
+    fieldsets = (
+        ('User Information', {
+            'fields': ('user',)
+        }),
+        ('Organization Details', {
+            'fields': ('client_type', 'company_name', 'company_size', 'industry')
+        }),
+        ('Contact Information', {
+            'fields': ('contact_person', 'phone_number', 'business_address', 'preferred_communication')
+        }),
+        ('Business Details', {
+            'fields': ('business_registration', 'tax_id'),
+            'classes': ('collapse',)
+        }),
+        ('Project Preferences', {
+            'fields': ('typical_budget_range', 'project_types')
+        }),
+        ('Performance Metrics', {
+            'fields': ('projects_posted', 'projects_completed', 'total_spent'),
+            'classes': ('collapse',)
+        }),
+        ('Verification Status', {
+            'fields': ('is_verified', 'payment_verified')
         }),
         ('Timestamps', {
             'fields': ('created_at',),

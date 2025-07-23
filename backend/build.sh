@@ -24,6 +24,10 @@ python manage.py migrate
 echo "Creating sample data..."
 python manage.py create_sample_data
 
+# Create creator and client profiles
+echo "Creating creator and client profiles..."
+python manage.py create_creator_client_profiles
+
 # Create production superuser
 echo "Creating production superuser..."
 python manage.py create_production_superuser

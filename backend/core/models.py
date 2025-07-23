@@ -252,6 +252,124 @@ class FreelancerProfile(models.Model):
             return 0
         return (self.completed_jobs / self.total_jobs) * 100
 
+class CreatorProfile(models.Model):
+    CREATOR_TYPES = [
+        ('artist', 'Visual Artist'),
+        ('photographer', 'Photographer'),
+        ('designer', 'Graphic Designer'),
+        ('writer', 'Writer/Storyteller'),
+        ('musician', 'Musician'),
+        ('filmmaker', 'Filmmaker'),
+        ('digital_artist', 'Digital Artist'),
+        ('traditional_artist', 'Traditional Artist'),
+        ('other', 'Other Creative'),
+    ]
+    
+    EXPERIENCE_LEVELS = [
+        ('beginner', 'Beginner (0-2 years)'),
+        ('intermediate', 'Intermediate (3-5 years)'),
+        ('advanced', 'Advanced (6-10 years)'),
+        ('expert', 'Expert (10+ years)'),
+    ]
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='creator_profile')
+    creator_type = models.CharField(max_length=50, choices=CREATOR_TYPES, help_text="Primary creative field")
+    artistic_style = models.CharField(max_length=200, blank=True, help_text="Description of artistic style or approach")
+    experience_level = models.CharField(max_length=20, choices=EXPERIENCE_LEVELS, default='beginner')
+    
+    # Portfolio and showcase
+    portfolio_url = models.URLField(blank=True, help_text="Link to external portfolio")
+    featured_work = models.URLField(blank=True, help_text="Cloudinary URL for featured artwork", validators=[validate_cloudinary_url])
+    art_statement = models.TextField(blank=True, help_text="Artist statement or creative philosophy")
+    
+    # Professional details
+    years_active = models.PositiveIntegerField(default=0, help_text="Years active as a creator")
+    exhibitions = models.TextField(blank=True, help_text="Notable exhibitions, shows, or features")
+    awards = models.TextField(blank=True, help_text="Awards and recognitions")
+    
+    # Availability and preferences
+    available_for_commissions = models.BooleanField(default=True)
+    commission_types = models.CharField(max_length=300, blank=True, help_text="Types of commissions accepted")
+    price_range = models.CharField(max_length=100, blank=True, help_text="Typical price range for work")
+    
+    # Social proof
+    followers_count = models.PositiveIntegerField(default=0)
+    is_featured = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.get_creator_type_display()}"
+    
+    class Meta:
+        verbose_name = "Creator Profile"
+        verbose_name_plural = "Creator Profiles"
+
+class ClientProfile(models.Model):
+    CLIENT_TYPES = [
+        ('individual', 'Individual'),
+        ('business', 'Business/Company'),
+        ('nonprofit', 'Non-Profit Organization'),
+        ('government', 'Government Agency'),
+        ('media', 'Media Organization'),
+        ('agency', 'Creative Agency'),
+        ('startup', 'Startup'),
+        ('other', 'Other'),
+    ]
+    
+    COMPANY_SIZES = [
+        ('solo', 'Solo/Individual'),
+        ('small', 'Small (2-10 employees)'),
+        ('medium', 'Medium (11-50 employees)'),
+        ('large', 'Large (51-200 employees)'),
+        ('enterprise', 'Enterprise (200+ employees)'),
+    ]
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='client_profile')
+    client_type = models.CharField(max_length=20, choices=CLIENT_TYPES, default='individual')
+    company_name = models.CharField(max_length=200, blank=True, help_text="Organization or company name")
+    company_size = models.CharField(max_length=20, choices=COMPANY_SIZES, default='solo')
+    industry = models.CharField(max_length=100, blank=True, help_text="Industry or sector")
+    
+    # Contact and location
+    business_address = models.TextField(blank=True)
+    contact_person = models.CharField(max_length=100, blank=True, help_text="Primary contact person")
+    phone_number = models.CharField(max_length=20, blank=True)
+    
+    # Project and budget preferences
+    typical_budget_range = models.CharField(max_length=100, blank=True, help_text="Typical project budget range")
+    project_types = models.TextField(blank=True, help_text="Types of projects typically commissioned")
+    preferred_communication = models.CharField(max_length=100, blank=True, help_text="Preferred communication methods")
+    
+    # Business details
+    business_registration = models.CharField(max_length=100, blank=True, help_text="Business registration number")
+    tax_id = models.CharField(max_length=50, blank=True, help_text="Tax identification number")
+    
+    # Metrics
+    projects_posted = models.PositiveIntegerField(default=0)
+    projects_completed = models.PositiveIntegerField(default=0)
+    total_spent = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    
+    # Status
+    is_verified = models.BooleanField(default=False)
+    payment_verified = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        if self.company_name:
+            return f"{self.company_name} ({self.user.username})"
+        return f"{self.user.username} - {self.get_client_type_display()}"
+    
+    @property
+    def completion_rate(self):
+        if self.projects_posted == 0:
+            return 0
+        return (self.projects_completed / self.projects_posted) * 100
+    
+    class Meta:
+        verbose_name = "Client Profile"
+        verbose_name_plural = "Client Profiles"
+
 class ProjectCategory(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)

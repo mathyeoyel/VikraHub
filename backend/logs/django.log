@@ -245,3 +245,18 @@ INFO 2025-07-23 10:36:17,259 basehttp 23200 26532 "GET / HTTP/1.1" 200 1043
 WARNING 2025-07-23 10:36:17,577 log 23200 26532 Not Found: /favicon.ico
 WARNING 2025-07-23 10:36:17,577 basehttp 23200 26532 "GET /favicon.ico HTTP/1.1" 404 3224
 INFO 2025-07-23 10:36:23,442 basehttp 23200 11704 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-23 10:51:27,685 basehttp 23200 19052 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-23 10:51:27,723 basehttp 23200 19052 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-23 10:52:27,558 basehttp 23200 19976 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-23 10:54:07,400 basehttp 23200 22764 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-23 10:54:07,431 basehttp 23200 22764 "GET /api/freelancer-profiles/ HTTP/1.1" 200 11176
+INFO 2025-07-23 11:16:00,790 autoreload 23200 15724 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\models.py changed, reloading.
+INFO 2025-07-23 11:16:01,995 autoreload 16720 12952 Watching for file changes with StatReloader
+INFO 2025-07-23 11:16:24,801 autoreload 16720 12952 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\admin.py changed, reloading.
+INFO 2025-07-23 11:16:25,441 autoreload 19824 4152 Watching for file changes with StatReloader
+INFO 2025-07-23 11:16:36,572 autoreload 19824 4152 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\admin.py changed, reloading.
+INFO 2025-07-23 11:16:37,243 autoreload 22108 5984 Watching for file changes with StatReloader
+INFO 2025-07-23 11:16:57,898 autoreload 22108 5984 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\admin.py changed, reloading.
+INFO 2025-07-23 11:16:58,507 autoreload 14528 9760 Watching for file changes with StatReloader
+INFO 2025-07-23 11:22:31,512 basehttp 14528 3192 "GET /admin/?id=b8e550cd-2877-4067-af50-5ef260dada82&vscodeBrowserReqId=1753262551355 HTTP/1.1" 302 0
+INFO 2025-07-23 11:22:31,878 basehttp 14528 3192 "GET /admin/login/?next=/admin/%3Fid%3Db8e550cd-2877-4067-af50-5ef260dada82%26vscodeBrowserReqId%3D1753262551355 HTTP/1.1" 200 4331
