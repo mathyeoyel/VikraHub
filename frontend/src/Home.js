@@ -12,29 +12,6 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const { isAuthenticated } = useAuth();
 
-  // Fetch featured creators (limit to 3)
-  useEffect(() => {
-    const fetchFeaturedCreators = async () => {
-      try {
-        setLoading(true);
-        const response = await assetAPI.getCreators();
-        const creatorsData = response.data.results || response.data;
-        
-        // Map and limit to first 3 creators
-        const mappedCreators = creatorsData.slice(0, 3).map(mapCreatorData);
-        setFeaturedCreators(mappedCreators);
-      } catch (err) {
-        console.error('Error fetching featured creators:', err);
-        // Use fallback data if API fails
-        setFeaturedCreators(getFallbackCreators().slice(0, 3));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFeaturedCreators();
-  }, [mapCreatorData]);
-
   // Helper functions
   const getLocationFromBio = useCallback((bio) => {
     if (!bio) return null;
@@ -73,7 +50,7 @@ function Home() {
       name: 'Akon Peter',
       title: 'Full-Stack Developer',
       location: 'Juba',
-      image: '/assets/Akon-peter.jpg',
+      image: 'https://ui-avatars.com/api/?name=Akon+Peter&background=000223&color=ffffff&size=200',
       bio: 'Through my code, I tell stories of innovation and the bright future of technology in our community.'
     },
     {
@@ -81,7 +58,7 @@ function Home() {
       name: 'Maduot Chongo',
       title: 'Mobile App Developer',
       location: 'Gudele',
-      image: '/assets/Maduot_chongo.jpg',
+      image: 'https://ui-avatars.com/api/?name=Maduot+Chongo&background=000223&color=ffffff&size=200',
       bio: 'Building mobile solutions that connect communities and solve real-world problems.'
     },
     {
@@ -89,10 +66,33 @@ function Home() {
       name: 'Awut Paul',
       title: 'UI/UX Designer',
       location: 'Munuki',
-      image: '/assets/Awut_paul.jpg',
+      image: 'https://ui-avatars.com/api/?name=Awut+Paul&background=000223&color=ffffff&size=200',
       bio: 'I blend design and user experience, creating digital interfaces that reflect our culture and values.'
     }
   ];
+
+  // Fetch featured creators (limit to 3)
+  useEffect(() => {
+    const fetchFeaturedCreators = async () => {
+      try {
+        setLoading(true);
+        const response = await assetAPI.getCreators();
+        const creatorsData = response.data.results || response.data;
+        
+        // Map and limit to first 3 creators
+        const mappedCreators = creatorsData.slice(0, 3).map(mapCreatorData);
+        setFeaturedCreators(mappedCreators);
+      } catch (err) {
+        console.error('Error fetching featured creators:', err);
+        // Use fallback data if API fails
+        setFeaturedCreators(getFallbackCreators().slice(0, 3));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedCreators();
+  }, [mapCreatorData]);
 
   const openAuthModal = (mode = 'login') => {
     setAuthMode(mode);
