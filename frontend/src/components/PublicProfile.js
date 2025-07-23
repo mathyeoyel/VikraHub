@@ -302,10 +302,14 @@ const PublicProfile = () => {
             )}
           </div>
 
-          {/* Skills & Expertise */}
-          {profile.skills && (
+          {/* Skills & Expertise - Show for Creator and Freelancer, Maybe for Client */}
+          {profile.skills && (profile.user_type === 'creator' || profile.user_type === 'freelancer' || profile.user_type === 'client') && (
             <div className="profile-section">
-              <h3>Skills & Expertise</h3>
+              <h3>
+                {profile.user_type === 'creator' ? 'Skills & Expertise' : 
+                 profile.user_type === 'freelancer' ? 'Skills & Expertise' : 
+                 'Areas of Interest'}
+              </h3>
               <div className="skills-list">
                 {profile.skills.split(',').map((skill, index) => (
                   <span key={index} className="skill-tag">
@@ -316,8 +320,8 @@ const PublicProfile = () => {
             </div>
           )}
 
-          {/* Achievements */}
-          {profile.achievements && (
+          {/* Achievements - Show only for Creator, Maybe for Freelancer */}
+          {profile.achievements && (profile.user_type === 'creator' || profile.user_type === 'freelancer') && (
             <div className="profile-section">
               <h3>Achievements & Recognition</h3>
               <div className="achievements-content">
@@ -333,10 +337,12 @@ const PublicProfile = () => {
             </div>
           )}
 
-          {/* Services Offered */}
-          {profile.services_offered && (
+          {/* Services Offered - Show for Creator, Maybe for Freelancer, No for Client */}
+          {profile.services_offered && (profile.user_type === 'creator' || profile.user_type === 'freelancer') && (
             <div className="profile-section">
-              <h3>Services & Commissions</h3>
+              <h3>
+                {profile.user_type === 'creator' ? 'Services & Commissions' : 'Services Offered'}
+              </h3>
               <div className="services-content">
                 <div className="services-text">
                   {profile.services_offered.split('\n').map((service, index) => (
@@ -346,6 +352,41 @@ const PublicProfile = () => {
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* Rates - Show for Freelancer, Maybe for Creator */}
+          {profile.user_type === 'freelancer' && (
+            <div className="profile-section">
+              <h3>Rates & Pricing</h3>
+              <div className="rates-content">
+                <div className="rates-grid">
+                  <div className="rate-item">
+                    <div className="rate-icon">💰</div>
+                    <div className="rate-info">
+                      <h4>Hourly Rate</h4>
+                      <p>Contact for rates</p>
+                    </div>
+                  </div>
+                  <div className="rate-item">
+                    <div className="rate-icon">📋</div>
+                    <div className="rate-info">
+                      <h4>Project Rate</h4>
+                      <p>Varies by scope</p>
+                    </div>
+                  </div>
+                  <div className="rate-item">
+                    <div className="rate-icon">⚡</div>
+                    <div className="rate-info">
+                      <h4>Rush Jobs</h4>
+                      <p>+50% surcharge</p>
+                    </div>
+                  </div>
+                </div>
+                <p className="rates-note">
+                  <em>Rates may vary based on project complexity and timeline. Contact for detailed quotes.</em>
+                </p>
               </div>
             </div>
           )}
@@ -396,18 +437,22 @@ const PublicProfile = () => {
 
           {/* Portfolio Section */}
           <div className="profile-section">
-            <h3>Portfolio & Work</h3>
+            <h3>
+              {profile.user_type === 'client' ? 'Past Projects' : 'Portfolio & Work'}
+            </h3>
             {assetsLoading ? (
               <div className="loading-state">
                 <div className="loading-spinner"></div>
-                <p>Loading portfolio...</p>
+                <p>Loading {profile.user_type === 'client' ? 'projects' : 'portfolio'}...</p>
               </div>
             ) : (
               <>
                 {/* Featured Work Section */}
                 {(profile.portfolio_items?.length > 0 || assets.length > 0) && (
                   <div className="featured-work-section">
-                    <h4 className="featured-work-title">✨ Featured Work</h4>
+                    <h4 className="featured-work-title">
+                      ✨ {profile.user_type === 'client' ? 'Featured Projects' : 'Featured Work'}
+                    </h4>
                     <div className="featured-work-grid">
                       {/* Show first portfolio item if exists */}
                       {profile.portfolio_items?.[0] && (
@@ -455,7 +500,9 @@ const PublicProfile = () => {
                 {/* Manual Portfolio Items */}
                 {profile.portfolio_items && profile.portfolio_items.length > 0 && (
                   <div className="portfolio-subsection">
-                    <h4 className="portfolio-subsection-title">Projects</h4>
+                    <h4 className="portfolio-subsection-title">
+                      {profile.user_type === 'client' ? 'Project History' : 'Projects'}
+                    </h4>
                     <div className="portfolio-grid">
                       {profile.portfolio_items.map((item) => (
                         <div key={`portfolio-${item.id}`} className="portfolio-item">
@@ -551,31 +598,55 @@ const PublicProfile = () => {
                  (!assets || assets.length === 0) && (
                   <div className="no-content-state">
                     <div className="no-content-icon">📁</div>
-                    <h4>No Portfolio Items</h4>
-                    <p>This creator hasn't uploaded any portfolio items yet.</p>
+                    <h4>
+                      {profile.user_type === 'client' ? 'No Projects Listed' : 'No Portfolio Items'}
+                    </h4>
+                    <p>
+                      {profile.user_type === 'client' 
+                        ? "This client hasn't listed any past projects yet." 
+                        : "This creator hasn't uploaded any portfolio items yet."}
+                    </p>
                   </div>
                 )}
               </>
             )}
           </div>
 
-          {/* Client Reviews/Testimonials Section */}
-          <div className="profile-section">
-            <h3>Reviews & Testimonials</h3>
-            <div className="reviews-placeholder">
-              <div className="review-item">
-                <div className="review-header">
-                  <div className="reviewer-avatar">👤</div>
-                  <div className="reviewer-info">
-                    <h4>Sample Review</h4>
-                    <div className="review-rating">⭐⭐⭐⭐⭐</div>
+          {/* Client Reviews/Testimonials Section - Yes for Freelancer, Optional for Creator and Client */}
+          {(profile.user_type === 'freelancer' || profile.user_type === 'creator' || profile.user_type === 'client') && (
+            <div className="profile-section">
+              <h3>
+                {profile.user_type === 'freelancer' ? 'Client Reviews' : 
+                 profile.user_type === 'creator' ? 'Customer Reviews' : 
+                 'Project Feedback'}
+              </h3>
+              <div className="reviews-placeholder">
+                <div className="review-item">
+                  <div className="review-header">
+                    <div className="reviewer-avatar">👤</div>
+                    <div className="reviewer-info">
+                      <h4>Sample Review</h4>
+                      <div className="review-rating">⭐⭐⭐⭐⭐</div>
+                    </div>
                   </div>
+                  <p>
+                    {profile.user_type === 'freelancer' 
+                      ? "This is a placeholder for client reviews and testimonials. The review system will be implemented to show real feedback from clients."
+                      : profile.user_type === 'creator'
+                      ? "This is a placeholder for customer reviews and testimonials. The review system will be implemented to show real feedback from customers."
+                      : "This is a placeholder for project feedback and testimonials from team members and collaborators."}
+                  </p>
                 </div>
-                <p>"This is a placeholder for client reviews and testimonials. The review system will be implemented to show real feedback from clients and collaborators."</p>
               </div>
+              <p className="no-content">
+                {profile.user_type === 'freelancer' 
+                  ? "Client reviews and testimonials will be displayed here once the review system is implemented."
+                  : profile.user_type === 'creator'
+                  ? "Customer reviews and feedback will be displayed here once the review system is implemented."
+                  : "Project feedback and team reviews will be displayed here once the review system is implemented."}
+              </p>
             </div>
-            <p className="no-content">Reviews and testimonials will be displayed here once the review system is implemented.</p>
-          </div>
+          )}
 
           {/* Recent Activity Section */}
           <div className="profile-section">
@@ -602,22 +673,44 @@ const PublicProfile = () => {
 
           {/* Contact & Collaboration Section */}
           <div className="profile-section">
-            <h3>Let's Work Together</h3>
+            <h3>
+              {profile.user_type === 'freelancer' ? 'Hire Me' : 
+               profile.user_type === 'creator' ? 'Work With Me' : 
+               'Let\'s Collaborate'}
+            </h3>
             <div className="collaboration-section">
-              <p>Interested in collaborating or hiring {profile.full_name.split(' ')[0]}? Get in touch!</p>
+              <p>
+                {profile.user_type === 'freelancer' 
+                  ? `Looking for a skilled freelancer? Get in touch with ${profile.full_name.split(' ')[0]} for your next project!`
+                  : profile.user_type === 'creator'
+                  ? `Interested in collaborating or commissioning work from ${profile.full_name.split(' ')[0]}? Let's create something amazing together!`
+                  : `Want to collaborate on a project or discuss opportunities with ${profile.full_name.split(' ')[0]}? Reach out!`}
+              </p>
               <div className="contact-methods">
                 <button className="contact-method-btn primary" onClick={handleMessage}>
                   <span className="method-icon">💬</span>
                   <div className="method-info">
                     <h4>Send Message</h4>
-                    <p>Start a conversation</p>
+                    <p>
+                      {profile.user_type === 'freelancer' ? 'Discuss your project' : 
+                       profile.user_type === 'creator' ? 'Start a conversation' : 
+                       'Connect directly'}
+                    </p>
                   </div>
                 </button>
                 <button className="contact-method-btn secondary" onClick={handleContact}>
                   <span className="method-icon">📧</span>
                   <div className="method-info">
-                    <h4>Contact Directly</h4>
-                    <p>Professional inquiry</p>
+                    <h4>
+                      {profile.user_type === 'freelancer' ? 'Get Quote' : 
+                       profile.user_type === 'creator' ? 'Commission Work' : 
+                       'Professional Contact'}
+                    </h4>
+                    <p>
+                      {profile.user_type === 'freelancer' ? 'Request project quote' : 
+                       profile.user_type === 'creator' ? 'Discuss commission' : 
+                       'Business inquiry'}
+                    </p>
                   </div>
                 </button>
               </div>

@@ -51,8 +51,8 @@ const Profile = () => {
     ...(profile?.website ? [{ platform: 'Website', url: profile.website.startsWith('http') ? profile.website : `https://${profile.website}`, icon: '🌐' }] : [])
   ];
 
-  // Mock services data - Replace with real services from profile
-  const services = profile?.services_offered && profile.services_offered.trim() 
+  // Services data - Only for Creator and Freelancer
+  const services = (profile?.user_type === 'creator' || profile?.user_type === 'freelancer') && profile?.services_offered && profile.services_offered.trim() 
     ? profile.services_offered.split('\n').filter(line => line.trim()).map((service, index) => {
         // Try to parse if it contains price information
         const parts = service.split(' - ');
@@ -62,15 +62,23 @@ const Profile = () => {
           price: "Contact for pricing"
         };
       })
-    : [
-        { name: "Portrait Photography", price: "From $50", description: "Professional portrait sessions" },
-        { name: "Event Photography", price: "From $150", description: "Weddings, celebrations, corporate events" },
-        { name: "Brand Design", price: "From $100", description: "Logo and brand identity creation" },
-        { name: "Digital Art Commission", price: "From $75", description: "Custom digital artwork" }
-      ];
+    : (profile?.user_type === 'creator' || profile?.user_type === 'freelancer') ? [
+        ...(profile?.user_type === 'creator' ? [
+          { name: "Portrait Photography", price: "From $50", description: "Professional portrait sessions" },
+          { name: "Brand Design", price: "From $100", description: "Logo and brand identity creation" },
+          { name: "Digital Art Commission", price: "From $75", description: "Custom digital artwork" },
+          { name: "Event Photography", price: "From $150", description: "Weddings, celebrations, corporate events" }
+        ] : []),
+        ...(profile?.user_type === 'freelancer' ? [
+          { name: "Web Development", price: "From $500", description: "Custom website development" },
+          { name: "Consulting", price: "From $100/hr", description: "Professional consulting services" },
+          { name: "Project Management", price: "Contact for rates", description: "End-to-end project management" },
+          { name: "Technical Writing", price: "From $50/hr", description: "Documentation and technical content" }
+        ] : [])
+      ] : [];
 
-  // Use real achievements from profile
-  const achievements = profile?.achievements && profile.achievements.trim()
+  // Use real achievements from profile - Only for Creator and Freelancer
+  const achievements = (profile?.user_type === 'creator' || profile?.user_type === 'freelancer') && profile?.achievements && profile.achievements.trim()
     ? profile.achievements.split('\n').filter(line => line.trim()).map((achievement, index) => {
         // Try to parse if it contains year information
         const parts = achievement.split(' - ');
@@ -79,12 +87,19 @@ const Profile = () => {
           description: parts[1] || '',
           year: new Date().getFullYear().toString() // Default to current year
         };
-      })
-    : [
-        { title: "Featured Creator", year: "2024", description: "VikraHub Creator of the Month" },
-        { title: "Cultural Heritage Award", year: "2023", description: "South Sudan Arts Council" },
-        { title: "Photography Exhibition", year: "2023", description: "Juba Contemporary Arts Center" }
-      ];
+      ])
+    : (profile?.user_type === 'creator' || profile?.user_type === 'freelancer') ? [
+        ...(profile?.user_type === 'creator' ? [
+          { title: "Featured Creator", year: "2024", description: "VikraHub Creator of the Month" },
+          { title: "Cultural Heritage Award", year: "2023", description: "South Sudan Arts Council" },
+          { title: "Photography Exhibition", year: "2023", description: "Juba Contemporary Arts Center" }
+        ] : []),
+        ...(profile?.user_type === 'freelancer' ? [
+          { title: "Top Freelancer", year: "2024", description: "VikraHub Top Rated Freelancer" },
+          { title: "Project Excellence Award", year: "2023", description: "Outstanding project delivery" },
+          { title: "Client Satisfaction Award", year: "2023", description: "98% client satisfaction rate" }
+        ] : [])
+      ] : [];
 
   const testimonials = [
     {
@@ -210,7 +225,11 @@ const Profile = () => {
           {/* Quick Info & Socials */}
           <div className="quick-info-section">
             <div className="skills-section">
-              <h3>Skills & Expertise</h3>
+              <h3>
+                {profile?.user_type === 'creator' ? 'Skills & Expertise' : 
+                 profile?.user_type === 'freelancer' ? 'Skills & Expertise' : 
+                 'Areas of Interest'}
+              </h3>
               <div className="skills-grid">
                 {profile?.skills && Array.isArray(profile.skills) && profile.skills.length > 0 && 
                   profile.skills.map((skill, index) => (
@@ -259,7 +278,9 @@ const Profile = () => {
           {/* Portfolio Gallery */}
           <div className="portfolio-section">
             <div className="section-header">
-              <h2>Portfolio</h2>
+              <h2>
+                {profile?.user_type === 'client' ? 'Past Projects' : 'Portfolio'}
+              </h2>
               {portfolioWorks.length > 0 && (
                 <div className="portfolio-tabs">
                   {['All', ...new Set(portfolioWorks.map(work => work.category || 'General'))].map(tab => (
@@ -327,34 +348,72 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Achievements & Highlights */}
-          <div className="achievements-section">
-            <h2>Achievements & Recognition</h2>
-            <div className="achievements-grid">
-              {achievements.map((achievement, index) => (
-                <div key={index} className="achievement-card">
-                  <div className="achievement-year">{achievement.year}</div>
-                  <h4>{achievement.title}</h4>
-                  <p>{achievement.description}</p>
-                </div>
-              ))}
+          {/* Achievements & Highlights - Show only for Creator and Freelancer */}
+          {(profile?.user_type === 'creator' || profile?.user_type === 'freelancer') && (
+            <div className="achievements-section">
+              <h2>Achievements & Recognition</h2>
+              <div className="achievements-grid">
+                {achievements.map((achievement, index) => (
+                  <div key={index} className="achievement-card">
+                    <div className="achievement-year">{achievement.year}</div>
+                    <h4>{achievement.title}</h4>
+                    <p>{achievement.description}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* Services Offered */}
-          <div className="services-section">
-            <h2>Services & Commissions</h2>
-            <div className="services-grid">
-              {services.map((service, index) => (
-                <div key={index} className="service-card">
-                  <h4>{service.name}</h4>
-                  <p className="service-price">{service.price}</p>
-                  <p className="service-description">{service.description}</p>
-                  <button className="btn-service">Book Now</button>
-                </div>
-              ))}
+          {/* Services Offered - Show for Creator and Freelancer, No for Client */}
+          {(profile?.user_type === 'creator' || profile?.user_type === 'freelancer') && (
+            <div className="services-section">
+              <h2>
+                {profile?.user_type === 'creator' ? 'Services & Commissions' : 'Services Offered'}
+              </h2>
+              <div className="services-grid">
+                {services.map((service, index) => (
+                  <div key={index} className="service-card">
+                    <h4>{service.name}</h4>
+                    <p className="service-price">{service.price}</p>
+                    <p className="service-description">{service.description}</p>
+                    <button className="btn-service">
+                      {profile?.user_type === 'creator' ? 'Commission' : 'Book Now'}
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* Rates & Pricing - Show for Freelancer */}
+          {profile?.user_type === 'freelancer' && (
+            <div className="rates-section">
+              <h2>Rates & Pricing</h2>
+              <div className="rates-grid">
+                <div className="rate-card">
+                  <div className="rate-icon">💰</div>
+                  <h4>Hourly Rate</h4>
+                  <p className="rate-price">Contact for rates</p>
+                  <p>Perfect for ongoing projects and consultations</p>
+                </div>
+                <div className="rate-card">
+                  <div className="rate-icon">📋</div>
+                  <h4>Project Rate</h4>
+                  <p className="rate-price">Varies by scope</p>
+                  <p>Fixed pricing based on project requirements</p>
+                </div>
+                <div className="rate-card">
+                  <div className="rate-icon">⚡</div>
+                  <h4>Rush Jobs</h4>
+                  <p className="rate-price">+50% surcharge</p>
+                  <p>Priority delivery for urgent projects</p>
+                </div>
+              </div>
+              <p className="rates-disclaimer">
+                <em>All rates are subject to project complexity and timeline. Contact me for a detailed quote tailored to your specific needs.</em>
+              </p>
+            </div>
+          )}
 
           {/* Testimonials */}
           <div className="testimonials-section">
@@ -380,11 +439,27 @@ const Profile = () => {
           {/* Contact/CTA Section */}
           <div className="cta-section">
             <div className="cta-content">
-              <h2>Ready to Work Together?</h2>
-              <p>Let's create something amazing that celebrates our culture and tells your story.</p>
+              <h2>
+                {profile?.user_type === 'freelancer' ? 'Ready to Hire Me?' : 
+                 profile?.user_type === 'creator' ? 'Ready to Work Together?' : 
+                 'Let\'s Collaborate!'}
+              </h2>
+              <p>
+                {profile?.user_type === 'freelancer' 
+                  ? "Let's discuss your project requirements and bring your vision to life with professional expertise."
+                  : profile?.user_type === 'creator'
+                  ? "Let's create something amazing that celebrates our culture and tells your story."
+                  : "I'm always looking for exciting new projects and collaborations. Let's connect!"}
+              </p>
               <div className="cta-buttons">
-                <button className="btn-cta-primary">Start a Project</button>
-                <button className="btn-cta-secondary">Download Portfolio</button>
+                <button className="btn-cta-primary">
+                  {profile?.user_type === 'freelancer' ? 'Get Quote' : 
+                   profile?.user_type === 'creator' ? 'Start a Project' : 
+                   'Start Collaboration'}
+                </button>
+                <button className="btn-cta-secondary">
+                  {profile?.user_type === 'client' ? 'View Projects' : 'Download Portfolio'}
+                </button>
               </div>
             </div>
           </div>
