@@ -50,8 +50,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = UserProfile
-        fields = ['id', 'user', 'user_type', 'avatar', 'bio', 'website', 'twitter', 
-                 'instagram', 'facebook', 'skills', 'first_name', 'last_name', 'email']
+        fields = ['id', 'user', 'user_type', 'avatar', 'cover_photo', 'bio', 'location', 
+                 'website', 'twitter', 'instagram', 'facebook', 'linkedin', 'github', 
+                 'skills', 'headline', 'achievements', 'services_offered', 
+                 'first_name', 'last_name', 'email']
         read_only_fields = ['id', 'user']
     
     def to_representation(self, instance):
@@ -68,10 +70,22 @@ class UserProfileSerializer(serializers.ModelSerializer):
             data['avatar_medium'] = get_optimized_avatar_url(data['avatar'], size=200)
             data['avatar_large'] = get_optimized_avatar_url(data['avatar'], size=400)
         
+        # Add optimized cover photo URLs
+        if data.get('cover_photo'):
+            data['cover_photo_small'] = get_optimized_avatar_url(data['cover_photo'], size=600)
+            data['cover_photo_medium'] = get_optimized_avatar_url(data['cover_photo'], size=1200)
+            data['cover_photo_large'] = get_optimized_avatar_url(data['cover_photo'], size=1920)
+        
         return data
     
     def validate_avatar(self, value):
         """Validate avatar URL is from Cloudinary"""
+        if value:
+            validate_cloudinary_url(value)
+        return value
+    
+    def validate_cover_photo(self, value):
+        """Validate cover photo URL is from Cloudinary"""
         if value:
             validate_cloudinary_url(value)
         return value

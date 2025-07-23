@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField  # for Postgres
 from django.urls import reverse # for URL reversing in templates
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from .cloudinary_utils import validate_cloudinary_url
 # This file defines the models for the Vikra Hub project, including user profiles, services, portfolio items, blog posts, team members, and notifications.
 
@@ -36,13 +38,17 @@ class UserProfile(models.Model):
     skills = models.CharField(max_length=250, blank=True, help_text="Comma-separated list of skills")
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.URLField(blank=True, null=True, help_text="Cloudinary URL for avatar image", validators=[validate_cloudinary_url])
+    cover_photo = models.URLField(blank=True, null=True, help_text="Cloudinary URL for cover photo", validators=[validate_cloudinary_url])
     bio = models.TextField(blank=True)
+    location = models.CharField(max_length=100, blank=True, help_text="City, Country or general location")
     website = models.URLField(blank=True)
     twitter = models.CharField(max_length=100, blank=True)
     instagram = models.CharField(max_length=100, blank=True)
     facebook = models.CharField(max_length=100, blank=True)
     linkedin = models.CharField(max_length=100, blank=True)
     github = models.CharField(max_length=100, blank=True)
+    achievements = models.TextField(blank=True, help_text="Awards, recognitions, and notable achievements")
+    services_offered = models.TextField(blank=True, help_text="Services and commissions offered")
     # Add more fields as needed
 
     def __str__(self):
@@ -63,18 +69,6 @@ from django.contrib.auth.models import User
 def get_profile(self):
     return UserProfile.objects.get_or_create(user=self)[0]
 User.profile = property(get_profile)
-
-
-# Signal to auto-create or update profile when User is created or saved
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
-@receiver(post_save, sender=User)
-def create_or_update_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance, user_type='client')
-    else:
-        UserProfile.objects.get_or_create(user=instance, defaults={'user_type': 'client'})
 
 class Service(models.Model):
     title = models.CharField(max_length=100)
@@ -491,3 +485,49 @@ class ProjectReview(models.Model):
     
     def __str__(self):
         return f"{self.reviewer.username} reviewed {self.reviewee.username} - {self.rating} stars"
+
+
+def create_specialized_profile(user, user_type):
+    """Helper function to create specialized profiles based on user_type"""
+    try:
+        if user_type == 'creator':
+            # Import here to avoid circular imports
+            CreatorProfile.objects.get_or_create(user=user, defaults={
+                'creator_type': 'other',
+                'experience_level': 'beginner',
+                'available_for_commissions': True
+            })
+        elif user_type == 'freelancer':
+            # Import here to avoid circular imports
+            FreelancerProfile.objects.get_or_create(user=user, defaults={
+                'title': 'Freelancer',
+                'hourly_rate': 25.00,
+                'availability': 'Part-time',
+                'skill_level': 'intermediate'
+            })
+        elif user_type == 'client':
+            # Import here to avoid circular imports
+            ClientProfile.objects.get_or_create(user=user, defaults={
+                'client_type': 'individual',
+                'company_size': 'solo'
+            })
+    except Exception as e:
+        print(f"Error creating specialized profile for {user.username}: {e}")
+
+@receiver(post_save, sender=User)
+def create_or_update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        profile = UserProfile.objects.create(user=instance, user_type='client')
+        # Create specialized profile based on user_type
+        create_specialized_profile(instance, profile.user_type)
+    else:
+        profile, created = UserProfile.objects.get_or_create(user=instance, defaults={'user_type': 'client'})
+        if not created:
+            # If profile already exists, ensure specialized profile exists
+            create_specialized_profile(instance, profile.user_type)
+
+@receiver(post_save, sender=UserProfile)
+def create_specialized_profile_on_userprofile_save(sender, instance, created, **kwargs):
+    """Signal to create specialized profiles when UserProfile is saved"""
+    if instance.user and instance.user_type:
+        create_specialized_profile(instance.user, instance.user_type)
