@@ -163,6 +163,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateUser = async () => {
+    try {
+      const currentToken = token || localStorage.getItem('access');
+      if (currentToken) {
+        await fetchUser(currentToken);
+      }
+    } catch (error) {
+      console.error('Failed to update user:', error);
+    }
+  };
+
   const value = {
     user,
     token,
@@ -171,6 +182,7 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     refreshToken,
+    updateUser,
     isAuthenticated: !!token && !!user,
     isFreelancer: user?.freelancer_profile ? true : false,
     isSeller: user?.assets?.length > 0

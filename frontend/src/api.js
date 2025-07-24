@@ -89,6 +89,9 @@ export const userAPI = {
     return api.patch("profiles/update_profile/", data);
   },
   getMyProfile: () => api.get("profiles/my_profile/"),
+  changePassword: (data) => api.post("auth/change-password/", data),
+  updatePreferences: (data) => api.patch("profiles/preferences/", data),
+  deleteAccount: () => api.delete("users/me/"),
 };
 
 export const teamAPI = {

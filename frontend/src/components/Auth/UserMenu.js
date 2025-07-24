@@ -60,6 +60,10 @@ const UserMenu = () => {
             <span className="dropdown-icon">📊</span>
             Dashboard
           </Link>
+          <Link to="/settings" className="user-dropdown-item" onClick={() => setIsOpen(false)}>
+            <span className="dropdown-icon">⚙️</span>
+            Settings
+          </Link>
           <Link to="/marketplace" className="user-dropdown-item" onClick={() => setIsOpen(false)}>
             <span className="dropdown-icon">🎨</span>
             Inspiration

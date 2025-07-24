@@ -24,6 +24,7 @@ const AssetsMarketplace = React.lazy(() => import("./components/Marketplace/Asse
 const Freelance = React.lazy(() => import("./components/Freelance"));
 const Creators = React.lazy(() => import("./components/Creators"));
 const SearchResults = React.lazy(() => import("./components/SearchResults"));
+const Settings = React.lazy(() => import("./components/Settings"));
 
 function App() {
   return (
@@ -60,6 +61,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <Settings />
                 </ProtectedRoute>
               }
             />
