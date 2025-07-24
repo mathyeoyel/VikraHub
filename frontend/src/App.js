@@ -25,6 +25,8 @@ const Freelance = React.lazy(() => import("./components/Freelance"));
 const Creators = React.lazy(() => import("./components/Creators"));
 const SearchResults = React.lazy(() => import("./components/SearchResults"));
 const Settings = React.lazy(() => import("./components/Settings"));
+const Messages = React.lazy(() => import("./components/Messages"));
+const Notifications = React.lazy(() => import("./components/Notifications"));
 
 function App() {
   return (
@@ -69,6 +71,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Settings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/messages"
+              element={
+                <ProtectedRoute>
+                  <Messages />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notifications"
+              element={
+                <ProtectedRoute>
+                  <Notifications />
                 </ProtectedRoute>
               }
             />

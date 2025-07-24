@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { publicProfileAPI, assetAPI } from '../api';
+import { publicProfileAPI, assetAPI, userAPI } from '../api';
 import PublicClientProfile from './PublicClientProfile';
 import './PublicProfile.css';
 
@@ -14,6 +14,7 @@ const PublicProfile = () => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const [followStatsLoading, setFollowStatsLoading] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -22,9 +23,8 @@ const PublicProfile = () => {
         const response = await publicProfileAPI.getByUsername(username);
         setProfile(response.data);
         
-        // Initialize follower/following counts (placeholder values)
-        setFollowerCount(Math.floor(Math.random() * 100) + 10); // Random for demo
-        setFollowingCount(Math.floor(Math.random() * 50) + 5);   // Random for demo
+        // Fetch real follower/following stats
+        await fetchFollowStats(username);
         
         // Fetch user's uploaded assets to include in portfolio
         await fetchUserAssets(response.data.user.id);
@@ -53,6 +53,24 @@ const PublicProfile = () => {
         setAssets([]);
       } finally {
         setAssetsLoading(false);
+      }
+    };
+
+    const fetchFollowStats = async (username) => {
+      try {
+        setFollowStatsLoading(true);
+        const response = await userAPI.getFollowStats(username);
+        setFollowerCount(response.data?.followers_count || 0);
+        setFollowingCount(response.data?.following_count || 0);
+        setIsFollowing(response.data?.is_following || false);
+      } catch (err) {
+        console.warn('Failed to fetch follow stats:', err);
+        // Set to 0 instead of random numbers when API fails
+        setFollowerCount(0);
+        setFollowingCount(0);
+        setIsFollowing(false);
+      } finally {
+        setFollowStatsLoading(false);
       }
     };
 
@@ -103,16 +121,18 @@ const PublicProfile = () => {
 
   const handleFollow = async () => {
     try {
-      // TODO: Implement follow/unfollow API calls
-      setIsFollowing(!isFollowing);
-      setFollowerCount(prev => isFollowing ? prev - 1 : prev + 1);
-      
-      // Show temporary feedback
-      const action = isFollowing ? 'Unfollowed' : 'Following';
-      alert(`${action} ${profile.full_name}!`);
+      if (isFollowing) {
+        await userAPI.unfollow(username);
+        setIsFollowing(false);
+        setFollowerCount(prev => Math.max(0, prev - 1));
+      } else {
+        await userAPI.follow(username);
+        setIsFollowing(true);
+        setFollowerCount(prev => prev + 1);
+      }
     } catch (error) {
-      console.error('Error following/unfollowing user:', error);
-      alert('Unable to complete action. Please try again.');
+      console.error('Failed to follow/unfollow user:', error);
+      // Optionally show an error message to the user
     }
   };
 

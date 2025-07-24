@@ -92,6 +92,18 @@ export const userAPI = {
   changePassword: (data) => api.post("auth/change-password/", data),
   updatePreferences: (data) => api.patch("profiles/preferences/", data),
   deleteAccount: () => api.delete("users/me/"),
+  follow: (username) => api.post(`profiles/${username}/follow/`),
+  unfollow: (username) => api.post(`profiles/${username}/unfollow/`),
+  getFollowers: (username) => api.get(`profiles/${username}/followers/`),
+  getFollowing: (username) => api.get(`profiles/${username}/following/`),
+  getFollowStats: (username) => api.get(`profiles/${username}/follow-stats/`),
+  
+  // Project-related endpoints
+  getMyProjects: () => api.get("projects/my-projects/"),
+  createProject: (data) => api.post("projects/", data),
+  updateProject: (id, data) => api.patch(`projects/${id}/`, data),
+  deleteProject: (id) => api.delete(`projects/${id}/`),
+  getProjectApplications: (projectId) => api.get(`projects/${projectId}/applications/`),
 };
 
 export const teamAPI = {
@@ -170,6 +182,27 @@ export const assetAPI = {
   getFeaturedCreators: () => api.get("creator-profiles/featured/"),
   getFreelancers: (params) => api.get("freelancer-profiles/", { params }),
   getFreelancer: (id) => api.get(`freelancer-profiles/${id}/`),
+};
+
+// Messages API
+export const messagesAPI = {
+  getConversations: () => api.get("conversations/"),
+  getMessages: (conversationId) => api.get(`conversations/${conversationId}/messages/`),
+  sendMessage: (data) => api.post("messages/", data),
+  markAsRead: (conversationId) => api.patch(`conversations/${conversationId}/mark_read/`),
+  createConversation: (data) => api.post("conversations/", data),
+  deleteConversation: (id) => api.delete(`conversations/${id}/`),
+  getUnreadCount: () => api.get("messages/unread_count/"),
+};
+
+// Notifications API
+export const notificationsAPI = {
+  getAll: () => api.get("notifications/"),
+  markAsRead: (id) => api.patch(`notifications/${id}/mark_read/`),
+  markAllAsRead: () => api.post("notifications/mark_all_read/"),
+  delete: (id) => api.delete(`notifications/${id}/`),
+  getUnreadCount: () => api.get("notifications/unread_count/"),
+  updateSettings: (data) => api.patch("notifications/settings/", data),
 };
 
 export default api;

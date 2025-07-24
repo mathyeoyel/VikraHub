@@ -293,3 +293,380 @@ WARNING 2025-07-23 12:18:32,208 basehttp 7600 10532 "GET /api/public-profiles/ak
 INFO 2025-07-24 13:13:59,033 autoreload 14052 14176 Watching for file changes with StatReloader
 INFO 2025-07-24 13:21:38,258 basehttp 14052 22028 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
 INFO 2025-07-24 13:21:38,279 basehttp 14052 7584 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 14:48:38,869 basehttp 14052 26108 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 14:48:38,903 basehttp 14052 26108 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 14:49:47,489 basehttp 14052 24356 "OPTIONS /api/users/ HTTP/1.1" 200 0
+INFO 2025-07-24 14:49:48,738 basehttp 14052 24356 "POST /api/users/ HTTP/1.1" 201 198
+INFO 2025-07-24 14:50:07,096 basehttp 14052 22592 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 14:50:07,127 basehttp 14052 22592 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+WARNING 2025-07-24 15:20:06,171 log 14052 25412 Not Found: /ws/profile/28/
+WARNING 2025-07-24 15:20:06,181 basehttp 14052 25412 "GET /ws/profile/28/ HTTP/1.1" 404 3233
+WARNING 2025-07-24 15:20:11,503 log 14052 26676 Not Found: /ws/profile/28/
+WARNING 2025-07-24 15:20:11,503 basehttp 14052 26676 "GET /ws/profile/28/ HTTP/1.1" 404 3233
+WARNING 2025-07-24 15:20:16,828 log 14052 16428 Not Found: /ws/profile/28/
+WARNING 2025-07-24 15:20:16,830 basehttp 14052 16428 "GET /ws/profile/28/ HTTP/1.1" 404 3233
+WARNING 2025-07-24 15:20:22,164 log 14052 23488 Not Found: /ws/profile/28/
+WARNING 2025-07-24 15:20:22,165 basehttp 14052 23488 "GET /ws/profile/28/ HTTP/1.1" 404 3233
+WARNING 2025-07-24 15:20:27,834 log 14052 25460 Not Found: /ws/profile/28/
+WARNING 2025-07-24 15:20:27,835 basehttp 14052 25460 "GET /ws/profile/28/ HTTP/1.1" 404 3233
+INFO 2025-07-24 15:23:44,192 basehttp 14052 25948 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 15:23:44,232 basehttp 14052 9436 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 15:23:44,778 basehttp 14052 17988 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 15:23:44,799 basehttp 14052 17988 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 15:24:12,274 basehttp 14052 15492 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 15:24:12,288 basehttp 14052 25272 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 15:24:22,782 basehttp 14052 25928 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 15:24:22,800 basehttp 14052 27184 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 15:26:10,859 basehttp 14052 26364 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 15:26:10,894 basehttp 14052 26364 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 15:26:10,928 basehttp 14052 22312 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 15:26:10,956 basehttp 14052 22312 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 15:26:14,033 basehttp 14052 22312 "OPTIONS /api/auth/token/ HTTP/1.1" 200 0
+INFO 2025-07-24 15:26:15,751 basehttp 14052 22312 "POST /api/auth/token/ HTTP/1.1" 200 486
+INFO 2025-07-24 15:26:15,789 basehttp 14052 22312 "OPTIONS /api/users/me/ HTTP/1.1" 200 0
+INFO 2025-07-24 15:26:15,835 basehttp 14052 22312 "GET /api/users/me/ HTTP/1.1" 200 198
+WARNING 2025-07-24 15:29:47,868 log 14052 12660 Not Found: /ws/profile/28/
+WARNING 2025-07-24 15:29:47,876 basehttp 14052 12660 "GET /ws/profile/28/ HTTP/1.1" 404 3233
+WARNING 2025-07-24 15:29:53,199 log 14052 14232 Not Found: /ws/profile/28/
+WARNING 2025-07-24 15:29:53,201 basehttp 14052 14232 "GET /ws/profile/28/ HTTP/1.1" 404 3233
+WARNING 2025-07-24 15:29:58,522 log 14052 25536 Not Found: /ws/profile/28/
+WARNING 2025-07-24 15:29:58,523 basehttp 14052 25536 "GET /ws/profile/28/ HTTP/1.1" 404 3233
+WARNING 2025-07-24 15:30:44,941 log 14052 24680 Not Found: /ws/profile/28/
+WARNING 2025-07-24 15:30:44,944 basehttp 14052 24680 "GET /ws/profile/28/ HTTP/1.1" 404 3233
+WARNING 2025-07-24 15:30:50,274 log 14052 18300 Not Found: /ws/profile/28/
+WARNING 2025-07-24 15:30:50,275 basehttp 14052 18300 "GET /ws/profile/28/ HTTP/1.1" 404 3233
+WARNING 2025-07-24 15:30:55,590 log 14052 25324 Not Found: /ws/profile/28/
+WARNING 2025-07-24 15:30:55,591 basehttp 14052 25324 "GET /ws/profile/28/ HTTP/1.1" 404 3233
+WARNING 2025-07-24 15:31:00,915 log 14052 20456 Not Found: /ws/profile/28/
+WARNING 2025-07-24 15:31:00,916 basehttp 14052 20456 "GET /ws/profile/28/ HTTP/1.1" 404 3233
+INFO 2025-07-24 15:32:30,803 basehttp 14052 24388 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 15:32:30,833 basehttp 14052 25176 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+WARNING 2025-07-24 15:45:14,946 log 14052 23464 Unauthorized: /api/users/me/
+WARNING 2025-07-24 15:45:14,969 basehttp 14052 23464 "GET /api/users/me/ HTTP/1.1" 401 183
+INFO 2025-07-24 15:49:19,635 basehttp 14052 23864 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 15:49:19,670 basehttp 14052 16504 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 15:50:48,195 basehttp 14052 22012 "POST /api/auth/token/ HTTP/1.1" 200 486
+INFO 2025-07-24 15:50:48,241 basehttp 14052 22012 "GET /api/users/me/ HTTP/1.1" 200 198
+INFO 2025-07-24 15:50:48,293 basehttp 14052 22012 "OPTIONS /api/messages/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-24 15:50:48,300 basehttp 14052 7608 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-24 15:50:48,300 basehttp 14052 11564 "OPTIONS /api/messages/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-24 15:50:48,300 basehttp 14052 22012 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+WARNING 2025-07-24 15:50:48,346 log 14052 26584 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 15:50:48,356 log 14052 11564 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 15:50:48,357 basehttp 14052 26584 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 15:50:48,358 basehttp 14052 11564 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 15:50:48,385 log 14052 22012 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 15:50:48,386 basehttp 14052 22012 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 15:50:48,390 log 14052 11564 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 15:50:48,390 basehttp 14052 11564 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+INFO 2025-07-24 15:50:54,735 basehttp 14052 20836 "OPTIONS /api/conversations/ HTTP/1.1" 200 0
+INFO 2025-07-24 15:50:54,735 basehttp 14052 1464 "OPTIONS /api/conversations/ HTTP/1.1" 200 0
+WARNING 2025-07-24 15:50:54,764 log 14052 1464 Not Found: /api/conversations/
+WARNING 2025-07-24 15:50:54,766 basehttp 14052 1464 "GET /api/conversations/ HTTP/1.1" 404 55778
+WARNING 2025-07-24 15:50:54,791 log 14052 1464 Not Found: /api/conversations/
+WARNING 2025-07-24 15:50:54,792 basehttp 14052 1464 "GET /api/conversations/ HTTP/1.1" 404 55778
+INFO 2025-07-24 15:50:58,339 basehttp 14052 20836 "OPTIONS /api/conversations/1/messages/ HTTP/1.1" 200 0
+INFO 2025-07-24 15:50:58,339 basehttp 14052 1464 "OPTIONS /api/conversations/1/mark_read/ HTTP/1.1" 200 0
+WARNING 2025-07-24 15:50:58,359 log 14052 1464 Not Found: /api/conversations/1/messages/
+WARNING 2025-07-24 15:50:58,380 log 14052 20836 Not Found: /api/conversations/1/mark_read/
+WARNING 2025-07-24 15:50:58,381 basehttp 14052 20836 "PATCH /api/conversations/1/mark_read/ HTTP/1.1" 404 55816
+WARNING 2025-07-24 15:50:58,382 basehttp 14052 1464 "GET /api/conversations/1/messages/ HTTP/1.1" 404 55811
+INFO 2025-07-24 15:51:02,776 basehttp 14052 25044 "OPTIONS /api/conversations/2/messages/ HTTP/1.1" 200 0
+WARNING 2025-07-24 15:51:02,797 log 14052 25044 Not Found: /api/conversations/2/messages/
+WARNING 2025-07-24 15:51:02,798 basehttp 14052 25044 "GET /api/conversations/2/messages/ HTTP/1.1" 404 55811
+INFO 2025-07-24 15:51:03,705 basehttp 14052 25044 "OPTIONS /api/conversations/3/messages/ HTTP/1.1" 200 0
+WARNING 2025-07-24 15:51:03,726 log 14052 25044 Not Found: /api/conversations/3/messages/
+WARNING 2025-07-24 15:51:03,727 basehttp 14052 25044 "GET /api/conversations/3/messages/ HTTP/1.1" 404 55811
+WARNING 2025-07-24 15:51:12,909 log 14052 26260 Not Found: /api/conversations/
+WARNING 2025-07-24 15:51:12,912 basehttp 14052 26260 "GET /api/conversations/ HTTP/1.1" 404 55778
+WARNING 2025-07-24 15:51:12,944 log 14052 26260 Not Found: /api/conversations/
+WARNING 2025-07-24 15:51:12,945 basehttp 14052 26260 "GET /api/conversations/ HTTP/1.1" 404 55778
+WARNING 2025-07-24 15:51:18,314 log 14052 26260 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 15:51:18,315 basehttp 14052 26260 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 15:51:18,320 log 14052 23952 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 15:51:18,322 basehttp 14052 23952 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+INFO 2025-07-24 15:51:19,356 basehttp 14052 26260 "OPTIONS /api/notifications/ HTTP/1.1" 200 0
+INFO 2025-07-24 15:51:19,356 basehttp 14052 23952 "OPTIONS /api/notifications/ HTTP/1.1" 200 0
+INFO 2025-07-24 15:51:19,370 basehttp 14052 23952 "GET /api/notifications/ HTTP/1.1" 200 2
+INFO 2025-07-24 15:51:19,378 basehttp 14052 23952 "GET /api/notifications/ HTTP/1.1" 200 2
+WARNING 2025-07-24 15:51:26,049 log 14052 26488 Not Found: /api/conversations/
+WARNING 2025-07-24 15:51:26,051 basehttp 14052 26488 "GET /api/conversations/ HTTP/1.1" 404 55778
+WARNING 2025-07-24 15:51:26,080 log 14052 26488 Not Found: /api/conversations/
+WARNING 2025-07-24 15:51:26,081 basehttp 14052 26488 "GET /api/conversations/ HTTP/1.1" 404 55778
+WARNING 2025-07-24 15:51:30,806 log 14052 26488 Not Found: /api/conversations/1/mark_read/
+WARNING 2025-07-24 15:51:30,823 log 14052 25068 Not Found: /api/conversations/1/messages/
+WARNING 2025-07-24 15:51:30,824 basehttp 14052 26488 "PATCH /api/conversations/1/mark_read/ HTTP/1.1" 404 55816
+WARNING 2025-07-24 15:51:30,825 basehttp 14052 25068 "GET /api/conversations/1/messages/ HTTP/1.1" 404 55811
+WARNING 2025-07-24 15:51:34,525 log 14052 19556 Not Found: /api/conversations/2/messages/
+WARNING 2025-07-24 15:51:34,529 basehttp 14052 19556 "GET /api/conversations/2/messages/ HTTP/1.1" 404 55811
+WARNING 2025-07-24 15:51:35,366 log 14052 19556 Not Found: /api/conversations/3/messages/
+WARNING 2025-07-24 15:51:35,369 basehttp 14052 19556 "GET /api/conversations/3/messages/ HTTP/1.1" 404 55811
+WARNING 2025-07-24 15:51:38,788 log 14052 19556 Not Found: /api/conversations/1/mark_read/
+WARNING 2025-07-24 15:51:38,818 basehttp 14052 19556 "PATCH /api/conversations/1/mark_read/ HTTP/1.1" 404 55816
+WARNING 2025-07-24 15:51:38,821 log 14052 25396 Not Found: /api/conversations/1/messages/
+WARNING 2025-07-24 15:51:38,824 basehttp 14052 25396 "GET /api/conversations/1/messages/ HTTP/1.1" 404 55811
+WARNING 2025-07-24 15:51:48,527 log 14052 25652 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 15:51:48,528 basehttp 14052 25652 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 15:51:48,530 log 14052 12412 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 15:51:48,531 basehttp 14052 12412 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 15:52:18,530 log 14052 10732 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 15:52:18,531 log 14052 16464 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 15:52:18,531 basehttp 14052 10732 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 15:52:18,532 basehttp 14052 16464 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 15:52:48,522 log 14052 13956 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 15:52:48,524 log 14052 26748 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 15:52:48,524 basehttp 14052 13956 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 15:52:48,524 basehttp 14052 26748 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 15:53:18,540 log 14052 3924 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 15:53:18,540 log 14052 26404 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 15:53:18,541 basehttp 14052 3924 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 15:53:18,541 basehttp 14052 26404 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 15:53:48,532 log 14052 26560 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 15:53:48,535 basehttp 14052 26560 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 15:53:48,538 log 14052 2248 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 15:53:48,539 basehttp 14052 2248 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 15:54:38,730 log 14052 4860 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 15:54:38,732 basehttp 14052 4860 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 15:54:38,734 log 14052 26672 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 15:54:38,735 basehttp 14052 26672 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 15:54:48,530 log 14052 27024 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 15:54:48,531 basehttp 14052 27024 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 15:54:48,535 log 14052 25316 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 15:54:48,536 basehttp 14052 25316 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 15:55:18,533 log 14052 23284 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 15:55:18,536 basehttp 14052 23284 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 15:55:18,539 log 14052 20676 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 15:55:18,540 basehttp 14052 20676 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 15:55:48,520 log 14052 20632 Unauthorized: /api/notifications/unread_count/
+WARNING 2025-07-24 15:55:48,528 log 14052 12596 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 15:55:48,529 basehttp 14052 20632 "GET /api/notifications/unread_count/ HTTP/1.1" 401 183
+WARNING 2025-07-24 15:55:48,529 basehttp 14052 12596 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+INFO 2025-07-24 15:55:48,598 basehttp 14052 12596 "OPTIONS /api/auth/token/refresh/ HTTP/1.1" 200 0
+INFO 2025-07-24 15:55:48,615 basehttp 14052 12596 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+WARNING 2025-07-24 15:55:48,630 log 14052 12596 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 15:55:48,631 basehttp 14052 12596 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 15:56:18,520 log 14052 4024 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 15:56:18,527 log 14052 27264 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 15:56:18,528 basehttp 14052 4024 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 15:56:18,529 basehttp 14052 27264 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 15:56:48,533 log 14052 24824 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 15:56:48,534 basehttp 14052 24824 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 15:56:48,536 log 14052 15240 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 15:56:48,537 basehttp 14052 15240 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 15:57:57,810 log 14052 27304 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 15:57:57,818 basehttp 14052 27304 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 15:57:57,837 log 14052 19920 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 15:57:57,838 basehttp 14052 19920 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 15:58:57,643 log 14052 18128 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 15:58:57,647 basehttp 14052 18128 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 15:58:57,660 log 14052 20012 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 15:58:57,661 basehttp 14052 20012 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 15:59:57,611 log 14052 25712 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 15:59:57,621 log 14052 18300 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 15:59:57,621 basehttp 14052 25712 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 15:59:57,622 basehttp 14052 18300 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:00:57,644 log 14052 24924 Unauthorized: /api/notifications/unread_count/
+WARNING 2025-07-24 16:00:57,659 log 14052 23912 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:00:57,661 basehttp 14052 24924 "GET /api/notifications/unread_count/ HTTP/1.1" 401 183
+WARNING 2025-07-24 16:00:57,661 basehttp 14052 23912 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+INFO 2025-07-24 16:00:57,702 basehttp 14052 23912 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+WARNING 2025-07-24 16:00:57,744 log 14052 23912 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:00:57,745 basehttp 14052 23912 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:01:57,816 log 14052 25388 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:01:57,823 basehttp 14052 25388 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:01:57,840 log 14052 19068 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:01:57,840 basehttp 14052 19068 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+INFO 2025-07-24 16:02:52,343 basehttp 14052 11028 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 16:02:52,370 basehttp 14052 23080 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+WARNING 2025-07-24 16:02:57,621 log 14052 11688 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:02:57,624 log 14052 9220 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:02:57,624 basehttp 14052 9220 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:02:57,624 basehttp 14052 11688 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:03:16,646 log 14052 20972 Not Found: /api/conversations/
+WARNING 2025-07-24 16:03:16,647 basehttp 14052 20972 "GET /api/conversations/ HTTP/1.1" 404 55778
+WARNING 2025-07-24 16:03:16,674 log 14052 20972 Not Found: /api/conversations/
+WARNING 2025-07-24 16:03:16,674 basehttp 14052 20972 "GET /api/conversations/ HTTP/1.1" 404 55778
+WARNING 2025-07-24 16:03:18,303 log 14052 20972 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:03:18,305 basehttp 14052 20972 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:03:18,308 log 14052 26440 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:03:18,310 basehttp 14052 26440 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+INFO 2025-07-24 16:03:20,754 basehttp 14052 26440 "GET /api/notifications/ HTTP/1.1" 200 2
+INFO 2025-07-24 16:03:20,763 basehttp 14052 26440 "GET /api/notifications/ HTTP/1.1" 200 2
+WARNING 2025-07-24 16:03:48,311 log 14052 25544 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:03:48,312 basehttp 14052 25544 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:03:48,314 log 14052 13556 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:03:48,315 basehttp 14052 13556 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:04:18,315 log 14052 6704 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:04:18,316 basehttp 14052 6704 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:04:18,318 log 14052 18664 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:04:18,319 basehttp 14052 18664 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:04:48,312 log 14052 26300 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:04:48,313 basehttp 14052 26300 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:04:48,315 log 14052 12744 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:04:48,316 basehttp 14052 12744 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:05:18,532 log 14052 27636 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:05:18,536 basehttp 14052 27636 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:05:18,539 log 14052 10424 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:05:18,539 basehttp 14052 10424 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:05:48,520 log 14052 19652 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:05:48,522 basehttp 14052 19652 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:05:48,525 log 14052 27136 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:05:48,525 basehttp 14052 27136 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:06:57,530 log 14052 18852 Unauthorized: /api/notifications/unread_count/
+WARNING 2025-07-24 16:06:57,540 log 14052 27092 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:06:57,540 basehttp 14052 18852 "GET /api/notifications/unread_count/ HTTP/1.1" 401 183
+WARNING 2025-07-24 16:06:57,541 basehttp 14052 27092 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+INFO 2025-07-24 16:06:57,577 basehttp 14052 27092 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+WARNING 2025-07-24 16:06:57,587 log 14052 27092 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:06:57,588 basehttp 14052 27092 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:07:57,675 log 14052 23020 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:07:57,695 log 14052 25660 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:07:57,696 basehttp 14052 23020 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:07:57,696 basehttp 14052 25660 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+INFO 2025-07-24 16:08:35,130 basehttp 14052 26040 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+WARNING 2025-07-24 16:08:35,285 log 14052 15552 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:08:35,291 basehttp 14052 15552 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:08:35,329 log 14052 21184 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:08:35,391 log 14052 15552 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:08:35,392 basehttp 14052 21184 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:08:35,423 basehttp 14052 15552 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+INFO 2025-07-24 16:08:35,423 basehttp 14052 24360 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+WARNING 2025-07-24 16:08:35,434 log 14052 21184 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:08:35,435 basehttp 14052 21184 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+INFO 2025-07-24 16:08:36,103 basehttp 14052 21184 "GET /api/notifications/ HTTP/1.1" 200 2
+INFO 2025-07-24 16:08:36,115 basehttp 14052 21184 "GET /api/notifications/ HTTP/1.1" 200 2
+WARNING 2025-07-24 16:09:05,546 log 14052 1992 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:09:05,547 log 14052 404 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:09:05,547 basehttp 14052 1992 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:09:05,548 basehttp 14052 404 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:09:35,660 log 14052 1784 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:09:35,664 basehttp 14052 1784 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:09:35,673 log 14052 10340 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:09:35,674 basehttp 14052 10340 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:10:05,520 log 14052 26424 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:10:05,520 basehttp 14052 26424 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:10:05,522 log 14052 16032 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:10:05,522 basehttp 14052 16032 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:10:35,540 log 14052 24320 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:10:35,542 basehttp 14052 24320 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:10:35,544 log 14052 24376 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:10:35,545 basehttp 14052 24376 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:11:05,529 log 14052 19120 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:11:05,531 log 14052 25708 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:11:05,531 basehttp 14052 19120 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:11:05,531 basehttp 14052 25708 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+INFO 2025-07-24 16:11:46,634 basehttp 14052 22476 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 16:11:46,696 basehttp 14052 26748 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+WARNING 2025-07-24 16:11:47,010 log 14052 24168 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:11:47,019 log 14052 4848 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:11:47,020 basehttp 14052 24168 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:11:47,022 basehttp 14052 4848 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:11:47,061 log 14052 24168 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:11:47,062 basehttp 14052 24168 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:11:47,065 log 14052 4848 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:11:47,067 basehttp 14052 4848 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+INFO 2025-07-24 16:11:47,256 basehttp 14052 4848 "GET /api/notifications/ HTTP/1.1" 200 2
+INFO 2025-07-24 16:11:47,270 basehttp 14052 4848 "GET /api/notifications/ HTTP/1.1" 200 2
+WARNING 2025-07-24 16:12:17,873 log 14052 10048 Unauthorized: /api/notifications/unread_count/
+WARNING 2025-07-24 16:12:17,915 log 14052 27044 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:12:17,916 basehttp 14052 10048 "GET /api/notifications/unread_count/ HTTP/1.1" 401 183
+WARNING 2025-07-24 16:12:17,917 basehttp 14052 27044 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+INFO 2025-07-24 16:12:18,025 basehttp 14052 27044 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+WARNING 2025-07-24 16:12:18,081 log 14052 27044 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:12:18,082 basehttp 14052 27044 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:13:14,006 log 14052 5568 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:13:14,010 log 14052 25608 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:13:14,012 basehttp 14052 5568 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:13:14,016 basehttp 14052 25608 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:13:17,536 log 14052 25608 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:13:17,537 basehttp 14052 25608 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:13:17,540 log 14052 5568 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:13:17,540 basehttp 14052 5568 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:13:47,967 log 14052 26560 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:13:47,995 basehttp 14052 26560 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:13:48,024 log 14052 26280 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:13:48,027 basehttp 14052 26280 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:14:17,561 log 14052 24712 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:14:17,562 basehttp 14052 24712 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:14:17,565 log 14052 25852 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:14:17,565 basehttp 14052 25852 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:14:58,128 log 14052 20836 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:14:58,144 basehttp 14052 20836 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:14:58,184 log 14052 4788 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:14:58,192 basehttp 14052 4788 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:15:57,726 log 14052 25504 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:15:57,730 basehttp 14052 25504 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:15:57,740 log 14052 26708 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:15:57,740 basehttp 14052 26708 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:16:51,982 log 14052 11580 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:16:52,018 basehttp 14052 11580 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:16:52,053 log 14052 25204 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:16:52,059 basehttp 14052 25204 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+INFO 2025-07-24 16:16:54,208 basehttp 14052 11580 "OPTIONS /api/creator-profiles/featured/ HTTP/1.1" 200 0
+INFO 2025-07-24 16:16:54,208 basehttp 14052 22984 "OPTIONS /api/creator-profiles/featured/ HTTP/1.1" 200 0
+INFO 2025-07-24 16:16:54,270 basehttp 14052 25204 "GET /api/users/me/ HTTP/1.1" 200 198
+INFO 2025-07-24 16:16:54,316 basehttp 14052 25204 "GET /api/users/me/ HTTP/1.1" 200 198
+WARNING 2025-07-24 16:16:54,363 log 14052 25204 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:16:54,370 basehttp 14052 25204 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:16:54,373 log 14052 11580 Not Found: /api/notifications/unread_count/
+INFO 2025-07-24 16:16:54,375 basehttp 14052 22984 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+WARNING 2025-07-24 16:16:54,379 basehttp 14052 11580 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:16:54,392 log 14052 25204 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:16:54,398 basehttp 14052 25204 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:16:54,404 log 14052 11580 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:16:54,405 basehttp 14052 11580 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+INFO 2025-07-24 16:16:54,431 basehttp 14052 22984 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+WARNING 2025-07-24 16:17:24,526 log 14052 23472 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:17:24,530 log 14052 21164 Unauthorized: /api/notifications/unread_count/
+WARNING 2025-07-24 16:17:24,531 basehttp 14052 23472 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:17:24,532 basehttp 14052 21164 "GET /api/notifications/unread_count/ HTTP/1.1" 401 183
+INFO 2025-07-24 16:17:24,554 basehttp 14052 23472 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+WARNING 2025-07-24 16:17:24,563 log 14052 23472 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:17:24,563 basehttp 14052 23472 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:17:54,534 log 14052 25180 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:17:54,535 basehttp 14052 25180 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:17:54,537 log 14052 16216 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:17:54,537 basehttp 14052 16216 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:18:24,528 log 14052 25128 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:18:24,530 basehttp 14052 25128 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:18:24,533 log 14052 22200 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:18:24,534 basehttp 14052 22200 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:18:54,528 log 14052 21704 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:18:54,530 basehttp 14052 21704 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:18:54,531 log 14052 21744 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:18:54,532 basehttp 14052 21744 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:19:24,528 log 14052 4000 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:19:24,529 basehttp 14052 4000 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:19:24,530 log 14052 16464 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:19:24,530 basehttp 14052 16464 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:19:54,528 log 14052 25340 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:19:54,529 basehttp 14052 25340 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:19:54,531 log 14052 21312 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:19:54,532 basehttp 14052 21312 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:20:57,545 log 14052 2248 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:20:57,547 log 14052 14288 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:20:57,547 basehttp 14052 2248 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:20:57,548 basehttp 14052 14288 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:21:57,537 log 14052 26300 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:21:57,538 basehttp 14052 26300 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:21:57,539 log 14052 24632 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:21:57,540 basehttp 14052 24632 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:22:57,530 log 14052 24356 Unauthorized: /api/notifications/unread_count/
+WARNING 2025-07-24 16:22:57,539 log 14052 17500 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:22:57,539 basehttp 14052 24356 "GET /api/notifications/unread_count/ HTTP/1.1" 401 183
+WARNING 2025-07-24 16:22:57,539 basehttp 14052 17500 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+INFO 2025-07-24 16:22:57,579 basehttp 14052 17500 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+WARNING 2025-07-24 16:22:57,588 log 14052 17500 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:22:57,589 basehttp 14052 17500 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:23:57,528 log 14052 1720 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:23:57,529 basehttp 14052 1720 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:23:57,531 log 14052 25064 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:23:57,532 basehttp 14052 25064 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:24:57,547 log 14052 25400 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:24:57,547 basehttp 14052 25400 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:24:57,549 log 14052 27256 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:24:57,549 basehttp 14052 27256 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:25:57,544 log 14052 22232 Not Found: /api/messages/unread_count/
+WARNING 2025-07-24 16:25:57,548 basehttp 14052 22232 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
+WARNING 2025-07-24 16:25:57,550 log 14052 6496 Not Found: /api/notifications/unread_count/
+WARNING 2025-07-24 16:25:57,550 basehttp 14052 6496 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23

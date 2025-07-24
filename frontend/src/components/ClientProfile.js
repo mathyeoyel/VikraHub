@@ -8,13 +8,16 @@ const ClientProfile = () => {
   const { user } = useAuth();
   const [profile, setProfile] = useState(null);
   const [clientProfile, setClientProfile] = useState(null);
+  const [postedProjects, setPostedProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [projectsLoading, setProjectsLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
     fetchProfile();
+    fetchProjects();
   }, [user]);
 
   const fetchProfile = async () => {
@@ -37,47 +40,26 @@ const ClientProfile = () => {
     }
   };
 
+  const fetchProjects = async () => {
+    try {
+      setProjectsLoading(true);
+      const response = await userAPI.getMyProjects();
+      setPostedProjects(response.data || []);
+    } catch (error) {
+      console.error('Failed to fetch projects:', error);
+      setPostedProjects([]);
+    } finally {
+      setProjectsLoading(false);
+    }
+  };
+
   const handleProfileUpdate = (updatedProfile) => {
     setProfile(updatedProfile);
     setEditing(false);
     console.log('Client profile updated successfully:', updatedProfile);
   };
 
-  // Sample project data (replace with real data from backend)
-  const postedProjects = [
-    {
-      id: 1,
-      title: "Brand Identity Design",
-      description: "Looking for a creative designer to develop a complete brand identity for our tech startup.",
-      budget: "$1,500 - $3,000",
-      status: "Completed",
-      datePosted: "2024-01-15",
-      applications: 12,
-      selectedFreelancer: "Maduot Chongo"
-    },
-    {
-      id: 2,
-      title: "Website Photography",
-      description: "Need professional photography for our company website and marketing materials.",
-      budget: "$500 - $1,000",
-      status: "In Progress",
-      datePosted: "2024-02-01",
-      applications: 8,
-      selectedFreelancer: "Akon Peter"
-    },
-    {
-      id: 3,
-      title: "Content Writing Project",
-      description: "Seeking a writer for blog posts and website content about South Sudan culture.",
-      budget: "$300 - $800",
-      status: "Open",
-      datePosted: "2024-02-10",
-      applications: 15,
-      selectedFreelancer: null
-    }
-  ];
-
-  // Sample testimonials from freelancers
+  // Sample testimonials from freelancers (replace with real data when available)
   const testimonials = [
     {
       name: "Maduot Chongo",
