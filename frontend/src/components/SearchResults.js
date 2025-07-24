@@ -1,435 +1,458 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import SearchBar from './SearchBar';
+import { publicProfileAPI, assetAPI } from '../api';
 import './SearchResults.css';
-
-// Enhanced mock search results with more comprehensive data
-const mockResults = [
-  {
-    id: 1,
-    type: 'creator',
-    username: 'sarahj_art',
-    name: 'Sarah Johnson',
-    title: 'Visual Artist & Illustrator',
-    location: 'Juba, South Sudan',
-    category: 'art',
-    skills: ['Traditional Art', 'Digital Illustration', 'Portrait Art', 'Cultural Art'],
-    industry: null,
-    tags: ['Traditional Culture', 'Modern Design', 'Cultural Heritage'],
-    image: 'https://ui-avatars.com/api/?name=SJ&background=000223&color=ffffff&size=200',
-    bio: 'Passionate visual artist specializing in traditional and digital illustrations that celebrate South Sudanese culture.',
-    rating: 4.9,
-    projects: 23,
-    joinedDate: '2023-01-15',
-    isPopular: true,
-    verified: true
-  },
-  {
-    id: 2,
-    type: 'freelancer',
-    username: 'mikedev',
-    name: 'Michael Chen',
-    title: 'Full-Stack Web Developer',
-    location: 'Wau, South Sudan',
-    category: 'tech',
-    skills: ['React', 'Node.js', 'Python', 'Mobile App Development', 'Cloud Technologies'],
-    industry: null,
-    tags: ['Digital Innovation', 'Entrepreneurship'],
-    image: 'https://ui-avatars.com/api/?name=MC&background=000223&color=ffffff&size=200',
-    bio: 'Experienced developer with expertise in React, Node.js, and cloud technologies. Building digital solutions for South Sudan.',
-    rating: 4.8,
-    projects: 45,
-    joinedDate: '2022-08-22',
-    isPopular: true,
-    verified: true
-  },
-  {
-    id: 3,
-    type: 'creator',
-    username: 'amina_fashion',
-    name: 'Amina Hassan',
-    title: 'Fashion Designer',
-    location: 'Malakal, South Sudan',
-    category: 'fashion',
-    skills: ['Fashion Design', 'Textile Design', 'Traditional Clothing', 'Modern Fashion'],
-    industry: null,
-    tags: ['Traditional Culture', 'Sustainability', 'Cultural Heritage'],
-    image: 'https://ui-avatars.com/api/?name=AH&background=000223&color=ffffff&size=200',
-    bio: 'Contemporary fashion designer blending traditional South Sudanese styles with modern trends.',
-    rating: 4.7,
-    projects: 18,
-    joinedDate: '2023-03-10',
-    isPopular: false,
-    verified: false
-  },
-  {
-    id: 4,
-    type: 'freelancer',
-    username: 'davidbrand',
-    name: 'David Mwangi',
-    title: 'Graphic Designer & Brand Specialist',
-    location: 'Yei, South Sudan',
-    category: 'design',
-    skills: ['Logo Design', 'Brand Identity', 'Print Design', 'Digital Design'],
-    industry: null,
-    tags: ['Modern Design', 'Digital Innovation'],
-    image: 'https://ui-avatars.com/api/?name=DM&background=000223&color=ffffff&size=200',
-    bio: 'Creative graphic designer helping businesses build strong visual identities and modern brand presence.',
-    rating: 4.9,
-    projects: 67,
-    joinedDate: '2022-05-18',
-    isPopular: true,
-    verified: true
-  },
-  {
-    id: 5,
-    type: 'creator',
-    username: 'graceshots',
-    name: 'Grace Akol',
-    title: 'Photographer & Visual Storyteller',
-    location: 'Bentiu, South Sudan',
-    category: 'photography',
-    skills: ['Documentary Photography', 'Portrait Photography', 'Event Photography', 'Photo Editing'],
-    industry: null,
-    tags: ['Cultural Heritage', 'Community Development'],
-    image: 'https://ui-avatars.com/api/?name=GA&background=000223&color=ffffff&size=200',
-    bio: 'Documentary photographer capturing the beauty and stories of South Sudan through powerful visual narratives.',
-    rating: 4.8,
-    projects: 34,
-    joinedDate: '2023-01-28',
-    isPopular: true,
-    verified: false
-  },
-  {
-    id: 6,
-    type: 'freelancer',
-    username: 'jamescopy',
-    name: 'James Lokwi',
-    title: 'Content Writer & Copywriter',
-    location: 'Torit, South Sudan',
-    category: 'writing',
-    skills: ['Content Writing', 'Copywriting', 'Blog Writing', 'Marketing Copy'],
-    industry: null,
-    tags: ['Digital Innovation', 'Community Development'],
-    image: 'https://ui-avatars.com/api/?name=JL&background=000223&color=ffffff&size=200',
-    bio: 'Professional content writer with expertise in marketing copy and storytelling for local and international brands.',
-    rating: 4.6,
-    projects: 52,
-    joinedDate: '2022-11-05',
-    isPopular: false,
-    verified: true
-  },
-  {
-    id: 7,
-    type: 'client',
-    username: 'edu_foundation',
-    name: 'South Sudan Education Foundation',
-    title: 'Education NGO',
-    location: 'Juba, South Sudan',
-    category: 'client',
-    skills: [],
-    industry: 'Education',
-    tags: ['Youth Empowerment', 'Community Development'],
-    image: 'https://ui-avatars.com/api/?name=SEF&background=000223&color=ffffff&size=200',
-    bio: 'Non-profit organization working to improve educational opportunities across South Sudan.',
-    rating: 4.5,
-    projects: 12,
-    joinedDate: '2023-02-14',
-    isPopular: false,
-    verified: true
-  },
-  {
-    id: 8,
-    type: 'client',
-    username: 'health_ministry',
-    name: 'Ministry of Health - South Sudan',
-    title: 'Government Healthcare Agency',
-    location: 'Juba, South Sudan',
-    category: 'client',
-    skills: [],
-    industry: 'Healthcare',
-    tags: ['Community Development', 'Digital Innovation'],
-    image: 'https://ui-avatars.com/api/?name=MOH&background=000223&color=ffffff&size=200',
-    bio: 'Government agency focused on improving healthcare services and public health initiatives.',
-    rating: 4.2,
-    projects: 8,
-    joinedDate: '2023-04-20',
-    isPopular: false,
-    verified: true
-  }
-];
 
 const SearchResults = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [sortBy, setSortBy] = useState('relevance');
   const [filters, setFilters] = useState({
-    type: searchParams.get('type') || 'all',
-    category: searchParams.get('category') || 'all',
-    location: searchParams.get('location') || '',
-    industry: searchParams.get('industry') || 'all',
-    sortBy: searchParams.get('sortBy') || 'relevance',
-    sortOrder: searchParams.get('sortOrder') || 'desc'
+    type: 'all',
+    category: 'all',
+    location: '',
+    skills: '',
+    industry: ''
   });
 
   const query = searchParams.get('q') || '';
 
-  useEffect(() => {
-    // Simulate API search
+  // Fetch search results from backend
+  const fetchSearchResults = async (searchQuery) => {
+    if (!searchQuery.trim()) {
+      setResults([]);
+      return;
+    }
+
     setLoading(true);
-    setTimeout(() => {
-      let filtered = mockResults;
+    setError(null);
+
+    try {
+      const searchPromises = [];
       
-      if (query) {
-        filtered = filtered.filter(result => {
-          const searchTerm = query.toLowerCase();
-          
-          // Search by name or username
-          const nameMatch = result.name.toLowerCase().includes(searchTerm) ||
-                           result.username.toLowerCase().includes(searchTerm);
-          
-          // Search by title/role
-          const titleMatch = result.title.toLowerCase().includes(searchTerm);
-          
-          // Search by skills/services
-          const skillsMatch = result.skills.some(skill => 
-            skill.toLowerCase().includes(searchTerm)
-          );
-          
-          // Search by location
-          const locationMatch = result.location.toLowerCase().includes(searchTerm);
-          
-          // Search by industry (for clients)
-          const industryMatch = result.industry && 
-                                result.industry.toLowerCase().includes(searchTerm);
-          
-          // Search by tags
-          const tagsMatch = result.tags.some(tag => 
-            tag.toLowerCase().includes(searchTerm)
-          );
-          
-          // Search by bio
-          const bioMatch = result.bio.toLowerCase().includes(searchTerm);
-          
-          return nameMatch || titleMatch || skillsMatch || locationMatch || 
-                 industryMatch || tagsMatch || bioMatch;
+      // Search public profiles
+      searchPromises.push(publicProfileAPI.search({ q: searchQuery }));
+      
+      // Search creators
+      searchPromises.push(assetAPI.getCreators({ search: searchQuery }));
+      
+      // Search freelancers  
+      searchPromises.push(assetAPI.getFreelancers({ search: searchQuery }));
+
+      const [publicProfiles, creators, freelancers] = await Promise.all(searchPromises);
+
+      console.log('Search results:', { publicProfiles, creators, freelancers });
+
+      // Combine and format results
+      const combinedResults = [];
+
+      // Add public profiles
+      if (publicProfiles.data?.results) {
+        publicProfiles.data.results.forEach(profile => {
+          combinedResults.push(formatPublicProfile(profile));
+        });
+      } else if (publicProfiles.data && Array.isArray(publicProfiles.data)) {
+        publicProfiles.data.forEach(profile => {
+          combinedResults.push(formatPublicProfile(profile));
         });
       }
-      
-      // Apply type filter
-      if (filters.type !== 'all') {
-        const typeMap = {
-          'creators': 'creator',
-          'freelancers': 'freelancer', 
-          'clients': 'client'
-        };
-        filtered = filtered.filter(result => result.type === typeMap[filters.type]);
-      }
-      
-      // Apply category filter
-      if (filters.category !== 'all') {
-        filtered = filtered.filter(result => result.category === filters.category);
-      }
-      
-      // Apply location filter
-      if (filters.location) {
-        filtered = filtered.filter(result => 
-          result.location.toLowerCase().includes(filters.location.toLowerCase())
-        );
-      }
-      
-      // Apply industry filter (for clients)
-      if (filters.industry !== 'all') {
-        filtered = filtered.filter(result => result.industry === filters.industry);
-      }
-      
-      // Apply sorting
-      filtered.sort((a, b) => {
-        let comparison = 0;
-        
-        switch (filters.sortBy) {
-          case 'popular':
-            comparison = (b.isPopular ? 1 : 0) - (a.isPopular ? 1 : 0) || 
-                        b.projects - a.projects;
-            break;
-          case 'newest':
-            comparison = new Date(b.joinedDate) - new Date(a.joinedDate);
-            break;
-          case 'name':
-            comparison = a.name.localeCompare(b.name);
-            break;
-          case 'rating':
-            comparison = b.rating - a.rating;
-            break;
-          case 'projects':
-            comparison = b.projects - a.projects;
-            break;
-          case 'relevance':
-          default:
-            // For relevance, prioritize verified users and exact matches
-            comparison = (b.verified ? 1 : 0) - (a.verified ? 1 : 0) ||
-                        (b.isPopular ? 1 : 0) - (a.isPopular ? 1 : 0) ||
-                        b.rating - a.rating;
-            break;
-        }
-        
-        return filters.sortOrder === 'desc' ? comparison : -comparison;
-      });
-      
-      setResults(filtered);
-      setLoading(false);
-    }, 800);
-  }, [query, filters]);
 
-  const handleSearch = ({ query: newQuery, filters: newFilters }) => {
-    setFilters(newFilters);
-    // Update URL parameters
-    const searchParams = new URLSearchParams();
-    searchParams.set('q', newQuery);
-    Object.entries(newFilters).forEach(([key, value]) => {
-      if (value && value !== 'all') {
-        searchParams.set(key, value);
+      // Add creators
+      if (creators.data?.results) {
+        creators.data.results.forEach(creator => {
+          combinedResults.push(formatCreator(creator));
+        });
+      } else if (creators.data && Array.isArray(creators.data)) {
+        creators.data.forEach(creator => {
+          combinedResults.push(formatCreator(creator));
+        });
       }
-    });
-    window.history.pushState({}, '', `${window.location.pathname}?${searchParams}`);
+
+      // Add freelancers
+      if (freelancers.data?.results) {
+        freelancers.data.results.forEach(freelancer => {
+          combinedResults.push(formatFreelancer(freelancer));
+        });
+      } else if (freelancers.data && Array.isArray(freelancers.data)) {
+        freelancers.data.forEach(freelancer => {
+          combinedResults.push(formatFreelancer(freelancer));
+        });
+      }
+
+      // Remove duplicates based on username
+      const uniqueResults = combinedResults.filter((result, index, self) => 
+        index === self.findIndex(r => r.username === result.username)
+      );
+
+      setResults(uniqueResults);
+
+    } catch (err) {
+      console.error('Search error:', err);
+      setError('Failed to load search results. Please try again.');
+      // For debugging, let's also show a fallback with some sample data
+      setResults([
+        {
+          id: 1,
+          type: 'profile',
+          username: 'sample_user',
+          name: 'Search functionality is being updated',
+          title: 'Backend integration in progress',
+          location: 'VikraHub',
+          category: 'general',
+          skills: ['Currently', 'Being', 'Updated'],
+          industry: 'Platform',
+          tags: [],
+          image: 'https://ui-avatars.com/api/?name=VH&background=000223&color=ffffff&size=200',
+          bio: 'Search results will show real user data from the backend once the connection is established.',
+          rating: 0,
+          projects: 0,
+          joinedDate: new Date().toISOString(),
+          isPopular: false,
+          verified: false
+        }
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  if (loading) {
-    return (
-      <div className="search-results">
-        <div className="container">
-          <SearchBar 
-            onSearch={handleSearch}
-            showFilters={true}
-          />
-          <div className="loading-state">
-            <div className="loading-spinner"></div>
-            <p>Searching for "{query}"...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Format public profile data
+  const formatPublicProfile = (profile) => {
+    const user = profile.user || profile;
+    return {
+      id: profile.id,
+      type: 'profile',
+      username: user.username,
+      name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username,
+      title: profile.bio?.split('.')[0] || 'VikraHub User',
+      location: extractLocation(profile.bio) || 'South Sudan',
+      category: 'general',
+      skills: extractSkills(profile.bio) || [],
+      industry: null,
+      tags: [],
+      image: profile.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=000223&color=ffffff&size=200`,
+      bio: profile.bio || 'VikraHub community member',
+      rating: 0,
+      projects: 0,
+      joinedDate: user.date_joined || new Date().toISOString(),
+      isPopular: false,
+      verified: user.is_verified || false
+    };
+  };
+
+  // Format creator profile data
+  const formatCreator = (creator) => {
+    const user = creator.user || creator;
+    const userProfile = user.userprofile || {};
+    return {
+      id: creator.id,
+      type: 'creator',
+      username: user.username,
+      name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username,
+      title: creator.creator_type_display || 'Creative Professional',
+      location: extractLocation(userProfile.bio) || 'South Sudan',
+      category: mapCreatorType(creator.creator_type),
+      skills: parseSkills(userProfile.skills) || [],
+      industry: 'Creative Arts',
+      tags: [],
+      image: userProfile.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=000223&color=ffffff&size=200`,
+      bio: creator.art_statement || userProfile.bio || 'Passionate creative professional.',
+      rating: 0,
+      projects: 0,
+      joinedDate: user.date_joined || new Date().toISOString(),
+      isPopular: creator.featured || false,
+      verified: user.is_verified || false
+    };
+  };
+
+  // Format freelancer profile data
+  const formatFreelancer = (freelancer) => {
+    const user = freelancer.user || freelancer;
+    const userProfile = user.userprofile || {};
+    return {
+      id: freelancer.id,
+      type: 'freelancer',
+      username: user.username,
+      name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username,
+      title: freelancer.specialization || 'Freelance Professional',
+      location: extractLocation(userProfile.bio) || 'South Sudan',
+      category: 'freelance',
+      skills: parseSkills(userProfile.skills) || [],
+      industry: 'Freelance Services',
+      tags: [],
+      image: userProfile.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=000223&color=ffffff&size=200`,
+      bio: freelancer.description || userProfile.bio || 'Professional freelancer ready to help with your projects.',
+      rating: parseFloat(freelancer.rating) || 0,
+      projects: freelancer.completed_projects || 0,
+      joinedDate: user.date_joined || new Date().toISOString(),
+      isPopular: freelancer.featured || false,
+      verified: user.is_verified || false
+    };
+  };
+
+  // Helper functions
+  const extractLocation = (bio) => {
+    if (!bio) return null;
+    const locationKeywords = ['Juba', 'Malakal', 'Wau', 'Yei', 'Torit', 'Rumbek', 'Bor', 'South Sudan'];
+    const found = locationKeywords.find(keyword => bio.toLowerCase().includes(keyword.toLowerCase()));
+    return found || null;
+  };
+
+  const extractSkills = (bio) => {
+    if (!bio) return [];
+    const skillKeywords = ['React', 'JavaScript', 'Python', 'Design', 'Art', 'Writing', 'Photography', 'Music'];
+    return skillKeywords.filter(skill => bio.toLowerCase().includes(skill.toLowerCase()));
+  };
+
+  const parseSkills = (skillsString) => {
+    if (!skillsString) return [];
+    if (Array.isArray(skillsString)) return skillsString;
+    return skillsString.split(',').map(skill => skill.trim()).filter(Boolean);
+  };
+
+  const mapCreatorType = (type) => {
+    const typeMapping = {
+      'visual_artist': 'art',
+      'musician': 'music',
+      'writer': 'writing',
+      'photographer': 'photography',
+      'designer': 'design'
+    };
+    return typeMapping[type] || 'general';
+  };
+
+  useEffect(() => {
+    if (query) {
+      fetchSearchResults(query);
+    }
+  }, [query]);
+
+  // Apply filters and sorting
+  const applyFiltersAndSort = (allResults) => {
+    let filtered = [...allResults];
+    
+    // Apply filters
+    if (filters.type !== 'all') {
+      const typeMap = {
+        'creators': 'creator',
+        'freelancers': 'freelancer', 
+        'profiles': 'profile'
+      };
+      filtered = filtered.filter(result => result.type === typeMap[filters.type]);
+    }
+    
+    if (filters.category !== 'all') {
+      filtered = filtered.filter(result => result.category === filters.category);
+    }
+    
+    if (filters.location) {
+      filtered = filtered.filter(result => 
+        result.location.toLowerCase().includes(filters.location.toLowerCase())
+      );
+    }
+    
+    if (filters.skills) {
+      filtered = filtered.filter(result => 
+        result.skills.some(skill => 
+          skill.toLowerCase().includes(filters.skills.toLowerCase())
+        )
+      );
+    }
+    
+    if (filters.industry) {
+      filtered = filtered.filter(result => 
+        result.industry && result.industry.toLowerCase().includes(filters.industry.toLowerCase())
+      );
+    }
+    
+    // Apply sorting
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'popular':
+          return (b.projects || 0) - (a.projects || 0);
+        case 'newest':
+          return new Date(b.joinedDate) - new Date(a.joinedDate);
+        case 'name':
+          return a.name.localeCompare(b.name);
+        case 'rating':
+          return (b.rating || 0) - (a.rating || 0);
+        case 'projects':
+          return (b.projects || 0) - (a.projects || 0);
+        default:
+          return 0;
+      }
+    });
+    
+    return filtered;
+  };
+
+  const filteredResults = applyFiltersAndSort(results);
+
+  const handleSearch = ({ query: searchQuery, filters: searchFilters }) => {
+    const params = new URLSearchParams();
+    if (searchQuery) params.set('q', searchQuery);
+    if (searchFilters.type !== 'all') params.set('type', searchFilters.type);
+    if (searchFilters.location) params.set('location', searchFilters.location);
+    if (searchFilters.skills) params.set('skills', searchFilters.skills);
+    if (searchFilters.industry) params.set('industry', searchFilters.industry);
+    
+    navigate(`/search?${params.toString()}`);
+  };
+
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+  };
 
   return (
     <div className="search-results">
       <div className="container">
-        {/* Search Bar */}
+        {/* Search Section */}
         <div className="search-section">
           <SearchBar 
             onSearch={handleSearch}
-            showFilters={true}
+            onFilterChange={handleFilterChange}
+            variant="default"
+            showAdvancedFilters={true}
           />
         </div>
 
-        {/* Search Results Header */}
+        {/* Results Header */}
         <div className="results-header">
           <h1>Search Results</h1>
-          <p className="results-count">
-            {results.length > 0 
-              ? `Found ${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"`
-              : `No results found for "${query}"`
-            }
-          </p>
+          {query && (
+            <p className="results-count">
+              {loading ? 'Searching...' : `${filteredResults.length} result${filteredResults.length !== 1 ? 's' : ''} found for "${query}"`}
+            </p>
+          )}
+          {error && (
+            <p className="error-message" style={{ color: '#dc3545', marginTop: '1rem' }}>
+              {error}
+            </p>
+          )}
         </div>
 
+        {/* Results Controls */}
+        <div className="results-controls">
+          <div className="controls-left">
+            <select 
+              value={filters.type} 
+              onChange={(e) => setFilters({ ...filters, type: e.target.value })}
+            >
+              <option value="all">All Types</option>
+              <option value="creators">Creators</option>
+              <option value="freelancers">Freelancers</option>
+              <option value="profiles">Profiles</option>
+            </select>
+          </div>
+          
+          <div className="controls-right">
+            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+              <option value="relevance">Most Relevant</option>
+              <option value="popular">Most Popular</option>
+              <option value="newest">Newest</option>
+              <option value="name">Name (A-Z)</option>
+              <option value="rating">Highest Rated</option>
+              <option value="projects">Most Projects</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Loading State */}
+        {loading && (
+          <div className="loading-state">
+            <div className="loading-spinner"></div>
+            <p>Searching VikraHub...</p>
+          </div>
+        )}
+
+        {/* No Results */}
+        {!loading && filteredResults.length === 0 && query && (
+          <div className="no-results">
+            <h3>No results found</h3>
+            <p>We couldn't find any results for "{query}". Try:</p>
+            <ul>
+              <li>Checking your spelling</li>
+              <li>Using different keywords</li>
+              <li>Being less specific</li>
+              <li>Removing some filters</li>
+            </ul>
+          </div>
+        )}
+
         {/* Results Grid */}
-        {results.length > 0 ? (
+        {!loading && filteredResults.length > 0 && (
           <div className="results-grid">
-            {results.map(result => (
-              <div key={result.id} className="result-card">
-                <div className="result-image">
-                  <img src={result.image} alt={result.name} />
-                  <span className={`result-type result-type--${result.type}`}>
-                    {result.type === 'creator' ? '🎨' : result.type === 'freelancer' ? '💼' : '🏢'}
-                  </span>
-                  {result.verified && (
-                    <span className="verified-badge">✓</span>
-                  )}
-                  {result.isPopular && (
-                    <span className="popular-badge">🔥</span>
-                  )}
-                </div>
-                
-                <div className="result-content">
-                  <h3 className="result-name">
-                    {result.name}
-                    <span className="result-username">@{result.username}</span>
-                  </h3>
-                  <p className="result-title">{result.title}</p>
-                  <p className="result-location">📍 {result.location}</p>
-                  
-                  {result.industry && (
-                    <p className="result-industry">🏢 {result.industry}</p>
-                  )}
-                  
-                  <p className="result-bio">{result.bio}</p>
-                  
-                  {/* Skills/Services */}
-                  {result.skills.length > 0 && (
-                    <div className="result-skills">
-                      {result.skills.slice(0, 3).map((skill, index) => (
-                        <span key={index} className="skill-tag">{skill}</span>
-                      ))}
-                      {result.skills.length > 3 && (
-                        <span className="skill-more">+{result.skills.length - 3} more</span>
-                      )}
+            {filteredResults.map(result => (
+              <div key={`${result.type}-${result.id}`} className="result-card">
+                <div className="result-header">
+                  <div className="result-info">
+                    <img 
+                      src={result.image} 
+                      alt={result.name}
+                      className="result-avatar"
+                    />
+                    <div className="result-details">
+                      <div className="result-badges">
+                        {result.verified && <span className="badge verified">✓ Verified</span>}
+                        {result.isPopular && <span className="badge popular">🔥 Popular</span>}
+                      </div>
+                      <h3 className="result-name">{result.name}</h3>
+                      <p className="result-title">{result.title}</p>
+                      <p className="result-location">📍 {result.location}</p>
                     </div>
-                  )}
-                  
-                  {/* Tags */}
-                  {result.tags.length > 0 && (
-                    <div className="result-tags">
-                      {result.tags.slice(0, 2).map((tag, index) => (
-                        <span key={index} className="tag-item">🏷️ {tag}</span>
-                      ))}
-                    </div>
-                  )}
-                  
-                  <div className="result-stats">
-                    <span className="rating">⭐ {result.rating}</span>
-                    <span className="projects">{result.projects} projects</span>
-                    <span className="joined">Joined {new Date(result.joinedDate).getFullYear()}</span>
                   </div>
                 </div>
-                
+
+                <div className="result-body">
+                  <p className="result-bio">{result.bio}</p>
+                  
+                  {result.skills.length > 0 && (
+                    <div className="result-skills">
+                      <strong>Skills:</strong>
+                      <div className="skills-list">
+                        {result.skills.slice(0, 4).map((skill, index) => (
+                          <span key={index} className="skill-tag">{skill}</span>
+                        ))}
+                        {result.skills.length > 4 && (
+                          <span className="skill-tag more">+{result.skills.length - 4} more</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="result-stats">
+                    <div className="stat-item">
+                      <span className="stat-label">Rating:</span>
+                      <span className="stat-value">{result.rating > 0 ? `${result.rating}/5.0` : 'New'}</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-label">Projects:</span>
+                      <span className="stat-value">{result.projects}</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-label">Joined:</span>
+                      <span className="stat-value">{new Date(result.joinedDate).getFullYear()}</span>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="result-actions">
                   <Link 
-                    to={`/${result.type === 'creator' ? 'creators' : result.type === 'freelancer' ? 'freelancers' : 'clients'}/${result.id}`}
+                    to={`/profile/${result.username}`} 
                     className="btn btn-primary"
                   >
                     View Profile
                   </Link>
                   <button className="btn btn-secondary">
-                    {result.type === 'creator' ? 'Follow' : 
-                     result.type === 'freelancer' ? 'Hire' : 'Connect'}
+                    Contact
                   </button>
                 </div>
               </div>
             ))}
-          </div>
-        ) : (
-          <div className="no-results">
-            <div className="no-results-icon">🔍</div>
-            <h3>No results found</h3>
-            <p>Try adjusting your search terms or filters to find what you're looking for.</p>
-            <div className="search-suggestions">
-              <h4>Try searching for:</h4>
-              <div className="suggestion-tags">
-                <button onClick={() => handleSearch({ query: 'graphic designer', filters })}>
-                  Graphic Designer
-                </button>
-                <button onClick={() => handleSearch({ query: 'photographer', filters })}>
-                  Photographer
-                </button>
-                <button onClick={() => handleSearch({ query: 'web developer', filters })}>
-                  Web Developer
-                </button>
-                <button onClick={() => handleSearch({ query: 'artist', filters })}>
-                  Artist
-                </button>
-              </div>
-            </div>
           </div>
         )}
       </div>
