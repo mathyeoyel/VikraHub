@@ -43,6 +43,7 @@ const Messages = () => {
             username: 'johndoe',
             first_name: 'John',
             last_name: 'Doe',
+            name: 'John Doe',
             avatar: null
           },
           last_message: {
@@ -58,6 +59,7 @@ const Messages = () => {
             username: 'sarahdesign',
             first_name: 'Sarah',
             last_name: 'Ahmed',
+            name: 'Sarah Ahmed',
             avatar: null
           },
           last_message: {
@@ -146,8 +148,8 @@ const Messages = () => {
           user_type: 'freelancer'
         }
       ].filter(user => 
-        user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        `${user.first_name} ${user.last_name}`.toLowerCase().includes(searchQuery.toLowerCase())
+        (user.username || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        `${user.first_name || ''} ${user.last_name || ''}`.toLowerCase().includes(searchQuery.toLowerCase())
       );
       
       setSearchUsers(mockUsers);
@@ -229,14 +231,19 @@ const Messages = () => {
       });
       
       // Send notification to the recipient
-      if (selectedConversation.participant) {
+      if (selectedConversation?.participant) {
+        const recipientName = selectedConversation.participant.name || 
+                             (selectedConversation.participant.first_name && selectedConversation.participant.last_name ? 
+                               `${selectedConversation.participant.first_name} ${selectedConversation.participant.last_name}` : 
+                               selectedConversation.participant.username || 'Unknown User');
+        
+        const senderName = user?.first_name && user?.last_name ? 
+                          `${user.first_name} ${user.last_name}` : 
+                          (user?.username || 'Someone');
+        
         notificationService.messageNotification(
-          selectedConversation.participant.first_name && selectedConversation.participant.last_name ? 
-            `${selectedConversation.participant.first_name} ${selectedConversation.participant.last_name}` : 
-            selectedConversation.participant.username,
-          user.first_name && user.last_name ? 
-            `${user.first_name} ${user.last_name}` : 
-            user.username || 'Someone',
+          recipientName,
+          senderName,
           newMessage.trim().substring(0, 50) + (newMessage.trim().length > 50 ? '...' : '')
         );
       }
@@ -291,10 +298,14 @@ const Messages = () => {
     }
   };
 
-  const filteredConversations = conversations.filter(conv =>
-    conv.participant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    conv.participant.username.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredConversations = conversations.filter(conv => {
+    const participantName = conv.participant.name || 
+                          `${conv.participant.first_name || ''} ${conv.participant.last_name || ''}`.trim();
+    const participantUsername = conv.participant.username || '';
+    
+    return participantName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           participantUsername.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   const totalUnread = conversations.reduce((sum, conv) => sum + conv.unread_count, 0);
 
