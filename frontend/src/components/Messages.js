@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from './Auth/AuthContext';
 import { messagesAPI, userAPI, publicProfileAPI } from '../api';
-import { notificationService } from '../services/notificationService';
+import notificationService from '../services/notificationService';
 import './Messages.css';
 
 const Messages = () => {

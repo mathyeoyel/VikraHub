@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { publicProfileAPI, userAPI } from '../api';
 import { useAuth } from './Auth/AuthContext';
-import { notificationService } from '../services/notificationService';
+import notificationService from '../services/notificationService';
 import './PublicClientProfile.css';
 
 const PublicClientProfile = () => {
