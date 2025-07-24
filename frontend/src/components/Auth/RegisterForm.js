@@ -16,7 +16,7 @@ const RegisterForm = ({ onClose, switchToLogin }) => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { register } = useAuth();
+  const { register, login } = useAuth();
 
   const handleChange = (e) => {
     setFormData({
@@ -48,10 +48,23 @@ const RegisterForm = ({ onClose, switchToLogin }) => {
     const result = await register(userData);
     
     if (result.success) {
-      alert('Registration successful! Welcome to VikraHub!');
-      onClose(); // Close the modal
-      // Redirect to homepage
-      navigate('/');
+      // Automatically log in the user after successful registration
+      const loginResult = await login({
+        username: formData.username,
+        password: formData.password
+      });
+      
+      if (loginResult.success) {
+        alert('Registration successful! Welcome to VikraHub!');
+        onClose(); // Close the modal
+        // Redirect to homepage (user is now logged in)
+        navigate('/');
+      } else {
+        // Registration succeeded but login failed - redirect to login page
+        alert('Registration successful! Please log in with your credentials.');
+        onClose();
+        switchToLogin();
+      }
     } else {
       setError(typeof result.error === 'string' ? result.error : 'Registration failed');
     }
