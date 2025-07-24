@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import './Auth.css';
 
 const RegisterForm = ({ onClose, switchToLogin }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -46,8 +48,10 @@ const RegisterForm = ({ onClose, switchToLogin }) => {
     const result = await register(userData);
     
     if (result.success) {
-      alert('Registration successful! Please log in.');
-      switchToLogin();
+      alert('Registration successful! Welcome to VikraHub!');
+      onClose(); // Close the modal
+      // Redirect to homepage
+      navigate('/');
     } else {
       setError(typeof result.error === 'string' ? result.error : 'Registration failed');
     }
