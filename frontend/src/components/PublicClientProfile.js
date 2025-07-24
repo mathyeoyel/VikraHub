@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { publicProfileAPI, userAPI } from '../api';
-import { AuthContext } from './Auth/AuthContext';
+import { useAuth } from './Auth/AuthContext';
 import './PublicClientProfile.css';
 
 const PublicClientProfile = () => {
   const { username } = useParams();
-  const { user, isAuthenticated } = useContext(AuthContext);
+  const { user, isAuthenticated } = useAuth();
   const [profile, setProfile] = useState(null);
   const [clientProfile, setClientProfile] = useState(null);
   const [loading, setLoading] = useState(true);
