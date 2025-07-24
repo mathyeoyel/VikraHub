@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { publicProfileAPI } from '../api';
+import { publicProfileAPI, userAPI } from '../api';
+import { AuthContext } from './Auth/AuthContext';
 import './PublicClientProfile.css';
 
 const PublicClientProfile = () => {
   const { username } = useParams();
+  const { user, isAuthenticated } = useContext(AuthContext);
   const [profile, setProfile] = useState(null);
   const [clientProfile, setClientProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,12 +27,25 @@ const PublicClientProfile = () => {
           setClientProfile(response.data.client_profile);
         }
         
-        // Initialize follower count (placeholder)
-        setFollowerCount(Math.floor(Math.random() * 100) + 10);
+        // Fetch real follower stats
+        await fetchFollowStats(username);
       } catch (err) {
         setError(err.response?.data?.detail || 'Client profile not found');
       } finally {
         setLoading(false);
+      }
+    };
+
+    const fetchFollowStats = async (username) => {
+      try {
+        const response = await userAPI.getFollowStats(username);
+        setFollowerCount(response.data?.followers_count || 0);
+        setIsFollowing(response.data?.is_following || false);
+      } catch (err) {
+        console.warn('Failed to fetch follow stats:', err);
+        // Keep default values on error
+        setFollowerCount(0);
+        setIsFollowing(false);
       }
     };
 
@@ -91,9 +106,48 @@ const PublicClientProfile = () => {
     }
   ];
 
-  const handleFollow = () => {
-    setIsFollowing(!isFollowing);
-    setFollowerCount(prev => isFollowing ? prev - 1 : prev + 1);
+  const handleFollow = async () => {
+    if (!isAuthenticated) {
+      alert('Please log in to follow users.');
+      return;
+    }
+
+    if (!username) {
+      console.error('No username provided for follow action');
+      return;
+    }
+
+    // Don't allow users to follow themselves
+    if (user && user.username === username) {
+      alert("You can't follow yourself!");
+      return;
+    }
+
+    try {
+      console.log(`Attempting to ${isFollowing ? 'unfollow' : 'follow'} user: ${username}`);
+      
+      if (isFollowing) {
+        const response = await userAPI.unfollow(username);
+        console.log('Unfollow response:', response);
+        setIsFollowing(false);
+        setFollowerCount(prev => Math.max(0, prev - 1));
+      } else {
+        const response = await userAPI.follow(username);
+        console.log('Follow response:', response);
+        setIsFollowing(true);
+        setFollowerCount(prev => prev + 1);
+      }
+    } catch (error) {
+      console.error('Failed to follow/unfollow user:', error);
+      console.error('Error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      
+      // Show a user-friendly error message
+      alert(`Failed to ${isFollowing ? 'unfollow' : 'follow'} user. Please try again.`);
+    }
   };
 
   const handleMessage = () => {
@@ -209,12 +263,14 @@ const PublicClientProfile = () => {
             <button className="btn-secondary-public" onClick={handleMessage}>
               Message
             </button>
-            <button 
-              className={`btn-follow-public ${isFollowing ? 'following' : ''}`}
-              onClick={handleFollow}
-            >
-              {isFollowing ? 'Following' : 'Follow'}
-            </button>
+            {isAuthenticated && user?.username !== username && (
+              <button 
+                className={`btn-follow-public ${isFollowing ? 'following' : ''}`}
+                onClick={handleFollow}
+              >
+                {isFollowing ? 'Following' : 'Follow'}
+              </button>
+            )}
           </div>
         </div>
       </div>

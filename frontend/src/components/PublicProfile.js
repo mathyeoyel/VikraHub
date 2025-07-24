@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { publicProfileAPI, assetAPI, userAPI } from '../api';
+import { AuthContext } from './Auth/AuthContext';
 import PublicClientProfile from './PublicClientProfile';
 import './PublicProfile.css';
 
 const PublicProfile = () => {
   const { username } = useParams();
+  const { user, isAuthenticated } = useContext(AuthContext);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -120,19 +122,46 @@ const PublicProfile = () => {
   };
 
   const handleFollow = async () => {
+    if (!isAuthenticated) {
+      alert('Please log in to follow users.');
+      return;
+    }
+
+    if (!username) {
+      console.error('No username provided for follow action');
+      return;
+    }
+
+    // Don't allow users to follow themselves
+    if (user && user.username === username) {
+      alert("You can't follow yourself!");
+      return;
+    }
+
     try {
+      console.log(`Attempting to ${isFollowing ? 'unfollow' : 'follow'} user: ${username}`);
+      
       if (isFollowing) {
-        await userAPI.unfollow(username);
+        const response = await userAPI.unfollow(username);
+        console.log('Unfollow response:', response);
         setIsFollowing(false);
         setFollowerCount(prev => Math.max(0, prev - 1));
       } else {
-        await userAPI.follow(username);
+        const response = await userAPI.follow(username);
+        console.log('Follow response:', response);
         setIsFollowing(true);
         setFollowerCount(prev => prev + 1);
       }
     } catch (error) {
       console.error('Failed to follow/unfollow user:', error);
-      // Optionally show an error message to the user
+      console.error('Error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      
+      // Show a user-friendly error message
+      alert(`Failed to ${isFollowing ? 'unfollow' : 'follow'} user. Please try again.`);
     }
   };
 
@@ -225,19 +254,21 @@ const PublicProfile = () => {
               
               {/* Action Buttons */}
               <div className="profile-actions">
-                <button className="action-btn follow-btn" onClick={handleFollow}>
-                  {isFollowing ? (
-                    <>
-                      <span className="btn-icon">✓</span>
-                      Following
-                    </>
-                  ) : (
-                    <>
-                      <span className="btn-icon">+</span>
-                      Follow
-                    </>
-                  )}
-                </button>
+                {isAuthenticated && user?.username !== username && (
+                  <button className="action-btn follow-btn" onClick={handleFollow}>
+                    {isFollowing ? (
+                      <>
+                        <span className="btn-icon">✓</span>
+                        Following
+                      </>
+                    ) : (
+                      <>
+                        <span className="btn-icon">+</span>
+                        Follow
+                      </>
+                    )}
+                  </button>
+                )}
                 <button className="action-btn message-btn" onClick={handleMessage}>
                   <span className="btn-icon">💬</span>
                   Message
