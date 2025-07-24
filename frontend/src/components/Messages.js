@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from './Auth/AuthContext';
 import { messagesAPI, userAPI, publicProfileAPI } from '../api';
+import { notificationService } from '../services/notificationService';
 import './Messages.css';
 
 const Messages = () => {
@@ -226,6 +227,19 @@ const Messages = () => {
         conversation_id: selectedConversation.id,
         text: newMessage.trim()
       });
+      
+      // Send notification to the recipient
+      if (selectedConversation.participant) {
+        notificationService.messageNotification(
+          selectedConversation.participant.first_name && selectedConversation.participant.last_name ? 
+            `${selectedConversation.participant.first_name} ${selectedConversation.participant.last_name}` : 
+            selectedConversation.participant.username,
+          user.first_name && user.last_name ? 
+            `${user.first_name} ${user.last_name}` : 
+            user.username || 'Someone',
+          newMessage.trim().substring(0, 50) + (newMessage.trim().length > 50 ? '...' : '')
+        );
+      }
       
     } catch (error) {
       console.error('Failed to send message:', error);

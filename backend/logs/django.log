@@ -883,3 +883,9 @@ WARNING 2025-07-24 17:33:16,932 log 14052 19504 Unauthorized: /api/creator-profi
 WARNING 2025-07-24 17:33:16,933 basehttp 14052 19504 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
 INFO 2025-07-24 17:33:16,972 basehttp 14052 19504 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
 INFO 2025-07-24 17:33:17,202 basehttp 14052 19504 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 17:37:41,916 basehttp 14052 13452 "OPTIONS /api/users/me/ HTTP/1.1" 200 0
+INFO 2025-07-24 17:37:41,922 basehttp 14052 23184 "OPTIONS /api/users/me/ HTTP/1.1" 200 0
+INFO 2025-07-24 17:37:42,084 basehttp 14052 23184 "GET /api/users/me/ HTTP/1.1" 200 198
+INFO 2025-07-24 17:37:42,113 basehttp 14052 23624 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 17:37:42,113 basehttp 14052 23184 "GET /api/users/me/ HTTP/1.1" 200 198
+INFO 2025-07-24 17:37:42,151 basehttp 14052 23184 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110

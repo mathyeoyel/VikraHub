@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { publicProfileAPI, assetAPI, userAPI } from '../api';
 import { useAuth } from './Auth/AuthContext';
+import { notificationService } from '../services/notificationService';
 import PublicClientProfile from './PublicClientProfile';
 import './PublicProfile.css';
 
@@ -151,6 +152,14 @@ const PublicProfile = () => {
         console.log('Follow response:', response);
         setIsFollowing(true);
         setFollowerCount(prev => prev + 1);
+        
+        // Send notification to the followed user
+        notificationService.followNotification(
+          profile.full_name || username,
+          user.first_name && user.last_name ? 
+            `${user.first_name} ${user.last_name}` : 
+            user.username || 'Someone'
+        );
       }
     } catch (error) {
       console.error('Failed to follow/unfollow user:', error);

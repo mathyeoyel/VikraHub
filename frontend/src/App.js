@@ -3,6 +3,7 @@ import { HashRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './components/Auth/AuthContext';
 import { NotificationProvider } from './components/common/NotificationContext';
 import NotificationContainer from './components/common/NotificationContainer';
+import ToastNotifications from './components/ToastNotifications';
 import Layout from './components/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingSpinner from './components/common/LoadingSpinner';
@@ -115,6 +116,7 @@ function App() {
             </Suspense>
           </Layout>
           <NotificationContainer />
+          <ToastNotifications />
         </HashRouter>
       </AuthProvider>
     </NotificationProvider>
