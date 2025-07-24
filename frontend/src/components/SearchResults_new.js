@@ -53,54 +53,40 @@ const SearchResults = () => {
       // Add public profiles
       if (publicProfiles.data?.results) {
         publicProfiles.data.results.forEach(profile => {
-          if (isRelevantResult(profile, searchQuery)) {
-            combinedResults.push(formatPublicProfile(profile));
-          }
+          combinedResults.push(formatPublicProfile(profile));
         });
       } else if (publicProfiles.data && Array.isArray(publicProfiles.data)) {
         publicProfiles.data.forEach(profile => {
-          if (isRelevantResult(profile, searchQuery)) {
-            combinedResults.push(formatPublicProfile(profile));
-          }
+          combinedResults.push(formatPublicProfile(profile));
         });
       }
 
       // Add creators
       if (creators.data?.results) {
         creators.data.results.forEach(creator => {
-          if (isRelevantResult(creator, searchQuery)) {
-            combinedResults.push(formatCreator(creator));
-          }
+          combinedResults.push(formatCreator(creator));
         });
       } else if (creators.data && Array.isArray(creators.data)) {
         creators.data.forEach(creator => {
-          if (isRelevantResult(creator, searchQuery)) {
-            combinedResults.push(formatCreator(creator));
-          }
+          combinedResults.push(formatCreator(creator));
         });
       }
 
       // Add freelancers
       if (freelancers.data?.results) {
         freelancers.data.results.forEach(freelancer => {
-          if (isRelevantResult(freelancer, searchQuery)) {
-            combinedResults.push(formatFreelancer(freelancer));
-          }
+          combinedResults.push(formatFreelancer(freelancer));
         });
       } else if (freelancers.data && Array.isArray(freelancers.data)) {
         freelancers.data.forEach(freelancer => {
-          if (isRelevantResult(freelancer, searchQuery)) {
-            combinedResults.push(formatFreelancer(freelancer));
-          }
+          combinedResults.push(formatFreelancer(freelancer));
         });
       }
 
-      // Remove duplicates based on username and sort by relevance
-      const uniqueResults = combinedResults
-        .filter((result, index, self) => 
-          index === self.findIndex(r => r.username === result.username)
-        )
-        .sort((a, b) => calculateRelevanceScore(b, searchQuery) - calculateRelevanceScore(a, searchQuery));
+      // Remove duplicates based on username
+      const uniqueResults = combinedResults.filter((result, index, self) => 
+        index === self.findIndex(r => r.username === result.username)
+      );
 
       setResults(uniqueResults);
 
@@ -206,78 +192,6 @@ const SearchResults = () => {
       isPopular: freelancer.featured || false,
       verified: user.is_verified || false
     };
-  };
-
-  // Check if a result is relevant to the search query
-  const isRelevantResult = (profile, searchQuery) => {
-    if (!searchQuery) return true;
-    
-    const query = searchQuery.toLowerCase();
-    const user = profile.user || profile;
-    const userProfile = user.userprofile || profile;
-    
-    // Check username
-    if (user.username && user.username.toLowerCase().includes(query)) return true;
-    
-    // Check first name and last name
-    if (user.first_name && user.first_name.toLowerCase().includes(query)) return true;
-    if (user.last_name && user.last_name.toLowerCase().includes(query)) return true;
-    
-    // Check full name
-    const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim().toLowerCase();
-    if (fullName.includes(query)) return true;
-    
-    // Check bio/description
-    if (userProfile.bio && userProfile.bio.toLowerCase().includes(query)) return true;
-    if (profile.description && profile.description.toLowerCase().includes(query)) return true;
-    if (profile.art_statement && profile.art_statement.toLowerCase().includes(query)) return true;
-    
-    // Check specialization for freelancers
-    if (profile.specialization && profile.specialization.toLowerCase().includes(query)) return true;
-    
-    // Check creator type for creators
-    if (profile.creator_type_display && profile.creator_type_display.toLowerCase().includes(query)) return true;
-    
-    // Check skills
-    if (userProfile.skills) {
-      const skills = typeof userProfile.skills === 'string' ? userProfile.skills : userProfile.skills.join(' ');
-      if (skills.toLowerCase().includes(query)) return true;
-    }
-    
-    return false;
-  };
-
-  // Calculate relevance score for sorting
-  const calculateRelevanceScore = (result, searchQuery) => {
-    if (!searchQuery) return 0;
-    
-    const query = searchQuery.toLowerCase();
-    let score = 0;
-    
-    // Username exact match gets highest score
-    if (result.username.toLowerCase() === query) score += 100;
-    else if (result.username.toLowerCase().includes(query)) score += 50;
-    
-    // Name exact match
-    if (result.name.toLowerCase() === query) score += 90;
-    else if (result.name.toLowerCase().includes(query)) score += 40;
-    
-    // Title/specialization match
-    if (result.title && result.title.toLowerCase().includes(query)) score += 30;
-    
-    // Bio match
-    if (result.bio && result.bio.toLowerCase().includes(query)) score += 20;
-    
-    // Skills match
-    if (result.skills && result.skills.some(skill => skill.toLowerCase().includes(query))) score += 25;
-    
-    // Boost for verified users
-    if (result.verified) score += 10;
-    
-    // Boost for popular users
-    if (result.isPopular) score += 5;
-    
-    return score;
   };
 
   // Helper functions
@@ -408,24 +322,11 @@ const SearchResults = () => {
 
         {/* Results Header */}
         <div className="results-header">
-          {query ? (
-            <>
-              <h1>Search Results for "<span className="search-query">{query}</span>"</h1>
-              <p className="results-count">
-                {loading ? (
-                  'Searching...'
-                ) : filteredResults.length === 0 ? (
-                  `No results found for "${query}". Try different keywords or check spelling.`
-                ) : (
-                  `Found ${filteredResults.length} ${filteredResults.length === 1 ? 'person' : 'people'} matching "${query}"`
-                )}
-              </p>
-            </>
-          ) : (
-            <>
-              <h1>Search VikraHub</h1>
-              <p className="results-count">Find creators, freelancers, and professionals in South Sudan</p>
-            </>
+          <h1>Search Results</h1>
+          {query && (
+            <p className="results-count">
+              {loading ? 'Searching...' : `${filteredResults.length} result${filteredResults.length !== 1 ? 's' : ''} found for "${query}"`}
+            </p>
           )}
           {error && (
             <p className="error-message" style={{ color: '#dc3545', marginTop: '1rem' }}>
