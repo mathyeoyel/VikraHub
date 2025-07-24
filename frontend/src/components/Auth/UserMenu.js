@@ -4,7 +4,7 @@ import { useAuth } from './AuthContext';
 import { useUnreadCounts } from '../../hooks/useUnreadCounts';
 import './Auth.css';
 
-const UserMenu = () => {
+const UserMenu = ({ onMenuAction }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logout } = useAuth();
   const { unreadMessages, unreadNotifications } = useUnreadCounts();
@@ -24,6 +24,12 @@ const UserMenu = () => {
   const handleLogout = () => {
     logout();
     setIsOpen(false);
+    if (onMenuAction) onMenuAction();
+  };
+
+  const handleMenuClick = () => {
+    setIsOpen(false);
+    if (onMenuAction) onMenuAction();
   };
 
   const getInitials = (user) => {
@@ -59,20 +65,20 @@ const UserMenu = () => {
             <small>{user.email}</small>
           </div>
           <div className="dropdown-divider"></div>
-          <Link to="/profile" className="user-dropdown-item" onClick={() => setIsOpen(false)}>
+          <Link to="/profile" className="user-dropdown-item" onClick={handleMenuClick}>
             <div className="dropdown-content">
               <span className="dropdown-icon">👤</span>
               My Profile
             </div>
           </Link>
-          <Link to="/messages" className="user-dropdown-item" onClick={() => setIsOpen(false)}>
+          <Link to="/messages" className="user-dropdown-item" onClick={handleMenuClick}>
             <div className="dropdown-content">
               <span className="dropdown-icon">💬</span>
               Messages
             </div>
             {unreadMessages > 0 && <span className="unread-badge">{unreadMessages}</span>}
           </Link>
-          <Link to="/notifications" className="user-dropdown-item" onClick={() => setIsOpen(false)}>
+          <Link to="/notifications" className="user-dropdown-item" onClick={handleMenuClick}>
             <div className="dropdown-content">
               <span className="dropdown-icon">🔔</span>
               Notifications
@@ -80,13 +86,13 @@ const UserMenu = () => {
             {unreadNotifications > 0 && <span className="unread-badge">{unreadNotifications}</span>}
           </Link>
           <div className="dropdown-divider"></div>
-          <Link to="/dashboard" className="user-dropdown-item" onClick={() => setIsOpen(false)}>
+          <Link to="/dashboard" className="user-dropdown-item" onClick={handleMenuClick}>
             <div className="dropdown-content">
               <span className="dropdown-icon">📊</span>
               Dashboard
             </div>
           </Link>
-          <Link to="/settings" className="user-dropdown-item" onClick={() => setIsOpen(false)}>
+          <Link to="/settings" className="user-dropdown-item" onClick={handleMenuClick}>
             <div className="dropdown-content">
               <span className="dropdown-icon">⚙️</span>
               Settings

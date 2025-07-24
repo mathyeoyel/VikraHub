@@ -357,47 +357,122 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .messages-page {
+    padding: 1rem;
+  }
+  
   .messages-container {
     grid-template-columns: 1fr;
-    height: auto;
+    height: calc(100vh - 120px);
+    margin: 0;
   }
   
   .conversations-sidebar {
-    display: none;
+    display: block;
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    max-height: 40vh;
+    overflow-y: auto;
   }
   
   .messages-area {
-    min-height: 60vh;
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .messages-list {
+    flex: 1;
+    overflow-y: auto;
+    max-height: calc(50vh - 120px);
   }
   
   .message-content {
     max-width: 85%;
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+  }
+  
+  .messages-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
   }
   
   .messages-header h1 {
-    font-size: 2rem;
+    font-size: 1.8rem;
+  }
+  
+  .conversation-item {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .conversation-avatar {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .conversation-preview {
+    font-size: 0.85rem;
   }
 }
 
 @media (max-width: 480px) {
   .messages-page {
-    padding: 1rem 0;
+    padding: 0.5rem;
   }
   
   .messages-container {
     border-radius: 10px;
+    height: calc(100vh - 100px);
+  }
+  
+  .conversations-sidebar {
+    max-height: 35vh;
+  }
+  
+  .messages-list {
+    max-height: calc(45vh - 100px);
+    padding: 0.5rem;
   }
   
   .conversation-item {
-    padding: 0.75rem 1rem;
+    padding: 0.75rem;
+    margin-bottom: 0.25rem;
   }
   
   .messages-header-bar,
   .message-input-form {
-    padding: 1rem;
+    padding: 0.75rem;
   }
   
-  .messages-list {
-    padding: 1rem;
+  .messages-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .message-input {
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
+  
+  .send-button {
+    padding: 0.75rem 1rem;
+  }
+  
+  .conversation-name {
+    font-size: 1rem;
+  }
+  
+  .conversation-preview {
+    font-size: 0.8rem;
+  }
+  
+  .message-content {
+    max-width: 90%;
+    font-size: 0.85rem;
+    padding: 0.6rem 0.8rem;
   }
 }

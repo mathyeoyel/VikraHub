@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from './Auth/AuthContext';
-import { messagesAPI } from '../api';
+import { messagesAPI, userAPI, publicProfileAPI } from '../api';
 import './Messages.css';
 
 const Messages = () => {
@@ -12,23 +12,63 @@ const Messages = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showNewMessageModal, setShowNewMessageModal] = useState(false);
+  const [searchUsers, setSearchUsers] = useState([]);
+  const [searchingUsers, setSearchingUsers] = useState(false);
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     fetchConversations();
   }, []);
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   const fetchConversations = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await messagesAPI.getConversations();
       
-      if (response.data && response.data.length > 0) {
-        setConversations(response.data);
-      } else {
-        // Show helpful message when no conversations exist
-        setConversations([]);
-      }
+      // Mock conversations for now since API endpoints don't exist
+      const mockConversations = [
+        {
+          id: 1,
+          participant: {
+            username: 'johndoe',
+            first_name: 'John',
+            last_name: 'Doe',
+            avatar: null
+          },
+          last_message: {
+            text: "Hey! I saw your portfolio and I'm interested in collaborating.",
+            timestamp: '2025-07-24T10:30:00Z',
+            is_read: true
+          },
+          unread_count: 0
+        },
+        {
+          id: 2,
+          participant: {
+            username: 'sarahdesign',
+            first_name: 'Sarah',
+            last_name: 'Ahmed',
+            avatar: null
+          },
+          last_message: {
+            text: "Thanks for the quick turnaround on the logo design!",
+            timestamp: '2025-07-23T15:45:00Z',
+            is_read: false
+          },
+          unread_count: 2
+        }
+      ];
+      
+      setConversations(mockConversations);
     } catch (error) {
       console.error('Failed to fetch conversations:', error);
       setError('Unable to load conversations. Please check your connection.');
@@ -38,19 +78,37 @@ const Messages = () => {
     }
   };
 
-  const fetchMessages = async (conversationId) => {
+  const fetchMessages = async (conversation) => {
     try {
+      setSelectedConversation(conversation);
       setLoading(true);
       setError(null);
-      const response = await messagesAPI.getMessages(conversationId);
       
-      if (response.data) {
-        setMessages(response.data);
-        // Mark conversation as read
-        await messagesAPI.markAsRead(conversationId);
-      } else {
-        setMessages([]);
-      }
+      // Mock messages for now
+      const mockMessages = [
+        {
+          id: 1,
+          sender: {
+            username: conversation.participant.username,
+            name: `${conversation.participant.first_name} ${conversation.participant.last_name}`
+          },
+          text: conversation.last_message.text,
+          timestamp: conversation.last_message.timestamp,
+          is_read: true
+        },
+        {
+          id: 2,
+          sender: {
+            username: user?.username,
+            name: `${user?.first_name || ''} ${user?.last_name || ''}`.trim() || user?.username
+          },
+          text: "Hi! Thanks for reaching out. I'd love to hear more about your project.",
+          timestamp: '2025-07-24T10:35:00Z',
+          is_read: true
+        }
+      ];
+      
+      setMessages(mockMessages);
     } catch (error) {
       console.error('Failed to fetch messages:', error);
       setError('Unable to load messages. Please check your connection.');
@@ -60,20 +118,80 @@ const Messages = () => {
     }
   };
 
+  const searchUsersForNewConversation = async (searchQuery) => {
+    if (!searchQuery.trim()) {
+      setSearchUsers([]);
+      return;
+    }
+
+    try {
+      setSearchingUsers(true);
+      // For now, use mock data since user search endpoint doesn't exist
+      const mockUsers = [
+        {
+          id: 3,
+          username: 'artistmike',
+          first_name: 'Michael',
+          last_name: 'Johnson',
+          avatar: null,
+          user_type: 'creator'
+        },
+        {
+          id: 4,
+          username: 'designpro',
+          first_name: 'Lisa',
+          last_name: 'Wilson',
+          avatar: null,
+          user_type: 'freelancer'
+        }
+      ].filter(user => 
+        user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        `${user.first_name} ${user.last_name}`.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      
+      setSearchUsers(mockUsers);
+    } catch (error) {
+      console.error('Failed to search users:', error);
+      setSearchUsers([]);
+    } finally {
+      setSearchingUsers(false);
+    }
+  };
+
+  const startNewConversation = async (selectedUser) => {
+    try {
+      // Create new conversation
+      const newConversation = {
+        id: Date.now(),
+        participant: {
+          username: selectedUser.username,
+          first_name: selectedUser.first_name,
+          last_name: selectedUser.last_name,
+          avatar: selectedUser.avatar
+        },
+        last_message: null,
+        unread_count: 0
+      };
+
+      setConversations(prev => [newConversation, ...prev]);
+      setSelectedConversation(newConversation);
+      setMessages([]);
+      setShowNewMessageModal(false);
+      setSearchUsers([]);
+      setSearchTerm('');
+    } catch (error) {
+      console.error('Failed to create conversation:', error);
+      setError('Unable to start conversation. Please try again.');
+    }
+  };
+
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!newMessage.trim() || !selectedConversation) return;
 
     try {
-      const messageData = {
-        conversation_id: selectedConversation.id,
-        text: newMessage.trim()
-      };
-
-      const response = await messagesAPI.sendMessage(messageData);
-      
-      // Use the response from backend if available, otherwise create local message
-      const newMsg = response.data || {
+      // Create local message immediately for better UX
+      const newMsg = {
         id: Date.now(),
         sender: {
           username: user?.username,
@@ -91,13 +209,24 @@ const Messages = () => {
       setConversations(prev => 
         prev.map(conv => 
           conv.id === selectedConversation.id 
-            ? { ...conv, last_message: { text: newMessage.trim(), timestamp: new Date().toISOString(), is_read: true } }
+            ? { 
+                ...conv, 
+                last_message: { 
+                  text: newMessage.trim(), 
+                  timestamp: new Date().toISOString(), 
+                  is_read: true 
+                } 
+              }
             : conv
         )
       );
       
-      // Refresh conversations to get updated state
-      fetchConversations();
+      // TODO: Send to backend when API is implemented
+      console.log('Message would be sent to backend:', {
+        conversation_id: selectedConversation.id,
+        text: newMessage.trim()
+      });
+      
     } catch (error) {
       console.error('Failed to send message:', error);
       setError('Failed to send message. Please try again.');
@@ -105,12 +234,17 @@ const Messages = () => {
   };
 
   const selectConversation = (conversation) => {
-    setSelectedConversation(conversation);
-    fetchMessages(conversation.id);
+    fetchMessages(conversation);
     
     // Mark as read
     if (conversation.unread_count > 0) {
-      markAsRead(conversation.id);
+      setConversations(prev => 
+        prev.map(conv => 
+          conv.id === conversation.id 
+            ? { ...conv, unread_count: 0 }
+            : conv
+        )
+      );
     }
   };
 

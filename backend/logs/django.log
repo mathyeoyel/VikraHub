@@ -854,3 +854,32 @@ WARNING 2025-07-24 16:45:25,530 log 14052 20756 Not Found: /api/messages/unread_
 WARNING 2025-07-24 16:45:25,532 basehttp 14052 20756 "GET /api/messages/unread_count/ HTTP/1.1" 404 55802
 WARNING 2025-07-24 16:45:25,534 log 14052 24196 Not Found: /api/notifications/unread_count/
 WARNING 2025-07-24 16:45:25,534 basehttp 14052 24196 "GET /api/notifications/unread_count/ HTTP/1.1" 404 23
+WARNING 2025-07-24 16:58:30,778 log 14052 12404 Unauthorized: /api/users/me/
+WARNING 2025-07-24 16:58:30,781 log 14052 22060 Unauthorized: /api/creator-profiles/featured/
+WARNING 2025-07-24 16:58:30,790 basehttp 14052 22060 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
+WARNING 2025-07-24 16:58:30,791 basehttp 14052 12404 "GET /api/users/me/ HTTP/1.1" 401 183
+WARNING 2025-07-24 16:58:30,807 log 14052 22060 Unauthorized: /api/creator-profiles/featured/
+WARNING 2025-07-24 16:58:30,811 log 14052 12404 Unauthorized: /api/users/me/
+WARNING 2025-07-24 16:58:30,829 basehttp 14052 22060 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
+WARNING 2025-07-24 16:58:30,837 basehttp 14052 12404 "GET /api/users/me/ HTTP/1.1" 401 183
+INFO 2025-07-24 16:58:30,837 basehttp 14052 21220 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-24 16:58:31,001 basehttp 14052 21220 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 17:08:48,336 basehttp 14052 25748 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 17:08:48,364 basehttp 14052 25036 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+WARNING 2025-07-24 17:08:48,693 log 14052 26604 Unauthorized: /api/creator-profiles/featured/
+WARNING 2025-07-24 17:08:48,694 basehttp 14052 26604 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
+WARNING 2025-07-24 17:08:48,697 log 14052 26604 Unauthorized: /api/creator-profiles/featured/
+WARNING 2025-07-24 17:08:48,697 basehttp 14052 26604 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
+INFO 2025-07-24 17:08:48,715 basehttp 14052 26604 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-24 17:08:48,716 basehttp 14052 2112 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-24 17:08:48,743 basehttp 14052 2112 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 17:08:48,770 basehttp 14052 26604 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 17:09:13,773 basehttp 14052 10760 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 17:09:13,788 basehttp 14052 2672 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 17:09:14,747 basehttp 14052 25432 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 17:09:14,769 basehttp 14052 25432 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 17:33:16,705 basehttp 14052 25064 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+WARNING 2025-07-24 17:33:16,932 log 14052 19504 Unauthorized: /api/creator-profiles/featured/
+WARNING 2025-07-24 17:33:16,933 basehttp 14052 19504 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
+INFO 2025-07-24 17:33:16,972 basehttp 14052 19504 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-24 17:33:17,202 basehttp 14052 19504 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110

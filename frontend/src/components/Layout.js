@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from './Auth/AuthContext';
 import UserMenu from './Auth/UserMenu';
 import AuthModal from './Auth/AuthModal';
@@ -11,14 +11,70 @@ const Layout = ({ children }) => {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login');
   const { isAuthenticated, user } = useAuth();
+  const location = useLocation();
+  const navRef = useRef(null);
+  const menuToggleRef = useRef(null);
+
+  // Close menu when route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location]);
+
+  // Close menu when user logs in
+  useEffect(() => {
+    if (isAuthenticated) {
+      setIsMenuOpen(false);
+      setAuthModalOpen(false);
+    }
+  }, [isAuthenticated]);
+
+  // Handle click outside menu
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isMenuOpen && 
+          navRef.current && 
+          !navRef.current.contains(event.target) &&
+          menuToggleRef.current &&
+          !menuToggleRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    // Handle escape key
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscape);
+      // Prevent scrolling when menu is open
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMenuOpen]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   const openAuthModal = (mode = 'login') => {
     setAuthMode(mode);
     setAuthModalOpen(true);
+    setIsMenuOpen(false); // Close menu when opening auth modal
   };
 
   const closeAuthModal = () => {
@@ -30,39 +86,41 @@ const Layout = ({ children }) => {
       <header className="header">
         <div className="container">
           <a href="/" className="logo" onClick={() => {
-            setIsMenuOpen(false);
+            closeMenu();
             window.location.reload();
           }}>
             <img src={logoImage} alt="VikraHub" className="logo-img" />
             <span className="logo-text">VikraHub</span>
           </a>
           <button 
+            ref={menuToggleRef}
             className="menu-toggle"
             onClick={toggleMenu}
             aria-label="Toggle menu"
+            aria-expanded={isMenuOpen}
           >
             <span></span>
             <span></span>
             <span></span>
           </button>
-          <nav className={`nav ${isMenuOpen ? 'nav-open' : ''}`}>
+          <nav ref={navRef} className={`nav ${isMenuOpen ? 'nav-open' : ''}`}>
             <a href="/" className="nav-link" onClick={() => {
-              setIsMenuOpen(false);
+              closeMenu();
               window.location.reload();
             }}>Home</a>
-            <Link to="/creators" className="nav-link" onClick={() => setIsMenuOpen(false)}>Explore Creators</Link>
-            <Link to="/marketplace" className="nav-link" onClick={() => setIsMenuOpen(false)}>Inspiration</Link>
-            <Link to="/freelance" className="nav-link" onClick={() => setIsMenuOpen(false)}>Freelance</Link>
-            <Link to="/services" className="nav-link" onClick={() => setIsMenuOpen(false)}>Services</Link>
+            <Link to="/creators" className="nav-link" onClick={closeMenu}>Explore Creators</Link>
+            <Link to="/marketplace" className="nav-link" onClick={closeMenu}>Inspiration</Link>
+            <Link to="/freelance" className="nav-link" onClick={closeMenu}>Freelance</Link>
+            <Link to="/services" className="nav-link" onClick={closeMenu}>Services</Link>
             
             {isAuthenticated ? (
               <div className="auth-section">
                 {user && (user.is_staff || user.is_superuser) && (
-                  <Link to="/admin" className="nav-link admin-link" onClick={() => setIsMenuOpen(false)}>
+                  <Link to="/admin" className="nav-link admin-link" onClick={closeMenu}>
                     Admin
                   </Link>
                 )}
-                <UserMenu />
+                <UserMenu onMenuAction={closeMenu} />
               </div>
             ) : (
               <div className="auth-buttons">
