@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from './components/Auth/AuthContext';
 import AuthModal from './components/Auth/AuthModal';
+import SearchBar from './components/SearchBar';
 import { assetAPI } from './api';
 import './Home.css';
 
@@ -128,6 +129,15 @@ function Home() {
                     </button>
                   )}
                   <Link to="/creators" className="hero-btn hero-btn-secondary">Explore Creators</Link>
+                </div>
+                
+                {/* Search Bar */}
+                <div className="hero-search">
+                  <SearchBar 
+                    variant="hero"
+                    placeholder="Find creators, freelancers, or services in South Sudan..."
+                    showFilters={false}
+                  />
                 </div>
               </div>
               <div className="hero-image">

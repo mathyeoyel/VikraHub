@@ -49,6 +49,14 @@
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+/* Hero Search */
+.hero-search {
+  width: 100%;
+  max-width: 700px;
+  margin-top: 1rem;
 }
 
 .hero-btn {
@@ -1039,6 +1047,7 @@
   padding: 2rem;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 15px;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;

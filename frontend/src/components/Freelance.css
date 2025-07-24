@@ -6,7 +6,7 @@
 .hero-section {
   text-align: center;
   padding: 4rem 0;
-  background: linear-gradient(135deg, #7c521b 0%, #a66825 100%);
+  background: #000223;
   color: white;
   margin-bottom: 4rem;
   border-radius: 10px;
@@ -20,6 +20,14 @@
 .hero-section p {
   font-size: 1.2rem;
   opacity: 0.9;
+  margin-bottom: 2rem;
+}
+
+/* Freelance Search Styles */
+.freelance-search {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 
 .platform-features {

@@ -24,7 +24,21 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
     achievements: '',
     services_offered: '',
     avatar: '',  // Will store Cloudinary URL instead of File object
-    cover_photo: ''  // Will store Cloudinary URL for cover photo
+    cover_photo: '',  // Will store Cloudinary URL for cover photo
+    
+    // Client-specific fields
+    client_type: 'individual',
+    company_name: '',
+    company_size: 'solo',
+    industry: '',
+    business_address: '',
+    contact_person: '',
+    phone_number: '',
+    typical_budget_range: '',
+    project_types: '',
+    preferred_communication: '',
+    business_registration: '',
+    tax_id: ''
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -60,7 +74,21 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
         achievements: profileData.achievements || '',
         services_offered: profileData.services_offered || '',
         avatar: profileData.avatar || '',  // Cloudinary URL
-        cover_photo: profileData.cover_photo || ''  // Cloudinary URL
+        cover_photo: profileData.cover_photo || '',  // Cloudinary URL
+        
+        // Client-specific fields from client_profile
+        client_type: profileData.client_profile?.client_type || 'individual',
+        company_name: profileData.client_profile?.company_name || '',
+        company_size: profileData.client_profile?.company_size || 'solo',
+        industry: profileData.client_profile?.industry || '',
+        business_address: profileData.client_profile?.business_address || '',
+        contact_person: profileData.client_profile?.contact_person || '',
+        phone_number: profileData.client_profile?.phone_number || '',
+        typical_budget_range: profileData.client_profile?.typical_budget_range || '',
+        project_types: profileData.client_profile?.project_types || '',
+        preferred_communication: profileData.client_profile?.preferred_communication || '',
+        business_registration: profileData.client_profile?.business_registration || '',
+        tax_id: profileData.client_profile?.tax_id || ''
       });
       
       if (profileData.avatar) {
@@ -486,6 +514,191 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
               />
             </div>
           </div>
+
+          {/* Client-specific Business Information */}
+          {formData.user_type === 'client' && (
+            <div className="form-section" data-client-section="true">
+              <h3>🏢 Business Information</h3>
+              
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="client_type">Client Type</label>
+                  <select
+                    id="client_type"
+                    name="client_type"
+                    value={formData.client_type}
+                    onChange={handleInputChange}
+                  >
+                    <option value="individual">Individual</option>
+                    <option value="business">Business/Company</option>
+                    <option value="nonprofit">Non-Profit Organization</option>
+                    <option value="government">Government Agency</option>
+                    <option value="media">Media Organization</option>
+                    <option value="agency">Creative Agency</option>
+                    <option value="startup">Startup</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="company_size">Company Size</label>
+                  <select
+                    id="company_size"
+                    name="company_size"
+                    value={formData.company_size}
+                    onChange={handleInputChange}
+                  >
+                    <option value="solo">Solo/Individual</option>
+                    <option value="small">Small (2-10 employees)</option>
+                    <option value="medium">Medium (11-50 employees)</option>
+                    <option value="large">Large (51-200 employees)</option>
+                    <option value="enterprise">Enterprise (200+ employees)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="company_name">Company/Organization Name</label>
+                  <input
+                    type="text"
+                    id="company_name"
+                    name="company_name"
+                    value={formData.company_name}
+                    onChange={handleInputChange}
+                    placeholder="Your company or organization name"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="industry">Industry</label>
+                  <input
+                    type="text"
+                    id="industry"
+                    name="industry"
+                    value={formData.industry}
+                    onChange={handleInputChange}
+                    placeholder="e.g., Technology, Healthcare, Education"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="business_address">Business Address</label>
+                <textarea
+                  id="business_address"
+                  name="business_address"
+                  value={formData.business_address}
+                  onChange={handleInputChange}
+                  placeholder="Complete business address"
+                  rows={3}
+                />
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="contact_person">Primary Contact Person</label>
+                  <input
+                    type="text"
+                    id="contact_person"
+                    name="contact_person"
+                    value={formData.contact_person}
+                    onChange={handleInputChange}
+                    placeholder="Name of primary contact"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="phone_number">Phone Number</label>
+                  <input
+                    type="tel"
+                    id="phone_number"
+                    name="phone_number"
+                    value={formData.phone_number}
+                    onChange={handleInputChange}
+                    placeholder="+1 (555) 123-4567"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Client Project Preferences */}
+          {formData.user_type === 'client' && (
+            <div className="form-section" data-client-section="true">
+              <h3>🎯 Project Preferences</h3>
+              
+              <div className="form-group">
+                <label htmlFor="typical_budget_range">Typical Budget Range</label>
+                <input
+                  type="text"
+                  id="typical_budget_range"
+                  name="typical_budget_range"
+                  value={formData.typical_budget_range}
+                  onChange={handleInputChange}
+                  placeholder="e.g., $500 - $2,000, $5,000+, Negotiable"
+                />
+                <small>Help freelancers understand your typical project budget expectations</small>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="project_types">Types of Projects You Commission</label>
+                <textarea
+                  id="project_types"
+                  name="project_types"
+                  value={formData.project_types}
+                  onChange={handleInputChange}
+                  placeholder="Describe the types of creative projects you typically commission..."
+                  rows={3}
+                />
+                <small>Examples: Logo design, web development, content writing, photography, etc.</small>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="preferred_communication">Preferred Communication Methods</label>
+                <input
+                  type="text"
+                  id="preferred_communication"
+                  name="preferred_communication"
+                  value={formData.preferred_communication}
+                  onChange={handleInputChange}
+                  placeholder="e.g., Email, Slack, Video calls, Phone"
+                />
+                <small>Let freelancers know how you prefer to communicate during projects</small>
+              </div>
+            </div>
+          )}
+
+          {/* Client Business Registration (Optional) */}
+          {formData.user_type === 'client' && formData.client_type !== 'individual' && (
+            <div className="form-section" data-client-section="true">
+              <h3>📋 Business Registration (Optional)</h3>
+              
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="business_registration">Business Registration Number</label>
+                  <input
+                    type="text"
+                    id="business_registration"
+                    name="business_registration"
+                    value={formData.business_registration}
+                    onChange={handleInputChange}
+                    placeholder="Business registration or license number"
+                  />
+                  <small>Optional - for business verification purposes</small>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="tax_id">Tax ID / EIN</label>
+                  <input
+                    type="text"
+                    id="tax_id"
+                    name="tax_id"
+                    value={formData.tax_id}
+                    onChange={handleInputChange}
+                    placeholder="Tax identification number"
+                  />
+                  <small>Optional - for tax documentation and verification</small>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Achievements & Recognition */}
           <div className="form-section">

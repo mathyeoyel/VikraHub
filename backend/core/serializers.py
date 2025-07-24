@@ -48,12 +48,30 @@ class UserProfileSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(source='user.last_name', read_only=False, required=False)
     email = serializers.EmailField(source='user.email', read_only=False, required=False)
     
+    # Client-specific fields (write-only for updates)
+    client_type = serializers.CharField(write_only=True, required=False)
+    company_name = serializers.CharField(write_only=True, required=False)
+    company_size = serializers.CharField(write_only=True, required=False)
+    industry = serializers.CharField(write_only=True, required=False)
+    business_address = serializers.CharField(write_only=True, required=False)
+    contact_person = serializers.CharField(write_only=True, required=False)
+    phone_number = serializers.CharField(write_only=True, required=False)
+    typical_budget_range = serializers.CharField(write_only=True, required=False)
+    project_types = serializers.CharField(write_only=True, required=False)
+    preferred_communication = serializers.CharField(write_only=True, required=False)
+    business_registration = serializers.CharField(write_only=True, required=False)
+    tax_id = serializers.CharField(write_only=True, required=False)
+    
     class Meta:
         model = UserProfile
         fields = ['id', 'user', 'user_type', 'avatar', 'cover_photo', 'bio', 'location', 
                  'website', 'twitter', 'instagram', 'facebook', 'linkedin', 'github', 
                  'skills', 'headline', 'achievements', 'services_offered', 
-                 'first_name', 'last_name', 'email']
+                 'first_name', 'last_name', 'email',
+                 'client_type', 'company_name', 'company_size', 'industry', 
+                 'business_address', 'contact_person', 'phone_number', 
+                 'typical_budget_range', 'project_types', 'preferred_communication',
+                 'business_registration', 'tax_id']
         read_only_fields = ['id', 'user']
     
     def to_representation(self, instance):
@@ -63,6 +81,33 @@ class UserProfileSerializer(serializers.ModelSerializer):
             data['first_name'] = instance.user.first_name
             data['last_name'] = instance.user.last_name
             data['email'] = instance.user.email
+        
+        # Add client profile data if user is a client
+        if instance.user_type == 'client':
+            try:
+                client_profile = instance.user.client_profile
+                data['client_profile'] = {
+                    'client_type': client_profile.client_type,
+                    'company_name': client_profile.company_name,
+                    'company_size': client_profile.company_size,
+                    'industry': client_profile.industry,
+                    'business_address': client_profile.business_address,
+                    'contact_person': client_profile.contact_person,
+                    'phone_number': client_profile.phone_number,
+                    'typical_budget_range': client_profile.typical_budget_range,
+                    'project_types': client_profile.project_types,
+                    'preferred_communication': client_profile.preferred_communication,
+                    'business_registration': client_profile.business_registration,
+                    'tax_id': client_profile.tax_id,
+                    'projects_posted': client_profile.projects_posted,
+                    'projects_completed': client_profile.projects_completed,
+                    'total_spent': client_profile.total_spent,
+                    'is_verified': client_profile.is_verified,
+                    'payment_verified': client_profile.payment_verified,
+                }
+            except AttributeError:
+                # Client profile doesn't exist yet
+                data['client_profile'] = None
         
         # Add optimized avatar URLs
         if data.get('avatar'):
@@ -95,10 +140,24 @@ class UserProfileSerializer(serializers.ModelSerializer):
         user_fields = ['first_name', 'last_name', 'email']
         user_data = {}
         
+        # Extract client profile fields
+        client_fields = [
+            'client_type', 'company_name', 'company_size', 'industry',
+            'business_address', 'contact_person', 'phone_number',
+            'typical_budget_range', 'project_types', 'preferred_communication',
+            'business_registration', 'tax_id'
+        ]
+        client_data = {}
+        
         # Handle direct user fields
         for field in user_fields:
             if field in validated_data:
                 user_data[field] = validated_data.pop(field)
+        
+        # Handle client profile fields
+        for field in client_fields:
+            if field in validated_data:
+                client_data[field] = validated_data.pop(field)
         
         # Handle nested user data (from source fields)
         if 'user' in validated_data:
@@ -112,6 +171,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
             for field_name, value in user_data.items():
                 setattr(user, field_name, value)
             user.save()
+        
+        # Update client profile fields if any and user is a client
+        if client_data and instance.user_type == 'client':
+            from .models import ClientProfile
+            client_profile, created = ClientProfile.objects.get_or_create(user=instance.user)
+            for field_name, value in client_data.items():
+                setattr(client_profile, field_name, value)
+            client_profile.save()
         
         # Update profile fields
         for field_name, value in validated_data.items():

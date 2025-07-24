@@ -23,6 +23,7 @@ const AdminDashboard = React.lazy(() => import("./components/Admin/AdminDashboar
 const AssetsMarketplace = React.lazy(() => import("./components/Marketplace/AssetsMarketplace"));
 const Freelance = React.lazy(() => import("./components/Freelance"));
 const Creators = React.lazy(() => import("./components/Creators"));
+const SearchResults = React.lazy(() => import("./components/SearchResults"));
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
             <Route path="/profile/:username" element={<PublicProfile />} />
             <Route path="/marketplace" element={<AssetsMarketplace />} />
             <Route path="/freelance" element={<Freelance />} />
+            <Route path="/search" element={<SearchResults />} />
             <Route path="/login" element={<Login />} />            {/* Protected Routes */}
             <Route
               path="/profile"
