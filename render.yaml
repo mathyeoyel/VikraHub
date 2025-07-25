@@ -44,14 +44,14 @@ services:
       echo "Building with REACT_APP_API_URL=${REACT_APP_API_URL}"
       echo "Building with REACT_APP_WS_URL=${REACT_APP_WS_URL}"
       npm run build
-      echo "Frontend build completed for static hosting"
+      echo "Frontend build completed for static hosting - Build $(date)"
     staticPublishPath: frontend/build
     plan: free
     envVars:
       - key: REACT_APP_API_URL
-        value: https://vikrahub-backend.onrender.com/api/
+        value: https://api.vikrahub.com/api/
       - key: REACT_APP_WS_URL
-        value: wss://vikrahub-backend.onrender.com/ws/
+        value: wss://api.vikrahub.com/ws/
       - key: REACT_APP_CLOUDINARY_CLOUD_NAME
         value: dxpwtdjzp
       - key: REACT_APP_CLOUDINARY_API_KEY
