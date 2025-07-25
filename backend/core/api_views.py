@@ -1,5 +1,5 @@
 from rest_framework import viewsets, status, serializers
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from django.contrib.auth.models import User
@@ -227,6 +227,18 @@ class NotificationViewSet(viewsets.ModelViewSet):
         notification.is_read = True
         notification.save()
         return Response({'status': 'notification marked as read'})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def unread_notifications_count(request):
+    """Get count of unread notifications for the authenticated user"""
+    count = Notification.objects.filter(
+        user=request.user,
+        is_read=False
+    ).count()
+    
+    return Response({'unread_count': count})
 
 
 # Creative Assets Marketplace ViewSets

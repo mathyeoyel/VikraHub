@@ -7,7 +7,7 @@ from .api_views import (
     CreativeAssetViewSet, AssetPurchaseViewSet, AssetReviewViewSet, 
     FreelancerProfileViewSet, CreatorProfileViewSet, ClientProfileViewSet,
     ProjectCategoryViewSet, ProjectViewSet, ProjectApplicationViewSet, 
-    ProjectContractViewSet, ProjectReviewViewSet
+    ProjectContractViewSet, ProjectReviewViewSet, unread_notifications_count
 )
 
 # API Router for DRF ViewSets
@@ -43,4 +43,7 @@ urlpatterns = [
     
     # Follow system endpoints
     path('follow/', include('core.follow_urls')),
+    
+    # Unread count endpoints
+    path('notifications/unread_count/', unread_notifications_count, name='unread_notifications_count'),
 ]

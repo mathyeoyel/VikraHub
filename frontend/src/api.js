@@ -211,10 +211,7 @@ export const messagesAPI = {
   markAsRead: (conversationId) => api.patch(`conversations/${conversationId}/mark_read/`),
   createConversation: (data) => api.post("conversations/", data),
   deleteConversation: (id) => api.delete(`conversations/${id}/`),
-  getUnreadCount: () => {
-    console.warn('Messages unread count endpoint not implemented on backend - using static response');
-    return Promise.resolve({ data: { count: 0 } }); // Set to 0 instead of random
-  },
+  getUnreadCount: () => api.get("messaging/unread-count/"),
 };
 
 // Notifications API
@@ -223,10 +220,7 @@ export const notificationsAPI = {
   markAsRead: (id) => api.patch(`notifications/${id}/mark_read/`),
   markAllAsRead: () => api.post("notifications/mark_all_read/"),
   delete: (id) => api.delete(`notifications/${id}/`),
-  getUnreadCount: () => {
-    console.warn('Notifications unread count endpoint not implemented on backend - using static response');
-    return Promise.resolve({ data: { count: 0 } }); // Set to 0 instead of random
-  },
+  getUnreadCount: () => api.get("notifications/unread_count/"),
   updateSettings: (data) => api.patch("notifications/settings/", data),
 };
 
