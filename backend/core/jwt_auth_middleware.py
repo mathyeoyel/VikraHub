@@ -13,7 +13,7 @@ from django.db import close_old_connections
 from channels.db import database_sync_to_async
 from rest_framework_simplejwt.tokens import UntypedToken
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
-from jwt import decode as jwt_decode
+import jwt
 from django.conf import settings
 
 logger = logging.getLogger(__name__)
@@ -36,7 +36,7 @@ def get_user_from_token(token):
         UntypedToken(token)
         
         # Decode the token to get user information
-        decoded_data = jwt_decode(
+        decoded_data = jwt.decode(
             token, 
             settings.SECRET_KEY, 
             algorithms=["HS256"]

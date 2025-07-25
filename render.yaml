@@ -49,9 +49,9 @@ services:
     plan: free
     envVars:
       - key: REACT_APP_API_URL
-        value: https://api.vikrahub.com/api/
+        value: https://vikrahub-backend.onrender.com/api/
       - key: REACT_APP_WS_URL
-        value: wss://api.vikrahub.com/ws/
+        value: wss://vikrahub-backend.onrender.com/ws/
       - key: REACT_APP_CLOUDINARY_CLOUD_NAME
         value: dxpwtdjzp
       - key: REACT_APP_CLOUDINARY_API_KEY

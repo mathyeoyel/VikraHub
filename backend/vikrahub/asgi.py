@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/5.2/howto/deployment/asgi/
 import os
 from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'vikrahub.settings')
 
@@ -17,13 +18,13 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'vikrahub.settings')
 # is populated before importing code that may import ORM models.
 django_asgi_app = get_asgi_application()
 
-# Import routing and JWT middleware after Django is initialized
+# Import routing after Django is initialized
 import messaging.routing
-from core.jwt_auth_middleware import JWTAuthMiddleware
 
+# Temporarily use AuthMiddlewareStack for debugging
 application = ProtocolTypeRouter({
     "http": django_asgi_app,
-    "websocket": JWTAuthMiddleware(
+    "websocket": AuthMiddlewareStack(
         URLRouter(
             messaging.routing.websocket_urlpatterns
         )
