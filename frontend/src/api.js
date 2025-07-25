@@ -240,4 +240,9 @@ export const messagingAPI = {
   getMessage: (message_id) => api.get(`messaging/messages/${message_id}/`),
 };
 
+// Export individual follow functions for compatibility with React components
+export const getMyFollowStats = () => api.get("follow/my-stats/");
+export const getFollowNotifications = () => api.get("follow/notifications/");
+export const getFollowSuggestions = () => api.get("follow/suggestions/");
+
 export default api;

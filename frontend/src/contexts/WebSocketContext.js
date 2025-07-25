@@ -1,6 +1,7 @@
 // frontend/src/contexts/WebSocketContext.js
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { useAuth } from '../components/Auth/AuthContext';
+import { getAccessToken } from '../auth';
 
 const WebSocketContext = createContext();
 
@@ -47,8 +48,13 @@ export const WebSocketProvider = ({ children }) => {
     }
 
     try {
-      const wsURL = getWebSocketURL();
-      console.log('Connecting to WebSocket:', wsURL);
+      const baseWsURL = getWebSocketURL();
+      
+      // Add JWT token as query parameter for authentication
+      const jwtToken = getAccessToken();
+      const wsURL = jwtToken ? `${baseWsURL}?token=${jwtToken}` : baseWsURL;
+      
+      console.log('Connecting to WebSocket:', wsURL.replace(/token=[^&]*/, 'token=***'));
       
       const newSocket = new WebSocket(wsURL);
       

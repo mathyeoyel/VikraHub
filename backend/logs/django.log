@@ -1256,3 +1256,13 @@ INFO 2025-07-25 12:46:24,189 autoreload 27080 16092 Watching for file changes wi
 INFO 2025-07-25 12:46:24,189 autoreload 16104 14868 Watching for file changes with StatReloader
 INFO 2025-07-25 12:46:24,298 autoreload 12200 25400 Watching for file changes with StatReloader
 INFO 2025-07-25 12:46:24,322 autoreload 7616 20012 Watching for file changes with StatReloader
+INFO 2025-07-25 15:18:54,723 autoreload 12200 25400 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-07-25 15:18:54,767 autoreload 27080 16092 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-07-25 15:18:54,920 autoreload 13908 19148 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-07-25 15:18:55,016 autoreload 16104 14868 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-07-25 15:18:55,061 autoreload 7616 20012 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-07-25 15:18:57,659 autoreload 7460 22200 Watching for file changes with StatReloader
+INFO 2025-07-25 15:18:57,660 autoreload 18984 5244 Watching for file changes with StatReloader
+INFO 2025-07-25 15:18:57,660 autoreload 25132 4520 Watching for file changes with StatReloader
+
+INFO 2025-07-25 15:18:57,661 autoreload 13500 3372 Watching for file changes with StatReloader
