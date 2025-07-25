@@ -162,6 +162,7 @@ export const notificationAPI = {
 export const publicProfileAPI = {
   getAll: () => api.get("public-profiles/"),
   getByUsername: (username) => api.get(`public-profiles/${username}/`),
+  getById: (userId) => api.get(`public-profiles/?user__id=${userId}`),
   search: (params) => api.get("public-profiles/search/", { params }),
 };
 
@@ -251,16 +252,78 @@ export const followAPI = {
     }
   },
   
+  // Enhanced follow functions with profile refresh
+  followWithRefresh: async (userId, username) => {
+    try {
+      const followResponse = await api.post("follow/follow/", { user_id: userId });
+      
+      // Refetch the user's profile to get updated follow status
+      let updatedProfile = null;
+      if (username) {
+        try {
+          const profileResponse = await api.get(`public-profiles/${username}/`);
+          updatedProfile = profileResponse.data;
+        } catch (profileError) {
+          console.warn('Failed to refresh profile after follow:', profileError);
+        }
+      }
+      
+      return {
+        followResult: followResponse.data,
+        updatedProfile: updatedProfile
+      };
+    } catch (error) {
+      console.error('Follow with refresh failed:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+  
+  unfollowWithRefresh: async (userId, username) => {
+    try {
+      const unfollowResponse = await api.post(`follow/unfollow/${userId}/`);
+      
+      // Refetch the user's profile to get updated follow status
+      let updatedProfile = null;
+      if (username) {
+        try {
+          const profileResponse = await api.get(`public-profiles/${username}/`);
+          updatedProfile = profileResponse.data;
+        } catch (profileError) {
+          console.warn('Failed to refresh profile after unfollow:', profileError);
+        }
+      }
+      
+      return {
+        unfollowResult: unfollowResponse.data,
+        updatedProfile: updatedProfile
+      };
+    } catch (error) {
+      console.error('Unfollow with refresh failed:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+  
   // Username-based follow function for backwards compatibility
   followByUsername: async (username) => {
     try {
       // First get user ID from username since backend expects user_id
       const userResponse = await api.get(`public-profiles/${username}/`);
-      const userId = userResponse.data.id;
+      const userId = userResponse.data.user.id;
       const response = await api.post("follow/follow/", { user_id: userId });
       return response.data;
     } catch (error) {
       console.error('Follow by username failed:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+  
+  // Profile refresh helper
+  refreshUserProfile: async (username) => {
+    try {
+      const response = await api.get(`public-profiles/${username}/`);
+      return response.data;
+    } catch (error) {
+      console.error('Profile refresh failed:', error.response?.data || error.message);
       throw error;
     }
   },
@@ -322,6 +385,52 @@ export const unfollow = async (userId) => {
     return response.data;
   } catch (error) {
     console.error('Unfollow request failed:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// Enhanced follow with profile refresh
+export const followWithRefresh = async (userId, username = null) => {
+  try {
+    const followResult = await follow(userId);
+    
+    // Optionally refetch profile data
+    let updatedProfile = null;
+    if (username) {
+      try {
+        updatedProfile = await publicProfileAPI.getByUsername(username);
+        updatedProfile = updatedProfile.data;
+      } catch (profileError) {
+        console.warn('Failed to refresh profile after follow:', profileError);
+      }
+    }
+    
+    return { followResult, updatedProfile };
+  } catch (error) {
+    console.error('Follow with refresh failed:', error);
+    throw error;
+  }
+};
+
+// Enhanced unfollow with profile refresh  
+export const unfollowWithRefresh = async (userId, username = null) => {
+  try {
+    const unfollowResult = await unfollow(userId);
+    
+    // Optionally refetch profile data
+    let updatedProfile = null;
+    if (username) {
+      try {
+        updatedProfile = await publicProfileAPI.getByUsername(username);
+        updatedProfile = updatedProfile.data;
+      } catch (profileError) {
+        console.warn('Failed to refresh profile after unfollow:', profileError);
+      }
+    }
+    
+    return { unfollowResult, updatedProfile };
+  } catch (error) {
+    console.error('Unfollow with refresh failed:', error);
     throw error;
   }
 };

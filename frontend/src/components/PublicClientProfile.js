@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { publicProfileAPI, userAPI } from '../api';
+import { publicProfileAPI, userAPI, followAPI } from '../api';
 import { useAuth } from './Auth/AuthContext';
 import notificationService from '../services/notificationService';
 import './PublicClientProfile.css';
@@ -28,8 +28,21 @@ const PublicClientProfile = () => {
           setClientProfile(response.data.client_profile);
         }
         
-        // Fetch real follower stats
-        await fetchFollowStats(username);
+        // Check if the profile response already contains follow information
+        if (response.data.followers_count !== undefined && 
+            response.data.is_following !== undefined) {
+          // Use follow data from profile response
+          setFollowerCount(response.data.followers_count || 0);
+          setIsFollowing(response.data.is_following || false);
+          console.log('Using follow data from client profile response:', {
+            followers: response.data.followers_count,
+            isFollowing: response.data.is_following
+          });
+        } else {
+          // Fallback to separate follow stats API call
+          console.log('Follow data not in client profile response, fetching separately...');
+          await fetchFollowStats(username);
+        }
       } catch (err) {
         setError(err.response?.data?.detail || 'Client profile not found');
       } finally {
@@ -128,15 +141,33 @@ const PublicClientProfile = () => {
       console.log(`Attempting to ${isFollowing ? 'unfollow' : 'follow'} user: ${username}`);
       
       if (isFollowing) {
-        const response = await userAPI.unfollow(profile.user.id);
-        console.log('Unfollow response:', response);
-        setIsFollowing(false);
-        setFollowerCount(prev => Math.max(0, prev - 1));
+        // Use enhanced unfollow with profile refresh
+        const { unfollowResult, updatedProfile } = await followAPI.unfollowWithRefresh(profile.user.id, username);
+        console.log('Unfollow response:', unfollowResult);
+        
+        // Update state from refreshed profile data if available
+        if (updatedProfile) {
+          setIsFollowing(updatedProfile.is_following || false);
+          setFollowerCount(updatedProfile.followers_count || 0);
+        } else {
+          // Fallback to manual state update
+          setIsFollowing(false);
+          setFollowerCount(prev => Math.max(0, prev - 1));
+        }
       } else {
-        const response = await userAPI.follow(profile.user.id);
-        console.log('Follow response:', response);
-        setIsFollowing(true);
-        setFollowerCount(prev => prev + 1);
+        // Use enhanced follow with profile refresh
+        const { followResult, updatedProfile } = await followAPI.followWithRefresh(profile.user.id, username);
+        console.log('Follow response:', followResult);
+        
+        // Update state from refreshed profile data if available
+        if (updatedProfile) {
+          setIsFollowing(updatedProfile.is_following || false);
+          setFollowerCount(updatedProfile.followers_count || 0);
+        } else {
+          // Fallback to manual state update
+          setIsFollowing(true);
+          setFollowerCount(prev => prev + 1);
+        }
         
         // Send notification to the followed user
         notificationService.followNotification(
