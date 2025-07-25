@@ -211,13 +211,16 @@ export const followAPI = {
   follow: (user_id) => api.post("follow/follow/", { user_id }),
   unfollow: (user_id) => api.post(`follow/unfollow/${user_id}/`),
   getMyStats: () => api.get("follow/my-stats/"),
+  getMyFollowStats: () => api.get("follow/my-stats/"), // Alias for compatibility
   getUserStats: (user_id) => api.get(`follow/stats/${user_id}/`),
   getFollowers: (user_id) => api.get(`follow/followers/${user_id}/`),
   getFollowing: (user_id) => api.get(`follow/following/${user_id}/`),
   getNotifications: () => api.get("follow/notifications/"),
+  getFollowNotifications: () => api.get("follow/notifications/"), // Alias for compatibility
   markNotificationRead: (notification_id) => api.post(`follow/notifications/${notification_id}/read/`),
   markAllNotificationsRead: () => api.post("follow/notifications/read-all/"),
   getSuggestions: () => api.get("follow/suggestions/"),
+  getFollowSuggestions: () => api.get("follow/suggestions/"), // Alias for compatibility
   searchUsers: (query) => api.get("follow/search/", { params: { q: query } }),
 };
 
