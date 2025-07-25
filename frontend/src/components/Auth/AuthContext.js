@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
     }
     
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || 'https://vikrahub.onrender.com/api/';
+      const apiUrl = process.env.REACT_APP_API_URL || 'https://api.vikrahub.com/api/';
       console.log('Fetching user from:', `${apiUrl}users/me/`);
       
       const response = await axios.get(`${apiUrl}users/me/`, {

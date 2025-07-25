@@ -32,7 +32,7 @@ export const WebSocketProvider = ({ children }) => {
     }
     
     // Fallback: derive from API URL
-    const baseURL = process.env.REACT_APP_API_URL || "https://vikrahub.onrender.com/api/";
+    const baseURL = process.env.REACT_APP_API_URL || "https://api.vikrahub.com/api/";
     const wsProtocol = baseURL.startsWith('https') ? 'wss' : 'ws';
     const domain = baseURL.replace(/^https?:\/\//, '').replace('/api/', '');
     const derivedWsUrl = `${wsProtocol}://${domain}/ws/messaging/`;

@@ -53,7 +53,6 @@ ALLOWED_HOSTS = [
     'www.vikrahub.com', 
     'api.vikrahub.com',
     # Render domains
-    'vikrahub-backend.onrender.com', 
     '.onrender.com', 
     # Local development
     'localhost', 
