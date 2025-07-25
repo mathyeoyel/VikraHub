@@ -1055,3 +1055,136 @@ WARNING 2025-07-25 09:22:49,704 basehttp 15468 24792 "GET /api/users/me/ HTTP/1.
 INFO 2025-07-25 09:22:49,757 basehttp 15468 11700 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
 INFO 2025-07-25 09:22:50,084 basehttp 15468 11700 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
 INFO 2025-07-25 09:27:33,743 basehttp 15468 4076 "GET /api/ HTTP/1.1" 200 1195
+INFO 2025-07-25 09:42:48,558 basehttp 15468 23316 "OPTIONS /api/auth/token/ HTTP/1.1" 200 0
+INFO 2025-07-25 09:42:49,232 basehttp 15468 23316 "POST /api/auth/token/ HTTP/1.1" 200 486
+INFO 2025-07-25 09:42:49,283 basehttp 15468 23316 "GET /api/users/me/ HTTP/1.1" 200 198
+WARNING 2025-07-25 09:42:49,413 log 15468 8236 Not Found: /ws/messaging/
+WARNING 2025-07-25 09:42:49,414 basehttp 15468 8236 "GET /ws/messaging/ HTTP/1.1" 404 3387
+WARNING 2025-07-25 09:42:52,431 log 15468 18672 Not Found: /ws/messaging/
+WARNING 2025-07-25 09:42:52,432 basehttp 15468 18672 "GET /ws/messaging/ HTTP/1.1" 404 3387
+WARNING 2025-07-25 09:42:55,447 log 15468 25564 Not Found: /ws/messaging/
+WARNING 2025-07-25 09:42:55,447 basehttp 15468 25564 "GET /ws/messaging/ HTTP/1.1" 404 3387
+WARNING 2025-07-25 09:42:58,467 log 15468 18796 Not Found: /ws/messaging/
+WARNING 2025-07-25 09:42:58,468 basehttp 15468 18796 "GET /ws/messaging/ HTTP/1.1" 404 3387
+WARNING 2025-07-25 09:43:01,483 log 15468 20292 Not Found: /ws/messaging/
+WARNING 2025-07-25 09:43:01,484 basehttp 15468 20292 "GET /ws/messaging/ HTTP/1.1" 404 3387
+WARNING 2025-07-25 09:43:04,503 log 15468 15596 Not Found: /ws/messaging/
+WARNING 2025-07-25 09:43:04,504 basehttp 15468 15596 "GET /ws/messaging/ HTTP/1.1" 404 3387
+INFO 2025-07-25 09:43:12,452 basehttp 15468 1448 "GET /api/users/me/ HTTP/1.1" 200 198
+INFO 2025-07-25 09:43:12,545 basehttp 15468 13556 "GET /api/users/me/ HTTP/1.1" 200 198
+WARNING 2025-07-25 09:43:12,555 log 15468 25576 Not Found: /ws/messaging/
+WARNING 2025-07-25 09:43:12,561 basehttp 15468 25576 "GET /ws/messaging/ HTTP/1.1" 404 3387
+INFO 2025-07-25 09:43:12,562 basehttp 15468 15324 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-25 09:43:12,564 basehttp 15468 25576 - Broken pipe from ('127.0.0.1', 52400)
+INFO 2025-07-25 09:43:12,595 basehttp 15468 15324 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+WARNING 2025-07-25 09:43:15,578 log 15468 19360 Not Found: /ws/messaging/
+WARNING 2025-07-25 09:43:15,578 basehttp 15468 19360 "GET /ws/messaging/ HTTP/1.1" 404 3387
+WARNING 2025-07-25 09:43:18,591 log 15468 21388 Not Found: /ws/messaging/
+WARNING 2025-07-25 09:43:18,592 basehttp 15468 21388 "GET /ws/messaging/ HTTP/1.1" 404 3387
+WARNING 2025-07-25 09:43:21,608 log 15468 1284 Not Found: /ws/messaging/
+WARNING 2025-07-25 09:43:21,609 basehttp 15468 1284 "GET /ws/messaging/ HTTP/1.1" 404 3387
+WARNING 2025-07-25 09:43:24,642 log 15468 24168 Not Found: /ws/messaging/
+WARNING 2025-07-25 09:43:24,643 basehttp 15468 24168 "GET /ws/messaging/ HTTP/1.1" 404 3387
+INFO 2025-07-25 09:43:24,644 basehttp 15468 24168 - Broken pipe from ('127.0.0.1', 52557)
+INFO 2025-07-25 09:43:27,238 basehttp 15468 21456 "OPTIONS /api/creator-profiles/?search=mathew HTTP/1.1" 200 0
+INFO 2025-07-25 09:43:27,239 basehttp 15468 17956 "OPTIONS /api/creator-profiles/?search=mathew HTTP/1.1" 200 0
+INFO 2025-07-25 09:43:27,302 basehttp 15468 25528 "GET /api/public-profiles/search/?q=mathew HTTP/1.1" 200 1743
+INFO 2025-07-25 09:43:27,359 basehttp 15468 17956 "GET /api/public-profiles/search/?q=mathew HTTP/1.1" 200 1743
+INFO 2025-07-25 09:43:27,377 basehttp 15468 21456 "GET /api/creator-profiles/?search=mathew HTTP/1.1" 200 11479
+INFO 2025-07-25 09:43:27,419 basehttp 15468 26036 "GET /api/freelancer-profiles/?search=mathew HTTP/1.1" 200 14317
+INFO 2025-07-25 09:43:27,465 basehttp 15468 21456 "GET /api/creator-profiles/?search=mathew HTTP/1.1" 200 11479
+INFO 2025-07-25 09:43:27,481 basehttp 15468 17956 "GET /api/freelancer-profiles/?search=mathew HTTP/1.1" 200 14317
+WARNING 2025-07-25 09:43:27,686 log 15468 5824 Not Found: /ws/messaging/
+WARNING 2025-07-25 09:43:27,687 basehttp 15468 5824 "GET /ws/messaging/ HTTP/1.1" 404 3387
+INFO 2025-07-25 09:43:34,788 basehttp 15468 17956 "GET /api/public-profiles/mathewyel/ HTTP/1.1" 200 1741
+INFO 2025-07-25 09:43:34,806 basehttp 15468 17956 "GET /api/public-profiles/mathewyel/ HTTP/1.1" 200 1741
+INFO 2025-07-25 09:43:34,819 basehttp 15468 21456 "GET /api/creative-assets/ HTTP/1.1" 200 880
+INFO 2025-07-25 09:43:34,834 basehttp 15468 21456 "GET /api/creative-assets/ HTTP/1.1" 200 880
+WARNING 2025-07-25 09:43:43,749 log 15468 27464 Not Found: /ws/messaging/
+WARNING 2025-07-25 09:43:43,750 basehttp 15468 27464 "GET /ws/messaging/ HTTP/1.1" 404 3387
+WARNING 2025-07-25 09:44:31,562 log 15468 18884 Not Found: /ws/messaging/
+WARNING 2025-07-25 09:44:31,563 basehttp 15468 18884 "GET /ws/messaging/ HTTP/1.1" 404 3387
+INFO 2025-07-25 09:45:43,007 basehttp 15468 21496 "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-07-25 09:45:43,369 basehttp 15468 21496 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4173
+INFO 2025-07-25 09:45:43,387 basehttp 15468 21496 "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-07-25 09:45:43,387 basehttp 15468 25548 "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-07-25 09:45:43,388 basehttp 15468 23252 "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-07-25 09:45:43,394 basehttp 15468 23252 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-07-25 09:45:43,395 basehttp 15468 25548 "GET /static/admin/css/login.css HTTP/1.1" 304 0
+INFO 2025-07-25 09:45:43,395 basehttp 15468 21496 "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-07-25 09:45:43,399 basehttp 15468 21496 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-07-25 09:45:48,511 basehttp 15468 2188 "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4341
+WARNING 2025-07-25 09:45:55,012 log 15468 21248 Not Found: /ws/messaging/
+WARNING 2025-07-25 09:45:55,012 basehttp 15468 21248 "GET /ws/messaging/ HTTP/1.1" 404 3387
+INFO 2025-07-25 09:46:24,261 basehttp 15468 19360 "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4341
+WARNING 2025-07-25 09:54:57,306 log 15468 23148 Not Found: /ws/messaging/
+WARNING 2025-07-25 09:54:57,319 basehttp 15468 23148 "GET /ws/messaging/ HTTP/1.1" 404 3387
+INFO 2025-07-25 09:57:45,195 autoreload 24708 16344 Watching for file changes with StatReloader
+ERROR 2025-07-25 10:03:32,001 log 11024 11700 Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\deprecation.py", line 119, in __call__
+    response = self.process_request(request)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\http\request.py", line 202, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+ERROR 2025-07-25 10:03:32,015 log 11024 11700 Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\deprecation.py", line 119, in __call__
+    response = self.process_request(request)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\http\request.py", line 202, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+ERROR 2025-07-25 10:03:32,033 log 11024 11700 Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\deprecation.py", line 119, in __call__
+    response = self.process_request(request)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\http\request.py", line 202, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+ERROR 2025-07-25 10:03:32,082 log 11024 11700 Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\deprecation.py", line 119, in __call__
+    response = self.process_request(request)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\http\request.py", line 202, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+ERROR 2025-07-25 10:03:32,097 log 11024 11700 Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\deprecation.py", line 119, in __call__
+    response = self.process_request(request)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\http\request.py", line 202, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+INFO 2025-07-25 10:03:45,884 autoreload 24708 16344 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-07-25 10:03:45,975 autoreload 424 23116 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-07-25 10:03:45,984 autoreload 15468 20644 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-07-25 10:03:45,989 autoreload 22092 20836 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-07-25 10:03:46,025 autoreload 20748 12956 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-07-25 10:03:48,015 autoreload 5824 24352 Watching for file changes with StatReloader
+INFO 2025-07-25 10:03:48,160 autoreload 12800 11796 Watching for file changes with StatReloader
+INFO 2025-07-25 10:03:48,187 autoreload 24440 15688 Watching for file changes with StatReloader
+INFO 2025-07-25 10:03:48,233 autoreload 23568 22900 Watching for file changes with StatReloader
+INFO 2025-07-25 10:03:48,528 autoreload 24404 25244 Watching for file changes with StatReloader
+WARNING 2025-07-25 10:05:10,201 log 18920 20128 Unauthorized: /api/follow/follow/
+WARNING 2025-07-25 10:05:10,203 log 18920 20128 Unauthorized: /api/follow/unfollow/2/
+WARNING 2025-07-25 10:05:10,206 log 18920 20128 Unauthorized: /api/follow/stats/2/

@@ -57,7 +57,8 @@ ALLOWED_HOSTS = [
     '.onrender.com', 
     # Local development
     'localhost', 
-    '127.0.0.1'
+    '127.0.0.1',
+    'testserver'  # For Django testing
 ]
 
 # Application definition
