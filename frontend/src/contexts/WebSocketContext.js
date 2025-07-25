@@ -48,13 +48,17 @@ export const WebSocketProvider = ({ children }) => {
     }
 
     try {
-      const wsURL = getWebSocketURL();
+      const baseWsURL = getWebSocketURL();
       
-      // Temporarily disable JWT token for debugging
-      // const jwtToken = getAccessToken();
-      // const wsURL = jwtToken ? `${baseWsURL}?token=${jwtToken}` : baseWsURL;
+      // Add JWT token as query parameter for authentication
+      const jwtToken = getAccessToken();
+      const wsURL = jwtToken ? `${baseWsURL}?token=${jwtToken}` : baseWsURL;
       
-      console.log('Connecting to WebSocket:', wsURL);
+      console.log('Connecting to WebSocket:', wsURL.replace(/token=[^&]*/, 'token=***'));
+      console.log('JWT Token present:', !!jwtToken);
+      if (jwtToken) {
+        console.log('JWT Token preview:', jwtToken.substring(0, 20) + '...' + jwtToken.substring(jwtToken.length - 10));
+      }
       
       const newSocket = new WebSocket(wsURL);
       

@@ -1,11 +1,15 @@
 # backend/messaging/consumers.py
 import json
+import logging
 from uuid import UUID
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from .models import Conversation, Message, TypingStatus
+
+# Set up logging
+logger = logging.getLogger(__name__)
 
 
 class MessagingConsumer(AsyncWebsocketConsumer):
@@ -15,27 +19,62 @@ class MessagingConsumer(AsyncWebsocketConsumer):
     
     async def connect(self):
         """Accept WebSocket connection and join user group"""
+        logger.info("=== MessagingConsumer.connect() called ===")
+        
         self.user = self.scope["user"]
+        logger.info(f"MessagingConsumer: self.user = {self.user}")
+        logger.info(f"MessagingConsumer: User type = {type(self.user)}")
+        logger.info(f"MessagingConsumer: Is anonymous = {self.user.is_anonymous if hasattr(self.user, 'is_anonymous') else 'No is_anonymous attr'}")
         
-        if self.user.is_anonymous:
-            await self.close()
-            return
+        # Log the entire scope for debugging
+        scope_info = {
+            'type': self.scope.get('type'),
+            'path': self.scope.get('path'),
+            'query_string': self.scope.get('query_string', b'').decode(),
+            'user': str(self.scope.get('user')),
+            'client': self.scope.get('client'),
+            'server': self.scope.get('server'),
+        }
+        logger.info(f"MessagingConsumer: Full scope info = {scope_info}")
         
-        # Join user-specific group for notifications
-        self.user_group_name = f"user_{self.user.id}"
-        await self.channel_layer.group_add(
-            self.user_group_name,
-            self.channel_name
-        )
+        # Temporarily accept even anonymous users for debugging
+        # if self.user.is_anonymous:
+        #     logger.warning("MessagingConsumer: Rejecting anonymous user")
+        #     await self.close()
+        #     return
         
+        logger.info("MessagingConsumer: Accepting connection (anonymous users temporarily allowed)")
         await self.accept()
         
-        # Send connection confirmation
-        await self.send(text_data=json.dumps({
-            'type': 'connection_established',
-            'user_id': self.user.id,
-            'username': self.user.username
-        }))
+        # Only set up user group if user is authenticated
+        if not self.user.is_anonymous:
+            # Join user-specific group for notifications
+            self.user_group_name = f"user_{self.user.id}"
+            logger.info(f"MessagingConsumer: Joining user group: {self.user_group_name}")
+            await self.channel_layer.group_add(
+                self.user_group_name,
+                self.channel_name
+            )
+            
+            # Send connection confirmation
+            await self.send(text_data=json.dumps({
+                'type': 'connection_established',
+                'user_id': self.user.id,
+                'username': self.user.username
+            }))
+            logger.info(f"MessagingConsumer: Connection established for user {self.user.username}")
+        else:
+            # Send anonymous connection confirmation
+            await self.send(text_data=json.dumps({
+                'type': 'connection_established',
+                'user_id': None,
+                'username': 'anonymous',
+                'message': 'Connected as anonymous user (debug mode)'
+            }))
+            logger.info("MessagingConsumer: Connection established for anonymous user (debug mode)")
+        
+        logger.info("=== MessagingConsumer.connect() completed ===")
+    
     
     async def disconnect(self, close_code):
         """Handle WebSocket disconnection"""

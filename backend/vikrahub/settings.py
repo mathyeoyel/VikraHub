@@ -328,6 +328,21 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
         },
+        'messaging': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'core.jwt_auth_middleware': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'vikrahub.asgi': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
     },
 }
 

@@ -31,40 +31,51 @@ def get_user_from_token(token):
     Returns:
         User or AnonymousUser: The authenticated user or AnonymousUser if invalid
     """
+    logger.info(f"get_user_from_token: Starting validation for token: {token[:20]}...{token[-10:] if len(token) > 30 else token}")
+    
     try:
         # Validate the token using rest_framework_simplejwt
+        logger.info("get_user_from_token: Validating token with UntypedToken...")
         UntypedToken(token)
+        logger.info("get_user_from_token: Token validation successful")
         
         # Decode the token to get user information
+        logger.info("get_user_from_token: Decoding token payload...")
         decoded_data = jwt.decode(
             token, 
             settings.SECRET_KEY, 
             algorithms=["HS256"]
         )
+        logger.info(f"get_user_from_token: Decoded payload: {decoded_data}")
         
         # Get user ID from token payload
         user_id = decoded_data.get('user_id')
+        logger.info(f"get_user_from_token: Extracted user_id: {user_id}")
+        
         if not user_id:
-            logger.warning("JWT token missing user_id")
+            logger.warning("get_user_from_token: JWT token missing user_id")
             return AnonymousUser()
         
         # Get user from database
+        logger.info(f"get_user_from_token: Looking up user with ID: {user_id}")
         user = User.objects.get(id=user_id)
+        logger.info(f"get_user_from_token: Found user: {user.username} (ID: {user.id})")
         
-        logger.info(f"WebSocket JWT authentication successful for user: {user.username}")
+        logger.info(f"get_user_from_token: WebSocket JWT authentication successful for user: {user.username}")
         return user
         
-    except InvalidToken:
-        logger.warning("Invalid JWT token provided for WebSocket connection")
+    except InvalidToken as e:
+        logger.warning(f"get_user_from_token: Invalid JWT token: {e}")
         return AnonymousUser()
     except TokenError as e:
-        logger.warning(f"JWT token error for WebSocket connection: {e}")
+        logger.warning(f"get_user_from_token: JWT token error: {e}")
         return AnonymousUser()
     except User.DoesNotExist:
-        logger.warning(f"User with ID {user_id} not found for WebSocket connection")
+        logger.warning(f"get_user_from_token: User with ID {user_id} not found")
         return AnonymousUser()
     except Exception as e:
-        logger.error(f"Unexpected error during WebSocket JWT authentication: {e}")
+        logger.error(f"get_user_from_token: Unexpected error during JWT authentication: {e}")
+        logger.exception("Full exception details:")
         return AnonymousUser()
 
 
@@ -79,6 +90,8 @@ class JWTAuthMiddleware:
         self.inner = inner
     
     async def __call__(self, scope, receive, send):
+        logger.info("=== JWTAuthMiddleware: Processing WebSocket connection ===")
+        
         # Close old database connections to prevent usage of timed out connections
         close_old_connections()
         
@@ -87,14 +100,24 @@ class JWTAuthMiddleware:
         query_params = parse_qs(query_string)
         token = query_params.get('token', [None])[0]
         
+        logger.info(f"JWTAuthMiddleware: Query string: {query_string}")
+        logger.info(f"JWTAuthMiddleware: Token present: {bool(token)}")
+        if token:
+            logger.info(f"JWTAuthMiddleware: Token preview: {token[:20]}...{token[-10:] if len(token) > 30 else token}")
+        
         if token:
             # Authenticate user with JWT token
             scope['user'] = await get_user_from_token(token)
-            logger.info(f"WebSocket connection authenticated as: {scope['user']}")
+            logger.info(f"JWTAuthMiddleware: Authenticated user: {scope['user']}")
+            logger.info(f"JWTAuthMiddleware: User type: {type(scope['user'])}")
+            logger.info(f"JWTAuthMiddleware: Is anonymous: {scope['user'].is_anonymous if hasattr(scope['user'], 'is_anonymous') else 'No is_anonymous attr'}")
         else:
             # No token provided, set as anonymous user
             scope['user'] = AnonymousUser()
-            logger.info("WebSocket connection with no token, setting as AnonymousUser")
+            logger.info("JWTAuthMiddleware: No token provided, setting as AnonymousUser")
+        
+        logger.info(f"JWTAuthMiddleware: Final scope['user']: {scope['user']}")
+        logger.info("=== JWTAuthMiddleware: Processing complete ===")
         
         # Call the next middleware/consumer
         return await self.inner(scope, receive, send)
