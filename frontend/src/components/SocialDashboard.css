@@ -1,0 +1,219 @@
+/* frontend/src/components/SocialDashboard.css */
+.social-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+}
+
+.dashboard-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 30px;
+  border-radius: 16px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.welcome-section h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.welcome-section p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 1rem;
+}
+
+.dashboard-tabs {
+  display: flex;
+  background: white;
+  border-radius: 12px;
+  padding: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.tab-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #666;
+}
+
+.tab-button:hover {
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+.tab-button.active {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.tab-icon {
+  font-size: 1.1rem;
+}
+
+.tab-label {
+  font-weight: inherit;
+}
+
+.dashboard-content {
+  min-height: 400px;
+}
+
+.tab-content {
+  display: grid;
+  gap: 20px;
+}
+
+.tab-content.feed {
+  grid-template-columns: 2fr 1fr;
+}
+
+.sidebar-widgets {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.discover-section,
+.network-section {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.discover-section h3,
+.network-section h3 {
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+/* Quick Actions */
+.quick-actions {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 100;
+}
+
+.quick-action-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  font-size: 1.4rem;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quick-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+.quick-action-btn:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .tab-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .sidebar-widgets {
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .social-dashboard {
+    padding: 15px;
+  }
+  
+  .dashboard-header {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .welcome-section h2 {
+    font-size: 1.5rem;
+  }
+  
+  .dashboard-tabs {
+    padding: 6px;
+    margin-bottom: 20px;
+  }
+  
+  .tab-button {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+  
+  .tab-icon {
+    font-size: 1rem;
+  }
+  
+  .discover-section,
+  .network-section {
+    padding: 20px;
+  }
+  
+  .quick-actions {
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .quick-action-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-tabs {
+    gap: 4px;
+  }
+  
+  .tab-button {
+    padding: 8px 12px;
+    min-width: auto;
+  }
+  
+  .tab-label {
+    display: none;
+  }
+  
+  .tab-icon {
+    font-size: 1.2rem;
+  }
+}

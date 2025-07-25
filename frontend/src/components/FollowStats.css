@@ -1,0 +1,244 @@
+/* frontend/src/components/FollowStats.css */
+
+.follow-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: inherit;
+}
+
+.follow-stats__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
+.follow-stats__item--clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.follow-stats__item--clickable:hover {
+  background: rgba(102, 126, 234, 0.1);
+  transform: translateY(-1px);
+}
+
+.follow-stats__item--clickable:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+.follow-stats__count {
+  font-weight: 700;
+  color: #1a202c;
+  line-height: 1.2;
+}
+
+.follow-stats__label {
+  font-size: 0.875em;
+  color: #718096;
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+.follow-stats__mutual {
+  margin-left: 8px;
+}
+
+.follow-stats__mutual-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Sizes */
+.follow-stats--small {
+  gap: 12px;
+}
+
+.follow-stats--small .follow-stats__count {
+  font-size: 14px;
+}
+
+.follow-stats--small .follow-stats__label {
+  font-size: 11px;
+}
+
+.follow-stats--small .follow-stats__item {
+  padding: 2px 6px;
+}
+
+.follow-stats--medium {
+  gap: 16px;
+}
+
+.follow-stats--medium .follow-stats__count {
+  font-size: 18px;
+}
+
+.follow-stats--medium .follow-stats__label {
+  font-size: 13px;
+}
+
+.follow-stats--large {
+  gap: 24px;
+}
+
+.follow-stats--large .follow-stats__count {
+  font-size: 24px;
+}
+
+.follow-stats--large .follow-stats__label {
+  font-size: 15px;
+}
+
+.follow-stats--large .follow-stats__item {
+  padding: 8px 12px;
+}
+
+/* Loading state */
+.follow-stats__loading {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.follow-stats__skeleton {
+  width: 60px;
+  height: 40px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Horizontal layout for mobile */
+@media (max-width: 480px) {
+  .follow-stats {
+    gap: 20px;
+  }
+  
+  .follow-stats__item {
+    flex-direction: row;
+    gap: 4px;
+  }
+  
+  .follow-stats__label {
+    margin-top: 0;
+  }
+  
+  .follow-stats--small {
+    gap: 16px;
+  }
+  
+  .follow-stats--large {
+    gap: 24px;
+  }
+}
+
+/* Compact mode for very small spaces */
+.follow-stats--compact {
+  gap: 8px;
+}
+
+.follow-stats--compact .follow-stats__item {
+  flex-direction: row;
+  gap: 4px;
+  padding: 2px 4px;
+}
+
+.follow-stats--compact .follow-stats__count {
+  font-size: 14px;
+}
+
+.follow-stats--compact .follow-stats__label {
+  font-size: 12px;
+  margin-top: 0;
+}
+
+.follow-stats--compact .follow-stats__mutual-badge {
+  font-size: 10px;
+  padding: 1px 6px;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .follow-stats__count {
+    color: #f7fafc;
+  }
+  
+  .follow-stats__label {
+    color: #a0aec0;
+  }
+  
+  .follow-stats__item--clickable:hover {
+    background: rgba(165, 180, 252, 0.1);
+  }
+  
+  .follow-stats__skeleton {
+    background: linear-gradient(90deg, #2d3748 25%, #4a5568 50%, #2d3748 75%);
+    background-size: 200% 100%;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .follow-stats__count {
+    font-weight: 900;
+    color: #000;
+  }
+  
+  .follow-stats__label {
+    color: #333;
+    font-weight: 600;
+  }
+  
+  .follow-stats__item--clickable:focus {
+    outline: 3px solid #000;
+    outline-offset: 3px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .follow-stats__item {
+    transition: none;
+  }
+  
+  .follow-stats__item--clickable:hover {
+    transform: none;
+  }
+  
+  .follow-stats__skeleton {
+    animation: none;
+    background: #e0e0e0;
+  }
+}
+
+/* RTL support */
+[dir="rtl"] .follow-stats {
+  direction: rtl;
+}
+
+[dir="rtl"] .follow-stats__mutual {
+  margin-left: 0;
+  margin-right: 8px;
+}

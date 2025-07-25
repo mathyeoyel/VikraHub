@@ -889,3 +889,169 @@ INFO 2025-07-24 17:37:42,084 basehttp 14052 23184 "GET /api/users/me/ HTTP/1.1" 
 INFO 2025-07-24 17:37:42,113 basehttp 14052 23624 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
 INFO 2025-07-24 17:37:42,113 basehttp 14052 23184 "GET /api/users/me/ HTTP/1.1" 200 198
 INFO 2025-07-24 17:37:42,151 basehttp 14052 23184 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 18:24:23,125 basehttp 14052 3192 "OPTIONS /api/creator-profiles/featured/ HTTP/1.1" 200 0
+INFO 2025-07-24 18:24:23,112 basehttp 14052 26208 "OPTIONS /api/creator-profiles/featured/ HTTP/1.1" 200 0
+WARNING 2025-07-24 18:39:23,798 log 14052 27304 Unauthorized: /api/creator-profiles/featured/
+WARNING 2025-07-24 18:39:23,813 basehttp 14052 27304 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
+WARNING 2025-07-24 18:39:23,824 log 14052 27304 Unauthorized: /api/creator-profiles/featured/
+WARNING 2025-07-24 18:39:23,825 basehttp 14052 27304 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
+INFO 2025-07-24 18:39:23,926 basehttp 14052 27304 "OPTIONS /api/auth/token/refresh/ HTTP/1.1" 200 0
+INFO 2025-07-24 18:39:23,975 basehttp 14052 200 "OPTIONS /api/auth/token/refresh/ HTTP/1.1" 200 0
+INFO 2025-07-24 18:39:23,976 basehttp 14052 27304 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-24 18:39:23,982 basehttp 14052 200 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-24 18:39:24,144 basehttp 14052 200 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 18:39:24,185 basehttp 14052 200 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 18:39:43,280 basehttp 14052 24148 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 18:39:43,318 basehttp 14052 24148 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 18:40:56,123 basehttp 14052 21680 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 18:40:56,216 basehttp 14052 21680 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 18:41:17,394 basehttp 14052 11192 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 18:41:17,439 basehttp 14052 11192 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-24 19:06:21,022 autoreload 14052 14176 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-07-24 19:06:24,387 autoreload 21228 9412 Watching for file changes with StatReloader
+INFO 2025-07-24 19:06:31,273 autoreload 21228 9412 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-07-24 19:06:32,595 autoreload 21692 20680 Watching for file changes with StatReloader
+INFO 2025-07-24 19:09:51,084 autoreload 21692 20680 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-07-24 19:09:54,399 autoreload 24560 22076 Watching for file changes with StatReloader
+ERROR 2025-07-24 19:42:08,797 log 7104 24296 Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\deprecation.py", line 119, in __call__
+    response = self.process_request(request)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\http\request.py", line 202, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+ERROR 2025-07-24 19:43:07,262 log 26896 27620 Internal Server Error: /api/follow/unfollow/34/
+INFO 2025-07-24 19:57:40,911 autoreload 23116 7136 Watching for file changes with StatReloader
+INFO 2025-07-24 19:57:46,559 basehttp 23116 23560 "GET / HTTP/1.1" 200 1195
+WARNING 2025-07-24 19:57:47,244 log 23116 23560 Not Found: /favicon.ico
+WARNING 2025-07-24 19:57:47,246 basehttp 23116 23560 "GET /favicon.ico HTTP/1.1" 404 3381
+INFO 2025-07-25 08:38:44,712 autoreload 15468 20644 Watching for file changes with StatReloader
+INFO 2025-07-25 08:38:48,571 basehttp 15468 16124 "GET / HTTP/1.1" 200 1195
+WARNING 2025-07-25 08:38:48,693 log 15468 16124 Not Found: /favicon.ico
+WARNING 2025-07-25 08:38:48,694 basehttp 15468 16124 "GET /favicon.ico HTTP/1.1" 404 3381
+INFO 2025-07-25 08:38:57,363 basehttp 15468 15864 "OPTIONS /api/auth/token/ HTTP/1.1" 200 0
+WARNING 2025-07-25 08:38:57,815 log 15468 15864 Unauthorized: /api/auth/token/
+WARNING 2025-07-25 08:38:57,816 basehttp 15468 15864 "POST /api/auth/token/ HTTP/1.1" 401 63
+INFO 2025-07-25 08:50:27,446 autoreload 424 23116 Watching for file changes with StatReloader
+WARNING 2025-07-25 08:50:54,237 log 15468 18180 Not Found: /api/auth/users/
+WARNING 2025-07-25 08:50:54,242 basehttp 15468 18180 "GET /api/auth/users/ HTTP/1.1" 404 56170
+WARNING 2025-07-25 08:51:08,461 log 15468 18180 Unauthorized: /api/users/
+WARNING 2025-07-25 08:51:08,462 basehttp 15468 18180 "GET /api/users/ HTTP/1.1" 401 58
+INFO 2025-07-25 08:52:45,486 basehttp 15468 18180 "POST /api/auth/token/ HTTP/1.1" 200 486
+INFO 2025-07-25 08:52:54,175 basehttp 15468 18180 "POST /api/auth/token/ HTTP/1.1" 200 486
+WARNING 2025-07-25 08:53:06,218 log 15468 18180 Unauthorized: /api/users/
+WARNING 2025-07-25 08:53:06,219 basehttp 15468 18180 "GET /api/users/ HTTP/1.1" 401 183
+INFO 2025-07-25 08:53:27,858 basehttp 15468 18180 "POST /api/auth/token/ HTTP/1.1" 200 486
+WARNING 2025-07-25 08:53:27,864 log 15468 18180 Forbidden: /api/users/
+WARNING 2025-07-25 08:53:27,864 basehttp 15468 18180 "GET /api/users/ HTTP/1.1" 403 63
+INFO 2025-07-25 08:56:24,426 basehttp 15468 27344 "POST /api/auth/token/ HTTP/1.1" 200 486
+WARNING 2025-07-25 08:56:24,440 log 15468 27344 Not Found: /api/follow/
+WARNING 2025-07-25 08:56:24,440 basehttp 15468 27344 "GET /api/follow/ HTTP/1.1" 404 60105
+INFO 2025-07-25 08:56:42,719 basehttp 15468 27344 "POST /api/auth/token/ HTTP/1.1" 200 486
+WARNING 2025-07-25 08:56:42,737 log 15468 27344 Bad Request: /api/follow/follow/
+WARNING 2025-07-25 08:56:42,738 basehttp 15468 27344 "POST /api/follow/follow/ HTTP/1.1" 400 39
+INFO 2025-07-25 08:57:00,381 basehttp 15468 27344 "POST /api/auth/token/ HTTP/1.1" 200 486
+INFO 2025-07-25 08:57:00,486 basehttp 15468 27344 "POST /api/follow/follow/ HTTP/1.1" 201 517
+INFO 2025-07-25 08:57:15,481 basehttp 15468 27344 "POST /api/auth/token/ HTTP/1.1" 200 486
+INFO 2025-07-25 08:57:15,490 basehttp 15468 27344 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-25 08:57:33,228 basehttp 15468 27344 "POST /api/auth/token/ HTTP/1.1" 200 486
+INFO 2025-07-25 08:57:33,238 basehttp 15468 27344 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-25 08:58:05,022 basehttp 15468 27344 "POST /api/auth/token/ HTTP/1.1" 200 486
+INFO 2025-07-25 08:58:05,033 basehttp 15468 27344 "GET /api/follow/notifications/ HTTP/1.1" 200 385
+INFO 2025-07-25 08:58:17,051 basehttp 15468 27344 "POST /api/auth/token/ HTTP/1.1" 200 486
+WARNING 2025-07-25 08:58:17,063 log 15468 27344 Not Found: /api/messaging/
+WARNING 2025-07-25 08:58:17,064 basehttp 15468 27344 "GET /api/messaging/ HTTP/1.1" 404 58489
+INFO 2025-07-25 08:58:34,526 basehttp 15468 27344 "POST /api/auth/token/ HTTP/1.1" 200 486
+INFO 2025-07-25 08:58:34,541 basehttp 15468 27344 "GET /api/messaging/conversations/ HTTP/1.1" 200 2
+INFO 2025-07-25 08:58:56,668 basehttp 15468 27344 "POST /api/auth/token/ HTTP/1.1" 200 486
+WARNING 2025-07-25 08:58:56,673 log 15468 27344 Bad Request: /api/messaging/conversations/
+WARNING 2025-07-25 08:58:56,674 basehttp 15468 27344 "POST /api/messaging/conversations/ HTTP/1.1" 400 52
+INFO 2025-07-25 08:59:09,490 basehttp 15468 27344 "POST /api/auth/token/ HTTP/1.1" 200 486
+ERROR 2025-07-25 08:59:10,017 log 15468 27344 Internal Server Error: /api/messaging/conversations/
+Traceback (most recent call last):
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\rest_framework\fields.py", line 437, in get_attribute
+    return get_attribute(instance, self.source_attrs)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\rest_framework\fields.py", line 104, in get_attribute
+    instance = getattr(instance, attr)
+AttributeError: 'Conversation' object has no attribute 'participant_username'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\rest_framework\generics.py", line 246, in post
+    return self.create(request, *args, **kwargs)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\rest_framework\mixins.py", line 20, in create
+    headers = self.get_success_headers(serializer.data)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\rest_framework\serializers.py", line 573, in data
+    ret = super().data
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\rest_framework\serializers.py", line 251, in data
+    self._data = self.to_representation(self.instance)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\rest_framework\serializers.py", line 527, in to_representation
+    attribute = field.get_attribute(instance)
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python310\lib\site-packages\rest_framework\fields.py", line 470, in get_attribute
+    raise type(exc)(msg)
+AttributeError: Got AttributeError when attempting to get a value for field `participant_username` on serializer `ConversationCreateSerializer`.
+The serializer field might be named incorrectly and not match any attribute or key on the `Conversation` instance.
+Original exception text was: 'Conversation' object has no attribute 'participant_username'.
+ERROR 2025-07-25 08:59:10,023 basehttp 15468 27344 "POST /api/messaging/conversations/ HTTP/1.1" 500 130429
+INFO 2025-07-25 08:59:35,012 basehttp 15468 27344 "POST /api/auth/token/ HTTP/1.1" 200 486
+INFO 2025-07-25 08:59:35,027 basehttp 15468 27344 "GET /api/messaging/conversations/ HTTP/1.1" 200 573
+INFO 2025-07-25 09:00:08,871 basehttp 15468 27344 "POST /api/auth/token/ HTTP/1.1" 200 486
+WARNING 2025-07-25 09:00:08,876 log 15468 27344 Bad Request: /api/messaging/conversations/d34e116c-b7ad-48e7-b58d-d3d1dd1a1d99/messages/
+WARNING 2025-07-25 09:00:08,877 basehttp 15468 27344 "POST /api/messaging/conversations/d34e116c-b7ad-48e7-b58d-d3d1dd1a1d99/messages/ HTTP/1.1" 400 44
+INFO 2025-07-25 09:00:21,483 basehttp 15468 27344 "POST /api/auth/token/ HTTP/1.1" 200 486
+WARNING 2025-07-25 09:00:21,490 log 15468 27344 Bad Request: /api/messaging/conversations/d34e116c-b7ad-48e7-b58d-d3d1dd1a1d99/messages/
+WARNING 2025-07-25 09:00:21,491 basehttp 15468 27344 "POST /api/messaging/conversations/d34e116c-b7ad-48e7-b58d-d3d1dd1a1d99/messages/ HTTP/1.1" 400 44
+INFO 2025-07-25 09:10:43,903 basehttp 15468 16448 "GET /api/ HTTP/1.1" 200 1195
+INFO 2025-07-25 09:10:44,445 basehttp 15468 16448 "POST /api/auth/token/ HTTP/1.1" 200 486
+INFO 2025-07-25 09:10:44,525 basehttp 15468 16448 "POST /api/follow/follow/ HTTP/1.1" 201 529
+INFO 2025-07-25 09:10:44,558 basehttp 15468 16448 "GET /api/messaging/conversations/ HTTP/1.1" 200 573
+INFO 2025-07-25 09:10:44,572 basehttp 15468 16448 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-25 09:10:53,812 basehttp 15468 16448 - Broken pipe from ('127.0.0.1', 61300)
+INFO 2025-07-25 09:13:08,325 autoreload 20748 12956 Watching for file changes with StatReloader
+INFO 2025-07-25 09:13:30,636 basehttp 15468 20280 "GET /api/ HTTP/1.1" 200 1195
+INFO 2025-07-25 09:17:00,613 basehttp 15468 17784 "GET /api/ HTTP/1.1" 200 1195
+INFO 2025-07-25 09:17:01,432 basehttp 15468 17784 "POST /api/auth/token/ HTTP/1.1" 200 486
+INFO 2025-07-25 09:17:01,497 basehttp 15468 17784 "POST /api/follow/follow/ HTTP/1.1" 201 529
+INFO 2025-07-25 09:17:01,530 basehttp 15468 17784 "GET /api/messaging/conversations/ HTTP/1.1" 200 573
+INFO 2025-07-25 09:17:01,543 basehttp 15468 17784 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-25 09:17:09,090 basehttp 15468 17784 - Broken pipe from ('127.0.0.1', 49814)
+INFO 2025-07-25 09:18:24,377 basehttp 15468 12380 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-25 09:18:24,394 basehttp 15468 9948 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-25 09:19:36,715 autoreload 22092 20836 Watching for file changes with StatReloader
+INFO 2025-07-25 09:22:49,448 basehttp 15468 24792 "OPTIONS /api/users/me/ HTTP/1.1" 200 0
+INFO 2025-07-25 09:22:49,441 basehttp 15468 8992 "OPTIONS /api/creator-profiles/featured/ HTTP/1.1" 200 0
+INFO 2025-07-25 09:22:49,460 basehttp 15468 21496 "OPTIONS /api/users/me/ HTTP/1.1" 200 0
+INFO 2025-07-25 09:22:49,468 basehttp 15468 11700 "OPTIONS /api/creator-profiles/featured/ HTTP/1.1" 200 0
+WARNING 2025-07-25 09:22:49,681 log 15468 24792 Unauthorized: /api/creator-profiles/featured/
+WARNING 2025-07-25 09:22:49,682 log 15468 8992 Unauthorized: /api/users/me/
+WARNING 2025-07-25 09:22:49,684 basehttp 15468 24792 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
+WARNING 2025-07-25 09:22:49,685 basehttp 15468 8992 "GET /api/users/me/ HTTP/1.1" 401 183
+WARNING 2025-07-25 09:22:49,693 log 15468 8992 Unauthorized: /api/creator-profiles/featured/
+WARNING 2025-07-25 09:22:49,696 log 15468 24792 Unauthorized: /api/users/me/
+INFO 2025-07-25 09:22:49,702 basehttp 15468 11700 "OPTIONS /api/auth/token/refresh/ HTTP/1.1" 200 0
+WARNING 2025-07-25 09:22:49,703 basehttp 15468 8992 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
+WARNING 2025-07-25 09:22:49,704 basehttp 15468 24792 "GET /api/users/me/ HTTP/1.1" 401 183
+INFO 2025-07-25 09:22:49,757 basehttp 15468 11700 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-25 09:22:50,084 basehttp 15468 11700 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7110
+INFO 2025-07-25 09:27:33,743 basehttp 15468 4076 "GET /api/ HTTP/1.1" 200 1195

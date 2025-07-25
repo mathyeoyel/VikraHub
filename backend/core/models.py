@@ -5,6 +5,10 @@ from django.urls import reverse # for URL reversing in templates
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .cloudinary_utils import validate_cloudinary_url
+
+# Import follow system models
+from .follow_models import Follow, FollowNotification
+
 # This file defines the models for the Vikra Hub project, including user profiles, services, portfolio items, blog posts, team members, and notifications.
 
 class Notification(models.Model):

@@ -1,71 +1,6 @@
 import axios from "axios";
 import { getAccessToken, getRefreshToken, removeTokens, saveToken } from "./auth";
 
-// Mock follow system with persistent storage
-const FOLLOW_STORAGE_KEY = 'vikrahub_follow_data';
-
-const getFollowData = () => {
-  try {
-    const data = localStorage.getItem(FOLLOW_STORAGE_KEY);
-    return data ? JSON.parse(data) : {};
-  } catch (error) {
-    console.warn('Failed to get follow data from localStorage:', error);
-    return {};
-  }
-};
-
-const setFollowData = (data) => {
-  try {
-    localStorage.setItem(FOLLOW_STORAGE_KEY, JSON.stringify(data));
-  } catch (error) {
-    console.warn('Failed to save follow data to localStorage:', error);
-  }
-};
-
-const getOrCreateUserFollowData = (username) => {
-  const followData = getFollowData();
-  if (!followData[username]) {
-    followData[username] = {
-      followers: new Set(),
-      following: new Set(),
-      followerCount: 0,
-      followingCount: 0
-    };
-  }
-  // Convert arrays back to Sets if needed (for localStorage compatibility)
-  if (Array.isArray(followData[username].followers)) {
-    followData[username].followers = new Set(followData[username].followers);
-  }
-  if (Array.isArray(followData[username].following)) {
-    followData[username].following = new Set(followData[username].following);
-  }
-  return followData;
-};
-
-const saveFollowData = (followData) => {
-  // Convert Sets to arrays for localStorage compatibility
-  const dataToSave = {};
-  Object.keys(followData).forEach(username => {
-    dataToSave[username] = {
-      followers: Array.from(followData[username].followers),
-      following: Array.from(followData[username].following),
-      followerCount: followData[username].followerCount,
-      followingCount: followData[username].followingCount
-    };
-  });
-  setFollowData(dataToSave);
-};
-
-const getCurrentUser = () => {
-  try {
-    const userData = localStorage.getItem('user');
-    return userData ? JSON.parse(userData) : null;
-  } catch (error) {
-    console.warn('Failed to get current user:', error);
-    return null;
-  }
-};
-
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || "https://vikrahub.onrender.com/api/", // Django API base URL
   headers: {
@@ -157,80 +92,6 @@ export const userAPI = {
   changePassword: (data) => api.post("auth/change-password/", data),
   updatePreferences: (data) => api.patch("profiles/preferences/", data),
   deleteAccount: () => api.delete("users/me/"),
-  
-  // Mock follow functionality until backend endpoints are implemented
-  follow: (username) => {
-    console.warn('Follow endpoint not implemented on backend - using mock response with persistent storage');
-    
-    const followData = getOrCreateUserFollowData(username);
-    const currentUser = getCurrentUser(); // We'll need to implement this
-    const currentUsername = currentUser?.username || 'anonymous_user';
-    
-    // Add current user to target user's followers
-    followData[username].followers.add(currentUsername);
-    followData[username].followerCount = followData[username].followers.size;
-    
-    // Add target user to current user's following
-    if (!followData[currentUsername]) {
-      followData[currentUsername] = {
-        followers: new Set(),
-        following: new Set(),
-        followerCount: 0,
-        followingCount: 0
-      };
-    }
-    followData[currentUsername].following.add(username);
-    followData[currentUsername].followingCount = followData[currentUsername].following.size;
-    
-    saveFollowData(followData);
-    return Promise.resolve({ data: { status: 'followed' } });
-  },
-  unfollow: (username) => {
-    console.warn('Unfollow endpoint not implemented on backend - using mock response with persistent storage');
-    
-    const followData = getOrCreateUserFollowData(username);
-    const currentUser = getCurrentUser();
-    const currentUsername = currentUser?.username || 'anonymous_user';
-    
-    // Remove current user from target user's followers
-    followData[username].followers.delete(currentUsername);
-    followData[username].followerCount = followData[username].followers.size;
-    
-    // Remove target user from current user's following
-    if (followData[currentUsername]) {
-      followData[currentUsername].following.delete(username);
-      followData[currentUsername].followingCount = followData[currentUsername].following.size;
-    }
-    
-    saveFollowData(followData);
-    return Promise.resolve({ data: { status: 'unfollowed' } });
-  },
-  getFollowers: (username) => {
-    console.warn('Get followers endpoint not implemented on backend - using mock response');
-    return Promise.resolve({ data: [] });
-  },
-  getFollowing: (username) => {
-    console.warn('Get following endpoint not implemented on backend - using mock response');
-    return Promise.resolve({ data: [] });
-  },
-  getFollowStats: (username) => {
-    console.warn('Follow stats endpoint not implemented on backend - using persistent storage');
-    
-    const followData = getOrCreateUserFollowData(username);
-    const currentUser = getCurrentUser();
-    const currentUsername = currentUser?.username || 'anonymous_user';
-    
-    const userData = followData[username];
-    const isFollowing = userData.followers.has(currentUsername);
-    
-    return Promise.resolve({ 
-      data: { 
-        followers_count: userData.followerCount,
-        following_count: userData.followingCount,
-        is_following: isFollowing
-      } 
-    });
-  },
   
   // Project-related endpoints
   getMyProjects: () => api.get("projects/my-projects/"),
@@ -343,6 +204,37 @@ export const notificationsAPI = {
     return Promise.resolve({ data: { count: 0 } }); // Set to 0 instead of random
   },
   updateSettings: (data) => api.patch("notifications/settings/", data),
+};
+
+// Follow System API
+export const followAPI = {
+  follow: (user_id) => api.post("follow/follow/", { user_id }),
+  unfollow: (user_id) => api.post(`follow/unfollow/${user_id}/`),
+  getMyStats: () => api.get("follow/my-stats/"),
+  getUserStats: (user_id) => api.get(`follow/stats/${user_id}/`),
+  getFollowers: (user_id) => api.get(`follow/followers/${user_id}/`),
+  getFollowing: (user_id) => api.get(`follow/following/${user_id}/`),
+  getNotifications: () => api.get("follow/notifications/"),
+  markNotificationRead: (notification_id) => api.post(`follow/notifications/${notification_id}/read/`),
+  markAllNotificationsRead: () => api.post("follow/notifications/read-all/"),
+  getSuggestions: () => api.get("follow/suggestions/"),
+  searchUsers: (query) => api.get("follow/search/", { params: { q: query } }),
+};
+
+// Messaging API
+export const messagingAPI = {
+  getConversations: () => api.get("messaging/conversations/"),
+  createConversation: (participant_username, initial_message = null) => 
+    api.post("messaging/conversations/", { participant_username, initial_message }),
+  getConversation: (conversation_id) => api.get(`messaging/conversations/${conversation_id}/`),
+  getMessages: (conversation_id) => api.get(`messaging/conversations/${conversation_id}/messages/`),
+  sendMessage: (conversation_id, content, message_type = 'text') => 
+    api.post(`messaging/conversations/${conversation_id}/messages/`, { content, message_type }),
+  markConversationRead: (conversation_id) => api.post(`messaging/conversations/${conversation_id}/mark-read/`),
+  startTyping: (conversation_id) => api.post(`messaging/conversations/${conversation_id}/typing/start/`),
+  stopTyping: (conversation_id) => api.post(`messaging/conversations/${conversation_id}/typing/stop/`),
+  getUnreadCount: () => api.get("messaging/unread-count/"),
+  getMessage: (message_id) => api.get(`messaging/messages/${message_id}/`),
 };
 
 export default api;

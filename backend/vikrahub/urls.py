@@ -45,6 +45,11 @@ def api_root(request):
                 'project_applications': '/api/project-applications/',
                 'project_contracts': '/api/project-contracts/',
                 'project_reviews': '/api/project-reviews/',
+            },
+            'messaging': {
+                'conversations': '/api/messaging/conversations/',
+                'messages': '/api/messaging/messages/',
+                'websocket': 'ws://your-domain/ws/messaging/',
             }
         },
         'documentation': 'Visit /api/ for browsable API interface'
@@ -59,6 +64,7 @@ urlpatterns = [
     
     # API endpoints
     path('api/', include('core.urls')),
+    path('api/messaging/', include('messaging.urls')),
     path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     

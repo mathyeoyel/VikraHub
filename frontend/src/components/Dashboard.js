@@ -4,6 +4,10 @@ import { useAuth } from './Auth/AuthContext';
 import { userAPI, notificationAPI, blogAPI, portfolioAPI, assetAPI } from '../api';
 import EditProfile from './EditProfile';
 import AssetUpload from './Marketplace/AssetUpload';
+import SocialDashboard from './SocialDashboard';
+import ActivityFeed from './ActivityFeed';
+import UserSuggestions from './UserSuggestions';
+import FollowStats from './FollowStats';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -377,6 +381,7 @@ const Dashboard = () => {
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: '📊' },
+    { id: 'social', label: 'Social', icon: '👥' },
     { id: 'upload', label: 'Upload Asset', icon: '📤' },
     { id: 'profile', label: 'Edit Profile', icon: '⚙️' },
     { id: 'notifications', label: 'Notifications', icon: '🔔' }
@@ -612,6 +617,12 @@ const Dashboard = () => {
                   </button>
                 </div>
               )}
+            </div>
+          )}
+
+          {activeTab === 'social' && (
+            <div className="social-tab">
+              <SocialDashboard />
             </div>
           )}
 

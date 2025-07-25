@@ -40,4 +40,7 @@ router.register(r'project-reviews', ProjectReviewViewSet)
 urlpatterns = [
     # API endpoints
     path('', include(router.urls)),
+    
+    # Follow system endpoints
+    path('follow/', include('core.follow_urls')),
 ]

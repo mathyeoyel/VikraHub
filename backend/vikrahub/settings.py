@@ -70,7 +70,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'channels',
     'core',
+    'messaging',
 ]
 
 MIDDLEWARE = [
@@ -104,6 +106,25 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'vikrahub.wsgi.application'
+ASGI_APPLICATION = 'vikrahub.asgi.application'
+
+# Channel Layers Configuration for WebSocket support
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+        },
+    },
+}
+
+# Fallback to in-memory channel layer for development
+if DEBUG and not os.environ.get('REDIS_URL'):
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer"
+        }
+    }
 
 # Database
 DATABASE_URL = os.environ.get("DATABASE_URL")
