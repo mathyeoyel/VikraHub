@@ -169,7 +169,7 @@ export const FollowProvider = ({ children }) => {
     try {
       setLoading(prev => ({ ...prev, stats: true }));
       
-      const response = await followAPI.getFollowStats(userId);
+      const response = await followAPI.getUserStats(userId);
       
       // Cache the stats
       setFollowStats(prev => ({

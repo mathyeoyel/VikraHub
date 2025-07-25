@@ -213,6 +213,7 @@ export const followAPI = {
   getMyStats: () => api.get("follow/my-stats/"),
   getMyFollowStats: () => api.get("follow/my-stats/"), // Alias for compatibility
   getUserStats: (user_id) => api.get(`follow/stats/${user_id}/`),
+  getFollowStats: (user_id) => api.get(`follow/stats/${user_id}/`), // Alias for getUserStats
   getFollowers: (user_id) => api.get(`follow/followers/${user_id}/`),
   getFollowing: (user_id) => api.get(`follow/following/${user_id}/`),
   getNotifications: () => api.get("follow/notifications/"),
