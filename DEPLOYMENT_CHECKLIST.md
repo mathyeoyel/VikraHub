@@ -104,7 +104,7 @@ curl -I https://www.vikrahub.com
 ### Updated Files:
 - [x] `backend/vikrahub/settings.py` - Django domain configuration
 - [x] `frontend/.env.production` - Frontend production environment
-- [x] `render-custom-domain.yaml` - Updated Render configuration
+- [x] `render.yaml` - Main Render deployment configuration with ASGI support
 - [x] `CUSTOM_DOMAIN_SETUP.md` - Complete setup guide
 - [x] `DNS_CONFIGURATION.md` - DNS records template
 
