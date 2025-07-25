@@ -96,24 +96,25 @@ export const userAPI = {
   // Follow/unfollow functions for compatibility with existing components
   follow: async (username) => {
     try {
-      // Get user profile to find their ID
-      const userResponse = await api.get(`public-profiles/${username}/`);
-      const userId = userResponse.data.id;
-      // Follow using the user ID
-      return api.post("follow/follow/", { user_id: userId });
+      // Send username directly to backend as expected
+      const response = await api.post("follow/follow/", { username });
+      return response.data;
     } catch (error) {
+      console.error('Follow request failed:', error.response?.data || error.message);
       throw error;
     }
   },
   
   unfollow: async (username) => {
     try {
-      // Get user profile to find their ID
+      // Get user profile to find their ID for the URL
       const userResponse = await api.get(`public-profiles/${username}/`);
       const userId = userResponse.data.id;
-      // Unfollow using the user ID
-      return api.post(`follow/unfollow/${userId}/`);
+      // Unfollow using the user ID in URL, no body
+      const response = await api.post(`follow/unfollow/${userId}/`);
+      return response.data;
     } catch (error) {
+      console.error('Unfollow request failed:', error.response?.data || error.message);
       throw error;
     }
   },
@@ -233,19 +234,34 @@ export const notificationsAPI = {
 
 // Follow System API
 export const followAPI = {
-  // Core follow functions using user_id
-  follow: (user_id) => api.post("follow/follow/", { user_id }),
-  unfollow: (user_id) => api.post(`follow/unfollow/${user_id}/`),
+  // Core follow functions - follow expects username, unfollow expects user_id
+  follow: async (username) => {
+    try {
+      const response = await api.post("follow/follow/", { username });
+      return response.data;
+    } catch (error) {
+      console.error('Follow request failed:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+  unfollow: async (user_id) => {
+    try {
+      const response = await api.post(`follow/unfollow/${user_id}/`);
+      return response.data;
+    } catch (error) {
+      console.error('Unfollow request failed:', error.response?.data || error.message);
+      throw error;
+    }
+  },
   
   // Username-based follow function as requested
   followByUsername: async (username) => {
     try {
-      // First get the user profile to find their ID
-      const userResponse = await api.get(`public-profiles/${username}/`);
-      const userId = userResponse.data.id;
-      // Then follow using the user ID
-      return api.post("follow/follow/", { user_id: userId });
+      // Send username directly to backend as expected
+      const response = await api.post("follow/follow/", { username });
+      return response.data;
     } catch (error) {
+      console.error('Follow by username failed:', error.response?.data || error.message);
       throw error;
     }
   },
@@ -292,13 +308,11 @@ export const messagingAPI = {
 // follow(username: string) – sends a POST request to /api/follow/follow/ with a JSON body { username: <username> }
 export const follow = async (username) => {
   try {
-    // Get user profile to find their ID
-    const userResponse = await api.get(`public-profiles/${username}/`);
-    const userId = userResponse.data.id;
-    // Follow using the user ID
-    const response = await api.post("follow/follow/", { user_id: userId });
+    // Send username directly to backend as requested
+    const response = await api.post("follow/follow/", { username });
     return response.data;
   } catch (error) {
+    console.error('Follow request failed:', error.response?.data || error.message);
     throw error;
   }
 };
@@ -309,6 +323,7 @@ export const unfollow = async (userId) => {
     const response = await api.post(`follow/unfollow/${userId}/`);
     return response.data;
   } catch (error) {
+    console.error('Unfollow request failed:', error.response?.data || error.message);
     throw error;
   }
 };
@@ -319,6 +334,7 @@ export const getMyFollowStats = async () => {
     const response = await api.get("follow/my-stats/");
     return response.data;
   } catch (error) {
+    console.error('Get my follow stats failed:', error.response?.data || error.message);
     throw error;
   }
 };
@@ -329,6 +345,7 @@ export const getFollowNotifications = async () => {
     const response = await api.get("follow/notifications/");
     return response.data;
   } catch (error) {
+    console.error('Get follow notifications failed:', error.response?.data || error.message);
     throw error;
   }
 };
@@ -339,6 +356,7 @@ export const getFollowSuggestions = async () => {
     const response = await api.get("follow/suggestions/");
     return response.data;
   } catch (error) {
+    console.error('Get follow suggestions failed:', error.response?.data || error.message);
     throw error;
   }
 };
