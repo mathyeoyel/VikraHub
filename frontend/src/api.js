@@ -2,7 +2,7 @@ import axios from "axios";
 import { getAccessToken, getRefreshToken, removeTokens, saveToken } from "./auth";
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "https://vikrahub-backend.onrender.com/api/", // Django API base URL
+  baseURL: process.env.REACT_APP_API_URL || "https://api.vikrahub.com/api/", // Django API base URL
   headers: {
     "Content-Type": "application/json",
   },   
@@ -94,11 +94,8 @@ export const userAPI = {
   deleteAccount: () => api.delete("users/me/"),
   
   // Follow/unfollow functions for compatibility with existing components
-  follow: async (username) => {
+  follow: async (userId) => {
     try {
-      // First get user ID from username since backend expects user_id
-      const userResponse = await api.get(`public-profiles/${username}/`);
-      const userId = userResponse.data.id;
       // Send user_id as expected by backend FollowCreateSerializer
       const response = await api.post("follow/follow/", { user_id: userId });
       return response.data;
@@ -108,11 +105,8 @@ export const userAPI = {
     }
   },
   
-  unfollow: async (username) => {
+  unfollow: async (userId) => {
     try {
-      // Get user profile to find their ID for the URL
-      const userResponse = await api.get(`public-profiles/${username}/`);
-      const userId = userResponse.data.id;
       // Unfollow using the user ID in URL, no body
       const response = await api.post(`follow/unfollow/${userId}/`);
       return response.data;
@@ -237,12 +231,9 @@ export const notificationsAPI = {
 
 // Follow System API
 export const followAPI = {
-  // Core follow functions - follow expects username, unfollow expects user_id
-  follow: async (username) => {
+  // Core follow functions - follow and unfollow both expect user_id
+  follow: async (userId) => {
     try {
-      // First get user ID from username since backend expects user_id
-      const userResponse = await api.get(`public-profiles/${username}/`);
-      const userId = userResponse.data.id;
       const response = await api.post("follow/follow/", { user_id: userId });
       return response.data;
     } catch (error) {
@@ -250,9 +241,9 @@ export const followAPI = {
       throw error;
     }
   },
-  unfollow: async (user_id) => {
+  unfollow: async (userId) => {
     try {
-      const response = await api.post(`follow/unfollow/${user_id}/`);
+      const response = await api.post(`follow/unfollow/${userId}/`);
       return response.data;
     } catch (error) {
       console.error('Unfollow request failed:', error.response?.data || error.message);
@@ -260,7 +251,7 @@ export const followAPI = {
     }
   },
   
-  // Username-based follow function as requested
+  // Username-based follow function for backwards compatibility
   followByUsername: async (username) => {
     try {
       // First get user ID from username since backend expects user_id
@@ -313,12 +304,9 @@ export const messagingAPI = {
 // Export individual follow functions for compatibility with React components
 // Functions as requested by the user specifications:
 
-// follow(username: string) – sends a POST request to /api/follow/follow/ with a JSON body { user_id: <id> }
-export const follow = async (username) => {
+// follow(userId: number) – sends a POST request to /api/follow/follow/ with a JSON body { user_id: <id> }
+export const follow = async (userId) => {
   try {
-    // First get user ID from username since backend expects user_id
-    const userResponse = await api.get(`public-profiles/${username}/`);
-    const userId = userResponse.data.id;
     const response = await api.post("follow/follow/", { user_id: userId });
     return response.data;
   } catch (error) {

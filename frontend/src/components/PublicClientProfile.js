@@ -128,12 +128,12 @@ const PublicClientProfile = () => {
       console.log(`Attempting to ${isFollowing ? 'unfollow' : 'follow'} user: ${username}`);
       
       if (isFollowing) {
-        const response = await userAPI.unfollow(username);
+        const response = await userAPI.unfollow(profile.user.id);
         console.log('Unfollow response:', response);
         setIsFollowing(false);
         setFollowerCount(prev => Math.max(0, prev - 1));
       } else {
-        const response = await userAPI.follow(username);
+        const response = await userAPI.follow(profile.user.id);
         console.log('Follow response:', response);
         setIsFollowing(true);
         setFollowerCount(prev => prev + 1);
