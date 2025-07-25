@@ -246,7 +246,13 @@ if not DEBUG_MODE:
         SESSION_COOKIE_SECURE = True
         CSRF_COOKIE_SECURE = True
     
+    # Trust the X-Forwarded-Proto header from Render so Django knows the request is HTTPS
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    
     print("🔒 Security headers configured for production")
+
+# Disable trailing-slash redirects if API endpoints already include a slash
+APPEND_SLASH = False
 
 # Session Configuration
 SESSION_COOKIE_AGE = 86400  # 24 hours
