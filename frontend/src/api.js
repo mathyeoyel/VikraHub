@@ -93,6 +93,31 @@ export const userAPI = {
   updatePreferences: (data) => api.patch("profiles/preferences/", data),
   deleteAccount: () => api.delete("users/me/"),
   
+  // Follow/unfollow functions for compatibility with existing components
+  follow: async (username) => {
+    try {
+      // Get user profile to find their ID
+      const userResponse = await api.get(`public-profiles/${username}/`);
+      const userId = userResponse.data.id;
+      // Follow using the user ID
+      return api.post("follow/follow/", { user_id: userId });
+    } catch (error) {
+      throw error;
+    }
+  },
+  
+  unfollow: async (username) => {
+    try {
+      // Get user profile to find their ID
+      const userResponse = await api.get(`public-profiles/${username}/`);
+      const userId = userResponse.data.id;
+      // Unfollow using the user ID
+      return api.post(`follow/unfollow/${userId}/`);
+    } catch (error) {
+      throw error;
+    }
+  },
+  
   // Project-related endpoints
   getMyProjects: () => api.get("projects/my-projects/"),
   createProject: (data) => api.post("projects/", data),
@@ -208,18 +233,38 @@ export const notificationsAPI = {
 
 // Follow System API
 export const followAPI = {
+  // Core follow functions using user_id
   follow: (user_id) => api.post("follow/follow/", { user_id }),
   unfollow: (user_id) => api.post(`follow/unfollow/${user_id}/`),
+  
+  // Username-based follow function as requested
+  followByUsername: async (username) => {
+    try {
+      // First get the user profile to find their ID
+      const userResponse = await api.get(`public-profiles/${username}/`);
+      const userId = userResponse.data.id;
+      // Then follow using the user ID
+      return api.post("follow/follow/", { user_id: userId });
+    } catch (error) {
+      throw error;
+    }
+  },
+  
+  // Stats and data functions
   getMyStats: () => api.get("follow/my-stats/"),
   getMyFollowStats: () => api.get("follow/my-stats/"), // Alias for compatibility
   getUserStats: (user_id) => api.get(`follow/stats/${user_id}/`),
   getFollowStats: (user_id) => api.get(`follow/stats/${user_id}/`), // Alias for getUserStats
   getFollowers: (user_id) => api.get(`follow/followers/${user_id}/`),
   getFollowing: (user_id) => api.get(`follow/following/${user_id}/`),
+  
+  // Notifications
   getNotifications: () => api.get("follow/notifications/"),
   getFollowNotifications: () => api.get("follow/notifications/"), // Alias for compatibility
   markNotificationRead: (notification_id) => api.post(`follow/notifications/${notification_id}/read/`),
   markAllNotificationsRead: () => api.post("follow/notifications/read-all/"),
+  
+  // Suggestions and search
   getSuggestions: () => api.get("follow/suggestions/"),
   getFollowSuggestions: () => api.get("follow/suggestions/"), // Alias for compatibility
   searchUsers: (query) => api.get("follow/search/", { params: { q: query } }),
@@ -242,8 +287,60 @@ export const messagingAPI = {
 };
 
 // Export individual follow functions for compatibility with React components
-export const getMyFollowStats = () => api.get("follow/my-stats/");
-export const getFollowNotifications = () => api.get("follow/notifications/");
-export const getFollowSuggestions = () => api.get("follow/suggestions/");
+// Functions as requested by the user specifications:
+
+// follow(username: string) – sends a POST request to /api/follow/follow/ with a JSON body { username: <username> }
+export const follow = async (username) => {
+  try {
+    // Get user profile to find their ID
+    const userResponse = await api.get(`public-profiles/${username}/`);
+    const userId = userResponse.data.id;
+    // Follow using the user ID
+    const response = await api.post("follow/follow/", { user_id: userId });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// unfollow(userId: number) – sends a POST request to /api/follow/unfollow/{user_id}/
+export const unfollow = async (userId) => {
+  try {
+    const response = await api.post(`follow/unfollow/${userId}/`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// getMyFollowStats() – GET /api/follow/my-stats/
+export const getMyFollowStats = async () => {
+  try {
+    const response = await api.get("follow/my-stats/");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// getFollowNotifications() – GET /api/follow/notifications/
+export const getFollowNotifications = async () => {
+  try {
+    const response = await api.get("follow/notifications/");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// getFollowSuggestions() – GET /api/follow/suggestions/
+export const getFollowSuggestions = async () => {
+  try {
+    const response = await api.get("follow/suggestions/");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export default api;
