@@ -1,4 +1,5 @@
 # backend/messaging/views.py
+import logging
 from rest_framework import generics, status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -18,6 +19,9 @@ from .serializers import (
     MessageSerializer,
     MessageCreateSerializer
 )
+
+# Set up logging
+logger = logging.getLogger(__name__)
 
 
 class MessagePagination(PageNumberPagination):
@@ -168,6 +172,9 @@ class MessageListCreateView(generics.ListCreateAPIView):
                         }
                     }
                 )
+                
+                # Send unread count update
+                send_unread_count_update(participant)
         
         return message
 
@@ -271,7 +278,47 @@ def mark_conversation_as_read(request, conversation_id):
     participant_record.last_read_at = timezone.now()
     participant_record.save()
     
+    # Send unread count update via WebSocket
+    send_unread_count_update(request.user)
+    
     return Response({'status': 'success'})
+
+
+def send_unread_count_update(user):
+    """Send real-time unread count update to user"""
+    try:
+        # Calculate current unread counts
+        message_count = Message.objects.filter(
+            conversation__participants=user,
+            conversation__is_deleted=False,
+            is_deleted=False
+        ).exclude(
+            conversation__deleted_by=user
+        ).exclude(
+            sender=user
+        ).exclude(
+            read_by=user
+        ).count()
+        
+        # For notifications, import here to avoid circular imports
+        from core.models import Notification
+        notification_count = Notification.objects.filter(
+            user=user,
+            is_read=False
+        ).count()
+        
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"user_{user.id}",
+            {
+                'type': 'unread_count_update',
+                'message_count': message_count,
+                'notification_count': notification_count,
+                'timestamp': timezone.now().isoformat()
+            }
+        )
+    except Exception as e:
+        logger.warning(f"Failed to send unread count update: {e}")
 
 
 @api_view(['POST'])

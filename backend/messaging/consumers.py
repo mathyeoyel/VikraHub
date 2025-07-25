@@ -8,6 +8,9 @@ from channels.db import database_sync_to_async
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.conf import settings
+from rest_framework_simplejwt.tokens import UntypedToken
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from jwt import decode as jwt_decode
 from .models import Conversation, Message, TypingStatus
 
 # Set up logging
@@ -23,6 +26,29 @@ class MessagingConsumer(AsyncWebsocketConsumer):
         super().__init__(*args, **kwargs)
         self.group_name = None
         self.user_group_name = None
+    
+    @database_sync_to_async
+    def authenticate_token(self, token):
+        """Authenticate user by JWT token"""
+        try:
+            # Validate the token
+            UntypedToken(token)
+            
+            # Decode the token to get user info
+            decoded_token = jwt_decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            user_id = decoded_token.get('user_id')
+            
+            if user_id:
+                user = User.objects.get(id=user_id)
+                return user
+        except (InvalidToken, TokenError, User.DoesNotExist) as e:
+            logger.warning(f"Token authentication failed: {e}")
+            return None
+        except Exception as e:
+            logger.error(f"Unexpected error during token authentication: {e}")
+            return None
+        
+        return None
         
     async def connect(self):
         """Accept WebSocket connection and join user group"""
@@ -133,7 +159,9 @@ class MessagingConsumer(AsyncWebsocketConsumer):
             
             logger.debug(f"MessagingConsumer: Received message type: {message_type}")
             
-            if message_type == 'join_conversation':
+            if message_type == 'authenticate':
+                await self.handle_authenticate(data)
+            elif message_type == 'join_conversation':
                 await self.join_conversation(data)
             elif message_type == 'leave_conversation':
                 await self.leave_conversation(data)
@@ -162,6 +190,52 @@ class MessagingConsumer(AsyncWebsocketConsumer):
                 'message': 'An unexpected error occurred'
             }))
     
+    async def handle_authenticate(self, data):
+        """Handle WebSocket authentication"""
+        try:
+            token = data.get('token')
+            if not token:
+                await self.send(text_data=json.dumps({
+                    'type': 'error',
+                    'message': 'Token is required for authentication'
+                }))
+                return
+            
+            # Authenticate the user
+            user = await self.authenticate_token(token)
+            if user:
+                # Update scope with authenticated user
+                self.scope["user"] = user
+                self.user = user
+                
+                # Set up user group
+                self.user_group_name = f"user_{user.id}"
+                self.group_name = self.user_group_name
+                
+                await self.channel_layer.group_add(
+                    self.user_group_name,
+                    self.channel_name
+                )
+                
+                await self.send(text_data=json.dumps({
+                    'type': 'authenticated',
+                    'user_id': user.id,
+                    'username': user.username
+                }))
+                logger.info(f"WebSocket authenticated for user: {user.username}")
+            else:
+                await self.send(text_data=json.dumps({
+                    'type': 'error',
+                    'message': 'Invalid token'
+                }))
+                
+        except Exception as e:
+            logger.exception(f"Error during WebSocket authentication: {e}")
+            await self.send(text_data=json.dumps({
+                'type': 'error',
+                'message': 'Authentication failed'
+            }))
+
     async def join_conversation(self, data):
         """Join a conversation room"""
         try:
@@ -482,3 +556,28 @@ class MessagingConsumer(AsyncWebsocketConsumer):
             logger.warning(f"Clearing conversation typing status failed: {e}")
         except Exception as e:
             logger.exception(f"Unexpected error clearing conversation typing status: {e}")
+
+    # Group message handlers for real-time notifications
+    async def follow_notification(self, event):
+        """Send follow notification to user"""
+        try:
+            await self.send(text_data=json.dumps({
+                'type': 'follow_notification',
+                'follower': event['follower'],
+                'message': event.get('message', 'You have a new follower!'),
+                'timestamp': event.get('timestamp')
+            }))
+        except Exception as e:
+            logger.exception(f"Error sending follow notification: {e}")
+    
+    async def unread_count_update(self, event):
+        """Send unread count update to user"""
+        try:
+            await self.send(text_data=json.dumps({
+                'type': 'unread_count_update',
+                'message_count': event.get('message_count', 0),
+                'notification_count': event.get('notification_count', 0),
+                'timestamp': event.get('timestamp')
+            }))
+        except Exception as e:
+            logger.exception(f"Error sending unread count update: {e}")

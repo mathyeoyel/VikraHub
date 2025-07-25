@@ -10,6 +10,7 @@ urlpatterns = [
     path('unfollow/<int:user_id>/', follow_views.unfollow_user, name='unfollow-user'),
     
     # Follow statistics
+    path('stats/', follow_views.get_follow_stats_query, name='follow-stats-query'),
     path('stats/<int:user_id>/', follow_views.get_follow_stats, name='user-follow-stats'),
     path('my-stats/', follow_views.get_my_follow_stats, name='my-follow-stats'),
     

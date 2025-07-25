@@ -132,18 +132,15 @@ class FollowCreateView(generics.CreateAPIView):
                 f"user_{follow_obj.followed.id}",
                 {
                     'type': 'follow_notification',
-                    'notification': {
-                        'type': 'new_follower',
-                        'follower': {
-                            'id': follow_obj.follower.id,
-                            'username': follow_obj.follower.username,
-                            'full_name': f"{follow_obj.follower.first_name} {follow_obj.follower.last_name}".strip() or follow_obj.follower.username,
-                            'profile_picture': self.get_user_profile_picture(follow_obj.follower)
-                        },
-                        'message': f'{follow_obj.follower.username} started following you',
-                        'timestamp': follow_obj.created_at.isoformat(),
-                        'follow_id': str(follow_obj.id)
-                    }
+                    'follower': {
+                        'id': follow_obj.follower.id,
+                        'username': follow_obj.follower.username,
+                        'full_name': f"{follow_obj.follower.first_name} {follow_obj.follower.last_name}".strip() or follow_obj.follower.username,
+                        'profile_picture': self.get_user_profile_picture(follow_obj.follower)
+                    },
+                    'message': f'{follow_obj.follower.username} started following you',
+                    'timestamp': follow_obj.created_at.isoformat(),
+                    'follow_id': str(follow_obj.id)
                 }
             )
         except Exception as e:
@@ -280,6 +277,26 @@ class UserFollowingListView(generics.ListAPIView):
         context = super().get_serializer_context()
         context['list_type'] = 'following'
         return context
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_follow_stats_query(request):
+    """Get follow statistics for a user using query parameter"""
+    user_id = request.GET.get('user_id')
+    if not user_id:
+        return Response({
+            'error': 'user_id query parameter is required'
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        user = get_object_or_404(User, id=int(user_id))
+        serializer = FollowStatsSerializer(user, context={'request': request})
+        return Response(serializer.data)
+    except ValueError:
+        return Response({
+            'error': 'Invalid user_id format'
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])

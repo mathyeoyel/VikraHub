@@ -68,12 +68,12 @@ export const WebSocketProvider = ({ children }) => {
         setConnectionError(null);
         reconnectAttemptsRef.current = 0;
         
-        // Send authentication or identification message if needed
-        if (user) {
+        // Send authentication message with JWT token
+        const token = getAccessToken();
+        if (token) {
           newSocket.send(JSON.stringify({
             type: 'authenticate',
-            user_id: user.id,
-            username: user.username
+            token: token
           }));
         }
       };
@@ -88,11 +88,24 @@ export const WebSocketProvider = ({ children }) => {
             case 'connection_established':
               console.log('WebSocket connection established for user:', data.username);
               break;
+            case 'authenticated':
+              console.log('WebSocket authenticated for user:', data.username);
+              break;
             case 'follow_notification':
               // This will be handled by FollowContext
               break;
             case 'new_message':
               // This will be handled by MessagingContext
+              break;
+            case 'unread_count_update':
+              // Dispatch custom event for unread count updates
+              window.dispatchEvent(new CustomEvent('unreadCountUpdate', {
+                detail: {
+                  message_count: data.message_count,
+                  notification_count: data.notification_count,
+                  timestamp: data.timestamp
+                }
+              }));
               break;
             case 'error':
               console.error('WebSocket error message:', data.message);

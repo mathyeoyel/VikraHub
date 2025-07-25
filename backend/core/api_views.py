@@ -226,7 +226,52 @@ class NotificationViewSet(viewsets.ModelViewSet):
         notification = self.get_object()
         notification.is_read = True
         notification.save()
+        
+        # Send real-time unread count update
+        self.send_unread_count_update(request.user)
+        
         return Response({'status': 'notification marked as read'})
+    
+    def send_unread_count_update(self, user):
+        """Send real-time unread count update to user"""
+        try:
+            from channels.layers import get_channel_layer
+            from asgiref.sync import async_to_sync
+            from django.utils import timezone
+            
+            # Calculate current unread counts
+            from messaging.models import Message
+            message_count = Message.objects.filter(
+                conversation__participants=user,
+                conversation__is_deleted=False,
+                is_deleted=False
+            ).exclude(
+                conversation__deleted_by=user
+            ).exclude(
+                sender=user
+            ).exclude(
+                read_by=user
+            ).count()
+            
+            notification_count = Notification.objects.filter(
+                user=user,
+                is_read=False
+            ).count()
+            
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                f"user_{user.id}",
+                {
+                    'type': 'unread_count_update',
+                    'message_count': message_count,
+                    'notification_count': notification_count,
+                    'timestamp': timezone.now().isoformat()
+                }
+            )
+        except Exception as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning(f"Failed to send unread count update: {e}")
 
 
 @api_view(['GET'])

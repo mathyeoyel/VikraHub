@@ -39,7 +39,15 @@ export const FollowProvider = ({ children }) => {
       console.log('Received follow notification:', data);
       
       if (data.type === 'follow_notification') {
-        const notification = data.notification;
+        // The data structure is now flat, not nested under 'notification'
+        const notification = {
+          type: 'new_follower',
+          follower: data.follower,
+          message: data.message,
+          timestamp: data.timestamp,
+          follow_id: data.follow_id,
+          id: data.follow_id // Use follow_id as notification id
+        };
         
         // Add new notification to the list
         setFollowNotifications(prev => [notification, ...prev]);
@@ -56,7 +64,7 @@ export const FollowProvider = ({ children }) => {
         }
         
         // Update follow stats if it's the current user's stats
-        if (user && notification.type === 'new_follower') {
+        if (user) {
           setFollowStats(prev => ({
             ...prev,
             [user.id]: {
