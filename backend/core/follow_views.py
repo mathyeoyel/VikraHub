@@ -1,4 +1,5 @@
 # backend/core/follow_views.py
+import logging
 from rest_framework import generics, status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -22,6 +23,9 @@ from .follow_serializers import (
     UserBasicSerializer
 )
 
+# Set up logging
+logger = logging.getLogger(__name__)
+
 
 class FollowPagination(PageNumberPagination):
     """Custom pagination for follow lists"""
@@ -31,115 +35,205 @@ class FollowPagination(PageNumberPagination):
 
 
 class FollowCreateView(generics.CreateAPIView):
-    """Follow a user"""
-    serializer_class = FollowCreateSerializer
+    """Follow a user with robust error handling"""
     permission_classes = [permissions.IsAuthenticated]
     
-    def create(self, request, *args, **kwargs):
-        """Create follow relationship and send real-time notification"""
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        
-        follow_obj = serializer.save()
-        
-        # Create notification for the followed user
-        notification, created = FollowNotification.objects.get_or_create(
-            follow=follow_obj,
-            recipient=follow_obj.followed
-        )
-        
-        # Send real-time notification via WebSocket
-        self.send_follow_notification(follow_obj)
-        
-        return Response({
-            'status': 'success',
-            'message': f'You are now following {follow_obj.followed.username}',
-            'follow': FollowSerializer(follow_obj).data
-        }, status=status.HTTP_201_CREATED)
+    def post(self, request, *args, **kwargs):
+        """Create follow relationship with comprehensive validation and error handling"""
+        try:
+            # Get input data
+            data = request.data
+            user_id = data.get('user_id')
+            username = data.get('username')
+            
+            # Validate input - require either user_id or username
+            if not user_id and not username:
+                return Response({
+                    "error": "user_id or username is required"
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Resolve target user
+            target_user = None
+            try:
+                if user_id:
+                    target_user = get_object_or_404(User, id=user_id)
+                elif username:
+                    target_user = get_object_or_404(User, username=username)
+            except Exception as e:
+                logger.warning(f"User lookup failed: {e}")
+                return Response({
+                    "error": "User not found"
+                }, status=status.HTTP_404_NOT_FOUND)
+            
+            # Validate user cannot follow themselves
+            if target_user == request.user:
+                return Response({
+                    "error": "You cannot follow yourself"
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Create follow relationship with error handling
+            try:
+                follow_rel, created = Follow.objects.get_or_create(
+                    follower=request.user, 
+                    followed=target_user,
+                    defaults={'is_active': True}
+                )
+                
+                if not created:
+                    # User is already following
+                    if follow_rel.is_active:
+                        return Response({
+                            "error": "Already following this user"
+                        }, status=status.HTTP_400_BAD_REQUEST)
+                    else:
+                        # Reactivate follow relationship
+                        follow_rel.is_active = True
+                        follow_rel.save()
+                
+                # Create notification for the followed user
+                try:
+                    notification, _ = FollowNotification.objects.get_or_create(
+                        follow=follow_rel,
+                        recipient=target_user
+                    )
+                    
+                    # Send real-time notification via WebSocket
+                    self.send_follow_notification(follow_rel)
+                except Exception as notification_error:
+                    logger.warning(f"Failed to create notification: {notification_error}")
+                    # Don't fail the follow operation if notification fails
+                
+                return Response({
+                    "detail": "Followed successfully",
+                    "status": "success", 
+                    "message": f"You are now following {target_user.username}",
+                    "follow": FollowSerializer(follow_rel).data
+                }, status=status.HTTP_201_CREATED)
+                
+            except Exception as follow_error:
+                logger.exception(f'Error creating follow relationship: {follow_error}')
+                return Response({
+                    "error": "Failed to follow user"
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                
+        except Exception as exc:
+            logger.exception(f'Error in follow endpoint: {exc}')
+            return Response({
+                "error": "An unexpected error occurred"
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     def send_follow_notification(self, follow_obj):
         """Send real-time follow notification via WebSocket"""
-        channel_layer = get_channel_layer()
-        
-        # Send notification to the followed user
-        async_to_sync(channel_layer.group_send)(
-            f"user_{follow_obj.followed.id}",
-            {
-                'type': 'follow_notification',
-                'notification': {
-                    'type': 'new_follower',
-                    'follower': {
-                        'id': follow_obj.follower.id,
-                        'username': follow_obj.follower.username,
-                        'full_name': f"{follow_obj.follower.first_name} {follow_obj.follower.last_name}".strip() or follow_obj.follower.username,
-                        'profile_picture': self.get_user_profile_picture(follow_obj.follower)
-                    },
-                    'message': f'{follow_obj.follower.username} started following you',
-                    'timestamp': follow_obj.created_at.isoformat(),
-                    'follow_id': str(follow_obj.id)
+        try:
+            channel_layer = get_channel_layer()
+            
+            # Send notification to the followed user
+            async_to_sync(channel_layer.group_send)(
+                f"user_{follow_obj.followed.id}",
+                {
+                    'type': 'follow_notification',
+                    'notification': {
+                        'type': 'new_follower',
+                        'follower': {
+                            'id': follow_obj.follower.id,
+                            'username': follow_obj.follower.username,
+                            'full_name': f"{follow_obj.follower.first_name} {follow_obj.follower.last_name}".strip() or follow_obj.follower.username,
+                            'profile_picture': self.get_user_profile_picture(follow_obj.follower)
+                        },
+                        'message': f'{follow_obj.follower.username} started following you',
+                        'timestamp': follow_obj.created_at.isoformat(),
+                        'follow_id': str(follow_obj.id)
+                    }
                 }
-            }
-        )
+            )
+        except Exception as e:
+            logger.warning(f"Failed to send WebSocket notification: {e}")
     
     def get_user_profile_picture(self, user):
         """Get user profile picture URL"""
         try:
             if hasattr(user, 'profile') and user.profile.profile_picture:
                 return user.profile.profile_picture
-        except:
-            pass
+        except Exception as e:
+            logger.debug(f"Error getting profile picture: {e}")
         return None
 
 
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def unfollow_user(request, user_id):
-    """Unfollow a user"""
+    """Unfollow a user with robust error handling"""
     try:
-        followed_user = get_object_or_404(User, id=user_id)
+        # Get target user
+        try:
+            followed_user = get_object_or_404(User, id=user_id)
+        except Exception as e:
+            logger.warning(f"User lookup failed for unfollow: {e}")
+            return Response({
+                'error': 'User not found'
+            }, status=status.HTTP_404_NOT_FOUND)
         
+        # Validate user cannot unfollow themselves
         if followed_user == request.user:
-            return Response(
-                {'error': 'You cannot unfollow yourself.'},
-                status=status.HTTP_400_BAD_REQUEST
+            return Response({
+                'error': 'You cannot unfollow yourself'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Try to find and deactivate follow relationship
+        try:
+            follow_rel = Follow.objects.get(
+                follower=request.user,
+                followed=followed_user,
+                is_active=True
             )
-        
-        success = request.user.unfollow(followed_user)
-        
-        if success:
+            
+            # Deactivate the follow relationship
+            follow_rel.is_active = False
+            follow_rel.save()
+            
             # Send real-time notification about unfollow
-            channel_layer = get_channel_layer()
-            async_to_sync(channel_layer.group_send)(
-                f"user_{followed_user.id}",
-                {
-                    'type': 'follow_notification',
-                    'notification': {
-                        'type': 'unfollowed',
-                        'follower': {
-                            'id': request.user.id,
-                            'username': request.user.username,
-                        },
-                        'message': f'{request.user.username} unfollowed you',
-                        'timestamp': timezone.now().isoformat()
+            try:
+                channel_layer = get_channel_layer()
+                async_to_sync(channel_layer.group_send)(
+                    f"user_{followed_user.id}",
+                    {
+                        'type': 'follow_notification',
+                        'notification': {
+                            'type': 'unfollowed',
+                            'follower': {
+                                'id': request.user.id,
+                                'username': request.user.username,
+                            },
+                            'message': f'{request.user.username} unfollowed you',
+                            'timestamp': timezone.now().isoformat()
+                        }
                     }
-                }
-            )
+                )
+            except Exception as notification_error:
+                logger.warning(f"Failed to send unfollow notification: {notification_error}")
+                # Don't fail the unfollow operation if notification fails
             
             return Response({
                 'status': 'success',
+                'detail': 'Unfollowed successfully',
                 'message': f'You unfollowed {followed_user.username}'
-            })
-        else:
-            return Response(
-                {'error': 'You are not following this user.'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            }, status=status.HTTP_200_OK)
+            
+        except Follow.DoesNotExist:
+            return Response({
+                'error': 'You are not following this user'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as unfollow_error:
+            logger.exception(f'Error unfollowing user: {unfollow_error}')
+            return Response({
+                'error': 'Failed to unfollow user'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
-    except Exception as e:
-        return Response(
-            {'error': str(e)},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
+    except Exception as exc:
+        logger.exception(f'Error in unfollow endpoint: {exc}')
+        return Response({
+            'error': 'An unexpected error occurred'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class UserFollowersListView(generics.ListAPIView):
