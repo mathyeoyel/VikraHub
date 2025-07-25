@@ -116,22 +116,50 @@ WSGI_APPLICATION = 'vikrahub.wsgi.application'
 ASGI_APPLICATION = 'vikrahub.asgi.application'
 
 # Channel Layers Configuration for WebSocket support
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
-        },
-    },
-}
+import logging
 
-# Fallback to in-memory channel layer for development
-if DEBUG and not os.environ.get('REDIS_URL'):
+# Set up channel layer logging
+channel_logger = logging.getLogger('channels')
+
+# Check for Redis URL
+redis_url = os.environ.get('REDIS_URL')
+if redis_url:
+    print(f"🔗 Using Redis for WebSocket channel layer: {redis_url}")
     CHANNEL_LAYERS = {
         "default": {
-            "BACKEND": "channels.layers.InMemoryChannelLayer"
-        }
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [redis_url],
+                "capacity": 1500,  # Default is 100, increase for production
+                "expiry": 60,      # Message expiry in seconds
+            },
+        },
     }
+else:
+    if DEBUG:
+        print("🔧 Development mode: Using in-memory channel layer (WebSockets limited to single server)")
+        CHANNEL_LAYERS = {
+            "default": {
+                "BACKEND": "channels.layers.InMemoryChannelLayer",
+                "CONFIG": {
+                    "capacity": 1500,
+                    "expiry": 60,
+                },
+            }
+        }
+    else:
+        print("⚠️  WARNING: No REDIS_URL found in production! WebSockets will not work properly.")
+        print("⚠️  Please set REDIS_URL environment variable for production deployment.")
+        # Still configure a basic layer to prevent crashes
+        CHANNEL_LAYERS = {
+            "default": {
+                "BACKEND": "channels.layers.InMemoryChannelLayer",
+                "CONFIG": {
+                    "capacity": 100,
+                    "expiry": 60,
+                },
+            }
+        }
 
 # Database
 DATABASE_URL = os.environ.get("DATABASE_URL")
