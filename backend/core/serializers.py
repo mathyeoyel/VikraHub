@@ -12,14 +12,27 @@ from .asset_utils import validate_asset_price, validate_asset_tags
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     user_type = serializers.CharField(write_only=True, required=False, default='client')
+    followers_count = serializers.SerializerMethodField()
+    following_count = serializers.SerializerMethodField()
+    is_following = serializers.SerializerMethodField()
     
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'password', 'user_type', 'date_joined', 'is_staff', 'is_superuser', 'is_active']
-        read_only_fields = ['id', 'date_joined', 'is_staff', 'is_superuser']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'password', 'user_type', 'date_joined', 'is_staff', 'is_superuser', 'is_active', 'followers_count', 'following_count', 'is_following']
+        read_only_fields = ['id', 'date_joined', 'is_staff', 'is_superuser', 'followers_count', 'following_count', 'is_following']
         extra_kwargs = {
             'password': {'write_only': True},
         }
+    
+    def get_followers_count(self, obj):
+        return obj.get_followers_count()
+    
+    def get_following_count(self, obj):
+        return obj.get_following_count()
+    
+    def get_is_following(self, obj):
+        user = self.context.get('request').user if self.context.get('request') else None
+        return user.is_authenticated and user.is_following(obj) if user else False
     
     def create(self, validated_data):
         user_type = validated_data.pop('user_type', 'client')
@@ -37,16 +50,32 @@ class UserSerializer(serializers.ModelSerializer):
 
 class PublicUserSerializer(serializers.ModelSerializer):
     """Serializer for public user information (no sensitive data)"""
+    followers_count = serializers.SerializerMethodField()
+    following_count = serializers.SerializerMethodField()
+    is_following = serializers.SerializerMethodField()
+    
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'date_joined']
-        read_only_fields = ['id', 'username', 'first_name', 'last_name', 'date_joined']
+        fields = ['id', 'username', 'first_name', 'last_name', 'date_joined', 'followers_count', 'following_count', 'is_following']
+        read_only_fields = ['id', 'username', 'first_name', 'last_name', 'date_joined', 'followers_count', 'following_count', 'is_following']
+    
+    def get_followers_count(self, obj):
+        return obj.get_followers_count()
+    
+    def get_following_count(self, obj):
+        return obj.get_following_count()
+    
+    def get_is_following(self, obj):
+        user = self.context.get('request').user if self.context.get('request') else None
+        return user.is_authenticated and user.is_following(obj) if user else False
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
     first_name = serializers.CharField(source='user.first_name', read_only=False, required=False)
     last_name = serializers.CharField(source='user.last_name', read_only=False, required=False)
     email = serializers.EmailField(source='user.email', read_only=False, required=False)
+    followers_count = serializers.SerializerMethodField()
+    following_count = serializers.SerializerMethodField()
+    is_following = serializers.SerializerMethodField()
     
     # Client-specific fields (write-only for updates)
     client_type = serializers.CharField(write_only=True, required=False)
@@ -67,20 +96,40 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'user_type', 'avatar', 'cover_photo', 'bio', 'location', 
                  'website', 'twitter', 'instagram', 'facebook', 'linkedin', 'github', 
                  'skills', 'headline', 'achievements', 'services_offered', 
-                 'first_name', 'last_name', 'email',
+                 'first_name', 'last_name', 'email', 'followers_count', 'following_count', 'is_following',
                  'client_type', 'company_name', 'company_size', 'industry', 
                  'business_address', 'contact_person', 'phone_number', 
                  'typical_budget_range', 'project_types', 'preferred_communication',
                  'business_registration', 'tax_id']
-        read_only_fields = ['id', 'user']
+        read_only_fields = ['id', 'user', 'followers_count', 'following_count', 'is_following']
+    
+    def get_followers_count(self, obj):
+        return obj.user.get_followers_count()
+    
+    def get_following_count(self, obj):
+        return obj.user.get_following_count()
+    
+    def get_is_following(self, obj):
+        user = self.context.get('request').user if self.context.get('request') else None
+        return user.is_authenticated and user.is_following(obj.user) if user else False
     
     def to_representation(self, instance):
-        """Override to include user fields in the response and optimize avatar"""
+        """Override to include user fields and nested user with context"""
         data = super().to_representation(instance)
+        
+    def to_representation(self, instance):
+        """Override to include user fields and nested user with context"""
+        data = super().to_representation(instance)
+        
+        # Include user fields directly at profile level
         if instance.user:
             data['first_name'] = instance.user.first_name
             data['last_name'] = instance.user.last_name
             data['email'] = instance.user.email
+        
+        # Serialize user with context for follow information
+        user_serializer = UserSerializer(instance.user, context=self.context)
+        data['user'] = user_serializer.data
         
         # Add client profile data if user is a client
         if instance.user_type == 'client':
@@ -200,20 +249,34 @@ class PortfolioItemSerializer(serializers.ModelSerializer):
 
 class PublicUserProfileSerializer(serializers.ModelSerializer):
     """Serializer for public user profiles (only public information)"""
-    user = PublicUserSerializer(read_only=True)
     full_name = serializers.SerializerMethodField()
     member_since = serializers.DateTimeField(source='user.date_joined', read_only=True)
     portfolio_items = serializers.SerializerMethodField()
     client_profile = serializers.SerializerMethodField()
+    followers_count = serializers.SerializerMethodField()
+    following_count = serializers.SerializerMethodField()
+    is_following = serializers.SerializerMethodField()
     
     class Meta:
         model = UserProfile
         fields = ['id', 'user', 'user_type', 'avatar', 'cover_photo', 'bio', 'website', 'headline',
                  'skills', 'location', 'achievements', 'services_offered', 'full_name', 'member_since', 'portfolio_items',
-                 'facebook', 'instagram', 'twitter', 'linkedin', 'github', 'client_profile']
+                 'facebook', 'instagram', 'twitter', 'linkedin', 'github', 'client_profile', 
+                 'followers_count', 'following_count', 'is_following']
         read_only_fields = ['id', 'user', 'user_type', 'avatar', 'cover_photo', 'bio', 'website', 'headline',
                            'skills', 'location', 'achievements', 'services_offered', 'full_name', 'member_since', 'portfolio_items',
-                           'facebook', 'instagram', 'twitter', 'linkedin', 'github', 'client_profile']
+                           'facebook', 'instagram', 'twitter', 'linkedin', 'github', 'client_profile',
+                           'followers_count', 'following_count', 'is_following']
+    
+    def get_followers_count(self, obj):
+        return obj.user.get_followers_count()
+    
+    def get_following_count(self, obj):
+        return obj.user.get_following_count()
+    
+    def get_is_following(self, obj):
+        user = self.context.get('request').user if self.context.get('request') else None
+        return user.is_authenticated and user.is_following(obj.user) if user else False
     
     def get_full_name(self, obj):
         """Get user's full name"""
@@ -253,6 +316,16 @@ class PublicUserProfileSerializer(serializers.ModelSerializer):
         """Get user's portfolio items"""
         portfolio_items = obj.user.portfolio_items.all()
         return PortfolioItemSerializer(portfolio_items, many=True).data
+    
+    def to_representation(self, instance):
+        """Override to ensure proper user serialization with context"""
+        data = super().to_representation(instance)
+        
+        # Serialize user with context for follow information
+        user_serializer = PublicUserSerializer(instance.user, context=self.context)
+        data['user'] = user_serializer.data
+        
+        return data
 
 class TeamMemberSerializer(serializers.ModelSerializer):
     class Meta:

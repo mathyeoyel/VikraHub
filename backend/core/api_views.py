@@ -95,7 +95,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     def my_profile(self, request):
         """Get current user's profile"""
         profile, created = UserProfile.objects.get_or_create(user=request.user)
-        serializer = self.get_serializer(profile)
+        serializer = self.get_serializer(profile, context={'request': request})
         return Response(serializer.data)
     
     @action(detail=False, methods=['patch', 'put'])
