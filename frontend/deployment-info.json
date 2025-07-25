@@ -1,0 +1,15 @@
+{
+  "deployment": {
+    "timestamp": "2025-07-25T08:45:00.000Z",
+    "version": "1.0.0-follow-system",
+    "features": [
+      "Complete follow system",
+      "Real-time notifications", 
+      "Direct messaging",
+      "Social dashboard"
+    ],
+    "api_endpoint": "https://api.vikrahub.com/api/",
+    "build_trigger": "force-rebuild-follow-system",
+    "commit": "52fb9455"
+  }
+}

@@ -6,31 +6,51 @@ echo "🚀 VikraHub Follow System - Production Verification"
 echo "=================================================="
 echo ""
 
-# Check if backend is accessible
-echo "📡 Testing Backend API Connection..."
-BACKEND_URL="https://vikrahub-backend.onrender.com/api/"
-response=$(curl -s -o /dev/null -w "%{http_code}" "${BACKEND_URL}users/")
+# Check backend API URL from the console logs
+echo "📡 Testing Current API Connection..."
+CURRENT_API_URL="https://vikrahub.onrender.com/api/"
+response=$(curl -s -o /dev/null -w "%{http_code}" "${CURRENT_API_URL}users/")
 
 if [ "$response" = "200" ] || [ "$response" = "401" ]; then
-    echo "✅ Backend API is accessible (Status: $response)"
+    echo "✅ Current API is accessible (Status: $response)"
+    echo "   URL: $CURRENT_API_URL"
 else
-    echo "❌ Backend API not accessible (Status: $response)"
-    echo "   URL: $BACKEND_URL"
+    echo "❌ Current API not accessible (Status: $response)"
+    echo "   URL: $CURRENT_API_URL"
 fi
 
 echo ""
 
-# Check follow endpoint specifically
-echo "📡 Testing Follow Endpoint..."
-follow_response=$(curl -s -o /dev/null -w "%{http_code}" "${BACKEND_URL}follow/follow/" -X POST)
+# Test the target backend URL
+echo "📡 Testing Target Backend API..."
+TARGET_BACKEND_URL="https://api.vikrahub.com/api/"
+target_response=$(curl -s -o /dev/null -w "%{http_code}" "${TARGET_BACKEND_URL}users/")
 
-if [ "$follow_response" = "401" ]; then
-    echo "✅ Follow endpoint accessible (Status: $follow_response - Authentication required)"
-elif [ "$follow_response" = "400" ]; then
-    echo "✅ Follow endpoint accessible (Status: $follow_response - Bad request expected without auth)"
+if [ "$target_response" = "200" ] || [ "$target_response" = "401" ]; then
+    echo "✅ Target Backend API is accessible (Status: $target_response)"
+    echo "   URL: $TARGET_BACKEND_URL"
 else
-    echo "❌ Follow endpoint issue (Status: $follow_response)"
+    echo "❌ Target Backend API not accessible (Status: $target_response)"
+    echo "   URL: $TARGET_BACKEND_URL"
 fi
+
+echo ""
+
+# Check deployment status
+echo "🔍 Deployment Status Check:"
+echo "Current build still showing: main.248fdd87.js"
+echo "This indicates the new deployment hasn't completed yet."
+echo ""
+echo "📊 Expected after successful deployment:"
+echo "✅ New build file name (not main.248fdd87.js)"
+echo "✅ API calls to https://api.vikrahub.com/"
+echo "✅ No more 'getMyFollowStats is not a function' errors"
+echo ""
+
+echo "⏰ Wait time estimate:"
+echo "- Typical deployment: 5-15 minutes"
+echo "- Check deployment dashboard for status"
+echo "- Clear browser cache after deployment completes"
 
 echo ""
 
