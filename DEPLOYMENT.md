@@ -70,7 +70,7 @@ Set these in the backend service environment:
 | `CORS_ALLOWED_ORIGINS` | `https://vikrahub.com,https://www.vikrahub.com` | CORS domains |
 | `CLOUDINARY_CLOUD_NAME` | `dxpwtdjzp` | Media storage |
 | `CLOUDINARY_API_KEY` | `415637895317185` | Media storage |
-| `CLOUDINARY_API_SECRET` | *your-secret* | Media storage |
+| `CLOUDINARY_API_SECRET` | `iRP8rC2Onej0vjV6TVwnmMw_zDA` | Media storage |
 
 ### 2.3 Connect Database
 1. Create PostgreSQL database: "New" → "PostgreSQL"
