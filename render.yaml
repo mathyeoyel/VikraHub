@@ -1,5 +1,5 @@
 services:
-  # Django Backend
+  # Django Backend with ASGI support for WebSockets
   - type: web
     name: vikrahub-backend
     runtime: python3
@@ -8,7 +8,7 @@ services:
       pip install -r requirements.txt
       python manage.py collectstatic --no-input
       python manage.py migrate
-    startCommand: cd backend && gunicorn vikrahub.wsgi:application
+    startCommand: cd backend && daphne vikrahub.asgi:application --bind 0.0.0.0 --port $PORT
     plan: free
     env: python
     envVars:
@@ -18,27 +18,42 @@ services:
         value: False
       - key: PYTHON_VERSION
         value: 3.11.4
+      - key: REDIS_URL
+        # Set this to the connection string of your Redis instance provisioned on Render
+        # Example: redis://red-xxxxxxxxxxxx:6379
+        value: 
+      - key: ALLOWED_HOSTS
+        value: api.vikrahub.com,vikrahub.com,.onrender.com,localhost,127.0.0.1
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://vikrahub.com,https://www.vikrahub.com,https://vikrahub.netlify.app
       - key: CLOUDINARY_CLOUD_NAME
-        value: your-cloudinary-cloud-name
+        value: dxpwtdjzp
       - key: CLOUDINARY_API_KEY
-        value: your-cloudinary-api-key
+        value: 415637895317185
       - key: CLOUDINARY_API_SECRET
         value: your-cloudinary-api-secret
 
-  # React Frontend with Hash Router - Simple Static Hosting
+  # React Frontend with proper API configuration
   - type: static
     name: vikrahub-frontend
     buildCommand: |
       cd frontend
       npm ci
       echo "Building with REACT_APP_API_URL=${REACT_APP_API_URL}"
+      echo "Building with REACT_APP_WS_URL=${REACT_APP_WS_URL}"
       npm run build
-      echo "Using Hash Router - no server-side routing needed"
+      echo "Frontend build completed for static hosting"
     staticPublishPath: frontend/build
     plan: free
     envVars:
       - key: REACT_APP_API_URL
-        value: https://vikrahub.onrender.com/api/
+        value: https://api.vikrahub.com/api/
+      - key: REACT_APP_WS_URL
+        value: wss://api.vikrahub.com/ws/
+      - key: REACT_APP_CLOUDINARY_CLOUD_NAME
+        value: dxpwtdjzp
+      - key: REACT_APP_CLOUDINARY_API_KEY
+        value: 415637895317185
 
 # PostgreSQL Database
 databases:

@@ -61,6 +61,13 @@ ALLOWED_HOSTS = [
     'testserver'  # For Django testing
 ]
 
+# Extend ALLOWED_HOSTS with environment variable
+env_allowed_hosts = os.environ.get('ALLOWED_HOSTS', '')
+if env_allowed_hosts:
+    additional_hosts = [host.strip() for host in env_allowed_hosts.split(',') if host.strip()]
+    ALLOWED_HOSTS.extend(additional_hosts)
+    print(f"🔧 Extended ALLOWED_HOSTS with: {additional_hosts}")
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -191,10 +198,12 @@ else:
         "http://localhost:3000",
     ]
     
-    # Allow additional origins from environment variable
-    additional_origins = os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',')
-    if additional_origins and additional_origins[0]:
-        CORS_ALLOWED_ORIGINS.extend([origin.strip() for origin in additional_origins])
+    # Extend CORS_ALLOWED_ORIGINS with environment variable
+    env_cors_origins = os.environ.get('CORS_ALLOWED_ORIGINS', '')
+    if env_cors_origins:
+        additional_origins = [origin.strip() for origin in env_cors_origins.split(',') if origin.strip()]
+        CORS_ALLOWED_ORIGINS.extend(additional_origins)
+        print(f"🔧 Extended CORS_ALLOWED_ORIGINS with: {additional_origins}")
     
     print(f"🔒 Production mode: CORS restricted to: {CORS_ALLOWED_ORIGINS}")
 

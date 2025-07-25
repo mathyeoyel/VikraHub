@@ -22,12 +22,22 @@ export const WebSocketProvider = ({ children }) => {
   const maxReconnectAttempts = 5;
   const reconnectDelay = 3000; // 3 seconds
 
-  // Get WebSocket URL
+  // Get WebSocket URL - prefer explicit REACT_APP_WS_URL
   const getWebSocketURL = () => {
+    // First priority: explicit WebSocket URL from environment
+    const explicitWsUrl = process.env.REACT_APP_WS_URL;
+    if (explicitWsUrl) {
+      console.log('Using explicit WebSocket URL:', explicitWsUrl);
+      return `${explicitWsUrl}messaging/`;
+    }
+    
+    // Fallback: derive from API URL
     const baseURL = process.env.REACT_APP_API_URL || "https://vikrahub.onrender.com/api/";
     const wsProtocol = baseURL.startsWith('https') ? 'wss' : 'ws';
     const domain = baseURL.replace(/^https?:\/\//, '').replace('/api/', '');
-    return `${wsProtocol}://${domain}/ws/messaging/`;
+    const derivedWsUrl = `${wsProtocol}://${domain}/ws/messaging/`;
+    console.log('Derived WebSocket URL from API URL:', derivedWsUrl);
+    return derivedWsUrl;
   };
 
   // Connect to WebSocket
