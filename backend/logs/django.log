@@ -1188,3 +1188,9 @@ INFO 2025-07-25 10:03:48,528 autoreload 24404 25244 Watching for file changes wi
 WARNING 2025-07-25 10:05:10,201 log 18920 20128 Unauthorized: /api/follow/follow/
 WARNING 2025-07-25 10:05:10,203 log 18920 20128 Unauthorized: /api/follow/unfollow/2/
 WARNING 2025-07-25 10:05:10,206 log 18920 20128 Unauthorized: /api/follow/stats/2/
+WARNING 2025-07-25 10:21:42,971 log 12800 25788 Not Found: /ws/profile/28/
+WARNING 2025-07-25 10:21:42,982 basehttp 12800 25788 "GET /ws/profile/28/ HTTP/1.1" 404 3390
+WARNING 2025-07-25 10:21:48,324 log 12800 15028 Not Found: /ws/profile/28/
+WARNING 2025-07-25 10:21:48,325 basehttp 12800 15028 "GET /ws/profile/28/ HTTP/1.1" 404 3390
+WARNING 2025-07-25 10:21:54,155 log 12800 22940 Not Found: /ws/profile/28/
+WARNING 2025-07-25 10:21:54,156 basehttp 12800 22940 "GET /ws/profile/28/ HTTP/1.1" 404 3390
