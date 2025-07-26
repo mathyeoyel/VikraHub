@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { assetAPI } from '../api';
+import ChatButton from './Chat/ChatButton';
 import './Creators.css';
 
 const Creators = () => {
@@ -375,6 +376,16 @@ const Creators = () => {
                       <span key={index} className="specialty-tag-featured">{specialty}</span>
                     ))}
                   </div>
+                  <div className="featured-creator-actions">
+                    <Link to={`/profile/${creator.username}`} className="btn-secondary">
+                      View Profile
+                    </Link>
+                    <ChatButton 
+                      recipientUsername={creator.username}
+                      recipientName={creator.name}
+                      size="medium"
+                    />
+                  </div>
                 </div>
               </div>
             ))}
@@ -441,6 +452,11 @@ const Creators = () => {
                       View Profile
                     </Link>
                     <button className="contact-btn">Contact</button>
+                    <ChatButton 
+                      recipientUsername={creator.username}
+                      recipientName={creator.name}
+                      size="small"
+                    />
                   </div>
                 </div>
               </div>

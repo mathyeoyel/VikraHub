@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { publicProfileAPI } from '../api';
+import { useAuth } from './Auth/AuthContext';
+import ChatButton from './Chat/ChatButton';
 import './PublicProfilesList.css';
 
 const PublicProfilesList = () => {
+  const { user, isAuthenticated } = useAuth();
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -140,59 +143,71 @@ const PublicProfilesList = () => {
 
         <div className="profiles-grid">
           {profiles.map((profile) => (
-            <Link 
-              key={profile.id} 
-              to={`/profile/${profile.user.username}`}
-              className="profile-card"
-            >
-              <div className="profile-avatar">
-                {profile.avatar ? (
-                  <img src={profile.avatar} alt={profile.full_name} />
-                ) : (
-                  <div className="avatar-placeholder">
-                    {profile.full_name.charAt(0).toUpperCase()}
-                  </div>
-                )}
-              </div>
-              
-              <div className="profile-content">
-                <h3>{profile.full_name}</h3>
-                <p className="username">@{profile.user.username}</p>
-                
-                <div className="user-type">
-                  <span className="user-type-icon">{getUserTypeIcon(profile.user_type)}</span>
-                  <span className="user-type-label">{getUserTypeLabel(profile.user_type)}</span>
+            <div key={profile.id} className="profile-card">
+              <Link 
+                to={`/profile/${profile.user.username}`}
+                className="profile-main-link"
+              >
+                <div className="profile-avatar">
+                  {profile.avatar ? (
+                    <img src={profile.avatar} alt={profile.full_name} />
+                  ) : (
+                    <div className="avatar-placeholder">
+                      {profile.full_name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
                 </div>
-
-                {profile.bio && (
-                  <p className="bio-preview">
-                    {profile.bio.length > 100 
-                      ? `${profile.bio.substring(0, 100)}...` 
-                      : profile.bio
-                    }
-                  </p>
-                )}
-
-                {profile.skills && (
-                  <div className="skills-preview">
-                    {profile.skills.split(',').slice(0, 3).map((skill, index) => (
-                      <span key={index} className="skill-tag">
-                        {skill.trim()}
-                      </span>
-                    ))}
-                    {profile.skills.split(',').length > 3 && (
-                      <span className="more-skills">
-                        +{profile.skills.split(',').length - 3} more
-                      </span>
-                    )}
+                
+                <div className="profile-content">
+                  <h3>{profile.full_name}</h3>
+                  <p className="username">@{profile.user.username}</p>
+                  
+                  <div className="user-type">
+                    <span className="user-type-icon">{getUserTypeIcon(profile.user_type)}</span>
+                    <span className="user-type-label">{getUserTypeLabel(profile.user_type)}</span>
                   </div>
-                )}
 
-                <p className="member-since">
-                  Member since {formatDate(profile.member_since)}
-                </p>
+                  {profile.bio && (
+                    <p className="bio-preview">
+                      {profile.bio.length > 100 
+                        ? `${profile.bio.substring(0, 100)}...` 
+                        : profile.bio
+                      }
+                    </p>
+                  )}
+
+                  {profile.skills && (
+                    <div className="skills-preview">
+                      {profile.skills.split(',').slice(0, 3).map((skill, index) => (
+                        <span key={index} className="skill-tag">
+                          {skill.trim()}
+                        </span>
+                      ))}
+                      {profile.skills.split(',').length > 3 && (
+                        <span className="more-skills">
+                          +{profile.skills.split(',').length - 3} more
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  <p className="member-since">
+                    Member since {formatDate(profile.member_since)}
+                  </p>
+                </div>
+              </Link>
+              
+              {/* Action buttons outside the Link */}
+              <div className="profile-actions">
+                {isAuthenticated && user?.username !== profile.user.username && (
+                  <ChatButton 
+                    recipientUsername={profile.user.username}
+                    recipientName={profile.full_name}
+                    size="small"
+                  />
+                )}
               </div>
-            </Link>
+            </div>
           ))}
         </div>
 

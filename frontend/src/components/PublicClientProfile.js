@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { publicProfileAPI, userAPI, followAPI } from '../api';
 import { useAuth } from './Auth/AuthContext';
 import notificationService from '../services/notificationService';
+import ChatButton from './Chat/ChatButton';
 import './PublicClientProfile.css';
 
 const PublicClientProfile = () => {
@@ -300,9 +301,14 @@ const PublicClientProfile = () => {
             <button className="btn-primary-public" onClick={handleProposal}>
               Send Proposal
             </button>
-            <button className="btn-secondary-public" onClick={handleMessage}>
-              Message
-            </button>
+            {isAuthenticated && user?.username !== username && (
+              <ChatButton 
+                recipientUsername={username}
+                recipientName={profile?.full_name || username}
+                className="btn-secondary-public"
+                size="medium"
+              />
+            )}
             {isAuthenticated && user?.username !== username && (
               <button 
                 className={`btn-follow-public ${isFollowing ? 'following' : ''}`}

@@ -4,6 +4,7 @@ import { publicProfileAPI, assetAPI, userAPI, followAPI } from '../api';
 import { useAuth } from './Auth/AuthContext';
 import notificationService from '../services/notificationService';
 import PublicClientProfile from './PublicClientProfile';
+import ChatButton from './Chat/ChatButton';
 import './PublicProfile.css';
 
 const PublicProfile = () => {
@@ -314,10 +315,14 @@ const PublicProfile = () => {
                     )}
                   </button>
                 )}
-                <button className="action-btn message-btn" onClick={handleMessage}>
-                  <span className="btn-icon">💬</span>
-                  Message
-                </button>
+                {isAuthenticated && user?.username !== username && (
+                  <ChatButton 
+                    recipientUsername={username}
+                    recipientName={profile.full_name}
+                    className="action-btn message-btn"
+                    size="medium"
+                  />
+                )}
                 <button className="action-btn share-btn" onClick={handleShare}>
                   <span className="btn-icon">📤</span>
                   Share

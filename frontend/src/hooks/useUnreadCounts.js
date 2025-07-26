@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { messagesAPI, notificationsAPI } from '../api';
+import { messagingAPI, notificationsAPI } from '../api';
 
 export const useUnreadCounts = () => {
   const [unreadMessages, setUnreadMessages] = useState(0);
@@ -10,11 +10,11 @@ export const useUnreadCounts = () => {
     try {
       setLoading(true);
       const [messagesResponse, notificationsResponse] = await Promise.all([
-        messagesAPI.getUnreadCount().catch(() => ({ data: { unread_count: 0 } })),
+        messagingAPI.getUnreadMessagesCount().catch(() => ({ data: { count: 0 } })),
         notificationsAPI.getUnreadCount().catch(() => ({ data: { unread_count: 0 } }))
       ]);
 
-      setUnreadMessages(messagesResponse.data?.unread_count || 0);
+      setUnreadMessages(messagesResponse.data?.count || 0);
       setUnreadNotifications(notificationsResponse.data?.unread_count || 0);
     } catch (error) {
       console.error('Failed to fetch unread counts:', error);

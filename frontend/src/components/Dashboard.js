@@ -8,6 +8,7 @@ import SocialDashboard from './SocialDashboard';
 import ActivityFeed from './ActivityFeed';
 import UserSuggestions from './UserSuggestions';
 import FollowStats from './FollowStats';
+import MessagesDashboard from './MessagesDashboard';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -382,6 +383,7 @@ const Dashboard = () => {
   const tabs = [
     { id: 'overview', label: 'Overview', icon: '📊' },
     { id: 'social', label: 'Social', icon: '👥' },
+    { id: 'messages', label: 'Messages', icon: '💬' },
     { id: 'upload', label: 'Upload Asset', icon: '📤' },
     { id: 'profile', label: 'Edit Profile', icon: '⚙️' },
     { id: 'notifications', label: 'Notifications', icon: '🔔' }
@@ -623,6 +625,12 @@ const Dashboard = () => {
           {activeTab === 'social' && (
             <div className="social-tab">
               <SocialDashboard />
+            </div>
+          )}
+
+          {activeTab === 'messages' && (
+            <div className="messages-tab">
+              <MessagesDashboard />
             </div>
           )}
 
