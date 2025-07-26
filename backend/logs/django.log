@@ -2157,3 +2157,5 @@ WARNING 2025-07-26 09:36:37,512 log 18376 23232 Unauthorized: /api/messaging/mes
 WARNING 2025-07-26 09:36:37,515 basehttp 18376 23232 "GET /api/messaging/messages/?user_id=1 HTTP/1.1" 401 58
 INFO 2025-07-26 11:10:13,238 autoreload 18376 3516 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\messaging\views.py changed, reloading.
 INFO 2025-07-26 11:10:14,750 autoreload 20572 23396 Watching for file changes with StatReloader
+INFO 2025-07-26 11:13:01,705 autoreload 20572 23396 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\messaging\views.py changed, reloading.
+INFO 2025-07-26 11:13:03,472 autoreload 12236 23984 Watching for file changes with StatReloader
