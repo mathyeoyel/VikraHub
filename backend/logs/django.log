@@ -2179,3 +2179,9 @@ INFO 2025-07-26 14:42:03,185 autoreload 24064 16564 C:\Users\hp\Downloads\Projec
 INFO 2025-07-26 14:42:03,830 autoreload 27376 23940 Watching for file changes with StatReloader
 INFO 2025-07-26 14:55:25,849 autoreload 27376 23940 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\messaging\views.py changed, reloading.
 INFO 2025-07-26 14:55:29,306 autoreload 21304 18320 Watching for file changes with StatReloader
+INFO 2025-07-26 16:18:16,786 basehttp 21304 14448 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-26 16:18:16,858 basehttp 21304 14448 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-26 16:19:46,395 basehttp 21304 26520 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-26 16:19:46,452 basehttp 21304 26520 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-26 16:20:15,608 basehttp 21304 20080 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-26 16:20:15,726 basehttp 21304 20080 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
