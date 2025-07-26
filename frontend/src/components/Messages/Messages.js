@@ -88,27 +88,40 @@ const Messages = () => {
       // Use the correct messaging API endpoint
       const response = await messagingAPI.getMessages(conversationId);
       console.log('📥 Raw messages response:', response);
+      console.log('📥 Response data:', response?.data);
+      console.log('📥 Response type:', typeof response);
       
-      // Ensure we always get an array
-      const messagesData = response?.data || response || [];
+      // Handle different response structures
+      let messagesData = [];
       
-      // Validate that messagesData is an array
-      if (Array.isArray(messagesData)) {
-        console.log('✅ Messages fetched successfully:', messagesData.length);
-        setMessages(messagesData);
+      // Try multiple ways to extract messages array
+      if (response?.data?.messages && Array.isArray(response.data.messages)) {
+        messagesData = response.data.messages;
+        console.log('✅ Found messages in response.data.messages:', messagesData.length);
+      } else if (response?.data?.results && Array.isArray(response.data.results)) {
+        messagesData = response.data.results;
+        console.log('✅ Found messages in response.data.results:', messagesData.length);
+      } else if (Array.isArray(response?.data)) {
+        messagesData = response.data;
+        console.log('✅ Found messages in response.data:', messagesData.length);
+      } else if (Array.isArray(response)) {
+        messagesData = response;
+        console.log('✅ Found messages in response:', messagesData.length);
+      } else if (response?.messages && Array.isArray(response.messages)) {
+        messagesData = response.messages;
+        console.log('✅ Found messages in response.messages:', messagesData.length);
       } else {
-        console.warn('⚠️ Messages data is not an array:', typeof messagesData, messagesData);
-        // If it's an object with messages property, try that
-        if (messagesData && messagesData.messages && Array.isArray(messagesData.messages)) {
-          console.log('✅ Using messages property:', messagesData.messages.length);
-          setMessages(messagesData.messages);
-        } else {
-          console.warn('⚠️ Setting empty array as fallback');
-          setMessages([]);
-        }
+        console.warn('⚠️ Could not find messages array in response structure');
+        console.warn('⚠️ Full response structure:', JSON.stringify(response, null, 2));
+        messagesData = [];
       }
+      
+      console.log('✅ Final messages data:', messagesData);
+      setMessages(messagesData);
+      
     } catch (error) {
       console.error('❌ Failed to fetch messages:', error);
+      console.error('❌ Error details:', error.response?.data);
       // Always ensure messages is an array
       setMessages([]);
     } finally {
@@ -122,13 +135,16 @@ const Messages = () => {
 
     try {
       console.log('📤 Sending message to conversation:', selectedConversation.id);
+      console.log('📤 Message content:', newMessage.trim());
+      console.log('📤 User info:', user);
       
       // Use the correct messaging API endpoint
-      await messagingAPI.sendMessage(selectedConversation.id, newMessage.trim());
+      const response = await messagingAPI.sendMessage(selectedConversation.id, newMessage.trim());
+      console.log('✅ Message sent successfully:', response);
       
       // Add message to local state - ensure messages is an array first
       const newMsg = {
-        id: Date.now(),
+        id: Date.now(), // Temporary ID
         sender: {
           username: user?.username,
           full_name: `${user?.first_name || ''} ${user?.last_name || ''}`.trim() || user?.username
@@ -137,6 +153,15 @@ const Messages = () => {
         created_at: new Date().toISOString(),
         is_read: true
       };
+      
+      // If the API response contains the created message, use that instead
+      if (response?.data) {
+        console.log('📨 Using API response message:', response.data);
+        // Use the actual message from API response
+        const apiMessage = response.data;
+        newMsg.id = apiMessage.id || newMsg.id;
+        newMsg.created_at = apiMessage.created_at || newMsg.created_at;
+      }
       
       // Safely update messages state
       setMessages(prevMessages => {
@@ -163,7 +188,28 @@ const Messages = () => {
       );
     } catch (error) {
       console.error('❌ Failed to send message:', error);
-      showToast('Failed to send message');
+      console.error('❌ Error response:', error.response?.data);
+      console.error('❌ Error status:', error.response?.status);
+      
+      // Provide specific error messages based on status
+      if (error.response?.status === 400) {
+        const errorData = error.response.data;
+        console.error('🔧 400 Error Details:', errorData);
+        
+        if (errorData?.detail) {
+          showToast(`Error: ${errorData.detail}`);
+        } else if (errorData?.message) {
+          showToast(`Error: ${errorData.message}`);
+        } else {
+          showToast('Invalid message format. Please try again.');
+        }
+      } else if (error.response?.status === 403) {
+        showToast('You do not have permission to send messages to this conversation.');
+      } else if (error.response?.status === 404) {
+        showToast('Conversation not found. Please refresh and try again.');
+      } else {
+        showToast('Failed to send message. Please check your connection.');
+      }
     }
   };
 

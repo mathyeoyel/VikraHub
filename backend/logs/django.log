@@ -2171,3 +2171,5 @@ INFO 2025-07-26 14:01:08,191 autoreload 27088 26876 C:\Users\hp\Downloads\Projec
 INFO 2025-07-26 14:01:10,452 autoreload 27528 19780 Watching for file changes with StatReloader
 INFO 2025-07-26 14:01:30,838 autoreload 27528 19780 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\api_views.py changed, reloading.
 INFO 2025-07-26 14:01:31,649 autoreload 20668 17648 Watching for file changes with StatReloader
+INFO 2025-07-26 14:26:17,997 autoreload 20668 17648 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\messaging\views.py changed, reloading.
+INFO 2025-07-26 14:26:20,019 autoreload 26912 21348 Watching for file changes with StatReloader
