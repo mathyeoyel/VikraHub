@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../Auth/AuthContext';
-import { messagesAPI } from '../../api';
+import { messagingAPI } from '../../api';
 import './Messages.css';
 
 const Messages = () => {
@@ -20,56 +20,25 @@ const Messages = () => {
   const fetchConversations = async () => {
     try {
       setLoading(true);
-      const response = await messagesAPI.getConversations();
-      setConversations(response.data || []);
+      // Use the correct messaging API endpoint
+      const response = await messagingAPI.getConversations();
+      const data = response.data || [];
+      
+      // Filter out fake or invalid user conversations
+      const validConversations = data.filter(conv => 
+        conv.other_participant &&
+        conv.other_participant.id &&
+        conv.other_participant.username
+      );
+      
+      console.log('Valid conversations loaded:', validConversations.length);
+      setConversations(validConversations);
+      setError(null);
     } catch (error) {
       console.error('Failed to fetch conversations:', error);
-      setError('Failed to load conversations');
-      // Mock data for development
-      setConversations([
-        {
-          id: 1,
-          participant: {
-            username: 'john_designer',
-            name: 'John Smith',
-            avatar: 'https://ui-avatars.com/api/?name=John+Smith&background=000223&color=ffffff&size=60'
-          },
-          last_message: {
-            text: 'Hey! I saw your portfolio and I\'m interested in collaborating on a project.',
-            timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-            is_read: false
-          },
-          unread_count: 2
-        },
-        {
-          id: 2,
-          participant: {
-            username: 'sarah_writer',
-            name: 'Sarah Johnson',
-            avatar: 'https://ui-avatars.com/api/?name=Sarah+Johnson&background=ffa000&color=ffffff&size=60'
-          },
-          last_message: {
-            text: 'Thanks for the quick response! When can we schedule a call?',
-            timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-            is_read: true
-          },
-          unread_count: 0
-        },
-        {
-          id: 3,
-          participant: {
-            username: 'mike_dev',
-            name: 'Mike Developer',
-            avatar: 'https://ui-avatars.com/api/?name=Mike+Developer&background=28a745&color=ffffff&size=60'
-          },
-          last_message: {
-            text: 'The project specifications look great. Let\'s move forward!',
-            timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-            is_read: true
-          },
-          unread_count: 0
-        }
-      ]);
+      showToast('Could not load conversations.');
+      // Don't show fake data - just empty list
+      setConversations([]);
     } finally {
       setLoading(false);
     }
@@ -78,43 +47,13 @@ const Messages = () => {
   const fetchMessages = async (conversationId) => {
     try {
       setLoading(true);
-      const response = await messagesAPI.getMessages(conversationId);
+      // Use the correct messaging API endpoint
+      const response = await messagingAPI.getMessages(conversationId);
       setMessages(response.data || []);
     } catch (error) {
       console.error('Failed to fetch messages:', error);
-      // Mock messages for development
-      setMessages([
-        {
-          id: 1,
-          sender: {
-            username: 'john_designer',
-            name: 'John Smith'
-          },
-          text: 'Hey! I saw your portfolio and I\'m interested in collaborating on a project.',
-          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-          is_read: false
-        },
-        {
-          id: 2,
-          sender: {
-            username: user?.username,
-            name: user?.first_name + ' ' + user?.last_name
-          },
-          text: 'Hi John! Thanks for reaching out. I\'d love to hear more about your project.',
-          timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
-          is_read: true
-        },
-        {
-          id: 3,
-          sender: {
-            username: 'john_designer',
-            name: 'John Smith'
-          },
-          text: 'Great! It\'s a web design project for a local business. Are you available for a quick call this week?',
-          timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-          is_read: false
-        }
-      ]);
+      // Don't show fake messages - just empty list
+      setMessages([]);
     } finally {
       setLoading(false);
     }
@@ -125,22 +64,18 @@ const Messages = () => {
     if (!newMessage.trim() || !selectedConversation) return;
 
     try {
-      const messageData = {
-        conversation_id: selectedConversation.id,
-        text: newMessage.trim()
-      };
-
-      await messagesAPI.sendMessage(messageData);
+      // Use the correct messaging API endpoint
+      await messagingAPI.sendMessage(selectedConversation.id, newMessage.trim());
       
       // Add message to local state
       const newMsg = {
         id: Date.now(),
         sender: {
           username: user?.username,
-          name: user?.first_name + ' ' + user?.last_name
+          full_name: `${user?.first_name || ''} ${user?.last_name || ''}`.trim() || user?.username
         },
-        text: newMessage.trim(),
-        timestamp: new Date().toISOString(),
+        content: newMessage.trim(),
+        created_at: new Date().toISOString(),
         is_read: true
       };
       
@@ -151,13 +86,19 @@ const Messages = () => {
       setConversations(prev => 
         prev.map(conv => 
           conv.id === selectedConversation.id 
-            ? { ...conv, last_message: { text: newMessage.trim(), timestamp: new Date().toISOString(), is_read: true } }
+            ? { 
+                ...conv, 
+                latest_message: { 
+                  content: newMessage.trim(), 
+                  created_at: new Date().toISOString() 
+                } 
+              }
             : conv
         )
       );
     } catch (error) {
       console.error('Failed to send message:', error);
-      setError('Failed to send message');
+      showToast('Failed to send message');
     }
   };
 
@@ -173,7 +114,8 @@ const Messages = () => {
 
   const markAsRead = async (conversationId) => {
     try {
-      await messagesAPI.markAsRead(conversationId);
+      // Use the correct messaging API endpoint
+      await messagingAPI.markConversationRead(conversationId);
       setConversations(prev =>
         prev.map(conv =>
           conv.id === conversationId ? { ...conv, unread_count: 0 } : conv
@@ -201,14 +143,29 @@ const Messages = () => {
   };
 
   const filteredConversations = conversations.filter(conv =>
-    conv.participant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    conv.participant.username.toLowerCase().includes(searchTerm.toLowerCase())
+    conv.other_participant.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    conv.other_participant.username?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalUnread = conversations.reduce((sum, conv) => sum + conv.unread_count, 0);
 
+  // Simple toast notification function
+  const showToast = (message) => {
+    setError(message);
+    // Clear error after 5 seconds
+    setTimeout(() => setError(null), 5000);
+  };
+
   return (
     <div className="messages-page">
+      {/* Toast Error Message */}
+      {error && (
+        <div className="error-toast">
+          {error}
+          <button onClick={() => setError(null)} className="toast-close">×</button>
+        </div>
+      )}
+      
       <div className="container">
         <div className="messages-header">
           <h1>Messages</h1>
@@ -239,8 +196,8 @@ const Messages = () => {
                 <div className="loading-state">Loading conversations...</div>
               ) : filteredConversations.length === 0 ? (
                 <div className="empty-state">
-                  <p>No conversations found</p>
-                  <small>Start networking to begin conversations!</small>
+                  <p>No conversations yet</p>
+                  <small>Start messaging other creators to see conversations here!</small>
                 </div>
               ) : (
                 filteredConversations.map(conversation => (
@@ -250,19 +207,19 @@ const Messages = () => {
                     onClick={() => selectConversation(conversation)}
                   >
                     <img
-                      src={conversation.participant.avatar}
-                      alt={conversation.participant.name}
+                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(conversation.other_participant.full_name || conversation.other_participant.username)}&background=000223&color=ffffff&size=60`}
+                      alt={conversation.other_participant.full_name || conversation.other_participant.username}
                       className="conversation-avatar"
                     />
                     <div className="conversation-info">
                       <div className="conversation-header">
-                        <h4>{conversation.participant.name}</h4>
+                        <h4>{conversation.other_participant.full_name || conversation.other_participant.username}</h4>
                         <span className="conversation-time">
-                          {formatTime(conversation.last_message.timestamp)}
+                          {conversation.latest_message ? formatTime(conversation.latest_message.created_at) : ''}
                         </span>
                       </div>
                       <p className="last-message">
-                        {conversation.last_message.text}
+                        {conversation.latest_message?.content || 'No messages yet'}
                       </p>
                       {conversation.unread_count > 0 && (
                         <span className="unread-count">{conversation.unread_count}</span>
@@ -280,13 +237,13 @@ const Messages = () => {
               <>
                 <div className="messages-header-bar">
                   <img
-                    src={selectedConversation.participant.avatar}
-                    alt={selectedConversation.participant.name}
+                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(selectedConversation.other_participant.full_name || selectedConversation.other_participant.username)}&background=000223&color=ffffff&size=60`}
+                    alt={selectedConversation.other_participant.full_name || selectedConversation.other_participant.username}
                     className="participant-avatar"
                   />
                   <div className="participant-info">
-                    <h3>{selectedConversation.participant.name}</h3>
-                    <span className="participant-username">@{selectedConversation.participant.username}</span>
+                    <h3>{selectedConversation.other_participant.full_name || selectedConversation.other_participant.username}</h3>
+                    <span className="participant-username">@{selectedConversation.other_participant.username}</span>
                   </div>
                 </div>
 
@@ -297,9 +254,9 @@ const Messages = () => {
                       className={`message ${message.sender.username === user?.username ? 'sent' : 'received'}`}
                     >
                       <div className="message-content">
-                        <p>{message.text}</p>
+                        <p>{message.content}</p>
                         <span className="message-time">
-                          {formatTime(message.timestamp)}
+                          {formatTime(message.created_at)}
                         </span>
                       </div>
                     </div>
