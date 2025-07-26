@@ -470,7 +470,7 @@ const Creators = () => {
                     <Link to={`/profile/${creator.username}`} className="view-profile-link">
                       View Profile
                     </Link>
-                    <button className="contact-btn">Contact</button>
+                    <Link to="/messages" className="message-btn">Message</Link>
                     {creator.id && creator.username ? (
                       <ChatButton 
                         recipientId={creator.id}

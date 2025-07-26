@@ -340,7 +340,7 @@
   color: white;
 }
 
-.contact-btn {
+.message-btn {
   background: transparent;
   border: 2px solid #ffa000;
   color: #ffa000;
@@ -349,11 +349,15 @@
   cursor: pointer;
   font-weight: 500;
   transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
 }
 
-.contact-btn:hover {
-  background: #7c521b;
+.message-btn:hover {
+  background: #ffa000;
   color: white;
+  text-decoration: none;
 }
 
 /* No Results */
