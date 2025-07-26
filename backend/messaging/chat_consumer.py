@@ -7,6 +7,7 @@ from channels.db import database_sync_to_async
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.conf import settings
+from django.db.models import Count
 from rest_framework_simplejwt.tokens import UntypedToken
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from jwt import decode as jwt_decode
@@ -254,8 +255,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 is_deleted=False
             ).filter(
                 participants=user2
+            ).annotate(
+                participant_count=Count('participants')
             ).filter(
-                participants__count=2  # Ensure it's exactly 2 participants
+                participant_count=2  # Ensure it's exactly 2 participants
             ).first()
             
             if conversation:

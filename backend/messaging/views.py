@@ -439,7 +439,7 @@ def get_messages_between_users(request):
         ).first()
         
         if not conversation:
-            return Response({'messages': []})
+            return Response([])  # Return empty array instead of object
         
         # Get messages in this conversation
         messages = Message.objects.filter(
@@ -450,7 +450,7 @@ def get_messages_between_users(request):
         ).select_related('sender', 'recipient').order_by('created_at')
         
         serializer = MessageSerializer(messages, many=True, context={'request': request})
-        return Response({'messages': serializer.data})
+        return Response(serializer.data)  # Return array directly
         
     except Exception as e:
         logger.exception(f"Error getting messages with user: {e}")

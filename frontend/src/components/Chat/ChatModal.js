@@ -51,7 +51,19 @@ const ChatModal = ({ isOpen, onClose, recipientUser }) => {
 
       if (response.ok) {
         const data = await response.json();
-        const formattedMessages = data.map(msg => ({
+        console.log('API response data:', data);
+        
+        // Safely handle API response - check if it's an array or has messages property
+        let messagesArray = [];
+        if (Array.isArray(data)) {
+          messagesArray = data;
+        } else if (data && Array.isArray(data.messages)) {
+          messagesArray = data.messages;
+        } else {
+          console.warn('Expected array or object with messages array, got:', typeof data, data);
+        }
+        
+        const formattedMessages = messagesArray.map(msg => ({
           id: msg.id,
           text: msg.content,
           sender: msg.sender,
