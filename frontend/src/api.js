@@ -359,7 +359,7 @@ export const messagingAPI = {
   
   // New chat API functions
   getMessagesWithUser: (user_id) => api.get(`messaging/messages/?user_id=${user_id}`),
-  getUnreadMessagesCount: (user_id) => api.get(`messaging/messages/user/${user_id}/unread/`),
+  getUnreadMessagesCount: () => api.get("messaging/unread-count/"),
 };
 
 // Export individual follow functions for compatibility with React components
