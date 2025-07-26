@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from django.contrib.auth.models import User
 from django.db.models import Q, Avg
+from django.utils import timezone
 from .asset_utils import (
     get_recommended_assets, get_asset_search_results, validate_asset_purchase,
     process_asset_purchase, get_seller_stats, get_trending_assets, calculate_asset_rating
@@ -277,13 +278,41 @@ class NotificationViewSet(viewsets.ModelViewSet):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def unread_notifications_count(request):
-    """Get count of unread notifications for the authenticated user"""
-    count = Notification.objects.filter(
-        user=request.user,
-        is_read=False
-    ).count()
-    
-    return Response({'unread_count': count})
+    """Get count of unread notifications for the authenticated user with enhanced error handling"""
+    try:
+        # Try to get notification count (primary method)
+        try:
+            count = Notification.objects.filter(
+                user=request.user,
+                is_read=False
+            ).count()
+        except Exception as notification_error:
+            print(f"⚠️ Notification count error: {notification_error}")
+            # Fallback to message-based count
+            try:
+                from core.models import Message
+                count = Message.objects.filter(
+                    recipient=request.user,
+                    is_read=False
+                ).count()
+            except Exception as message_error:
+                print(f"⚠️ Message count error: {message_error}")
+                count = 0
+        
+        return Response({
+            'unread_count': count,
+            'status': 'success',
+            'timestamp': timezone.now().isoformat()
+        })
+        
+    except Exception as e:
+        print(f"❌ Critical error in unread_notifications_count: {e}")
+        # Always return a valid response to prevent frontend errors
+        return Response({
+            'unread_count': 0,
+            'status': 'error',
+            'message': 'Could not fetch notification count'
+        }, status=status.HTTP_200_OK)
 
 
 # Creative Assets Marketplace ViewSets

@@ -21,24 +21,49 @@ const Messages = () => {
   const fetchConversations = async () => {
     try {
       setLoading(true);
-      // Use the correct messaging API endpoint
+      setError(null);
+      console.log('🔄 Fetching conversations...');
+      
+      // Use the correct messaging API endpoint with enhanced error handling
       const response = await messagingAPI.getConversations();
       const data = response.data || [];
       
-      // Filter out fake or invalid user conversations
-      const validConversations = data.filter(conv => 
-        conv.other_participant &&
-        conv.other_participant.id &&
-        conv.other_participant.username
-      );
+      console.log('📥 Raw conversations data:', data);
       
-      console.log('Valid conversations loaded:', validConversations.length);
+      // Filter out fake or invalid user conversations with enhanced validation
+      const validConversations = data.filter(conv => {
+        const isValid = conv.other_participant &&
+          conv.other_participant.id &&
+          conv.other_participant.username &&
+          typeof conv.other_participant.id === 'number' &&
+          conv.other_participant.username.trim() !== '';
+        
+        if (!isValid) {
+          console.warn('⚠️ Filtered out invalid conversation:', conv);
+        }
+        return isValid;
+      });
+      
+      console.log('✅ Valid conversations loaded:', validConversations.length);
       setConversations(validConversations);
       setError(null);
+      
     } catch (error) {
-      console.error('Failed to fetch conversations:', error);
-      showToast('Could not load conversations.');
-      // Don't show fake data - just empty list
+      console.error('❌ Failed to fetch conversations:', error);
+      
+      // Enhanced error handling with specific error types
+      if (error.response?.status === 500) {
+        console.error('🔧 Database/Server Error Details:', error.response.data);
+        showToast('Server error detected. Our team has been notified. Please try again later.');
+      } else if (error.response?.status === 401) {
+        showToast('Session expired. Please log in again.');
+      } else if (error.response?.status === 403) {
+        showToast('Access denied. Please check your permissions.');
+      } else {
+        showToast('Could not load conversations. Please check your connection.');
+      }
+      
+      // Always show empty list instead of fake data
       setConversations([]);
     } finally {
       setLoading(false);

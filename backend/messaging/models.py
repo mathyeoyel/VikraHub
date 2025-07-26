@@ -45,10 +45,12 @@ class Conversation(models.Model):
     
     def get_unread_count(self, user):
         """Get unread message count for a specific user"""
-        return self.messages.filter(
-            is_deleted=False,
-            read_by__lt=models.F('created_at')
-        ).exclude(sender=user).count()
+        # Fixed: Use proper read receipt checking instead of comparing integer with timestamp
+        unread_messages = self.messages.filter(
+            is_deleted=False
+        ).exclude(sender=user).exclude(read_by=user)
+        
+        return unread_messages.count()
     
     def get_latest_message(self):
         """Get the most recent message in the conversation"""
