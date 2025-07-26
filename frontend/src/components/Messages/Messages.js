@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../Auth/AuthContext';
 import { messagingAPI } from '../../api';
+import { handleImageError, getAvatarUrl } from '../../utils/imageUtils';
 import './Messages.css';
 
 const Messages = () => {
@@ -207,9 +208,10 @@ const Messages = () => {
                     onClick={() => selectConversation(conversation)}
                   >
                     <img
-                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(conversation.other_participant.full_name || conversation.other_participant.username)}&background=000223&color=ffffff&size=60`}
+                      src={getAvatarUrl(conversation.other_participant)}
                       alt={conversation.other_participant.full_name || conversation.other_participant.username}
                       className="conversation-avatar"
+                      onError={(e) => handleImageError(e, 'avatar')}
                     />
                     <div className="conversation-info">
                       <div className="conversation-header">
@@ -237,9 +239,10 @@ const Messages = () => {
               <>
                 <div className="messages-header-bar">
                   <img
-                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(selectedConversation.other_participant.full_name || selectedConversation.other_participant.username)}&background=000223&color=ffffff&size=60`}
+                    src={getAvatarUrl(selectedConversation.other_participant)}
                     alt={selectedConversation.other_participant.full_name || selectedConversation.other_participant.username}
                     className="participant-avatar"
+                    onError={(e) => handleImageError(e, 'avatar')}
                   />
                   <div className="participant-info">
                     <h3>{selectedConversation.other_participant.full_name || selectedConversation.other_participant.username}</h3>

@@ -122,6 +122,9 @@ export const userAPI = {
   updateProject: (id, data) => api.patch(`projects/${id}/`, data),
   deleteProject: (id) => api.delete(`projects/${id}/`),
   getProjectApplications: (projectId) => api.get(`projects/${projectId}/applications/`),
+  
+  // User lookup by username
+  getUserByUsername: (username) => api.get(`users/username/${username}/`),
 };
 
 export const teamAPI = {

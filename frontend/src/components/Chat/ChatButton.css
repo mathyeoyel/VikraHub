@@ -163,6 +163,35 @@
   box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
 }
 
+/* Disabled variant */
+.chat-button-disabled {
+  background: #6c757d;
+  color: white;
+  border: 1px solid transparent;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.chat-button-disabled:hover {
+  background: #6c757d;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Loading animation */
+.chat-icon.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .chat-button {
