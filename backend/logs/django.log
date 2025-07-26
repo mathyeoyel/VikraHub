@@ -2185,3 +2185,10 @@ INFO 2025-07-26 16:19:46,395 basehttp 21304 26520 "GET /api/creator-profiles/fea
 INFO 2025-07-26 16:19:46,452 basehttp 21304 26520 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
 INFO 2025-07-26 16:20:15,608 basehttp 21304 20080 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
 INFO 2025-07-26 16:20:15,726 basehttp 21304 20080 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-26 16:42:11,999 basehttp 21304 10088 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-26 16:42:12,160 basehttp 21304 10088 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-26 16:42:18,389 basehttp 21304 14916 "OPTIONS /api/auth/token/ HTTP/1.1" 200 0
+WARNING 2025-07-26 16:42:19,500 log 21304 14916 Unauthorized: /api/auth/token/
+WARNING 2025-07-26 16:42:19,500 basehttp 21304 14916 "POST /api/auth/token/ HTTP/1.1" 401 63
+INFO 2025-07-26 16:43:26,651 basehttp 21304 21700 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-26 16:43:26,795 basehttp 21304 21700 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
