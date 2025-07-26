@@ -47,11 +47,21 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class MessageCreateSerializer(serializers.ModelSerializer):
-    """Serializer for creating messages"""
+    """Serializer for creating messages with enhanced validation"""
     
     class Meta:
         model = Message
         fields = ['conversation', 'content']
+    
+    def validate_content(self, value):
+        """Validate message content"""
+        if not value or not value.strip():
+            raise serializers.ValidationError("Message content cannot be empty.")
+        
+        if len(value.strip()) > 1000:  # Reasonable message length limit
+            raise serializers.ValidationError("Message content is too long (max 1000 characters).")
+        
+        return value.strip()
     
     def validate_conversation(self, value):
         """Validate that user is participant in the conversation"""
@@ -67,6 +77,13 @@ class MessageCreateSerializer(serializers.ModelSerializer):
         """Create message with sender set to current user"""
         request = self.context.get('request')
         validated_data['sender'] = request.user
+        
+        # Set recipient as the other participant
+        conversation = validated_data['conversation']
+        other_participant = conversation.get_other_participant(request.user)
+        if other_participant:
+            validated_data['recipient'] = other_participant
+        
         message = super().create(validated_data)
         
         # Update conversation's updated_at timestamp

@@ -208,6 +208,61 @@ class MessageListCreateView(generics.ListCreateAPIView):
             deleted_by=self.request.user
         ).select_related('sender').prefetch_related('read_by').order_by('created_at')
     
+    def create(self, request, *args, **kwargs):
+        """Enhanced create method with better error handling"""
+        try:
+            conversation_id = self.kwargs.get('conversation_id')
+            logger.info(f"Creating message for conversation {conversation_id} by user {request.user.username}")
+            logger.info(f"Request data: {request.data}")
+            
+            # Validate conversation exists and user is participant
+            try:
+                conversation = Conversation.objects.get(
+                    id=conversation_id,
+                    participants=request.user,
+                    is_deleted=False
+                )
+            except Conversation.DoesNotExist:
+                logger.error(f"Conversation {conversation_id} not found or user {request.user.username} is not a participant")
+                return Response(
+                    {'error': 'Conversation not found or you are not a participant'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            
+            # Validate content
+            content = request.data.get('content', '').strip()
+            if not content:
+                logger.error("Empty message content provided")
+                return Response(
+                    {'error': 'Message content cannot be empty'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Add conversation to request data
+            mutable_data = request.data.copy()
+            mutable_data['conversation'] = conversation.id
+            
+            # Create serializer with conversation included
+            serializer = self.get_serializer(data=mutable_data)
+            if not serializer.is_valid():
+                logger.error(f"Serializer validation failed: {serializer.errors}")
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Save the message
+            message = serializer.save()
+            logger.info(f"Message created successfully: {message.id}")
+            
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            
+        except Exception as e:
+            logger.error(f"Unexpected error creating message: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return Response(
+                {'error': 'Internal server error occurred while creating message'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+    
     def perform_create(self, serializer):
         """Create message and send real-time notification"""
         message = serializer.save()
