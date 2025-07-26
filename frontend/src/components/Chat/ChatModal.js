@@ -26,19 +26,21 @@ const ChatModal = ({ isOpen, onClose, recipientUser }) => {
 
   // Load existing messages with the user
   const loadExistingMessages = useCallback(async () => {
-    if (!recipientUser) return;
+    if (!recipientUser || !recipientUser.id) return;
     
     try {
       setLoading(true);
       const token = getAccessToken();
       
-      // Use recipient ID if it's a valid number, otherwise use username
-      const queryParam = (recipientUser.id && !isNaN(recipientUser.id)) 
-        ? `user_id=${recipientUser.id}` 
-        : `username=${recipientUser.username}`;
+      // Always use numeric user ID for fetching messages
+      const recipientId = parseInt(recipientUser.id);
+      if (isNaN(recipientId)) {
+        console.error('Invalid recipient ID:', recipientUser.id);
+        return;
+      }
         
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL || "https://api.vikrahub.com/api/"}messaging/messages/?${queryParam}`,
+        `${process.env.REACT_APP_API_URL || "https://api.vikrahub.com/api/"}messaging/messages/?user_id=${recipientId}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -155,14 +157,16 @@ const ChatModal = ({ isOpen, onClose, recipientUser }) => {
     e.preventDefault();
     if (!newMessage.trim() || !socket || !isConnected || !recipientUser) return;
 
-    // Use recipient ID if it's a valid number, otherwise use username for identification
-    const recipientIdentifier = (recipientUser.id && !isNaN(recipientUser.id)) 
-      ? recipientUser.id 
-      : recipientUser.username;
+    // Always use numeric recipient ID for sending messages
+    const recipientId = parseInt(recipientUser.id);
+    if (isNaN(recipientId)) {
+      console.error('Invalid recipient ID for sending message:', recipientUser.id);
+      return;
+    }
 
     const messageData = {
       type: 'message',
-      recipient_id: recipientIdentifier,
+      recipient_id: recipientId, // Always use numeric ID
       text: newMessage.trim()
     };
 

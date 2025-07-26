@@ -19,20 +19,29 @@ const ChatButton = ({
   const getRecipientUser = () => {
     // If user object is provided directly, use it
     if (user && user.id && user.username) {
-      return user;
+      return {
+        ...user,
+        id: parseInt(user.id) // Ensure ID is numeric
+      };
     }
     
     // If individual props are provided, construct user object
-    if (recipientUsername) {
+    if (recipientUsername && recipientId) {
+      const numericId = parseInt(recipientId);
+      if (isNaN(numericId)) {
+        console.error("ChatButton: recipientId must be numeric:", recipientId);
+        return null;
+      }
+      
       return {
-        id: recipientId || recipientUsername, // Use ID if available, fallback to username
+        id: numericId, // Always use numeric ID
         username: recipientUsername,
         full_name: recipientName || recipientUsername,
         avatar: null // Will use default avatar generation
       };
     }
     
-    console.error("ChatButton: Missing recipient info", { user, recipientUsername, recipientName, recipientId });
+    console.error("ChatButton: Missing recipient info or invalid ID", { user, recipientUsername, recipientName, recipientId });
     return null;
   };
 
