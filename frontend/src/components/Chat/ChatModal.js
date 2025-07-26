@@ -1,5 +1,5 @@
 // frontend/src/components/Chat/ChatModal.js
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '../Auth/AuthContext';
 import { getAccessToken } from '../../auth';
 import './ChatModal.css';
@@ -13,14 +13,8 @@ const ChatModal = ({ isOpen, onClose, recipientUser }) => {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Validate recipient user data
-  if (!recipientUser || (!recipientUser.username && !recipientUser.id)) {
-    console.error('ChatModal: Invalid recipient user data', recipientUser);
-    return null;
-  }
-
-  // Ensure recipient has proper display name
-  const recipientDisplayName = recipientUser.full_name || recipientUser.username || 'User';
+  // Ensure recipient has proper display name (safe fallback)
+  const recipientDisplayName = recipientUser?.full_name || recipientUser?.username || 'User';
 
   // WebSocket URL configuration
   const getWebSocketURL = () => {
@@ -29,6 +23,48 @@ const ChatModal = ({ isOpen, onClose, recipientUser }) => {
     const domain = baseURL.replace(/^https?:\/\//, '').replace('/api/', '');
     return `${wsProtocol}://${domain}/ws/chat/`;
   };
+
+  // Load existing messages with the user
+  const loadExistingMessages = useCallback(async () => {
+    if (!recipientUser) return;
+    
+    try {
+      setLoading(true);
+      const token = getAccessToken();
+      
+      // Use recipient ID if it's a valid number, otherwise use username
+      const queryParam = (recipientUser.id && !isNaN(recipientUser.id)) 
+        ? `user_id=${recipientUser.id}` 
+        : `username=${recipientUser.username}`;
+        
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL || "https://api.vikrahub.com/api/"}messaging/messages/?${queryParam}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        const formattedMessages = data.map(msg => ({
+          id: msg.id,
+          text: msg.content,
+          sender: msg.sender,
+          recipient: msg.recipient,
+          timestamp: msg.timestamp,
+          isOwn: msg.sender.id === user?.id
+        }));
+        setMessages(formattedMessages);
+      }
+    } catch (error) {
+      console.error('Failed to load existing messages:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [recipientUser, user?.id]);
 
   // Connect to WebSocket
   useEffect(() => {
@@ -112,49 +148,7 @@ const ChatModal = ({ isOpen, onClose, recipientUser }) => {
         ws.close();
       }
     };
-  }, [isOpen, recipientUser]);
-
-  // Load existing messages with the user
-  const loadExistingMessages = async () => {
-    if (!recipientUser) return;
-    
-    try {
-      setLoading(true);
-      const token = getAccessToken();
-      
-      // Use recipient ID if it's a valid number, otherwise use username
-      const queryParam = (recipientUser.id && !isNaN(recipientUser.id)) 
-        ? `user_id=${recipientUser.id}` 
-        : `username=${recipientUser.username}`;
-        
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL || "https://api.vikrahub.com/api/"}messaging/messages/?${queryParam}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      
-      if (response.ok) {
-        const data = await response.json();
-        const formattedMessages = data.messages.map(msg => ({
-          id: msg.id,
-          sender: msg.sender,
-          recipient: msg.recipient,
-          text: msg.content,
-          timestamp: msg.created_at,
-          is_read: msg.is_read
-        }));
-        setMessages(formattedMessages);
-      }
-    } catch (error) {
-      console.error('Failed to load existing messages:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [isOpen, recipientUser, loadExistingMessages]);
 
   // Send message via WebSocket
   const sendMessage = (e) => {
@@ -208,7 +202,13 @@ const ChatModal = ({ isOpen, onClose, recipientUser }) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
+  // Validate recipient user data and modal state
   if (!isOpen) return null;
+  
+  if (!recipientUser || (!recipientUser.username && !recipientUser.id)) {
+    console.error('ChatModal: Invalid recipient user data', recipientUser);
+    return null;
+  }
 
   return (
     <div className="chat-modal-overlay" onClick={onClose}>
