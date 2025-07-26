@@ -5,7 +5,7 @@ import ActivityFeed from './ActivityFeed';
 import FollowStats from './FollowStats';
 import FollowNotifications from './FollowNotifications';
 import SearchBar from './SearchBar';
-import Messages from './Messages';
+import Messages from './Messages/Messages';
 import './SocialDashboard.css';
 
 const SocialDashboard = () => {
