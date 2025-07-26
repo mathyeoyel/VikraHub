@@ -20,17 +20,18 @@ class UserSerializer(serializers.ModelSerializer):
 class MessageSerializer(serializers.ModelSerializer):
     """Serializer for messages"""
     sender = UserSerializer(read_only=True)
+    recipient = UserSerializer(read_only=True)
     is_read = serializers.SerializerMethodField()
     read_by_users = serializers.SerializerMethodField()
     
     class Meta:
         model = Message
         fields = [
-            'id', 'conversation', 'sender', 'content', 'created_at', 
+            'id', 'conversation', 'sender', 'recipient', 'content', 'created_at', 
             'updated_at', 'is_edited', 'edited_at', 'is_deleted', 
             'is_read', 'read_by_users'
         ]
-        read_only_fields = ['id', 'created_at', 'updated_at', 'sender']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'sender', 'recipient']
     
     def get_is_read(self, obj):
         """Check if current user has read this message"""

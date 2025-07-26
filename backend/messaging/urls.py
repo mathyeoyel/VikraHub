@@ -15,6 +15,8 @@ urlpatterns = [
     
     # Message endpoints
     path('messages/<uuid:pk>/', views.MessageDetailView.as_view(), name='message-detail'),
+    path('messages/', views.get_messages_between_users, name='messages-list'), # GET /api/messages/?user_id=X
+    path('messages/user/<int:user_id>/unread/', views.get_unread_messages_count, name='unread-messages-count'),
     
     # Utility endpoints
     path('unread-count/', views.get_unread_count, name='unread-count'),

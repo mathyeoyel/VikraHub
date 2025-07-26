@@ -356,6 +356,10 @@ export const messagingAPI = {
   stopTyping: (conversation_id) => api.post(`messaging/conversations/${conversation_id}/typing/stop/`),
   getUnreadCount: () => api.get("messaging/unread-count/"),
   getMessage: (message_id) => api.get(`messaging/messages/${message_id}/`),
+  
+  // New chat API functions
+  getMessagesWithUser: (user_id) => api.get(`messaging/messages/?user_id=${user_id}`),
+  getUnreadMessagesCount: (user_id) => api.get(`messaging/messages/user/${user_id}/unread/`),
 };
 
 // Export individual follow functions for compatibility with React components

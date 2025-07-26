@@ -407,3 +407,87 @@ def get_unread_count(request):
     ).count()
     
     return Response({'unread_count': unread_count})
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_messages_between_users(request):
+    """Get all messages between current user and another user - /api/messages/?user_id=X"""
+    try:
+        user_id = request.GET.get('user_id')
+        if not user_id:
+            return Response(
+                {'error': 'user_id parameter is required'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Get the other user
+        try:
+            other_user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response(
+                {'error': 'User not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Get conversation between these users
+        conversation = Conversation.objects.filter(
+            participants=request.user,
+            is_deleted=False
+        ).filter(
+            participants=other_user
+        ).first()
+        
+        if not conversation:
+            return Response({'messages': []})
+        
+        # Get messages in this conversation
+        messages = Message.objects.filter(
+            conversation=conversation,
+            is_deleted=False
+        ).exclude(
+            deleted_by=request.user
+        ).select_related('sender', 'recipient').order_by('created_at')
+        
+        serializer = MessageSerializer(messages, many=True, context={'request': request})
+        return Response({'messages': serializer.data})
+        
+    except Exception as e:
+        logger.exception(f"Error getting messages with user: {e}")
+        return Response(
+            {'error': 'Failed to get messages'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated]) 
+def get_unread_messages_count(request, user_id):
+    """Get unread message count with specific user"""
+    try:
+        # Get the other user
+        try:
+            other_user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response(
+                {'error': 'User not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Count unread messages from this user
+        unread_count = Message.objects.filter(
+            sender=other_user,
+            recipient=request.user,
+            is_deleted=False
+        ).exclude(
+            read_by=request.user
+        ).count()
+        
+        return Response({'unread_count': unread_count})
+        
+    except Exception as e:
+        logger.exception(f"Error getting unread count with user: {e}")
+        return Response(
+            {'error': 'Failed to get unread count'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )

@@ -30,6 +30,7 @@ const SearchResults = React.lazy(() => import("./components/SearchResults"));
 const Settings = React.lazy(() => import("./components/Settings"));
 const Messages = React.lazy(() => import("./components/Messages"));
 const Notifications = React.lazy(() => import("./components/Notifications"));
+const ChatExample = React.lazy(() => import("./components/Chat/ChatExample"));
 
 function App() {
   return (
@@ -84,6 +85,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Messages />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/chat-demo"
+              element={
+                <ProtectedRoute>
+                  <ChatExample />
                 </ProtectedRoute>
               }
             />
