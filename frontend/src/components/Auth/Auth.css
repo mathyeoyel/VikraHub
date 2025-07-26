@@ -430,6 +430,11 @@
     backdrop-filter: blur(4px);
   }
 
+  /* Mobile user menu positioning */
+  .nav .auth-section .user-menu {
+    position: relative;
+  }
+
   .user-dropdown {
     position: fixed;
     top: 50%;

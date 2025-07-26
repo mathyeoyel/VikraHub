@@ -26,7 +26,7 @@ const UserMenu = ({ onMenuAction }) => {
     const newIsOpen = !isOpen;
     setIsOpen(newIsOpen);
     
-    // Close hamburger menu when user menu opens
+    // Only close hamburger menu when user menu dropdown OPENS (not when it closes)
     if (newIsOpen && onMenuAction) {
       onMenuAction();
     }

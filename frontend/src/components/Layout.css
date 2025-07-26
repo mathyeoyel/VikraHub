@@ -452,6 +452,17 @@ body {
     opacity: 1;
     visibility: visible;
   }
+
+  /* Keep auth section visible on mobile even when nav is closed */
+  .nav .auth-section {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    opacity: 1;
+    visibility: visible;
+    z-index: 1001;
+    background: none;
+  }
   
   .nav-link {
     padding: 1rem 1.5rem;
@@ -492,6 +503,12 @@ body {
   .nav {
     top: 70px;
     width: calc(100% - 10px);
+  }
+
+  /* Adjust auth section position for smaller screens */
+  .nav .auth-section {
+    top: 15px;
+    right: 15px;
   }
   
   .footer-content {
