@@ -8,11 +8,21 @@ const Messages = () => {
   const { user } = useAuth();
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([]); // Ensure it's always an array
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Debug log to track messages state
+  useEffect(() => {
+    console.log('🔍 Messages state changed:', { 
+      type: typeof messages, 
+      isArray: Array.isArray(messages), 
+      length: messages?.length,
+      messages 
+    });
+  }, [messages]);
 
   useEffect(() => {
     fetchConversations();
@@ -73,12 +83,33 @@ const Messages = () => {
   const fetchMessages = async (conversationId) => {
     try {
       setLoading(true);
+      console.log('🔄 Fetching messages for conversation:', conversationId);
+      
       // Use the correct messaging API endpoint
       const response = await messagingAPI.getMessages(conversationId);
-      setMessages(response.data || []);
+      console.log('📥 Raw messages response:', response);
+      
+      // Ensure we always get an array
+      const messagesData = response?.data || response || [];
+      
+      // Validate that messagesData is an array
+      if (Array.isArray(messagesData)) {
+        console.log('✅ Messages fetched successfully:', messagesData.length);
+        setMessages(messagesData);
+      } else {
+        console.warn('⚠️ Messages data is not an array:', typeof messagesData, messagesData);
+        // If it's an object with messages property, try that
+        if (messagesData && messagesData.messages && Array.isArray(messagesData.messages)) {
+          console.log('✅ Using messages property:', messagesData.messages.length);
+          setMessages(messagesData.messages);
+        } else {
+          console.warn('⚠️ Setting empty array as fallback');
+          setMessages([]);
+        }
+      }
     } catch (error) {
-      console.error('Failed to fetch messages:', error);
-      // Don't show fake messages - just empty list
+      console.error('❌ Failed to fetch messages:', error);
+      // Always ensure messages is an array
       setMessages([]);
     } finally {
       setLoading(false);
@@ -90,10 +121,12 @@ const Messages = () => {
     if (!newMessage.trim() || !selectedConversation) return;
 
     try {
+      console.log('📤 Sending message to conversation:', selectedConversation.id);
+      
       // Use the correct messaging API endpoint
       await messagingAPI.sendMessage(selectedConversation.id, newMessage.trim());
       
-      // Add message to local state
+      // Add message to local state - ensure messages is an array first
       const newMsg = {
         id: Date.now(),
         sender: {
@@ -105,7 +138,13 @@ const Messages = () => {
         is_read: true
       };
       
-      setMessages(prev => [...prev, newMsg]);
+      // Safely update messages state
+      setMessages(prevMessages => {
+        const currentMessages = Array.isArray(prevMessages) ? prevMessages : [];
+        console.log('💬 Adding message to conversation. Current count:', currentMessages.length);
+        return [...currentMessages, newMsg];
+      });
+      
       setNewMessage('');
       
       // Update conversation's last message
@@ -123,7 +162,7 @@ const Messages = () => {
         )
       );
     } catch (error) {
-      console.error('Failed to send message:', error);
+      console.error('❌ Failed to send message:', error);
       showToast('Failed to send message');
     }
   };
@@ -276,19 +315,26 @@ const Messages = () => {
                 </div>
 
                 <div className="messages-list">
-                  {messages.map(message => (
-                    <div
-                      key={message.id}
-                      className={`message ${message.sender.username === user?.username ? 'sent' : 'received'}`}
-                    >
-                      <div className="message-content">
-                        <p>{message.content}</p>
-                        <span className="message-time">
-                          {formatTime(message.created_at)}
-                        </span>
+                  {Array.isArray(messages) && messages.length > 0 ? (
+                    messages.map(message => (
+                      <div
+                        key={message.id}
+                        className={`message ${message.sender.username === user?.username ? 'sent' : 'received'}`}
+                      >
+                        <div className="message-content">
+                          <p>{message.content}</p>
+                          <span className="message-time">
+                            {formatTime(message.created_at)}
+                          </span>
+                        </div>
                       </div>
+                    ))
+                  ) : (
+                    <div className="empty-messages">
+                      <p>No messages in this conversation yet</p>
+                      <small>Send a message to start the conversation!</small>
                     </div>
-                  ))}
+                  )}
                 </div>
 
                 <form onSubmit={sendMessage} className="message-input-form">
