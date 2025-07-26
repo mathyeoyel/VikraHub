@@ -1,3 +1,5 @@
+import logging
+
 from rest_framework import viewsets, status, serializers
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
@@ -5,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from django.contrib.auth.models import User
 from django.db.models import Q, Avg
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 from .asset_utils import (
     get_recommended_assets, get_asset_search_results, validate_asset_purchase,
     process_asset_purchase, get_seller_stats, get_trending_assets, calculate_asset_rating
@@ -24,6 +27,9 @@ from .serializers import (
     ProjectCategorySerializer, ProjectSerializer, ProjectApplicationSerializer, 
     ProjectContractSerializer, ProjectReviewSerializer
 )
+
+# Setup logging
+logger = logging.getLogger(__name__)
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -205,10 +211,26 @@ class BlogPostViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'])
     def my_posts(self, request):
-        """Get current user's blog posts"""
-        posts = BlogPost.objects.filter(author=request.user)
-        serializer = self.get_serializer(posts, many=True)
-        return Response(serializer.data)
+        """Get current user's blog posts with authentication check"""
+        if not request.user.is_authenticated:
+            return Response({
+                'error': 'Authentication required',
+                'detail': 'You must be logged in to view your posts'
+            }, status=status.HTTP_401_UNAUTHORIZED)
+        
+        try:
+            posts = BlogPost.objects.filter(author=request.user).order_by('-created_at')
+            serializer = self.get_serializer(posts, many=True)
+            return Response({
+                'count': posts.count(),
+                'results': serializer.data
+            })
+        except Exception as e:
+            logger.error(f"Error fetching user posts: {e}")
+            return Response({
+                'error': 'Failed to fetch posts',
+                'detail': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class NotificationViewSet(viewsets.ModelViewSet):
     queryset = Notification.objects.all()
@@ -363,10 +385,26 @@ class CreativeAssetViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'])
     def my_assets(self, request):
-        """Get current user's assets"""
-        assets = CreativeAsset.objects.filter(seller=request.user)
-        serializer = self.get_serializer(assets, many=True)
-        return Response(serializer.data)
+        """Get current user's assets with authentication check"""
+        if not request.user.is_authenticated:
+            return Response({
+                'error': 'Authentication required',
+                'detail': 'You must be logged in to view your assets'
+            }, status=status.HTTP_401_UNAUTHORIZED)
+        
+        try:
+            assets = CreativeAsset.objects.filter(seller=request.user).order_by('-created_at')
+            serializer = self.get_serializer(assets, many=True)
+            return Response({
+                'count': assets.count(),
+                'results': serializer.data
+            })
+        except Exception as e:
+            logger.error(f"Error fetching user assets: {e}")
+            return Response({
+                'error': 'Failed to fetch assets',
+                'detail': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     @action(detail=False, methods=['get'])
     def trending(self, request):

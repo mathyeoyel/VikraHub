@@ -35,7 +35,7 @@ api.interceptors.request.use(
   error => Promise.reject(error)
 );
 
-// Response interceptor to handle token expiration
+// Response interceptor to handle token expiration and errors
 api.interceptors.response.use(
   response => response,
   async error => {
@@ -74,6 +74,60 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Enhanced error handling helper
+const handleAPIError = (error, defaultMessage = "An error occurred") => {
+  if (error.response) {
+    // Server responded with error status
+    const { status, data } = error.response;
+    
+    if (status === 401) {
+      return { 
+        error: true, 
+        message: data.detail || "Authentication required",
+        status: 401,
+        authError: true
+      };
+    } else if (status === 403) {
+      return { 
+        error: true, 
+        message: data.detail || "Permission denied",
+        status: 403
+      };
+    } else if (status === 404) {
+      return { 
+        error: true, 
+        message: data.detail || "Resource not found",
+        status: 404
+      };
+    } else if (status === 500) {
+      return { 
+        error: true, 
+        message: data.detail || "Server error occurred",
+        status: 500
+      };
+    } else {
+      return { 
+        error: true, 
+        message: data.error || data.detail || defaultMessage,
+        status
+      };
+    }
+  } else if (error.request) {
+    // Network error
+    return { 
+      error: true, 
+      message: "Network error - please check your connection",
+      networkError: true
+    };
+  } else {
+    // Other error
+    return { 
+      error: true, 
+      message: error.message || defaultMessage
+    };
+  }
+};
 
 // API endpoints
 export const authAPI = {
@@ -149,17 +203,81 @@ export const portfolioAPI = {
 };
 
 export const blogAPI = {
-  getAll: () => api.get("blog/"),
-  getMyPosts: () => api.get("blog/my_posts/"),
-  create: (data) => api.post("blog/", data),
-  update: (id, data) => api.patch(`blog/${id}/`, data),
-  delete: (id) => api.delete(`blog/${id}/`),
+  getAll: async () => {
+    try {
+      const response = await api.get("blog/");
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to fetch blog posts");
+    }
+  },
+  getMyPosts: async () => {
+    try {
+      const response = await api.get("blog/my_posts/");
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to fetch your blog posts");
+    }
+  },
+  create: async (data) => {
+    try {
+      const response = await api.post("blog/", data);
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to create blog post");
+    }
+  },
+  update: async (id, data) => {
+    try {
+      const response = await api.patch(`blog/${id}/`, data);
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to update blog post");
+    }
+  },
+  delete: async (id) => {
+    try {
+      const response = await api.delete(`blog/${id}/`);
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to delete blog post");
+    }
+  },
 };
 
 export const notificationAPI = {
-  getAll: () => api.get("notifications/"),
-  markAsRead: (id) => api.post(`notifications/${id}/mark_read/`),
-  create: (data) => api.post("notifications/", data),
+  getAll: async () => {
+    try {
+      const response = await api.get("notifications/");
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to fetch notifications");
+    }
+  },
+  markAsRead: async (id) => {
+    try {
+      const response = await api.post(`notifications/${id}/mark_read/`);
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to mark notification as read");
+    }
+  },
+  create: async (data) => {
+    try {
+      const response = await api.post("notifications/", data);
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to create notification");
+    }
+  },
+  getUnreadCount: async () => {
+    try {
+      const response = await api.get("notifications/unread_count/");
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to fetch unread count");
+    }
+  },
 };
 
 export const publicProfileAPI = {
@@ -169,20 +287,97 @@ export const publicProfileAPI = {
   search: (params) => api.get("public-profiles/search/", { params }),
 };
 
-// Creative Assets Marketplace API
+// Creative Assets Marketplace API with enhanced error handling
 export const assetAPI = {
   // Assets
-  getAll: (params) => api.get("creative-assets/", { params }),
-  getById: (id) => api.get(`creative-assets/${id}/`),
-  create: (data) => api.post("creative-assets/", data),
-  update: (id, data) => api.patch(`creative-assets/${id}/`, data),
-  delete: (id) => api.delete(`creative-assets/${id}/`),
-  getMyAssets: () => api.get("creative-assets/my_assets/"),
-  getTrending: (params) => api.get("creative-assets/trending/", { params }),
-  getRecommended: (params) => api.get("creative-assets/recommended/", { params }),
-  purchase: (id) => api.post(`creative-assets/${id}/purchase/`),
-  download: (id) => api.post(`creative-assets/${id}/download/`),
-  getSellerStats: () => api.get("creative-assets/seller_stats/"),
+  getAll: async (params) => {
+    try {
+      const response = await api.get("creative-assets/", { params });
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to fetch assets");
+    }
+  },
+  getById: async (id) => {
+    try {
+      const response = await api.get(`creative-assets/${id}/`);
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to fetch asset details");
+    }
+  },
+  create: async (data) => {
+    try {
+      const response = await api.post("creative-assets/", data);
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to create asset");
+    }
+  },
+  update: async (id, data) => {
+    try {
+      const response = await api.patch(`creative-assets/${id}/`, data);
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to update asset");
+    }
+  },
+  delete: async (id) => {
+    try {
+      const response = await api.delete(`creative-assets/${id}/`);
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to delete asset");
+    }
+  },
+  getMyAssets: async () => {
+    try {
+      const response = await api.get("creative-assets/my_assets/");
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to fetch your assets");
+    }
+  },
+  getTrending: async (params) => {
+    try {
+      const response = await api.get("creative-assets/trending/", { params });
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to fetch trending assets");
+    }
+  },
+  getRecommended: async (params) => {
+    try {
+      const response = await api.get("creative-assets/recommended/", { params });
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to fetch recommended assets");
+    }
+  },
+  purchase: async (id) => {
+    try {
+      const response = await api.post(`creative-assets/${id}/purchase/`);
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to purchase asset");
+    }
+  },
+  download: async (id) => {
+    try {
+      const response = await api.post(`creative-assets/${id}/download/`);
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to download asset");
+    }
+  },
+  getSellerStats: async () => {
+    try {
+      const response = await api.get("creative-assets/seller_stats/");
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to fetch seller statistics");
+    }
+  },
   
   // Categories
   getCategories: () => api.get("asset-categories/"),
