@@ -21,6 +21,17 @@ const UserMenu = ({ onMenuAction }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Toggle user menu and close hamburger menu on mobile
+  const toggleUserMenu = () => {
+    const newIsOpen = !isOpen;
+    setIsOpen(newIsOpen);
+    
+    // Close hamburger menu when user menu opens
+    if (newIsOpen && onMenuAction) {
+      onMenuAction();
+    }
+  };
+
   const handleLogout = () => {
     logout();
     setIsOpen(false);
@@ -43,7 +54,7 @@ const UserMenu = ({ onMenuAction }) => {
     <div className="user-menu" ref={dropdownRef}>
       <div 
         className="user-avatar"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggleUserMenu}
         title={`${user.first_name} ${user.last_name}` || user.username}
       >
         <span className="user-icon">👤</span>
@@ -56,59 +67,63 @@ const UserMenu = ({ onMenuAction }) => {
       </div>
       
       {isOpen && (
-        <div className="user-dropdown">
-          <div className="user-dropdown-item user-info">
-            <strong>{user.first_name && user.last_name ? 
-              `${user.first_name} ${user.last_name}` : 
-              user.username}</strong>
-            <br />
-            <small>{user.email}</small>
+        <>
+          {/* Mobile backdrop overlay */}
+          <div className="user-menu-backdrop" onClick={() => setIsOpen(false)}></div>
+          <div className="user-dropdown">
+            <div className="user-dropdown-item user-info">
+              <strong>{user.first_name && user.last_name ? 
+                `${user.first_name} ${user.last_name}` : 
+                user.username}</strong>
+              <br />
+              <small>{user.email}</small>
+            </div>
+            <div className="dropdown-divider"></div>
+            <Link to="/profile" className="user-dropdown-item" onClick={handleMenuClick}>
+              <div className="dropdown-content">
+                <span className="dropdown-icon">👤</span>
+                My Profile
+              </div>
+            </Link>
+            <Link to="/messages" className="user-dropdown-item" onClick={handleMenuClick}>
+              <div className="dropdown-content">
+                <span className="dropdown-icon">💬</span>
+                Messages
+              </div>
+              {unreadMessages > 0 && <span className="unread-badge">{unreadMessages}</span>}
+            </Link>
+            <Link to="/notifications" className="user-dropdown-item" onClick={handleMenuClick}>
+              <div className="dropdown-content">
+                <span className="dropdown-icon">🔔</span>
+                Notifications
+              </div>
+              {unreadNotifications > 0 && <span className="unread-badge">{unreadNotifications}</span>}
+            </Link>
+            <div className="dropdown-divider"></div>
+            <Link to="/dashboard" className="user-dropdown-item" onClick={handleMenuClick}>
+              <div className="dropdown-content">
+                <span className="dropdown-icon">📊</span>
+                Dashboard
+              </div>
+            </Link>
+            <Link to="/settings" className="user-dropdown-item" onClick={handleMenuClick}>
+              <div className="dropdown-content">
+                <span className="dropdown-icon">⚙️</span>
+                Settings
+              </div>
+            </Link>
+            <div className="dropdown-divider"></div>
+            <button 
+              onClick={handleLogout}
+              className="user-dropdown-item logout"
+            >
+              <div className="dropdown-content">
+                <span className="dropdown-icon">🚪</span>
+                Logout
+              </div>
+            </button>
           </div>
-          <div className="dropdown-divider"></div>
-          <Link to="/profile" className="user-dropdown-item" onClick={handleMenuClick}>
-            <div className="dropdown-content">
-              <span className="dropdown-icon">👤</span>
-              My Profile
-            </div>
-          </Link>
-          <Link to="/messages" className="user-dropdown-item" onClick={handleMenuClick}>
-            <div className="dropdown-content">
-              <span className="dropdown-icon">💬</span>
-              Messages
-            </div>
-            {unreadMessages > 0 && <span className="unread-badge">{unreadMessages}</span>}
-          </Link>
-          <Link to="/notifications" className="user-dropdown-item" onClick={handleMenuClick}>
-            <div className="dropdown-content">
-              <span className="dropdown-icon">🔔</span>
-              Notifications
-            </div>
-            {unreadNotifications > 0 && <span className="unread-badge">{unreadNotifications}</span>}
-          </Link>
-          <div className="dropdown-divider"></div>
-          <Link to="/dashboard" className="user-dropdown-item" onClick={handleMenuClick}>
-            <div className="dropdown-content">
-              <span className="dropdown-icon">📊</span>
-              Dashboard
-            </div>
-          </Link>
-          <Link to="/settings" className="user-dropdown-item" onClick={handleMenuClick}>
-            <div className="dropdown-content">
-              <span className="dropdown-icon">⚙️</span>
-              Settings
-            </div>
-          </Link>
-          <div className="dropdown-divider"></div>
-          <button 
-            onClick={handleLogout}
-            className="user-dropdown-item logout"
-          >
-            <div className="dropdown-content">
-              <span className="dropdown-icon">🚪</span>
-              Logout
-            </div>
-          </button>
-        </div>
+        </>
       )}
     </div>
   );
