@@ -214,11 +214,17 @@ const Messages = () => {
   };
 
   const selectConversation = (conversation) => {
+    console.log('🎯 Selecting conversation:', conversation);
     setSelectedConversation(conversation);
+    
+    // Clear previous messages before fetching new ones
+    setMessages([]);
+    
     fetchMessages(conversation.id);
     
     // Mark as read
     if (conversation.unread_count > 0) {
+      console.log('📖 Marking conversation as read, unread count:', conversation.unread_count);
       markAsRead(conversation.id);
     }
   };
