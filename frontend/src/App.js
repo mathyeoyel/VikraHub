@@ -28,7 +28,7 @@ const Freelance = React.lazy(() => import("./components/Freelance"));
 const Creators = React.lazy(() => import("./components/Creators"));
 const SearchResults = React.lazy(() => import("./components/SearchResults"));
 const Settings = React.lazy(() => import("./components/Settings"));
-const Messages = React.lazy(() => import("./components/Messages"));
+const Messages = React.lazy(() => import("./components/Messages/Messages"));
 const Notifications = React.lazy(() => import("./components/Notifications"));
 const ChatExample = React.lazy(() => import("./components/Chat/ChatExample"));
 
