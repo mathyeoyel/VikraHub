@@ -129,7 +129,8 @@ const Creators = () => {
   // Sample fallback data (to show during loading or if no real data)
   const fallbackCreators = [
     {
-      id: 1,
+      id: null, // No real user ID for fallback data
+      username: null, // No real username for fallback data
       name: "Akon Peter",
       title: "Photographer",
       location: "Juba",
@@ -141,7 +142,8 @@ const Creators = () => {
       featured: true
     },
     {
-      id: 2,
+      id: null, // No real user ID for fallback data
+      username: null, // No real username for fallback data
       name: "Maduot Chongo",
       title: "Designer",
       location: "Gudele",
@@ -153,7 +155,8 @@ const Creators = () => {
       featured: true
     },
     {
-      id: 3,
+      id: null, // No real user ID for fallback data
+      username: null, // No real username for fallback data
       name: "Awut Paul",
       title: "Programmer",
       location: "Munuki",
@@ -165,7 +168,8 @@ const Creators = () => {
       featured: true
     },
     {
-      id: 4,
+      id: null, // No real user ID for fallback data
+      username: null, // No real username for fallback data
       name: "Buay Moses",
       title: "Entrepreneur",
       location: "Juba",
@@ -177,7 +181,8 @@ const Creators = () => {
       featured: false
     },
     {
-      id: 5,
+      id: null, // No real user ID for fallback data
+      username: null, // No real username for fallback data
       name: "John Marit",
       title: "Developer",
       location: "Juba",
@@ -189,7 +194,8 @@ const Creators = () => {
       featured: false
     },
     {
-      id: 6,
+      id: null, // No real user ID for fallback data
+      username: null, // No real username for fallback data
       name: "Ayen",
       title: "Digital Creator",
       location: "Juba",
@@ -201,7 +207,8 @@ const Creators = () => {
       featured: false
     },
     {
-      id: 7,
+      id: null, // No real user ID for fallback data
+      username: null, // No real username for fallback data
       name: "Grace Paskal",
       title: "Tech Enthusiast",
       location: "Juba",
@@ -213,7 +220,8 @@ const Creators = () => {
       featured: false
     },
     {
-      id: 8,
+      id: null, // No real user ID for fallback data
+      username: null, // No real username for fallback data
       name: "James Mayen",
       title: "Tech Enthusiast",
       location: "Wau",
@@ -225,7 +233,8 @@ const Creators = () => {
       featured: false
     },
     {
-      id: 9,
+      id: null, // No real user ID for fallback data
+      username: null, // No real username for fallback data
       name: "Barnabas Malek",
       title: "Web Designer",
       location: "Juba",
@@ -237,7 +246,8 @@ const Creators = () => {
       featured: false
     },
     {
-      id: 10,
+      id: null, // No real user ID for fallback data
+      username: null, // No real username for fallback data
       name: "Pal James",
       title: "Brand Specialist",
       location: "Juba",
@@ -249,7 +259,8 @@ const Creators = () => {
       featured: false
     },
     {
-      id: 11,
+      id: null, // No real user ID for fallback data
+      username: null, // No real username for fallback data
       name: "Thomas Obotte",
       title: "Cyber Analyst",
       location: "Juba",
@@ -261,7 +272,8 @@ const Creators = () => {
       featured: false
     },
     {
-      id: 12,
+      id: null, // No real user ID for fallback data
+      username: null, // No real username for fallback data
       name: "Wai Mike",
       title: "Digital Artist",
       location: "Malakal",
@@ -380,12 +392,18 @@ const Creators = () => {
                     <Link to={`/profile/${creator.username}`} className="btn-secondary">
                       View Profile
                     </Link>
-                    <ChatButton 
-                      recipientId={creator.id}
-                      recipientUsername={creator.username}
-                      recipientName={creator.name}
-                      size="medium"
-                    />
+                    {creator.id && creator.username ? (
+                      <ChatButton 
+                        recipientId={creator.id}
+                        recipientUsername={creator.username}
+                        recipientName={creator.name}
+                        size="medium"
+                      />
+                    ) : (
+                      <button className="btn-primary disabled" disabled>
+                        Chat Unavailable
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -453,12 +471,18 @@ const Creators = () => {
                       View Profile
                     </Link>
                     <button className="contact-btn">Contact</button>
-                    <ChatButton 
-                      recipientId={creator.id}
-                      recipientUsername={creator.username}
-                      recipientName={creator.name}
-                      size="small"
-                    />
+                    {creator.id && creator.username ? (
+                      <ChatButton 
+                        recipientId={creator.id}
+                        recipientUsername={creator.username}
+                        recipientName={creator.name}
+                        size="small"
+                      />
+                    ) : (
+                      <button className="btn-small disabled" disabled>
+                        Chat Unavailable
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
