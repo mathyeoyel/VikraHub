@@ -2309,3 +2309,7 @@ WARNING 2025-07-26 18:52:40,651 log 21984 15076 Unauthorized: /api/blog/my_posts
 WARNING 2025-07-26 18:52:40,655 basehttp 21984 15076 "GET /api/blog/my_posts/ HTTP/1.1" 401 87
 WARNING 2025-07-26 19:03:02,885 log 21984 16964 Unauthorized: /api/notifications/unread_count/
 WARNING 2025-07-26 19:03:02,890 basehttp 21984 16964 "GET /api/notifications/unread_count/ HTTP/1.1" 401 58
+INFO 2025-07-26 19:06:23,992 autoreload 3588 24392 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\api_views.py changed, reloading.
+INFO 2025-07-26 19:06:24,521 autoreload 21984 10764 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\api_views.py changed, reloading.
+INFO 2025-07-26 19:06:26,668 autoreload 10560 9316 Watching for file changes with StatReloader
+INFO 2025-07-26 19:06:27,621 autoreload 18748 21384 Watching for file changes with StatReloader

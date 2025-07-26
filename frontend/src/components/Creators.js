@@ -288,8 +288,18 @@ const Creators = () => {
 
   const categories = ['All', 'Photography', 'Design', 'Art', 'Digital Art', 'Writing', 'Music', 'Video', 'Creative'];
 
-  // Use real data if available, otherwise fallback data
-  const displayCreators = creators.length > 0 ? creators.map(mapCreatorData) : fallbackCreators;
+  // Use real data if available, combine with enhanced fallback data
+  const realCreators = creators.length > 0 ? creators.map(mapCreatorData) : [];
+  const enhancedFallbackCreators = fallbackCreators.map((creator, index) => ({
+    ...creator,
+    // Add mock user data for demonstration purposes - in production, only use real data
+    id: 1000 + index, // Mock user IDs starting from 1000
+    username: creator.name.toLowerCase().replace(/\s+/g, '_'), // Generate username from name
+    isMockData: true // Flag to identify this as sample data
+  }));
+  
+  // Combine real and fallback data for demonstration
+  const displayCreators = [...realCreators, ...enhancedFallbackCreators];
 
   // Filter creators based on category and search term
   const filteredCreators = displayCreators.filter(creator => {
@@ -392,13 +402,20 @@ const Creators = () => {
                     <Link to={`/profile/${creator.username}`} className="btn-secondary">
                       View Profile
                     </Link>
-                    {creator.id && creator.username ? (
+                    {creator.id && creator.username && !creator.isMockData ? (
                       <ChatButton 
                         recipientId={creator.id}
                         recipientUsername={creator.username}
                         recipientName={creator.name}
                         size="medium"
                       />
+                    ) : creator.isMockData ? (
+                      <button 
+                        className="btn-primary" 
+                        onClick={() => alert('This is a sample profile. Real messaging will be available with actual user profiles.')}
+                      >
+                        Message (Demo)
+                      </button>
                     ) : (
                       <button className="btn-primary disabled" disabled>
                         Chat Unavailable
@@ -470,14 +487,22 @@ const Creators = () => {
                     <Link to={`/profile/${creator.username}`} className="view-profile-link">
                       View Profile
                     </Link>
-                    <Link to="/messages" className="message-btn">Message</Link>
-                    {creator.id && creator.username ? (
+                    {creator.id && creator.username && !creator.isMockData ? (
                       <ChatButton 
                         recipientId={creator.id}
                         recipientUsername={creator.username}
                         recipientName={creator.name}
                         size="small"
+                        buttonText="Message"
+                        className="message-btn"
                       />
+                    ) : creator.isMockData ? (
+                      <button 
+                        className="message-btn" 
+                        onClick={() => alert('This is a sample profile. Real messaging will be available with actual user profiles.')}
+                      >
+                        Message (Demo)
+                      </button>
                     ) : (
                       <button className="btn-small disabled" disabled>
                         Chat Unavailable
