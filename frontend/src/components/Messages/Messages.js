@@ -13,6 +13,19 @@ const Messages = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if screen is mobile size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Debug log to track messages state
   useEffect(() => {
@@ -229,6 +242,12 @@ const Messages = () => {
     }
   };
 
+  // Function to go back to conversations list (mobile only)
+  const goBackToConversations = () => {
+    setSelectedConversation(null);
+    setMessages([]);
+  };
+
   const markAsRead = async (conversationId) => {
     try {
       // Use the correct messaging API endpoint
@@ -293,7 +312,7 @@ const Messages = () => {
           </div>
         </div>
 
-        <div className="messages-container">
+        <div className={`messages-container ${selectedConversation && isMobile ? 'conversation-selected' : ''}`}>
           {/* Conversations List */}
           <div className="conversations-sidebar">
             <div className="conversations-header">
@@ -354,6 +373,15 @@ const Messages = () => {
             {selectedConversation ? (
               <>
                 <div className="messages-header-bar">
+                  {isMobile && (
+                    <button 
+                      className="back-button"
+                      onClick={goBackToConversations}
+                      aria-label="Back to conversations"
+                    >
+                      ←
+                    </button>
+                  )}
                   <img
                     src={getAvatarUrl(selectedConversation.other_participant)}
                     alt={selectedConversation.other_participant.full_name || selectedConversation.other_participant.username}
@@ -407,8 +435,8 @@ const Messages = () => {
             ) : (
               <div className="no-conversation-selected">
                 <div className="empty-chat-state">
-                  <h3>Select a conversation</h3>
-                  <p>Choose a conversation from the sidebar to start messaging</p>
+                  <h3>{isMobile ? 'Select a conversation' : 'Select a conversation'}</h3>
+                  <p>{isMobile ? 'Choose a conversation to start messaging' : 'Choose a conversation from the sidebar to start messaging'}</p>
                 </div>
               </div>
             )}
