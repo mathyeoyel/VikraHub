@@ -90,10 +90,36 @@ const ChatButton = ({
   const recipientUser = getRecipientUser();
 
   const handleChatClick = () => {
-    if (!recipientUser) {
-      console.warn("Cannot open chat: Missing recipient information or recipient ID not yet loaded");
+    // ✨ Enhanced recipient validation as requested
+    const finalRecipientId = recipientId || fetchedRecipientId;
+    
+    if (!finalRecipientId) {
+      console.warn("❌ Missing recipientId, aborting chat send.");
+      console.warn("ChatButton validation failed:", {
+        recipientId,
+        fetchedRecipientId,
+        recipientUsername,
+        recipientName,
+        loading,
+        error
+      });
       return;
     }
+
+    if (!recipientUser || !recipientUser.id) {
+      console.warn("❌ Cannot open chat: Missing recipient information or recipient ID not yet loaded");
+      console.warn("Recipient user validation failed:", recipientUser);
+      return;
+    }
+
+    // Additional validation for numeric ID
+    const numericId = parseInt(finalRecipientId);
+    if (isNaN(numericId)) {
+      console.warn("❌ Invalid recipient ID (not numeric):", finalRecipientId);
+      return;
+    }
+
+    console.log("✅ ChatButton validation passed, opening chat modal");
     setShowChatModal(true);
   };
 

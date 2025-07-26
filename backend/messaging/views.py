@@ -4,6 +4,7 @@ from rest_framework import generics, status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.db.models import Q, Max, Count, Prefetch
@@ -31,6 +32,50 @@ class MessagePagination(PageNumberPagination):
     max_page_size = 100
 
 
+class ConversationListAPIView(APIView):
+    """
+    🚀 Fixed API endpoint for listing conversations
+    Handles authentication, error cases, and proper data serialization
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        """Get conversations for authenticated user with proper error handling"""
+        try:
+            user = request.user
+            logger.info(f"Fetching conversations for user: {user.username}")
+            
+            # Get conversations where user is a participant
+            conversations = Conversation.objects.filter(
+                participants=user,
+                is_deleted=False
+            ).exclude(
+                deleted_by=user
+            ).prefetch_related(
+                'participants',
+                Prefetch('messages', queryset=Message.objects.filter(is_deleted=False).order_by('-created_at'))
+            ).annotate(
+                latest_message_time=Max('messages__created_at')
+            ).order_by('-latest_message_time', '-updated_at')
+            
+            # Serialize conversations with context
+            serializer = ConversationSerializer(
+                conversations, 
+                many=True, 
+                context={'request': request}
+            )
+            
+            logger.info(f"Successfully fetched {len(conversations)} conversations for {user.username}")
+            return Response(serializer.data, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Error fetching conversations for user {request.user.username}: {str(e)}")
+            return Response(
+                {"error": "Failed to fetch conversations", "detail": str(e)}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
 class ConversationListCreateView(generics.ListCreateAPIView):
     """
     List all conversations for the current user or create a new one
@@ -43,24 +88,43 @@ class ConversationListCreateView(generics.ListCreateAPIView):
         return ConversationSerializer
     
     def get_queryset(self):
-        """Get conversations for current user"""
-        user = self.request.user
-        return Conversation.objects.filter(
-            participants=user,
-            is_deleted=False
-        ).exclude(
-            deleted_by=user
-        ).prefetch_related(
-            'participants',
-            'messages'
-        ).annotate(
-            latest_message_time=Max('messages__created_at')
-        ).order_by('-latest_message_time', '-updated_at')
+        """Get conversations for current user with enhanced error handling"""
+        try:
+            user = self.request.user
+            return Conversation.objects.filter(
+                participants=user,
+                is_deleted=False
+            ).exclude(
+                deleted_by=user
+            ).prefetch_related(
+                'participants',
+                'messages'
+            ).annotate(
+                latest_message_time=Max('messages__created_at')
+            ).order_by('-latest_message_time', '-updated_at')
+        except Exception as e:
+            logger.error(f"Error in get_queryset for user {self.request.user.username}: {str(e)}")
+            return Conversation.objects.none()
+    
+    def list(self, request, *args, **kwargs):
+        """Enhanced list method with error handling"""
+        try:
+            return super().list(request, *args, **kwargs)
+        except Exception as e:
+            logger.error(f"Error listing conversations: {str(e)}")
+            return Response(
+                {"error": "Failed to retrieve conversations", "detail": str(e)}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
     
     def perform_create(self, serializer):
         """Create conversation with current user as participant"""
-        conversation = serializer.save()
-        return conversation
+        try:
+            conversation = serializer.save()
+            return conversation
+        except Exception as e:
+            logger.error(f"Error creating conversation: {str(e)}")
+            raise
 
 
 class ConversationDetailView(generics.RetrieveUpdateDestroyAPIView):

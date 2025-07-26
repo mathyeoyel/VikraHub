@@ -345,22 +345,123 @@ export const followAPI = {
   searchUsers: (query) => api.get("follow/search/", { params: { q: query } }),
 };
 
-// Messaging API
+// 🚀 Enhanced Messaging API with proper error handling and validation
 export const messagingAPI = {
-  getConversations: () => api.get("messaging/conversations/"),
-  createConversation: (participant_username, initial_message = null) => 
-    api.post("messaging/conversations/", { participant_username, initial_message }),
-  getConversation: (conversation_id) => api.get(`messaging/conversations/${conversation_id}/`),
-  getMessages: (conversation_id) => api.get(`messaging/conversations/${conversation_id}/messages/`),
-  sendMessage: (conversation_id, content, message_type = 'text') => 
-    api.post(`messaging/conversations/${conversation_id}/messages/`, { content, message_type }),
-  markConversationRead: (conversation_id) => api.post(`messaging/conversations/${conversation_id}/mark-read/`),
+  // Get conversations with enhanced error handling
+  getConversations: async () => {
+    try {
+      const response = await api.get("messaging/conversations/");
+      console.log('✅ Conversations fetched successfully:', response.data?.length || 0);
+      return response;
+    } catch (error) {
+      console.error('❌ Failed to fetch conversations:', error.response?.data || error.message);
+      
+      // Return empty data structure to prevent crashes
+      if (error.response?.status === 500) {
+        console.warn('🔧 Server error detected, returning empty conversations list');
+        return { data: [] };
+      }
+      throw error;
+    }
+  },
+  
+  // Create conversation with validation
+  createConversation: async (participant_username, initial_message = null) => {
+    try {
+      if (!participant_username) {
+        throw new Error('Participant username is required');
+      }
+      
+      const response = await api.post("messaging/conversations/create/", { 
+        participant_username, 
+        initial_message 
+      });
+      console.log('✅ Conversation created successfully');
+      return response;
+    } catch (error) {
+      console.error('❌ Failed to create conversation:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+  
+  // Get specific conversation
+  getConversation: async (conversation_id) => {
+    try {
+      if (!conversation_id) {
+        throw new Error('Conversation ID is required');
+      }
+      return await api.get(`messaging/conversations/${conversation_id}/`);
+    } catch (error) {
+      console.error('❌ Failed to fetch conversation:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+  
+  // Get messages with validation
+  getMessages: async (conversation_id) => {
+    try {
+      if (!conversation_id) {
+        throw new Error('Conversation ID is required');
+      }
+      
+      const response = await api.get(`messaging/conversations/${conversation_id}/messages/`);
+      console.log('✅ Messages fetched successfully:', response.data?.length || 0);
+      return response;
+    } catch (error) {
+      console.error('❌ Failed to fetch messages:', error.response?.data || error.message);
+      
+      // Return empty messages array to prevent crashes
+      if (error.response?.status === 404 || error.response?.status === 500) {
+        console.warn('🔧 Returning empty messages list due to error');
+        return { data: [] };
+      }
+      throw error;
+    }
+  },
+  
+  // Send message with enhanced validation
+  sendMessage: async (conversation_id, content, message_type = 'text') => {
+    try {
+      if (!conversation_id) {
+        throw new Error('Conversation ID is required');
+      }
+      if (!content || !content.trim()) {
+        throw new Error('Message content cannot be empty');
+      }
+      
+      const response = await api.post(`messaging/conversations/${conversation_id}/messages/`, { 
+        content: content.trim(), 
+        message_type 
+      });
+      console.log('✅ Message sent successfully');
+      return response;
+    } catch (error) {
+      console.error('❌ Failed to send message:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+  
+  // Mark conversation as read
+  markConversationRead: async (conversation_id) => {
+    try {
+      if (!conversation_id) {
+        console.warn('⚠️ Conversation ID missing for mark read');
+        return;
+      }
+      return await api.post(`messaging/conversations/${conversation_id}/mark-read/`);
+    } catch (error) {
+      console.error('❌ Failed to mark conversation as read:', error.response?.data || error.message);
+      // Don't throw error for mark as read failures
+    }
+  },
+  
+  // Typing indicators
   startTyping: (conversation_id) => api.post(`messaging/conversations/${conversation_id}/typing/start/`),
   stopTyping: (conversation_id) => api.post(`messaging/conversations/${conversation_id}/typing/stop/`),
+  
+  // Utility functions
   getUnreadCount: () => api.get("messaging/unread-count/"),
   getMessage: (message_id) => api.get(`messaging/messages/${message_id}/`),
-  
-  // New chat API functions
   getMessagesWithUser: (user_id) => api.get(`messaging/messages/?user_id=${user_id}`),
   getUnreadMessagesCount: () => api.get("messaging/unread-count/"),
 };
