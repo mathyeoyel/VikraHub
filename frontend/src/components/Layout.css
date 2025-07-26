@@ -189,6 +189,72 @@ body {
   box-shadow: 0 4px 15px rgba(124, 82, 27, 0.3) !important;
 }
 
+/* Mobile Header Controls */
+.mobile-header-controls {
+  display: none;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mobile-auth-section,
+.mobile-auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mobile-get-started-btn {
+  background: var(--primary-color);
+  color: var(--dark-color) !important;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(255, 160, 0, 0.3);
+  cursor: pointer;
+}
+
+.mobile-get-started-btn:hover {
+  background: var(--primary-dark);
+  box-shadow: 0 4px 12px rgba(255, 160, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+.mobile-admin-link {
+  background: linear-gradient(135deg, #7c521b, #ffa000) !important;
+  color: white !important;
+  padding: 6px 12px !important;
+  border-radius: 15px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease !important;
+  font-size: 0.8rem !important;
+}
+
+.mobile-admin-link:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 3px 10px rgba(124, 82, 27, 0.3) !important;
+}
+
+/* Desktop Auth Section - Show only on desktop */
+.desktop-auth-section {
+  display: flex;
+  align-items: center;
+}
+
+/* Hide mobile controls on desktop */
+@media (min-width: 769px) {
+  .mobile-header-controls {
+    display: none !important;
+  }
+  
+  .desktop-auth-section {
+    display: flex;
+  }
+}
+
 /* Menu Toggle Button (Hamburger) */
 .menu-toggle {
   display: none;
@@ -425,6 +491,10 @@ body {
     padding: 0;
   }
   
+  .mobile-header-controls {
+    display: flex;
+  }
+  
   .menu-toggle {
     display: flex;
   }
@@ -453,15 +523,9 @@ body {
     visibility: visible;
   }
 
-  /* Keep auth section visible on mobile even when nav is closed */
-  .nav .auth-section {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    opacity: 1;
-    visibility: visible;
-    z-index: 1001;
-    background: none;
+  /* Hide desktop auth section on mobile */
+  .desktop-auth-section {
+    display: none;
   }
   
   .nav-link {
@@ -505,10 +569,19 @@ body {
     width: calc(100% - 10px);
   }
 
-  /* Adjust auth section position for smaller screens */
-  .nav .auth-section {
-    top: 15px;
-    right: 15px;
+  /* Mobile header controls adjustments for smaller screens */
+  .mobile-header-controls {
+    gap: 0.75rem;
+  }
+  
+  .mobile-get-started-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  
+  .mobile-admin-link {
+    padding: 5px 10px !important;
+    font-size: 0.75rem !important;
   }
   
   .footer-content {

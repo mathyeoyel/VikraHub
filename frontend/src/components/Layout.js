@@ -92,17 +92,38 @@ const Layout = ({ children }) => {
             <img src={logoImage} alt="VikraHub" className="logo-img" />
             <span className="logo-text">VikraHub</span>
           </a>
-          <button 
-            ref={menuToggleRef}
-            className="menu-toggle"
-            onClick={toggleMenu}
-            aria-label="Toggle menu"
-            aria-expanded={isMenuOpen}
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
+          <div className="mobile-header-controls">
+            {isAuthenticated ? (
+              <div className="mobile-auth-section">
+                {user && (user.is_staff || user.is_superuser) && (
+                  <Link to="/admin" className="mobile-admin-link" onClick={closeMenu}>
+                    Admin
+                  </Link>
+                )}
+                <UserMenu onMenuAction={closeMenu} />
+              </div>
+            ) : (
+              <div className="mobile-auth-buttons">
+                <button 
+                  className="mobile-get-started-btn" 
+                  onClick={() => openAuthModal('login')}
+                >
+                  Get Started
+                </button>
+              </div>
+            )}
+            <button 
+              ref={menuToggleRef}
+              className="menu-toggle"
+              onClick={toggleMenu}
+              aria-label="Toggle menu"
+              aria-expanded={isMenuOpen}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
           <nav ref={navRef} className={`nav ${isMenuOpen ? 'nav-open' : ''}`}>
             <a href="/" className="nav-link" onClick={() => {
               closeMenu();
@@ -113,25 +134,28 @@ const Layout = ({ children }) => {
             <Link to="/freelance" className="nav-link" onClick={closeMenu}>Freelance</Link>
             <Link to="/services" className="nav-link" onClick={closeMenu}>Services</Link>
             
-            {isAuthenticated ? (
-              <div className="auth-section">
-                {user && (user.is_staff || user.is_superuser) && (
-                  <Link to="/admin" className="nav-link admin-link" onClick={closeMenu}>
-                    Admin
-                  </Link>
-                )}
-                <UserMenu onMenuAction={closeMenu} />
-              </div>
-            ) : (
-              <div className="auth-buttons">
-                <button 
-                  className="nav-link get-started-btn" 
-                  onClick={() => openAuthModal('login')}
-                >
-                  Get Started
-                </button>
-              </div>
-            )}
+            {/* Desktop auth section - hidden on mobile */}
+            <div className="desktop-auth-section">
+              {isAuthenticated ? (
+                <div className="auth-section">
+                  {user && (user.is_staff || user.is_superuser) && (
+                    <Link to="/admin" className="nav-link admin-link" onClick={closeMenu}>
+                      Admin
+                    </Link>
+                  )}
+                  <UserMenu onMenuAction={closeMenu} />
+                </div>
+              ) : (
+                <div className="auth-buttons">
+                  <button 
+                    className="nav-link get-started-btn" 
+                    onClick={() => openAuthModal('login')}
+                  >
+                    Get Started
+                  </button>
+                </div>
+              )}
+            </div>
           </nav>
         </div>
       </header>
