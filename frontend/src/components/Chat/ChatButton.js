@@ -3,19 +3,65 @@ import React, { useState } from 'react';
 import ChatModal from './ChatModal';
 import './ChatButton.css';
 
-const ChatButton = ({ user, buttonText = "Message", className = "", variant = "primary" }) => {
+const ChatButton = ({ 
+  user, 
+  recipientUsername, 
+  recipientName, 
+  recipientId,
+  buttonText = "Message", 
+  className = "", 
+  variant = "primary",
+  size = "medium"
+}) => {
   const [showChatModal, setShowChatModal] = useState(false);
 
+  // Create a proper user object for the chat modal
+  const getRecipientUser = () => {
+    // If user object is provided directly, use it
+    if (user && user.id && user.username) {
+      return user;
+    }
+    
+    // If individual props are provided, construct user object
+    if (recipientUsername) {
+      return {
+        id: recipientId || recipientUsername, // Use ID if available, fallback to username
+        username: recipientUsername,
+        full_name: recipientName || recipientUsername,
+        avatar: null // Will use default avatar generation
+      };
+    }
+    
+    console.error("ChatButton: Missing recipient info", { user, recipientUsername, recipientName, recipientId });
+    return null;
+  };
+
+  const recipientUser = getRecipientUser();
+
   const handleChatClick = () => {
+    if (!recipientUser) {
+      console.error("Cannot open chat: Missing recipient information");
+      return;
+    }
     setShowChatModal(true);
+  };
+
+  // Size-based styling
+  const getSizeClass = () => {
+    switch (size) {
+      case 'small': return 'chat-button-small';
+      case 'large': return 'chat-button-large';
+      default: return 'chat-button-medium';
+    }
   };
 
   return (
     <>
       <button 
         onClick={handleChatClick}
-        className={`chat-button chat-button-${variant} ${className}`}
-        title={`Send a message to ${user?.full_name || user?.username}`}
+        className={`chat-button chat-button-${variant} ${getSizeClass()} ${className}`}
+        title={`Send a message to ${recipientUser?.full_name || recipientUser?.username || 'user'}`}
+        disabled={!recipientUser}
       >
         <svg 
           width="16" 
@@ -29,11 +75,13 @@ const ChatButton = ({ user, buttonText = "Message", className = "", variant = "p
         {buttonText}
       </button>
       
-      <ChatModal
-        isOpen={showChatModal}
-        onClose={() => setShowChatModal(false)}
-        recipientUser={user}
-      />
+      {recipientUser && (
+        <ChatModal
+          isOpen={showChatModal}
+          onClose={() => setShowChatModal(false)}
+          recipientUser={recipientUser}
+        />
+      )}
     </>
   );
 };

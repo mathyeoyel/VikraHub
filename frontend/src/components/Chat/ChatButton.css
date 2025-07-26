@@ -99,6 +99,44 @@
   box-shadow: none;
 }
 
+/* Size variants */
+.chat-button-small {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+}
+
+.chat-button-small .chat-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.chat-button-medium {
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+
+.chat-button-medium .chat-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.chat-button-large {
+  padding: 14px 20px;
+  font-size: 1rem;
+}
+
+.chat-button-large .chat-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Disabled state */
+.chat-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 /* Dark theme variant */
 .chat-button-dark {
   background: #343a40;

@@ -13,6 +13,15 @@ const ChatModal = ({ isOpen, onClose, recipientUser }) => {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
+  // Validate recipient user data
+  if (!recipientUser || (!recipientUser.username && !recipientUser.id)) {
+    console.error('ChatModal: Invalid recipient user data', recipientUser);
+    return null;
+  }
+
+  // Ensure recipient has proper display name
+  const recipientDisplayName = recipientUser.full_name || recipientUser.username || 'User';
+
   // WebSocket URL configuration
   const getWebSocketURL = () => {
     const baseURL = process.env.REACT_APP_API_URL || "https://api.vikrahub.com/api/";
@@ -112,8 +121,14 @@ const ChatModal = ({ isOpen, onClose, recipientUser }) => {
     try {
       setLoading(true);
       const token = getAccessToken();
+      
+      // Use recipient ID if it's a valid number, otherwise use username
+      const queryParam = (recipientUser.id && !isNaN(recipientUser.id)) 
+        ? `user_id=${recipientUser.id}` 
+        : `username=${recipientUser.username}`;
+        
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL || "https://api.vikrahub.com/api/"}messaging/messages/?user_id=${recipientUser.id}`,
+        `${process.env.REACT_APP_API_URL || "https://api.vikrahub.com/api/"}messaging/messages/?${queryParam}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -146,9 +161,14 @@ const ChatModal = ({ isOpen, onClose, recipientUser }) => {
     e.preventDefault();
     if (!newMessage.trim() || !socket || !isConnected || !recipientUser) return;
 
+    // Use recipient ID if it's a valid number, otherwise use username for identification
+    const recipientIdentifier = (recipientUser.id && !isNaN(recipientUser.id)) 
+      ? recipientUser.id 
+      : recipientUser.username;
+
     const messageData = {
       type: 'message',
-      recipient_id: recipientUser.id,
+      recipient_id: recipientIdentifier,
       text: newMessage.trim()
     };
 
@@ -196,12 +216,12 @@ const ChatModal = ({ isOpen, onClose, recipientUser }) => {
         <div className="chat-header">
           <div className="chat-user-info">
             <img
-              src={recipientUser?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(recipientUser?.full_name || recipientUser?.username || 'User')}&background=007bff&color=ffffff&size=40`}
-              alt={recipientUser?.full_name || recipientUser?.username}
+              src={recipientUser?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(recipientDisplayName)}&background=007bff&color=ffffff&size=40`}
+              alt={recipientDisplayName}
               className="chat-user-avatar"
             />
             <div>
-              <h3>{recipientUser?.full_name || recipientUser?.username}</h3>
+              <h3>{recipientDisplayName}</h3>
               <span className={`connection-status ${isConnected ? 'connected' : 'disconnected'}`}>
                 {isConnected ? '🟢 Connected' : '🔴 Connecting...'}
               </span>
@@ -215,7 +235,7 @@ const ChatModal = ({ isOpen, onClose, recipientUser }) => {
             <div className="chat-loading">Loading messages...</div>
           ) : messages.length === 0 ? (
             <div className="chat-empty">
-              <p>Start your conversation with {recipientUser?.full_name || recipientUser?.username}</p>
+              <p>Start your conversation with {recipientDisplayName}</p>
             </div>
           ) : (
             messages.map(message => (
@@ -241,7 +261,7 @@ const ChatModal = ({ isOpen, onClose, recipientUser }) => {
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              placeholder={`Message ${recipientUser?.full_name || recipientUser?.username}...`}
+              placeholder={`Message ${recipientDisplayName}...`}
               className="chat-input"
               disabled={!isConnected}
             />

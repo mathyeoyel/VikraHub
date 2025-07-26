@@ -40,7 +40,7 @@ const Creators = () => {
     const userProfile = user.userprofile || {};
     
     return {
-      id: creatorProfile.id,
+      id: user.id, // Use user ID instead of creator profile ID for messaging
       username: user.username,
       name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username,
       title: creatorProfile.creator_type_display || 'Creative Professional',
@@ -381,6 +381,7 @@ const Creators = () => {
                       View Profile
                     </Link>
                     <ChatButton 
+                      recipientId={creator.id}
                       recipientUsername={creator.username}
                       recipientName={creator.name}
                       size="medium"
@@ -453,6 +454,7 @@ const Creators = () => {
                     </Link>
                     <button className="contact-btn">Contact</button>
                     <ChatButton 
+                      recipientId={creator.id}
                       recipientUsername={creator.username}
                       recipientName={creator.name}
                       size="small"
