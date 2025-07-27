@@ -27,31 +27,41 @@ const AssetsMarketplace = () => {
   const loadInitialData = async () => {
     try {
       setLoading(true);
+      setError(null); // Clear any previous errors
       
-      // Load categories, trending, and recommended assets
+      // Load categories and trending assets (these don't require authentication)
       const [categoriesRes, trendingRes] = await Promise.all([
-        assetAPI.getCategories(),
-        assetAPI.getTrending({ limit: 6 })
+        assetAPI.getCategories().catch(err => {
+          console.warn('Failed to load categories:', err);
+          return { data: [] };
+        }),
+        assetAPI.getTrending({ limit: 6 }).catch(err => {
+          console.warn('Failed to load trending assets:', err);
+          return { data: [] };
+        })
       ]);
 
-      setCategories(categoriesRes.data);
-      setTrending(trendingRes.data);
+      setCategories(categoriesRes.data || []);
+      setTrending(trendingRes.data || []);
 
-      // Load recommended assets if user is authenticated
+      // Load recommended assets only if user is authenticated
       if (user) {
         try {
           const recommendedRes = await assetAPI.getRecommended({ limit: 6 });
-          setRecommended(recommendedRes.data);
+          setRecommended(recommendedRes.data || []);
         } catch (err) {
-          console.log('No recommendations available');
+          console.warn('No recommendations available or user not authenticated:', err);
+          setRecommended([]); // Set empty array to prevent undefined errors
         }
+      } else {
+        setRecommended([]); // Set empty array for non-authenticated users
       }
 
       // Load initial assets
       await loadAssets();
     } catch (err) {
-      setError('Failed to load marketplace data');
-      console.error(err);
+      console.error('Failed to load marketplace data:', err);
+      setError('Failed to load marketplace data. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -73,10 +83,11 @@ const AssetsMarketplace = () => {
       });
 
       const response = await assetAPI.getAll(params);
-      setAssets(response.data);
+      setAssets(response.data || []); // Ensure we always set an array
     } catch (err) {
-      setError('Failed to load assets');
-      console.error(err);
+      console.error('Failed to load assets:', err);
+      setAssets([]); // Set empty array on error to prevent undefined errors
+      // Don't set global error here as this might be called frequently
     }
   };
 
@@ -113,69 +124,83 @@ const AssetsMarketplace = () => {
     }
   };
 
-  const AssetCard = ({ asset }) => (
-    <div className="asset-card">
-      <div className="asset-image">
-        <img src={asset.preview_image} alt={asset.title} loading="lazy" />
-        <div className="asset-overlay">
-          <div className="asset-rating">
-            ⭐ {asset.rating ? parseFloat(asset.rating).toFixed(1) : '0.0'} ({asset.review_count || 0})
+  const AssetCard = ({ asset }) => {
+    // Add safety checks for asset properties
+    if (!asset) return null;
+    
+    return (
+      <div className="asset-card">
+        <div className="asset-image">
+          {asset.preview_image && (
+            <img src={asset.preview_image} alt={asset.title || 'Asset'} loading="lazy" />
+          )}
+          <div className="asset-overlay">
+            <div className="asset-rating">
+              ⭐ {asset.rating ? parseFloat(asset.rating).toFixed(1) : '0.0'} ({asset.review_count || 0})
+            </div>
+          </div>
+        </div>
+        
+        <div className="asset-info">
+          <h3 className="asset-title">{asset.title || 'Untitled Asset'}</h3>
+          <p className="asset-seller">by {asset.seller?.username || 'Unknown'}</p>
+          <p className="asset-description">
+            {asset.description ? asset.description.substring(0, 100) + '...' : 'No description available'}
+          </p>
+          
+          <div className="asset-tags">
+            {(asset.tags_list || []).slice(0, 3).map((tag, index) => (
+              <span key={index} className="asset-tag">{tag}</span>
+            ))}
+          </div>
+          
+          <div className="asset-footer">
+            <div className="asset-price">${asset.price ? parseFloat(asset.price).toFixed(2) : '0.00'}</div>
+            <div className="asset-actions">
+              {asset.is_purchased ? (
+                <button 
+                  className="btn btn-success"
+                  onClick={() => handleDownload(asset.id)}
+                >
+                  Download
+                </button>
+              ) : (
+                <button 
+                  className="btn btn-primary"
+                  onClick={() => handlePurchase(asset.id)}
+                >
+                  Purchase
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
-      
-      <div className="asset-info">
-        <h3 className="asset-title">{asset.title}</h3>
-        <p className="asset-seller">by {asset.seller?.username || 'Unknown'}</p>
-        <p className="asset-description">{asset.description ? asset.description.substring(0, 100) + '...' : ''}</p>
-        
-        <div className="asset-tags">
-          {(asset.tags_list || []).slice(0, 3).map((tag, index) => (
-            <span key={index} className="asset-tag">{tag}</span>
-          ))}
-        </div>
-        
-        <div className="asset-footer">
-          <div className="asset-price">${asset.price ? parseFloat(asset.price).toFixed(2) : '0.00'}</div>
-          <div className="asset-actions">
-            {asset.is_purchased ? (
-              <button 
-                className="btn btn-success"
-                onClick={() => handleDownload(asset.id)}
-              >
-                Download
-              </button>
-            ) : (
-              <button 
-                className="btn btn-primary"
-                onClick={() => handlePurchase(asset.id)}
-              >
-                Purchase
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+    );
+  };
 
   const TrendingSection = () => (
     <section className="trending-section">
       <h2>🔥 Trending Assets</h2>
       <div className="assets-grid trending-grid">
-        {trending.map(asset => (
+        {(trending || []).map(asset => (
           <AssetCard key={asset.id} asset={asset} />
         ))}
       </div>
+      {(!trending || trending.length === 0) && (
+        <div className="no-assets">
+          <p>No trending assets available at the moment.</p>
+        </div>
+      )}
     </section>
   );
 
   const RecommendedSection = () => (
-    user && recommended.length > 0 && (
+    user && (recommended || []).length > 0 && (
       <section className="recommended-section">
         <h2>💡 Recommended for You</h2>
         <div className="assets-grid recommended-grid">
-          {recommended.map(asset => (
+          {(recommended || []).map(asset => (
             <AssetCard key={asset.id} asset={asset} />
           ))}
         </div>
@@ -281,14 +306,14 @@ const AssetsMarketplace = () => {
 
       {/* All Assets */}
       <section className="all-assets-section">
-        <h2>All Assets ({assets.length})</h2>
-        {assets.length === 0 ? (
+        <h2>All Assets ({(assets || []).length})</h2>
+        {(!assets || assets.length === 0) ? (
           <div className="no-assets">
             <p>No assets found matching your criteria.</p>
           </div>
         ) : (
           <div className="assets-grid">
-            {assets.map(asset => (
+            {(assets || []).map(asset => (
               <AssetCard key={asset.id} asset={asset} />
             ))}
           </div>

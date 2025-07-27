@@ -22,7 +22,8 @@ api.interceptors.request.use(
       !config.url.includes('my_assets/') && 
       !config.url.includes('my-assets/') &&
       !config.url.includes('purchase/') &&
-      !config.url.includes('review/');
+      !config.url.includes('review/') &&
+      !config.url.includes('recommended/'); // Recommended endpoint requires authentication
     
     const isPublicRoute = publicRoutes.some(route => config.url.includes(route)) || isCreativeAssetsPublic;
     
@@ -57,7 +58,8 @@ api.interceptors.response.use(
       !originalRequest.url.includes('my_assets/') && 
       !originalRequest.url.includes('my-assets/') &&
       !originalRequest.url.includes('purchase/') &&
-      !originalRequest.url.includes('review/');
+      !originalRequest.url.includes('review/') &&
+      !originalRequest.url.includes('recommended/'); // Recommended endpoint requires authentication
     
     const isPublicRoute = publicRoutes.some(route => originalRequest.url.includes(route)) || isCreativeAssetsPublic;
     
