@@ -47,7 +47,19 @@ const PublicProfile = () => {
         }
         
         // Fetch user's uploaded assets to include in portfolio
-        await fetchUserAssets(response.data.user.id);
+        console.log('👤 Profile data:', {
+          username: response.data.user?.username,
+          userId: response.data.user?.id,
+          userType: response.data.user_type,
+          profileId: response.data.id
+        });
+        
+        if (response.data.user?.id) {
+          await fetchUserAssets(response.data.user.id);
+        } else {
+          console.warn('⚠️ No user ID found in profile response');
+          setAssets([]);
+        }
       } catch (err) {
         setError(err.response?.data?.detail || 'Profile not found');
       } finally {
@@ -58,34 +70,76 @@ const PublicProfile = () => {
     const fetchUserAssets = async (userId) => {
       try {
         setAssetsLoading(true);
-        console.log(`Fetching assets for user ${userId}...`);
+        console.log(`🔍 Fetching assets for user ID: ${userId} (${typeof userId})`);
         
-        // Try to fetch assets with seller filter parameter first
-        let userAssets = [];
-        try {
-          const response = await assetAPI.getAll({ seller: userId });
-          userAssets = response.results || response.data || response || [];
-          console.log(`API response for user ${userId}:`, response);
-        } catch (paramError) {
-          console.log('Parameterized fetch failed, falling back to full fetch and filter...');
-          // Fallback: fetch all assets and filter client-side
-          const response = await assetAPI.getAll();
-          const allAssets = response.results || response.data || response || [];
+        // Convert userId to number if it's a string, since API might expect number
+        const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
+        console.log(`📊 Converted user ID: ${numericUserId} (${typeof numericUserId})`);
+        
+        // Always fetch all assets and filter client-side for now to ensure proper filtering
+        const response = await assetAPI.getAll();
+        console.log(`📥 Raw API response:`, response);
+        
+        // Extract assets from response
+        const allAssets = response.results || response.data || response || [];
+        console.log(`📋 Total assets received: ${allAssets.length}`);
+        
+        // Debug: Log first few assets to see structure
+        if (allAssets.length > 0) {
+          console.log(`🔬 Sample asset structure:`, allAssets[0]);
+        }
+        
+        // Filter assets to only show those created by this specific user
+        const userAssets = allAssets.filter(asset => {
+          // Check multiple possible patterns for user identification
+          const isUserAsset = 
+            (asset.seller && asset.seller.id === numericUserId) || 
+            (asset.seller && asset.seller.id === userId) ||
+            (asset.user && asset.user.id === numericUserId) ||
+            (asset.user && asset.user.id === userId) ||
+            (asset.seller_id === numericUserId) ||
+            (asset.seller_id === userId) ||
+            (asset.user_id === numericUserId) ||
+            (asset.user_id === userId) ||
+            (asset.created_by && asset.created_by.id === numericUserId) ||
+            (asset.created_by && asset.created_by.id === userId);
           
-          // Filter assets to only show those created/sold by this specific user
-          userAssets = allAssets.filter(asset => {
-            // Check both seller.id and user.id patterns
-            return (asset.seller && asset.seller.id === userId) || 
-                   (asset.user && asset.user.id === userId) ||
-                   (asset.seller_id === userId) ||
-                   (asset.user_id === userId);
+          if (isUserAsset) {
+            console.log(`✅ Asset belongs to user ${userId}:`, {
+              assetId: asset.id,
+              title: asset.title,
+              seller: asset.seller,
+              user: asset.user,
+              seller_id: asset.seller_id,
+              user_id: asset.user_id,
+              created_by: asset.created_by
+            });
+          }
+          
+          return isUserAsset;
+        });
+        
+        console.log(`🎯 Filtered ${userAssets.length} assets for user ${userId} out of ${allAssets.length} total assets`);
+        
+        if (userAssets.length === 0 && allAssets.length > 0) {
+          console.warn(`⚠️ No assets found for user ${userId}. Check if user ID matches asset ownership fields.`);
+          // Debug: Show how assets are structured
+          allAssets.slice(0, 3).forEach((asset, index) => {
+            console.log(`🔍 Asset ${index + 1} ownership info:`, {
+              id: asset.id,
+              title: asset.title,
+              seller: asset.seller,
+              user: asset.user,
+              seller_id: asset.seller_id,
+              user_id: asset.user_id,
+              created_by: asset.created_by
+            });
           });
         }
         
-        console.log(`Found ${userAssets.length} assets for user ${userId}:`, userAssets);
         setAssets(userAssets);
       } catch (err) {
-        console.warn('Failed to fetch user assets:', err);
+        console.error('❌ Failed to fetch user assets:', err);
         setAssets([]);
       } finally {
         setAssetsLoading(false);
