@@ -31,6 +31,76 @@ export const FollowProvider = ({ children }) => {
     suggestions: false
   });
 
+  // Request queue for follow stats to prevent too many concurrent requests
+  const [statsRequestQueue, setStatsRequestQueue] = useState([]);
+  const [activeStatsRequests, setActiveStatsRequests] = useState(0);
+  const MAX_CONCURRENT_STATS_REQUESTS = 5;
+
+  // Process stats request queue
+  const processStatsQueue = () => {
+    setStatsRequestQueue(currentQueue => {
+      if (currentQueue.length === 0) return currentQueue;
+      
+      setActiveStatsRequests(currentActive => {
+        if (currentActive >= MAX_CONCURRENT_STATS_REQUESTS) {
+          return currentActive; // Don't start new requests if at limit
+        }
+        
+        // Start the next request in queue
+        const nextRequest = currentQueue[0];
+        if (nextRequest) {
+          executeStatsRequest(nextRequest);
+        }
+        
+        return currentActive;
+      });
+      
+      return currentQueue;
+    });
+  };
+
+  // Execute a single stats request
+  const executeStatsRequest = async ({ userId, resolvers, rejecters }) => {
+    try {
+      setActiveStatsRequests(prev => prev + 1);
+      setLoading(prev => ({ ...prev, stats: true }));
+      
+      const response = await followAPI.getUserStats(userId);
+      
+      // Cache the stats
+      setFollowStats(prev => ({
+        ...prev,
+        [userId]: response.data
+      }));
+      
+      // Resolve all waiting promises
+      const result = { success: true, data: response.data };
+      resolvers.forEach(resolve => resolve(result));
+    } catch (error) {
+      console.error('Error getting follow stats:', error);
+      
+      // Reject all waiting promises
+      const errorResult = { success: false, error: error.response?.data?.error || 'Failed to get follow stats' };
+      rejecters.forEach(reject => reject(errorResult));
+    } finally {
+      setActiveStatsRequests(prev => prev - 1);
+      setLoading(prev => ({ ...prev, stats: false }));
+      
+      // Remove completed request from queue and process next
+      setStatsRequestQueue(prev => {
+        const newQueue = prev.slice(1);
+        return newQueue;
+      });
+    }
+  };
+
+  // Monitor queue and process when there are pending requests and available slots
+  useEffect(() => {
+    if (statsRequestQueue.length > 0 && activeStatsRequests < MAX_CONCURRENT_STATS_REQUESTS) {
+      processStatsQueue();
+    }
+  }, [statsRequestQueue.length, activeStatsRequests]);
+
   // WebSocket message handlers
   useEffect(() => {
     if (!socket || !isConnected) return;
@@ -174,24 +244,31 @@ export const FollowProvider = ({ children }) => {
   };
 
   const getFollowStats = async (userId) => {
-    try {
-      setLoading(prev => ({ ...prev, stats: true }));
+    return new Promise((resolve, reject) => {
+      // Check if we already have cached stats for this user
+      if (followStats[userId]) {
+        resolve({ success: true, data: followStats[userId] });
+        return;
+      }
       
-      const response = await followAPI.getUserStats(userId);
+      // Check if request is already in queue for this userId
+      const existingRequest = statsRequestQueue.find(req => req.userId === userId);
+      if (existingRequest) {
+        // Add this resolve/reject to the existing request so multiple callers get the same result
+        existingRequest.resolvers = existingRequest.resolvers || [];
+        existingRequest.rejecters = existingRequest.rejecters || [];
+        existingRequest.resolvers.push(resolve);
+        existingRequest.rejecters.push(reject);
+        return;
+      }
       
-      // Cache the stats
-      setFollowStats(prev => ({
-        ...prev,
-        [userId]: response.data
-      }));
-      
-      return { success: true, data: response.data };
-    } catch (error) {
-      console.error('Error getting follow stats:', error);
-      return { success: false, error: error.response?.data?.error || 'Failed to get follow stats' };
-    } finally {
-      setLoading(prev => ({ ...prev, stats: false }));
-    }
+      // Add request to queue with arrays for multiple resolvers/rejecters
+      setStatsRequestQueue(prev => [...prev, { 
+        userId, 
+        resolvers: [resolve], 
+        rejecters: [reject]
+      }]);
+    });
   };
 
   const loadMyFollowStats = async () => {
