@@ -57,23 +57,53 @@ const Dashboard = () => {
         userAPI.getMyProfile(),
         notificationAPI.getAll().catch(err => {
           console.warn('Failed to fetch notifications:', err);
-          errors.push('notifications');
-          return { data: [] };
+          
+          if (err.response?.status === 401) {
+            console.warn('Notifications API returned 401 - authentication issue');
+            errors.push('notifications (authentication required)');
+          } else {
+            errors.push('notifications');
+          }
+          
+          return { data: [], results: [] };
         }),
         blogAPI.getMyPosts().catch(err => {
           console.warn('Failed to fetch blog posts:', err);
-          errors.push('blog posts');
-          return [];
+          
+          if (err.response?.status === 401) {
+            console.warn('Blog API returned 401 - authentication issue');
+            errors.push('blog posts (authentication required)');
+          } else {
+            errors.push('blog posts');
+          }
+          
+          return { data: [], results: [] };
         }),
         portfolioAPI.getAll().catch(err => {
           console.warn('Failed to fetch portfolio:', err);
-          errors.push('portfolio');
-          return { data: [] };
+          
+          if (err.response?.status === 401) {
+            console.warn('Portfolio API returned 401 - authentication issue');
+            errors.push('portfolio (authentication required)');
+          } else {
+            errors.push('portfolio');
+          }
+          
+          return { data: [], results: [] };
         }),
         assetAPI.getMyAssets().catch(err => {
           console.warn('Failed to fetch assets:', err);
-          errors.push('assets');
-          return [];
+          
+          // Handle 401 specifically for assets
+          if (err.response?.status === 401) {
+            console.warn('Assets API returned 401 - authentication issue');
+            errors.push('assets (authentication required)');
+          } else {
+            errors.push('assets');
+          }
+          
+          // Return consistent structure for assets
+          return { data: [], results: [] };
         }),
         getMyFollowStats().catch(err => {
           console.warn('Failed to fetch follow stats:', err);
@@ -82,9 +112,17 @@ const Dashboard = () => {
         })
       ]);
 
-      // Update API errors state
+      // Update API errors state and check for authentication issues
       if (errors.length > 0) {
         setApiErrors(errors);
+        
+        // Check if there are authentication-related errors
+        const authErrors = errors.filter(error => error.includes('authentication required'));
+        if (authErrors.length > 0) {
+          console.warn('Authentication issues detected:', authErrors);
+          // You might want to trigger a token refresh here
+          // or show a specific message about re-login
+        }
       }
 
       // Only update state if component is still active
@@ -106,13 +144,21 @@ const Dashboard = () => {
         });
         
         // Normalize responses to handle both arrays and paginated objects
+        console.log('Raw API responses:', {
+          notificationsRes: notificationsRes?.data,
+          blogRes,
+          portfolioRes: portfolioRes?.data,
+          assetsRes,
+          followStatsRes: followStatsRes?.data
+        });
+        
         const normalizedNotifications = Array.isArray(notificationsRes.data) 
           ? notificationsRes.data 
           : notificationsRes.data?.results || [];
         
         const normalizedBlogRes = Array.isArray(blogRes) 
           ? blogRes 
-          : blogRes?.results || [];
+          : blogRes?.results || blogRes?.data || [];
         
         const normalizedPortfolioData = Array.isArray(portfolioRes.data) 
           ? portfolioRes.data 
@@ -120,7 +166,14 @@ const Dashboard = () => {
         
         const normalizedAssetsRes = Array.isArray(assetsRes) 
           ? assetsRes 
-          : assetsRes?.results || [];
+          : assetsRes?.results || assetsRes?.data || [];
+
+        console.log('Normalized responses:', {
+          normalizedNotifications,
+          normalizedBlogRes,
+          normalizedPortfolioData,
+          normalizedAssetsRes
+        });
 
         setNotifications(normalizedNotifications.slice(0, 5));
         setRecentActivity([
@@ -421,10 +474,15 @@ const Dashboard = () => {
   };
 
   const handleAssetCreated = () => {
-    // Refresh dashboard data when new asset is uploaded
-    fetchDashboardData(false);
-    // Switch back to overview tab
+    console.log('Asset created, refreshing dashboard data...');
+    
+    // Switch back to overview tab immediately for better UX
     setActiveTab('overview');
+    
+    // Add a small delay to ensure the asset is fully saved on the backend
+    setTimeout(() => {
+      fetchDashboardData(false);
+    }, 1000);
   };
 
   // Manual refresh function
