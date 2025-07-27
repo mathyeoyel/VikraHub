@@ -421,8 +421,12 @@ const PublicProfile = () => {
             </div>
             
             <div className="profile-info">
-              <h1 className="profile-name">{profile.full_name}</h1>
-              <p className="username">@{profile.user.username}</p>
+              <h1 className="profile-name">
+                {typeof profile.full_name === 'string' ? profile.full_name : 
+                 typeof profile.full_name === 'object' ? (profile.full_name.name || 'Unknown User') : 
+                 'Unknown User'}
+              </h1>
+              <p className="username">@{profile.user?.username || 'unknown'}</p>
               
               {/* Headline/Tagline */}
               {profile.headline && (
@@ -728,7 +732,7 @@ const PublicProfile = () => {
                               <div className="portfolio-tags">
                                 {item.tags_list.map((tag, index) => (
                                   <span key={index} className="portfolio-tag">
-                                    {tag}
+                                    {typeof tag === 'string' ? tag : (tag?.name || tag?.title || String(tag))}
                                   </span>
                                 ))}
                               </div>
@@ -776,10 +780,14 @@ const PublicProfile = () => {
                             </div>
                           </div>
                           <div className="portfolio-content">
-                            <h4>{asset.title}</h4>
-                            <p>{asset.description}</p>
+                            <h4>{typeof asset.title === 'string' ? asset.title : 'Untitled Asset'}</h4>
+                            <p>{typeof asset.description === 'string' ? asset.description : 'No description available'}</p>
                             <div className="asset-meta">
-                              <span className="asset-type-badge">{asset.asset_type}</span>
+                              <span className="asset-type-badge">
+                                {typeof asset.asset_type === 'string' ? asset.asset_type : 
+                                 typeof asset.asset_type === 'object' ? (asset.asset_type.name || 'Unknown') : 
+                                 'Unknown'}
+                              </span>
                               {asset.price && (
                                 <span className="asset-price">${asset.price}</span>
                               )}
