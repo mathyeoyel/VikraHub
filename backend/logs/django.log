@@ -2359,3 +2359,4 @@ INFO 2025-07-27 10:00:55,616 autoreload 18076 16992 Watching for file changes wi
 INFO 2025-07-27 10:04:58,318 autoreload 14244 18016 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\urls.py changed, reloading.
 INFO 2025-07-27 10:04:58,331 autoreload 18076 16992 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\urls.py changed, reloading.
 INFO 2025-07-27 10:05:00,092 autoreload 23624 14760 Watching for file changes with StatReloader
+INFO 2025-07-27 12:57:41,768 autoreload 11448 25164 Watching for file changes with StatReloader

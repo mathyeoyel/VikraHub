@@ -33,22 +33,22 @@ const AssetsMarketplace = () => {
       const [categoriesRes, trendingRes] = await Promise.all([
         assetAPI.getCategories().catch(err => {
           console.warn('Failed to load categories:', err);
-          return { data: [] };
+          return [];
         }),
         assetAPI.getTrending({ limit: 6 }).catch(err => {
           console.warn('Failed to load trending assets:', err);
-          return { data: [] };
+          return [];
         })
       ]);
 
-      setCategories(categoriesRes.data || []);
-      setTrending(trendingRes.data || []);
+      setCategories(categoriesRes || []);
+      setTrending(trendingRes || []);
 
       // Load recommended assets only if user is authenticated
       if (user) {
         try {
           const recommendedRes = await assetAPI.getRecommended({ limit: 6 });
-          setRecommended(recommendedRes.data || []);
+          setRecommended(recommendedRes || []);
         } catch (err) {
           console.warn('No recommendations available or user not authenticated:', err);
           setRecommended([]); // Set empty array to prevent undefined errors
@@ -83,7 +83,16 @@ const AssetsMarketplace = () => {
       });
 
       const response = await assetAPI.getAll(params);
-      setAssets(response.data || []); // Ensure we always set an array
+      
+      // Check if response has error property (from enhanced error handling)
+      if (response && response.error) {
+        console.error('API returned error:', response.message);
+        setAssets([]);
+        return;
+      }
+      
+      // assetAPI.getAll returns response.data directly, so no need to access .data again
+      setAssets(response || []); // Ensure we always set an array
     } catch (err) {
       console.error('Failed to load assets:', err);
       setAssets([]); // Set empty array on error to prevent undefined errors

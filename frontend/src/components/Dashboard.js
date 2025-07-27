@@ -63,7 +63,7 @@ const Dashboard = () => {
         blogAPI.getMyPosts().catch(err => {
           console.warn('Failed to fetch blog posts:', err);
           errors.push('blog posts');
-          return { data: [] };
+          return [];
         }),
         portfolioAPI.getAll().catch(err => {
           console.warn('Failed to fetch portfolio:', err);
@@ -73,7 +73,7 @@ const Dashboard = () => {
         assetAPI.getMyAssets().catch(err => {
           console.warn('Failed to fetch assets:', err);
           errors.push('assets');
-          return { data: [] };
+          return [];
         }),
         getMyFollowStats().catch(err => {
           console.warn('Failed to fetch follow stats:', err);
@@ -107,19 +107,19 @@ const Dashboard = () => {
         
         setNotifications(notificationsRes.data?.slice(0, 5) || []);
         setRecentActivity([
-          ...blogRes.data?.slice(0, 3).map(post => ({
+          ...(blogRes || []).slice(0, 3).map(post => ({
             type: 'blog',
             title: `Published: ${post.title}`,
             date: post.created_at,
             icon: '📝'
           })) || [],
-          ...portfolioRes.data?.slice(0, 3).map(item => ({
+          ...(portfolioRes.data || []).slice(0, 3).map(item => ({
             type: 'portfolio',
             title: `Added to portfolio: ${item.title}`,
             date: item.created_at,
             icon: '🎨'
           })) || [],
-          ...assetsRes.data?.slice(0, 3).map(asset => ({
+          ...(assetsRes || []).slice(0, 3).map(asset => ({
             type: 'asset',
             title: `Uploaded asset: ${asset.title}`,
             date: asset.created_at,
@@ -129,9 +129,9 @@ const Dashboard = () => {
 
         // Calculate comprehensive stats from real data
         const followStats = followStatsRes.data || {};
-        const blogPosts = blogRes.data || [];
-        const portfolioItems = portfolioRes.data || [];
-        const assets = assetsRes.data || [];
+        const blogPosts = blogRes || []; // blogRes is now the direct array
+        const portfolioItems = portfolioRes.data || []; // portfolioRes returns axios response
+        const assets = assetsRes || []; // assetsRes is now the direct array
         
         // Calculate total views and likes from all content
         const totalViews = [
