@@ -17,8 +17,9 @@ api.interceptors.request.use(
       'freelancer-profiles/' // Freelancer profiles should be publicly viewable
     ];
     
-    // Special handling for creative-assets: only marketplace listings are public
-    const isCreativeAssetsPublic = config.url.includes('creative-assets/') && 
+    // Special handling for creative-assets: only GET requests to marketplace listings are public
+    const isCreativeAssetsPublic = config.method === 'get' && 
+      config.url.includes('creative-assets/') && 
       !config.url.includes('my_assets/') && 
       !config.url.includes('my-assets/') &&
       !config.url.includes('purchase/') &&
@@ -53,8 +54,9 @@ api.interceptors.response.use(
       'public-profiles/'
     ];
     
-    // Special handling for creative-assets: only marketplace listings are public
-    const isCreativeAssetsPublic = originalRequest.url.includes('creative-assets/') && 
+    // Special handling for creative-assets: only GET requests to marketplace listings are public
+    const isCreativeAssetsPublic = originalRequest.method === 'get' && 
+      originalRequest.url.includes('creative-assets/') && 
       !originalRequest.url.includes('my_assets/') && 
       !originalRequest.url.includes('my-assets/') &&
       !originalRequest.url.includes('purchase/') &&
