@@ -10,11 +10,11 @@ const APIDebugger = () => {
 
   useEffect(() => {
     const testAPI = async () => {
-      const backendUrl = 'https://api.vikrahub.com/api/';
+      const backendUrl = process.env.REACT_APP_API_URL || 'https://api.vikrahub.com/api/';
       console.log('Environment variables:', {
         REACT_APP_API_URL: process.env.REACT_APP_API_URL,
         NODE_ENV: process.env.NODE_ENV,
-        FORCED_URL: backendUrl
+        USED_URL: backendUrl
       });
       
       setStatus(prev => ({ ...prev, backendUrl }));
