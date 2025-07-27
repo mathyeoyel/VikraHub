@@ -577,16 +577,19 @@ export const messagingAPI = {
   },
   
   // Create conversation with validation
-  createConversation: async (participant_username, initial_message = null) => {
+  createConversation: async (participant_username, initial_message) => {
     try {
       if (!participant_username) {
         throw new Error('Participant username is required');
       }
       
-      const response = await api.post("messaging/conversations/create/", { 
-        participant_username, 
-        initial_message 
-      });
+      // Build payload conditionally - only include initial_message if it's a non-empty string
+      const payload = { participant_username };
+      if (initial_message && initial_message.trim()) {
+        payload.initial_message = initial_message.trim();
+      }
+      
+      const response = await api.post("messaging/conversations/create/", payload);
       console.log('✅ Conversation created successfully');
       return response;
     } catch (error) {
