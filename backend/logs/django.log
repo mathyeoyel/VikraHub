@@ -2313,3 +2313,22 @@ INFO 2025-07-26 19:06:23,992 autoreload 3588 24392 C:\Users\hp\Downloads\Project
 INFO 2025-07-26 19:06:24,521 autoreload 21984 10764 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\api_views.py changed, reloading.
 INFO 2025-07-26 19:06:26,668 autoreload 10560 9316 Watching for file changes with StatReloader
 INFO 2025-07-26 19:06:27,621 autoreload 18748 21384 Watching for file changes with StatReloader
+INFO 2025-07-26 19:50:01,015 basehttp 10560 24280 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-26 19:50:01,061 basehttp 10560 20212 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+WARNING 2025-07-26 19:56:31,867 log 10560 9668 Not Found: /api/auth/login/
+WARNING 2025-07-26 19:56:31,871 basehttp 10560 9668 "POST /api/auth/login/ HTTP/1.1" 404 56470
+INFO 2025-07-26 19:57:09,186 basehttp 10560 9668 "POST /api/auth/token/ HTTP/1.1" 200 483
+INFO 2025-07-26 19:58:47,447 basehttp 10560 23288 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-26 19:58:47,509 basehttp 10560 24220 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-27 08:43:23,670 autoreload 7072 1604 Watching for file changes with StatReloader
+INFO 2025-07-27 08:45:47,831 basehttp 7072 3548 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-27 08:45:47,876 basehttp 7072 21956 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+WARNING 2025-07-27 08:46:46,845 log 7072 20660 Unauthorized: /api/follow/my-stats/
+WARNING 2025-07-27 08:46:46,846 basehttp 7072 20660 "GET /api/follow/my-stats/ HTTP/1.1" 401 183
+INFO 2025-07-27 08:47:04,463 basehttp 7072 20660 "GET /api/ HTTP/1.1" 200 1195
+INFO 2025-07-27 08:49:51,570 basehttp 7072 2484 "POST /api/auth/token/ HTTP/1.1" 200 483
+INFO 2025-07-27 09:19:06,054 basehttp 7072 16628 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-27 09:19:06,091 basehttp 7072 10292 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-27 09:19:35,734 autoreload 2272 24508 Watching for file changes with StatReloader
+INFO 2025-07-27 09:20:34,303 basehttp 7072 2456 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-27 09:20:34,383 basehttp 7072 1308 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476

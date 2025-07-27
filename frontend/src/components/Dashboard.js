@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from './Auth/AuthContext';
-import { userAPI, notificationAPI, blogAPI, portfolioAPI, assetAPI } from '../api';
+import { userAPI, notificationAPI, blogAPI, portfolioAPI, assetAPI, getMyFollowStats } from '../api';
 import EditProfile from './EditProfile';
 import AssetUpload from './Marketplace/AssetUpload';
 import SocialDashboard from './SocialDashboard';
@@ -75,7 +75,7 @@ const Dashboard = () => {
           errors.push('assets');
           return { data: [] };
         }),
-        userAPI.getMyFollowStats().catch(err => {
+        getMyFollowStats().catch(err => {
           console.warn('Failed to fetch follow stats:', err);
           errors.push('follow stats');
           return { data: { followers: 0, following: 0 } };
