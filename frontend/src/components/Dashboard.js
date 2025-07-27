@@ -75,7 +75,7 @@ const Dashboard = () => {
           errors.push('assets');
           return { data: [] };
         }),
-        userAPI.getFollowStats().catch(err => {
+        userAPI.getMyFollowStats().catch(err => {
           console.warn('Failed to fetch follow stats:', err);
           errors.push('follow stats');
           return { data: { followers: 0, following: 0 } };
