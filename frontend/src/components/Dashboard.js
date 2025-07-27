@@ -105,33 +105,50 @@ const Dashboard = () => {
           email: profileData?.email
         });
         
-        setNotifications(notificationsRes.data?.slice(0, 5) || []);
+        // Normalize responses to handle both arrays and paginated objects
+        const normalizedNotifications = Array.isArray(notificationsRes.data) 
+          ? notificationsRes.data 
+          : notificationsRes.data?.results || [];
+        
+        const normalizedBlogRes = Array.isArray(blogRes) 
+          ? blogRes 
+          : blogRes?.results || [];
+        
+        const normalizedPortfolioData = Array.isArray(portfolioRes.data) 
+          ? portfolioRes.data 
+          : portfolioRes.data?.results || [];
+        
+        const normalizedAssetsRes = Array.isArray(assetsRes) 
+          ? assetsRes 
+          : assetsRes?.results || [];
+
+        setNotifications(normalizedNotifications.slice(0, 5));
         setRecentActivity([
-          ...(blogRes || []).slice(0, 3).map(post => ({
+          ...normalizedBlogRes.slice(0, 3).map(post => ({
             type: 'blog',
             title: `Published: ${post.title}`,
             date: post.created_at,
             icon: '📝'
-          })) || [],
-          ...(portfolioRes.data || []).slice(0, 3).map(item => ({
+          })),
+          ...normalizedPortfolioData.slice(0, 3).map(item => ({
             type: 'portfolio',
             title: `Added to portfolio: ${item.title}`,
             date: item.created_at,
             icon: '🎨'
-          })) || [],
-          ...(assetsRes || []).slice(0, 3).map(asset => ({
+          })),
+          ...normalizedAssetsRes.slice(0, 3).map(asset => ({
             type: 'asset',
             title: `Uploaded asset: ${asset.title}`,
             date: asset.created_at,
             icon: '🎨'
-          })) || []
+          }))
         ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5));
 
-        // Calculate comprehensive stats from real data
+        // Calculate comprehensive stats from normalized data
         const followStats = followStatsRes.data || {};
-        const blogPosts = blogRes || []; // blogRes is now the direct array
-        const portfolioItems = portfolioRes.data || []; // portfolioRes returns axios response
-        const assets = assetsRes || []; // assetsRes is now the direct array
+        const blogPosts = normalizedBlogRes; // Use normalized blog data
+        const portfolioItems = normalizedPortfolioData; // Use normalized portfolio data
+        const assets = normalizedAssetsRes; // Use normalized assets data
         
         // Calculate total views and likes from all content
         const totalViews = [
