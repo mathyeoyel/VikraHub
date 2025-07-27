@@ -2360,3 +2360,8 @@ INFO 2025-07-27 10:04:58,318 autoreload 14244 18016 C:\Users\hp\Downloads\Projec
 INFO 2025-07-27 10:04:58,331 autoreload 18076 16992 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\urls.py changed, reloading.
 INFO 2025-07-27 10:05:00,092 autoreload 23624 14760 Watching for file changes with StatReloader
 INFO 2025-07-27 12:57:41,768 autoreload 11448 25164 Watching for file changes with StatReloader
+INFO 2025-07-27 13:01:15,604 basehttp 20084 24800 "GET /api/creative-assets/ HTTP/1.1" 200 958
+WARNING 2025-07-27 13:01:40,354 log 20084 24800 Unauthorized: /api/creative-assets/my_assets/
+WARNING 2025-07-27 13:01:40,355 basehttp 20084 24800 "GET /api/creative-assets/my_assets/ HTTP/1.1" 401 183
+INFO 2025-07-27 13:03:16,346 basehttp 20084 16692 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-27 13:03:16,691 basehttp 20084 24660 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476

@@ -33,7 +33,7 @@ const AssetsMarketplace = () => {
       const [categoriesRes, trendingRes] = await Promise.all([
         assetAPI.getCategories().catch(err => {
           console.warn('Failed to load categories:', err);
-          return [];
+          return { data: [] }; // getCategories returns axios response
         }),
         assetAPI.getTrending({ limit: 6 }).catch(err => {
           console.warn('Failed to load trending assets:', err);
@@ -41,14 +41,26 @@ const AssetsMarketplace = () => {
         })
       ]);
 
-      setCategories(categoriesRes || []);
-      setTrending(trendingRes || []);
+      // Handle different response formats:
+      // - getCategories returns axios response object with .data
+      // - getTrending returns data directly or error object
+      const categories = categoriesRes?.data ? categoriesRes.data : (Array.isArray(categoriesRes) ? categoriesRes : []);
+      const trending = Array.isArray(trendingRes) ? trendingRes : [];
+      
+      console.log('Categories response:', categoriesRes, 'Processed:', categories);
+      console.log('Trending response:', trendingRes, 'Processed:', trending);
+      
+      setCategories(categories);
+      setTrending(trending);
 
       // Load recommended assets only if user is authenticated
       if (user) {
         try {
           const recommendedRes = await assetAPI.getRecommended({ limit: 6 });
-          setRecommended(recommendedRes || []);
+          console.log('Recommended response:', recommendedRes);
+          // Check if response is an array before setting state
+          const recommended = Array.isArray(recommendedRes) ? recommendedRes : [];
+          setRecommended(recommended);
         } catch (err) {
           console.warn('No recommendations available or user not authenticated:', err);
           setRecommended([]); // Set empty array to prevent undefined errors
@@ -91,8 +103,8 @@ const AssetsMarketplace = () => {
         return;
       }
       
-      // assetAPI.getAll returns response.data directly, so no need to access .data again
-      setAssets(response || []); // Ensure we always set an array
+      // Only set assets if response is an array, not an error object
+      setAssets(Array.isArray(response) ? response : []);
     } catch (err) {
       console.error('Failed to load assets:', err);
       setAssets([]); // Set empty array on error to prevent undefined errors
