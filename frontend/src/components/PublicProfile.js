@@ -4,6 +4,7 @@ import { publicProfileAPI, assetAPI, userAPI, followAPI } from '../api';
 import { useAuth } from './Auth/AuthContext';
 import notificationService from '../services/notificationService';
 import PublicClientProfile from './PublicClientProfile';
+import ErrorBoundary from './ErrorBoundary';
 import './PublicProfile.css';
 
 const PublicProfile = () => {
@@ -359,8 +360,9 @@ const PublicProfile = () => {
   }
 
   return (
-    <div className="public-profile">
-      <div className="container">
+    <ErrorBoundary>
+      <div className="public-profile">
+        <div className="container">
         {/* Cover Photo Section */}
         <div className="profile-cover">
           <div className="cover-image">
@@ -710,8 +712,16 @@ const PublicProfile = () => {
                             </div>
                           )}
                           <div className="featured-work-content">
-                            <h5>{profile.portfolio_items[0].title}</h5>
-                            <p>{profile.portfolio_items[0].description}</p>
+                            <h5>
+                              {typeof profile.portfolio_items[0].title === 'string' ? profile.portfolio_items[0].title : 
+                               typeof profile.portfolio_items[0].title === 'object' ? (profile.portfolio_items[0].title.name || 'Featured Work') : 
+                               'Featured Work'}
+                            </h5>
+                            <p>
+                              {typeof profile.portfolio_items[0].description === 'string' ? profile.portfolio_items[0].description : 
+                               typeof profile.portfolio_items[0].description === 'object' ? (profile.portfolio_items[0].description.name || 'Description available') : 
+                               'Description available'}
+                            </p>
                           </div>
                         </div>
                       )}
@@ -732,8 +742,16 @@ const PublicProfile = () => {
                             </div>
                           </div>
                           <div className="featured-work-content">
-                            <h5>{assets[0].title}</h5>
-                            <p>{assets[0].description}</p>
+                            <h5>
+                              {typeof assets[0].title === 'string' ? assets[0].title : 
+                               typeof assets[0].title === 'object' ? (assets[0].title.name || 'Latest Asset') : 
+                               'Latest Asset'}
+                            </h5>
+                            <p>
+                              {typeof assets[0].description === 'string' ? assets[0].description : 
+                               typeof assets[0].description === 'object' ? (assets[0].description.name || 'Asset description') : 
+                               'Asset description'}
+                            </p>
                           </div>
                         </div>
                       )}
@@ -756,8 +774,16 @@ const PublicProfile = () => {
                             </div>
                           )}
                           <div className="portfolio-content">
-                            <h4>{item.title}</h4>
-                            <p>{item.description}</p>
+                            <h4>
+                              {typeof item.title === 'string' ? item.title : 
+                               typeof item.title === 'object' ? (item.title.name || 'Project') : 
+                               'Project'}
+                            </h4>
+                            <p>
+                              {typeof item.description === 'string' ? item.description : 
+                               typeof item.description === 'object' ? (item.description.name || 'Project description') : 
+                               'Project description'}
+                            </p>
                             {item.tags_list && item.tags_list.length > 0 && (
                               <div className="portfolio-tags">
                                 {item.tags_list.map((tag, index) => (
@@ -967,6 +993,7 @@ const PublicProfile = () => {
         </div>
       </div>
     </div>
+    </ErrorBoundary>
   );
 };
 
