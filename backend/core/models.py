@@ -155,16 +155,23 @@ class CreativeAsset(models.Model):
         ('other', 'Other'),
     ]
     
+    CURRENCY_CHOICES = [
+        ('SSP', 'South Sudanese Pound'),
+        ('USD', 'US Dollar'),
+        ('EUR', 'Euro'),
+    ]
+    
     title = models.CharField(max_length=200)
     description = models.TextField()
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assets')
     category = models.ForeignKey(AssetCategory, on_delete=models.CASCADE)
     asset_type = models.CharField(max_length=20, choices=ASSET_TYPES)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Leave empty for free assets")
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='SSP')
     
     # Asset files - using Cloudinary URLs for deployment compatibility
     preview_image = models.URLField(blank=True, null=True, help_text="Cloudinary URL for preview image", validators=[validate_cloudinary_url])
-    asset_files = models.URLField(blank=True, null=True, help_text="Cloudinary URL for asset files (ZIP or individual files)", validators=[validate_cloudinary_url])
+    asset_files = models.URLField(blank=True, null=True, help_text="Cloudinary URL for asset files (ZIP or individual files) - Optional", validators=[validate_cloudinary_url])
     
     # Metadata
     tags = models.CharField(max_length=500, help_text="Comma-separated tags")

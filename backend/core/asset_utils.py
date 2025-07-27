@@ -11,10 +11,14 @@ from .cloudinary_utils import validate_cloudinary_url
 
 def validate_asset_price(price):
     """Validate asset price is within acceptable range"""
+    # Allow None for free assets
+    if price is None:
+        return price
+    
     if price < Decimal('0.01'):
-        raise ValidationError("Price must be at least $0.01")
+        raise ValidationError("Price must be at least 0.01")
     if price > Decimal('999999.99'):
-        raise ValidationError("Price cannot exceed $999,999.99")
+        raise ValidationError("Price cannot exceed 999,999.99")
     return price
 
 

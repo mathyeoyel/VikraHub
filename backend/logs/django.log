@@ -2336,3 +2336,15 @@ INFO 2025-07-27 09:24:54,861 basehttp 7072 18608 "GET /api/creator-profiles/feat
 INFO 2025-07-27 09:24:54,915 basehttp 7072 18420 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
 INFO 2025-07-27 09:25:53,622 basehttp 7072 5476 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
 INFO 2025-07-27 09:25:53,662 basehttp 7072 21548 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-27 09:43:30,551 autoreload 7072 1604 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\models.py changed, reloading.
+INFO 2025-07-27 09:43:31,694 autoreload 2272 24508 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\models.py changed, reloading.
+INFO 2025-07-27 09:43:32,345 autoreload 21132 13100 Watching for file changes with StatReloader
+INFO 2025-07-27 09:43:32,971 autoreload 10816 9396 Watching for file changes with StatReloader
+INFO 2025-07-27 09:43:45,459 autoreload 21132 13100 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\models.py changed, reloading.
+INFO 2025-07-27 09:43:45,910 autoreload 10816 9396 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\models.py changed, reloading.
+INFO 2025-07-27 09:43:46,204 autoreload 24188 22584 Watching for file changes with StatReloader
+INFO 2025-07-27 09:43:46,597 autoreload 10772 6304 Watching for file changes with StatReloader
+INFO 2025-07-27 09:46:16,135 autoreload 24188 22584 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\asset_utils.py changed, reloading.
+INFO 2025-07-27 09:46:16,359 autoreload 10772 6304 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\asset_utils.py changed, reloading.
+INFO 2025-07-27 09:46:17,461 autoreload 24248 3964 Watching for file changes with StatReloader
+INFO 2025-07-27 09:46:17,670 autoreload 3120 11296 Watching for file changes with StatReloader
