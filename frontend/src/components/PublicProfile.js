@@ -269,7 +269,6 @@ const PublicProfile = () => {
         isFollowing={isFollowing}
         setIsFollowing={setIsFollowing}
         followerCount={followerCount}
-        followingCount={followingCount}
       />
     );
   }
@@ -358,11 +357,15 @@ const PublicProfile = () => {
               {/* Stats Row */}
               <div className="profile-stats">
                 <div className="stat-item">
-                  <span className="stat-number">{followerCount}</span>
+                  <span className="stat-number">
+                    {followStatsLoading ? '...' : followerCount}
+                  </span>
                   <span className="stat-label">Followers</span>
                 </div>
                 <div className="stat-item">
-                  <span className="stat-number">{followingCount}</span>
+                  <span className="stat-number">
+                    {followStatsLoading ? '...' : followingCount}
+                  </span>
                   <span className="stat-label">Following</span>
                 </div>
                 <div className="stat-item">

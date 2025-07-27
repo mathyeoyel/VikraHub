@@ -5,19 +5,51 @@ import { useAuth } from './Auth/AuthContext';
 import notificationService from '../services/notificationService';
 import './PublicClientProfile.css';
 
-const PublicClientProfile = () => {
-  const { username } = useParams();
+const PublicClientProfile = ({ 
+  profile: initialProfile = null,
+  username: propUsername = null,
+  isFollowing: propIsFollowing = false,
+  setIsFollowing: propSetIsFollowing = null,
+  followerCount: propFollowerCount = 0,
+  followingCount: propFollowingCount = 0 
+}) => {
+  const { username: paramUsername } = useParams();
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const [profile, setProfile] = useState(null);
+  
+  // Use props if available, otherwise use local state
+  const username = propUsername || paramUsername;
+  const [profile, setProfile] = useState(initialProfile);
   const [clientProfile, setClientProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialProfile);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [followerCount, setFollowerCount] = useState(0);
+  const [followStatsLoading, setFollowStatsLoading] = useState(false);
+  
+  // Use props for follow state if passed, otherwise local state
+  const [localIsFollowing, setLocalIsFollowing] = useState(propIsFollowing);
+  const [localFollowerCount, setLocalFollowerCount] = useState(propFollowerCount);
+  const [localFollowingCount, setLocalFollowingCount] = useState(propFollowingCount);
+  
+  const isFollowing = propSetIsFollowing ? propIsFollowing : localIsFollowing;
+  const followerCount = propSetIsFollowing ? propFollowerCount : localFollowerCount;
+  const followingCount = propSetIsFollowing ? propFollowingCount : localFollowingCount;
+  
+  const setIsFollowing = propSetIsFollowing || setLocalIsFollowing;
+  const setFollowerCount = propSetIsFollowing ? (() => {}) : setLocalFollowerCount;
+  const setFollowingCount = propSetIsFollowing ? (() => {}) : setLocalFollowingCount;
 
   useEffect(() => {
+    // Skip fetching if we already have profile data from props
+    if (initialProfile) {
+      setProfile(initialProfile);
+      if (initialProfile.client_profile) {
+        setClientProfile(initialProfile.client_profile);
+      }
+      setLoading(false);
+      return;
+    }
+
     const fetchProfile = async () => {
       try {
         setLoading(true);
@@ -33,8 +65,8 @@ const PublicClientProfile = () => {
         if (response.data.followers_count !== undefined && 
             response.data.is_following !== undefined) {
           // Use follow data from profile response
-          setFollowerCount(response.data.followers_count || 0);
-          setIsFollowing(response.data.is_following || false);
+          setLocalFollowerCount(response.data.followers_count || 0);
+          setLocalIsFollowing(response.data.is_following || false);
           console.log('Using follow data from client profile response:', {
             followers: response.data.followers_count,
             isFollowing: response.data.is_following
@@ -53,19 +85,24 @@ const PublicClientProfile = () => {
 
     const fetchFollowStats = async (username) => {
       try {
+        setFollowStatsLoading(true);
         const response = await userAPI.getFollowStats(username);
-        setFollowerCount(response.data?.followers_count || 0);
-        setIsFollowing(response.data?.is_following || false);
+        setLocalFollowerCount(response.data?.followers_count || 0);
+        setLocalIsFollowing(response.data?.is_following || false);
       } catch (err) {
         console.warn('Failed to fetch follow stats:', err);
         // Keep default values on error
-        setFollowerCount(0);
-        setIsFollowing(false);
+        setLocalFollowerCount(0);
+        setLocalIsFollowing(false);
+      } finally {
+        setFollowStatsLoading(false);
       }
     };
 
-    fetchProfile();
-  }, [username]);
+    if (username) {
+      fetchProfile();
+    }
+  }, [username, initialProfile]);
 
   // Sample projects data (in real app, this would come from backend)
   const sampleProjects = [
@@ -149,11 +186,20 @@ const PublicClientProfile = () => {
         // Update state from refreshed profile data if available
         if (updatedProfile) {
           setIsFollowing(updatedProfile.is_following || false);
-          setFollowerCount(updatedProfile.followers_count || 0);
+          if (propSetIsFollowing) {
+            // Update parent component's follower count if using parent state
+            const currentCount = propFollowerCount;
+            // Note: We can't directly update parent's followerCount from here
+            // The parent component should handle this via its own follow handlers
+          } else {
+            setFollowerCount(updatedProfile.followers_count || 0);
+          }
         } else {
           // Fallback to manual state update
           setIsFollowing(false);
-          setFollowerCount(prev => Math.max(0, prev - 1));
+          if (!propSetIsFollowing) {
+            setFollowerCount(prev => Math.max(0, prev - 1));
+          }
         }
       } else {
         // Use enhanced follow with profile refresh
@@ -163,11 +209,20 @@ const PublicClientProfile = () => {
         // Update state from refreshed profile data if available
         if (updatedProfile) {
           setIsFollowing(updatedProfile.is_following || false);
-          setFollowerCount(updatedProfile.followers_count || 0);
+          if (propSetIsFollowing) {
+            // Update parent component's follower count if using parent state
+            const currentCount = propFollowerCount;
+            // Note: We can't directly update parent's followerCount from here
+            // The parent component should handle this via its own follow handlers
+          } else {
+            setFollowerCount(updatedProfile.followers_count || 0);
+          }
         } else {
           // Fallback to manual state update
           setIsFollowing(true);
-          setFollowerCount(prev => prev + 1);
+          if (!propSetIsFollowing) {
+            setFollowerCount(prev => prev + 1);
+          }
         }
         
         // Send notification to the followed user
@@ -294,7 +349,9 @@ const PublicClientProfile = () => {
                   <span className="stat-label">Success Rate</span>
                 </div>
                 <div className="stat-item">
-                  <span className="stat-number">{followerCount}</span>
+                  <span className="stat-number">
+                    {followStatsLoading ? '...' : followerCount}
+                  </span>
                   <span className="stat-label">Followers</span>
                 </div>
               </div>
