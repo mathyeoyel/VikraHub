@@ -2332,3 +2332,7 @@ INFO 2025-07-27 09:19:06,091 basehttp 7072 10292 "GET /api/creator-profiles/feat
 INFO 2025-07-27 09:19:35,734 autoreload 2272 24508 Watching for file changes with StatReloader
 INFO 2025-07-27 09:20:34,303 basehttp 7072 2456 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
 INFO 2025-07-27 09:20:34,383 basehttp 7072 1308 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-27 09:24:54,861 basehttp 7072 18608 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-27 09:24:54,915 basehttp 7072 18420 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-27 09:25:53,622 basehttp 7072 5476 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-27 09:25:53,662 basehttp 7072 21548 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
