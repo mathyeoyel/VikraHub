@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../Auth/AuthContext';
 import { messagingAPI } from '../../api';
 import { handleImageError, getAvatarUrl } from '../../utils/imageUtils';
@@ -6,6 +7,7 @@ import './Messages.css';
 
 const Messages = () => {
   const { user } = useAuth();
+  const location = useLocation();
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [messages, setMessages] = useState([]); // Ensure it's always an array
@@ -40,6 +42,25 @@ const Messages = () => {
   useEffect(() => {
     fetchConversations();
   }, []);
+
+  // Handle recipient from navigation state
+  useEffect(() => {
+    const recipientUsername = location.state?.recipientUsername;
+    if (recipientUsername && conversations.length > 0) {
+      // Find existing conversation with this user
+      const existingConv = conversations.find(conv => 
+        conv.other_participant?.username === recipientUsername
+      );
+      
+      if (existingConv) {
+        console.log(`📩 Opening existing conversation with ${recipientUsername}`);
+        setSelectedConversation(existingConv);
+      } else {
+        console.log(`💬 No existing conversation found with ${recipientUsername}, user can start a new one`);
+        // You could implement auto-creating a conversation here if needed
+      }
+    }
+  }, [location.state, conversations]);
 
   const fetchConversations = async () => {
     try {

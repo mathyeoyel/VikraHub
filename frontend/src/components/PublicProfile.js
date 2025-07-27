@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { publicProfileAPI, assetAPI, userAPI, followAPI } from '../api';
 import { useAuth } from './Auth/AuthContext';
 import notificationService from '../services/notificationService';
 import PublicClientProfile from './PublicClientProfile';
-import ChatButton from './Chat/ChatButton';
 import './PublicProfile.css';
 
 const PublicProfile = () => {
   const { username } = useParams();
   const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -212,8 +212,12 @@ const PublicProfile = () => {
   };
 
   const handleMessage = () => {
-    // TODO: Implement messaging functionality
-    alert('Messaging functionality will be implemented soon!');
+    if (!isAuthenticated) {
+      alert('Please log in to send messages.');
+      return;
+    }
+    // Navigate to messages page with the recipient's username
+    navigate('/messages', { state: { recipientUsername: username } });
   };
 
   const handleShare = () => {
@@ -316,12 +320,14 @@ const PublicProfile = () => {
                   </button>
                 )}
                 {isAuthenticated && user?.username !== username && (
-                  <ChatButton 
-                    recipientUsername={username}
-                    recipientName={profile.full_name}
+                  <button 
                     className="action-btn message-btn"
-                    size="medium"
-                  />
+                    onClick={handleMessage}
+                    title={`Send a message to ${profile.full_name || username}`}
+                  >
+                    <span className="btn-icon">💬</span>
+                    Message
+                  </button>
                 )}
                 <button className="action-btn share-btn" onClick={handleShare}>
                   <span className="btn-icon">📤</span>
