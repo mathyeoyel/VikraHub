@@ -190,10 +190,10 @@ const Dashboard = () => {
             icon: '🎨'
           })),
           ...normalizedAssetsRes.slice(0, 3).map(asset => ({
-            type: 'asset',
-            title: `Uploaded asset: ${asset.title}`,
+            type: 'portfolio', // Changed from 'asset' to 'portfolio' to show as portfolio item
+            title: `Added to portfolio: ${asset.title}`, // Changed to show as portfolio addition
             date: asset.created_at,
-            icon: '🎨'
+            icon: '🎨' // Keep the same icon as portfolio items
           }))
         ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5));
 
@@ -202,6 +202,9 @@ const Dashboard = () => {
         const blogPosts = normalizedBlogRes; // Use normalized blog data
         const portfolioItems = normalizedPortfolioData; // Use normalized portfolio data
         const assets = normalizedAssetsRes; // Use normalized assets data
+        
+        // Combine portfolio items with uploaded assets for total portfolio count
+        const totalPortfolioItems = portfolioItems.length + assets.length;
         
         // Calculate total views and likes from all content
         const totalViews = [
@@ -221,7 +224,7 @@ const Dashboard = () => {
           completedProjects: profileData?.client_profile?.projects_completed || 0,
           totalEarnings: profileData?.creator_profile?.total_earnings || profileData?.freelancer_profile?.total_earnings || 0,
           totalPurchases: profileData?.total_purchases || 0,
-          portfolioItems: portfolioItems.length,
+          portfolioItems: totalPortfolioItems, // Now includes both portfolio items and uploaded assets
           blogPosts: blogPosts.length,
           uploadedAssets: assets.length,
           totalViews: totalViews,
@@ -474,10 +477,13 @@ const Dashboard = () => {
   };
 
   const handleAssetCreated = () => {
-    console.log('Asset created, refreshing dashboard data...');
+    console.log('Asset created and added to portfolio, refreshing dashboard data...');
     
     // Switch back to overview tab immediately for better UX
     setActiveTab('overview');
+    
+    // Show a notification that the asset was added to portfolio
+    showUpdateNotification('Asset uploaded and added to your portfolio!');
     
     // Add a small delay to ensure the asset is fully saved on the backend
     setTimeout(() => {
@@ -650,7 +656,7 @@ const Dashboard = () => {
                   <strong>{stats.blogPosts}</strong> Blog Posts
                 </span>
                 <span className="stat-item">
-                  <strong>{stats.uploadedAssets}</strong> Uploaded Assets
+                  <strong>{stats.uploadedAssets}</strong> Creative Assets
                 </span>
               </div>
             </div>
@@ -725,6 +731,9 @@ const Dashboard = () => {
                   <div className="stat-info">
                     <h3>{stats.portfolioItems}</h3>
                     <p>Portfolio Items</p>
+                    <small style={{opacity: 0.7, fontSize: '0.8em'}}>
+                      (includes {stats.uploadedAssets} creative assets)
+                    </small>
                   </div>
                 </div>
                 <div className="stat-card">
@@ -738,7 +747,10 @@ const Dashboard = () => {
                   <div className="stat-icon">🏪</div>
                   <div className="stat-info">
                     <h3>{stats.uploadedAssets}</h3>
-                    <p>Uploaded Assets</p>
+                    <p>Creative Assets</p>
+                    <small style={{opacity: 0.7, fontSize: '0.8em'}}>
+                      (automatically added to portfolio)
+                    </small>
                   </div>
                 </div>
                 <div className="stat-card">
