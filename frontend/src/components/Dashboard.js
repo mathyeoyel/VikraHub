@@ -5,9 +5,6 @@ import { userAPI, notificationAPI, blogAPI, portfolioAPI, assetAPI } from '../ap
 import EditProfile from './EditProfile';
 import AssetUpload from './Marketplace/AssetUpload';
 import SocialDashboard from './SocialDashboard';
-import ActivityFeed from './ActivityFeed';
-import UserSuggestions from './UserSuggestions';
-import FollowStats from './FollowStats';
 import MessagesDashboard from './MessagesDashboard';
 import './Dashboard.css';
 
@@ -25,9 +22,15 @@ const Dashboard = () => {
     totalPurchases: 0,
     portfolioItems: 0,
     blogPosts: 0,
-    uploadedAssets: 0
+    uploadedAssets: 0,
+    totalViews: 0,
+    totalLikes: 0,
+    followers: 0,
+    following: 0
   });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [apiErrors, setApiErrors] = useState([]);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [updateNotification, setUpdateNotification] = useState(null);
@@ -43,28 +46,46 @@ const Dashboard = () => {
     
     try {
       if (showLoader) setLoading(true);
+      setApiErrors([]); // Clear previous errors
       
       console.log('Fetching dashboard data for user:', user.username);
       
-      const [profileRes, notificationsRes, blogRes, portfolioRes, assetsRes] = await Promise.all([
+      const errors = [];
+      
+      // Fetch comprehensive user data including follow stats
+      const [profileRes, notificationsRes, blogRes, portfolioRes, assetsRes, followStatsRes] = await Promise.all([
         userAPI.getMyProfile(),
         notificationAPI.getAll().catch(err => {
           console.warn('Failed to fetch notifications:', err);
+          errors.push('notifications');
           return { data: [] };
         }),
         blogAPI.getMyPosts().catch(err => {
           console.warn('Failed to fetch blog posts:', err);
+          errors.push('blog posts');
           return { data: [] };
         }),
         portfolioAPI.getAll().catch(err => {
           console.warn('Failed to fetch portfolio:', err);
+          errors.push('portfolio');
           return { data: [] };
         }),
         assetAPI.getMyAssets().catch(err => {
           console.warn('Failed to fetch assets:', err);
+          errors.push('assets');
           return { data: [] };
+        }),
+        userAPI.getFollowStats().catch(err => {
+          console.warn('Failed to fetch follow stats:', err);
+          errors.push('follow stats');
+          return { data: { followers: 0, following: 0 } };
         })
       ]);
+
+      // Update API errors state
+      if (errors.length > 0) {
+        setApiErrors(errors);
+      }
 
       // Only update state if component is still active
       if (isActiveRef.current) {
@@ -106,17 +127,41 @@ const Dashboard = () => {
           })) || []
         ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5));
 
+        // Calculate comprehensive stats from real data
+        const followStats = followStatsRes.data || {};
+        const blogPosts = blogRes.data || [];
+        const portfolioItems = portfolioRes.data || [];
+        const assets = assetsRes.data || [];
+        
+        // Calculate total views and likes from all content
+        const totalViews = [
+          ...blogPosts.map(post => post.views || 0),
+          ...portfolioItems.map(item => item.views || 0),
+          ...assets.map(asset => asset.views || 0)
+        ].reduce((sum, views) => sum + views, 0);
+        
+        const totalLikes = [
+          ...blogPosts.map(post => post.likes || 0),
+          ...portfolioItems.map(item => item.likes || 0),
+          ...assets.map(asset => asset.likes || 0)
+        ].reduce((sum, likes) => sum + likes, 0);
+
         setStats({
-          totalProjects: 0,
-          completedProjects: 0,
-          totalEarnings: 0,
-          totalPurchases: 0,
-          portfolioItems: portfolioRes.data?.length || 0,
-          blogPosts: blogRes.data?.length || 0,
-          uploadedAssets: assetsRes.data?.length || 0
+          totalProjects: profileData?.client_profile?.projects_posted || 0,
+          completedProjects: profileData?.client_profile?.projects_completed || 0,
+          totalEarnings: profileData?.creator_profile?.total_earnings || profileData?.freelancer_profile?.total_earnings || 0,
+          totalPurchases: profileData?.total_purchases || 0,
+          portfolioItems: portfolioItems.length,
+          blogPosts: blogPosts.length,
+          uploadedAssets: assets.length,
+          totalViews: totalViews,
+          totalLikes: totalLikes,
+          followers: followStats.followers || 0,
+          following: followStats.following || 0
         });
 
         setLastUpdated(new Date());
+        setError(null); // Clear any previous errors
       }
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -130,13 +175,22 @@ const Dashboard = () => {
         });
       }
       
-      // Show user-friendly error message for network issues
+      // Set user-friendly error messages based on error type
       if (!navigator.onLine) {
+        setError('You appear to be offline. Please check your internet connection.');
         console.warn('User is offline, will retry when back online');
       } else if (error.response?.status === 401) {
+        setError('Your session has expired. Please log in again.');
         console.warn('User authentication expired, please login again');
+      } else if (error.response?.status === 403) {
+        setError('You do not have permission to access this data.');
       } else if (error.response?.status >= 500) {
+        setError('Server error occurred. We are working to fix this issue.');
         console.warn('Server error, will retry automatically');
+      } else if (error.response?.status === 404) {
+        setError('Profile data not found. Please try refreshing the page.');
+      } else {
+        setError('Failed to load dashboard data. Please try again.');
       }
     } finally {
       if (showLoader && isActiveRef.current) {
@@ -357,6 +411,8 @@ const Dashboard = () => {
   // Manual refresh function
   const handleManualRefresh = () => {
     console.log('Manual refresh triggered');
+    setError(null);
+    setApiErrors([]);
     fetchDashboardData(true);
   };
 
@@ -378,6 +434,12 @@ const Dashboard = () => {
   const showUpdateNotification = (message) => {
     setUpdateNotification(message);
     setTimeout(() => setUpdateNotification(null), 3000);
+  };
+
+  // Function to retry failed operations
+  const retryOperation = () => {
+    setError(null);
+    fetchDashboardData(true);
   };
 
   const tabs = [
@@ -402,6 +464,29 @@ const Dashboard = () => {
     );
   }
 
+  // Show error state with retry option
+  if (error && !profile) {
+    return (
+      <div className="user-profile">
+        <div className="container">
+          <div className="error-state">
+            <div className="error-icon">⚠️</div>
+            <h2>Unable to Load Dashboard</h2>
+            <p>{error}</p>
+            <div className="error-actions">
+              <button className="retry-btn" onClick={retryOperation}>
+                🔄 Try Again
+              </button>
+              <button className="refresh-btn" onClick={handleManualRefresh}>
+                ↻ Refresh Page
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="user-profile">
       <div className="container">
@@ -410,6 +495,23 @@ const Dashboard = () => {
           <div className="update-notification">
             <span className="notification-icon">✨</span>
             {updateNotification}
+          </div>
+        )}
+
+        {/* API Error Banner */}
+        {apiErrors.length > 0 && (
+          <div className="api-error-banner">
+            <span className="error-icon">⚠️</span>
+            <span>
+              Some features may not be up to date: {apiErrors.join(', ')} failed to load.
+            </span>
+            <button 
+              className="error-retry-btn" 
+              onClick={handleManualRefresh}
+              title="Retry loading"
+            >
+              ↻
+            </button>
           </div>
         )}
 
@@ -570,7 +672,28 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-icon">📈</div>
+                  <div className="stat-icon">�️</div>
+                  <div className="stat-info">
+                    <h3>{stats.totalViews}</h3>
+                    <p>Total Views</p>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon">❤️</div>
+                  <div className="stat-info">
+                    <h3>{stats.totalLikes}</h3>
+                    <p>Total Likes</p>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon">👥</div>
+                  <div className="stat-info">
+                    <h3>{stats.followers}</h3>
+                    <p>Followers</p>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon">�📈</div>
                   <div className="stat-info">
                     <h3>{getProfileCompletionPercentage()}%</h3>
                     <p>Profile Complete</p>
