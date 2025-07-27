@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './Auth/AuthContext';
 import { useWebSocket } from '../contexts/WebSocketContext';
+import { followAPI } from '../api';
 import './ActivityFeed.css';
 
 const ActivityFeed = () => {
@@ -16,25 +17,19 @@ const ActivityFeed = () => {
 
   const fetchActivities = async () => {
     try {
-      // Use follow notifications as activity feed for now
-      const baseURL = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
-      const response = await fetch(`${baseURL}/api/follow/notifications/`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-        }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        // Transform follow notifications into activity format
-        const followActivities = (data.results || []).map(notification => ({
-          type: 'follow',
-          actor: notification.follower,
-          target: { username: user?.username },
-          timestamp: notification.follow_date,
-          message: `${notification.follower?.username} started following you`
-        }));
-        setActivities(followActivities);
-      }
+      // Use followAPI to get follow notifications properly
+      const response = await followAPI.getFollowNotifications();
+      const data = response.data;
+      
+      // Transform follow notifications into activity format
+      const followActivities = (data.results || []).map(notification => ({
+        type: 'follow',
+        actor: notification.follower,
+        target: { username: user?.username },
+        timestamp: notification.follow_date,
+        message: `${notification.follower?.username} started following you`
+      }));
+      setActivities(followActivities);
     } catch (error) {
       console.error('Error fetching activities:', error);
       // Fallback: show some demo activities for testing
