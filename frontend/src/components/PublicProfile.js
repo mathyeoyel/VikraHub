@@ -430,7 +430,11 @@ const PublicProfile = () => {
               
               {/* Headline/Tagline */}
               {profile.headline && (
-                <p className="profile-headline">{profile.headline}</p>
+                <p className="profile-headline">
+                  {typeof profile.headline === 'string' ? profile.headline : 
+                   typeof profile.headline === 'object' ? (profile.headline.name || 'Professional') : 
+                   'Professional'}
+                </p>
               )}
               
               <div className="profile-meta">
@@ -510,7 +514,11 @@ const PublicProfile = () => {
           <div className="profile-section">
             <h3>About</h3>
             {profile.bio ? (
-              <p className="bio">{profile.bio}</p>
+              <p className="bio">
+                {typeof profile.bio === 'string' ? profile.bio : 
+                 typeof profile.bio === 'object' ? (profile.bio.name || profile.bio.description || 'Bio available') : 
+                 'Bio available'}
+              </p>
             ) : (
               <p className="no-content">This user hasn't added a bio yet.</p>
             )}
@@ -540,12 +548,21 @@ const PublicProfile = () => {
               <h3>Achievements & Recognition</h3>
               <div className="achievements-content">
                 <div className="achievements-text">
-                  {profile.achievements.split('\n').map((achievement, index) => (
-                    <div key={index} className="achievement-item">
-                      <span className="achievement-icon">🏆</span>
-                      <p>{achievement.trim()}</p>
-                    </div>
-                  ))}
+                  {Array.isArray(profile.achievements)
+                    ? profile.achievements.map((achievement, index) => (
+                        <div key={index} className="achievement-item">
+                          <span className="achievement-icon">🏆</span>
+                          <p>{typeof achievement === 'string' ? achievement : (achievement.name || achievement.title || 'Achievement earned')}</p>
+                        </div>
+                      ))
+                    : typeof profile.achievements === 'string'
+                    ? profile.achievements.split('\n').map((achievement, index) => (
+                        <div key={index} className="achievement-item">
+                          <span className="achievement-icon">🏆</span>
+                          <p>{achievement.trim()}</p>
+                        </div>
+                      ))
+                    : null}
                 </div>
               </div>
             </div>
@@ -559,12 +576,21 @@ const PublicProfile = () => {
               </h3>
               <div className="services-content">
                 <div className="services-text">
-                  {profile.services_offered.split('\n').map((service, index) => (
-                    <div key={index} className="service-item">
-                      <span className="service-icon">⚡</span>
-                      <p>{service.trim()}</p>
-                    </div>
-                  ))}
+                  {Array.isArray(profile.services_offered)
+                    ? profile.services_offered.map((service, index) => (
+                        <div key={index} className="service-item">
+                          <span className="service-icon">⚡</span>
+                          <p>{typeof service === 'string' ? service : (service.name || service.title || 'Service available')}</p>
+                        </div>
+                      ))
+                    : typeof profile.services_offered === 'string'
+                    ? profile.services_offered.split('\n').map((service, index) => (
+                        <div key={index} className="service-item">
+                          <span className="service-icon">⚡</span>
+                          <p>{service.trim()}</p>
+                        </div>
+                      ))
+                    : null}
                 </div>
               </div>
             </div>
@@ -614,7 +640,11 @@ const PublicProfile = () => {
                   <div className="experience-icon">📍</div>
                   <div className="experience-content">
                     <h4>Location</h4>
-                    <p>{profile.location}</p>
+                    <p>
+                      {typeof profile.location === 'string' ? profile.location : 
+                       typeof profile.location === 'object' ? (profile.location.name || 'Location provided') : 
+                       'Location provided'}
+                    </p>
                   </div>
                 </div>
               )}
