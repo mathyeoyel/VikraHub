@@ -204,8 +204,10 @@ const Dashboard = () => {
     if (!user || websocketRef.current) return;
 
     try {
-      // Use the correct WebSocket URL for messaging
-      const wsUrl = process.env.REACT_APP_WS_URL || 'ws://localhost:8000/ws/messaging/';
+      // Use the same URL construction logic as WebSocketContext
+      // This ensures consistency between dashboard and messaging WebSocket connections
+      const baseWsUrl = process.env.REACT_APP_WS_URL || 'ws://localhost:8000/ws/';
+      const wsUrl = `${baseWsUrl}messaging/`;
       const ws = new WebSocket(wsUrl);
       
       ws.onopen = () => {
