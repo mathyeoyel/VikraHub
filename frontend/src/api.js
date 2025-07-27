@@ -14,11 +14,17 @@ api.interceptors.request.use(
     // Skip authentication for public routes
     const publicRoutes = [
       'public-profiles/',
-      'creative-assets/', // Creative assets should be publicly viewable
       'freelancer-profiles/' // Freelancer profiles should be publicly viewable
     ];
     
-    const isPublicRoute = publicRoutes.some(route => config.url.includes(route));
+    // Special handling for creative-assets: only marketplace listings are public
+    const isCreativeAssetsPublic = config.url.includes('creative-assets/') && 
+      !config.url.includes('my_assets/') && 
+      !config.url.includes('my-assets/') &&
+      !config.url.includes('purchase/') &&
+      !config.url.includes('review/');
+    
+    const isPublicRoute = publicRoutes.some(route => config.url.includes(route)) || isCreativeAssetsPublic;
     
     if (!isPublicRoute) {
       const token = getAccessToken();
@@ -43,11 +49,17 @@ api.interceptors.response.use(
     
     // Skip token refresh for public routes
     const publicRoutes = [
-      'public-profiles/',
-      'creative-assets/'
+      'public-profiles/'
     ];
     
-    const isPublicRoute = publicRoutes.some(route => originalRequest.url.includes(route));
+    // Special handling for creative-assets: only marketplace listings are public
+    const isCreativeAssetsPublic = originalRequest.url.includes('creative-assets/') && 
+      !originalRequest.url.includes('my_assets/') && 
+      !originalRequest.url.includes('my-assets/') &&
+      !originalRequest.url.includes('purchase/') &&
+      !originalRequest.url.includes('review/');
+    
+    const isPublicRoute = publicRoutes.some(route => originalRequest.url.includes(route)) || isCreativeAssetsPublic;
     
     if (error.response?.status === 401 && !originalRequest._retry && !isPublicRoute) {
       originalRequest._retry = true;

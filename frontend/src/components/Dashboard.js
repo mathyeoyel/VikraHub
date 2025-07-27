@@ -204,9 +204,9 @@ const Dashboard = () => {
     if (!user || websocketRef.current) return;
 
     try {
-      // Replace with your actual WebSocket URL
-      const wsUrl = process.env.REACT_APP_WS_URL || 'ws://localhost:8000/ws/profile/';
-      const ws = new WebSocket(`${wsUrl}${user.id}/`);
+      // Use the correct WebSocket URL for messaging
+      const wsUrl = process.env.REACT_APP_WS_URL || 'ws://localhost:8000/ws/messaging/';
+      const ws = new WebSocket(wsUrl);
       
       ws.onopen = () => {
         console.log('WebSocket connected for real-time profile updates');

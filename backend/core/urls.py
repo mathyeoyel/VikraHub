@@ -38,12 +38,12 @@ router.register(r'project-contracts', ProjectContractViewSet)
 router.register(r'project-reviews', ProjectReviewViewSet)
 
 urlpatterns = [
+    # Unread count endpoints - Must be before router.urls to avoid conflict
+    path('notifications/unread_count/', unread_notifications_count, name='unread_notifications_count'),
+    
     # API endpoints
     path('', include(router.urls)),
     
     # Follow system endpoints
     path('follow/', include('core.follow_urls')),
-    
-    # Unread count endpoints
-    path('notifications/unread_count/', unread_notifications_count, name='unread_notifications_count'),
 ]
