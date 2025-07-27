@@ -58,15 +58,31 @@ const PublicProfile = () => {
     const fetchUserAssets = async (userId) => {
       try {
         setAssetsLoading(true);
-        // Fetch all assets and filter by the specific user
-        const response = await assetAPI.getAll();
-        const allAssets = response.data.results || response.data || [];
+        console.log(`Fetching assets for user ${userId}...`);
         
-        // Filter assets to only show those created/sold by this specific user
-        // The backend uses 'seller' field for the asset creator, seller is an object with id
-        const userAssets = allAssets.filter(asset => asset.seller && asset.seller.id === userId);
+        // Try to fetch assets with seller filter parameter first
+        let userAssets = [];
+        try {
+          const response = await assetAPI.getAll({ seller: userId });
+          userAssets = response.results || response.data || response || [];
+          console.log(`API response for user ${userId}:`, response);
+        } catch (paramError) {
+          console.log('Parameterized fetch failed, falling back to full fetch and filter...');
+          // Fallback: fetch all assets and filter client-side
+          const response = await assetAPI.getAll();
+          const allAssets = response.results || response.data || response || [];
+          
+          // Filter assets to only show those created/sold by this specific user
+          userAssets = allAssets.filter(asset => {
+            // Check both seller.id and user.id patterns
+            return (asset.seller && asset.seller.id === userId) || 
+                   (asset.user && asset.user.id === userId) ||
+                   (asset.seller_id === userId) ||
+                   (asset.user_id === userId);
+          });
+        }
         
-        console.log(`Found ${userAssets.length} assets for user ${userId}`);
+        console.log(`Found ${userAssets.length} assets for user ${userId}:`, userAssets);
         setAssets(userAssets);
       } catch (err) {
         console.warn('Failed to fetch user assets:', err);
