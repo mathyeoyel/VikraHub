@@ -46,6 +46,9 @@ const Messages = () => {
   // Handle recipient from navigation state
   useEffect(() => {
     const recipientUsername = location.state?.recipientUsername;
+    const autoCreateConversation = location.state?.autoCreateConversation;
+    const recipientName = location.state?.recipientName;
+    
     if (recipientUsername && conversations.length > 0) {
       // Find existing conversation with this user
       const existingConv = conversations.find(conv => 
@@ -55,12 +58,50 @@ const Messages = () => {
       if (existingConv) {
         console.log(`📩 Opening existing conversation with ${recipientUsername}`);
         setSelectedConversation(existingConv);
+      } else if (autoCreateConversation) {
+        console.log(`🆕 Auto-creating new conversation with ${recipientUsername}`);
+        createNewConversation(recipientUsername, recipientName);
       } else {
         console.log(`💬 No existing conversation found with ${recipientUsername}, user can start a new one`);
-        // You could implement auto-creating a conversation here if needed
       }
     }
   }, [location.state, conversations]);
+
+  // Function to create a new conversation
+  const createNewConversation = async (recipientUsername, recipientName = null) => {
+    try {
+      setLoading(true);
+      console.log(`🔄 Creating conversation with ${recipientUsername}`);
+      
+      const response = await messagingAPI.createConversation(recipientUsername);
+      const newConversation = response.data;
+      
+      console.log(`✅ New conversation created:`, newConversation);
+      
+      // Add the new conversation to the list
+      setConversations(prev => [newConversation, ...prev]);
+      
+      // Select the new conversation
+      setSelectedConversation(newConversation);
+      
+      // Show success message
+      console.log(`🎉 Ready to message ${recipientName || recipientUsername}!`);
+      
+    } catch (error) {
+      console.error('❌ Failed to create conversation:', error);
+      
+      // Show user-friendly error message
+      if (error.response?.status === 404) {
+        alert(`User "${recipientUsername}" not found. Please check the username.`);
+      } else if (error.response?.status === 400) {
+        alert('Cannot create conversation with this user. Please try again.');
+      } else {
+        alert('Failed to start conversation. Please try again.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchConversations = async () => {
     try {

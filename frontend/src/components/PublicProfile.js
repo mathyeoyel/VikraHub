@@ -211,13 +211,28 @@ const PublicProfile = () => {
     }
   };
 
-  const handleMessage = () => {
+  const handleMessage = async () => {
     if (!isAuthenticated) {
       alert('Please log in to send messages.');
       return;
     }
-    // Navigate to messages page with the recipient's username
-    navigate('/messages', { state: { recipientUsername: username } });
+    
+    try {
+      // First, try to find if there's an existing conversation
+      console.log(`🔍 Looking for existing conversation with ${username}`);
+      
+      // Navigate to messages page and let it handle finding or creating conversation
+      navigate('/messages', { 
+        state: { 
+          recipientUsername: username,
+          autoCreateConversation: true, // Flag to auto-create if not found
+          recipientName: profile.full_name || username
+        } 
+      });
+    } catch (error) {
+      console.error('❌ Error handling message action:', error);
+      alert('Failed to open messages. Please try again.');
+    }
   };
 
   const handleShare = () => {
