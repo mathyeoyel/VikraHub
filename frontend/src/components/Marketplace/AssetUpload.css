@@ -158,6 +158,56 @@
   cursor: not-allowed;
 }
 
+/* Price Input Group */
+.price-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.currency-select {
+  padding: 8px 12px;
+  border: 2px solid #e1e5e9;
+  border-radius: 6px;
+  background: white;
+  font-size: 14px;
+  min-width: 80px;
+}
+
+.price-input {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #e1e5e9;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.price-input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Secondary Button */
+.upload-btn.secondary {
+  background: #6c757d;
+  border-color: #6c757d;
+}
+
+.upload-btn.secondary:hover {
+  background: #5a6268;
+  border-color: #545b62;
+}
+
+/* Form Help Text */
+.form-help {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #6c757d;
+  font-style: italic;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .asset-upload-container {
@@ -175,5 +225,11 @@
   
   .upload-header h2 {
     font-size: 1.6rem;
+  }
+  
+  .price-input-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
   }
 }

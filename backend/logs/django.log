@@ -2348,3 +2348,7 @@ INFO 2025-07-27 09:46:16,135 autoreload 24188 22584 C:\Users\hp\Downloads\Projec
 INFO 2025-07-27 09:46:16,359 autoreload 10772 6304 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\asset_utils.py changed, reloading.
 INFO 2025-07-27 09:46:17,461 autoreload 24248 3964 Watching for file changes with StatReloader
 INFO 2025-07-27 09:46:17,670 autoreload 3120 11296 Watching for file changes with StatReloader
+INFO 2025-07-27 09:52:14,376 autoreload 24248 3964 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\models.py changed, reloading.
+INFO 2025-07-27 09:52:14,384 autoreload 3120 11296 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\models.py changed, reloading.
+INFO 2025-07-27 09:52:16,255 autoreload 14716 1728 Watching for file changes with StatReloader
+INFO 2025-07-27 09:52:16,256 autoreload 17332 23664 Watching for file changes with StatReloader

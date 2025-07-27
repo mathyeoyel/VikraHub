@@ -15,6 +15,7 @@ const AssetUpload = ({ onAssetCreated }) => {
     category: '',
     asset_type: '',
     price: '',
+    currency: 'SSP',
     tags: '',
     software_used: '',
     file_formats: '',
@@ -98,25 +99,28 @@ const AssetUpload = ({ onAssetCreated }) => {
       return;
     }
 
-    if (!formData.preview_file || !formData.asset_file) {
-      alert('Please upload both preview image and asset files');
+    if (!formData.preview_file) {
+      alert('Please upload a preview image');
       return;
     }
 
     setLoading(true);
     
     try {
-      // Upload files to Cloudinary first
-      const [previewUpload, assetUpload] = await Promise.all([
-        uploadToCloudinary(formData.preview_file, {
-          folder: 'vikrahub/assets/previews',
-          tags: 'asset_preview'
-        }),
-        uploadRawToCloudinary(formData.asset_file, {
+      // Upload preview image to Cloudinary (required)
+      const previewUpload = await uploadToCloudinary(formData.preview_file, {
+        folder: 'vikrahub/assets/previews',
+        tags: 'asset_preview'
+      });
+
+      // Upload asset file to Cloudinary (optional)
+      let assetUpload = null;
+      if (formData.asset_file) {
+        assetUpload = await uploadRawToCloudinary(formData.asset_file, {
           folder: 'vikrahub/assets/files',
           tags: 'asset_file'
-        })
-      ]);
+        });
+      }
 
       // Create asset data with Cloudinary URLs
       const assetData = {
@@ -124,12 +128,13 @@ const AssetUpload = ({ onAssetCreated }) => {
         description: formData.description,
         category_id: formData.category,
         asset_type: formData.asset_type,
-        price: formData.price,
+        price: formData.price || null,
+        currency: formData.currency,
         tags: formData.tags,
         software_used: formData.software_used,
         file_formats: formData.file_formats,
         preview_image: previewUpload.secure_url,
-        asset_files: assetUpload.secure_url
+        asset_files: assetUpload ? assetUpload.secure_url : null
       };
       
       const response = await assetAPI.create(assetData);
@@ -142,6 +147,7 @@ const AssetUpload = ({ onAssetCreated }) => {
         category: '',
         asset_type: '',
         price: '',
+        currency: 'SSP',
         tags: '',
         software_used: '',
         file_formats: '',
@@ -190,19 +196,32 @@ const AssetUpload = ({ onAssetCreated }) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="price">Price (USD) *</label>
-            <input
-              type="number"
-              id="price"
-              name="price"
-              value={formData.price}
-              onChange={handleInputChange}
-              placeholder="0.00"
-              min="0.01"
-              max="999999.99"
-              step="0.01"
-              required
-            />
+            <label htmlFor="price">Price (Optional)</label>
+            <div className="price-input-group">
+              <select
+                name="currency"
+                value={formData.currency}
+                onChange={handleInputChange}
+                className="currency-select"
+              >
+                <option value="SSP">SSP</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+              </select>
+              <input
+                type="number"
+                id="price"
+                name="price"
+                value={formData.price}
+                onChange={handleInputChange}
+                placeholder="0.00 (Leave empty for free)"
+                min="0"
+                max="999999.99"
+                step="0.01"
+                className="price-input"
+              />
+            </div>
+            <small className="form-help">Leave empty to make your asset free to download</small>
           </div>
         </div>
 
@@ -337,7 +356,7 @@ const AssetUpload = ({ onAssetCreated }) => {
             </div>
 
             <div className="form-group">
-              <label>Asset Files (ZIP) *</label>
+              <label>Asset Files (ZIP) - Optional</label>
               <div className="upload-widget">
                 <input
                   type="file"
@@ -349,15 +368,16 @@ const AssetUpload = ({ onAssetCreated }) => {
                 <button 
                   type="button" 
                   onClick={() => document.getElementById('asset-upload').click()}
-                  className="upload-btn"
+                  className="upload-btn secondary"
                 >
-                  {formData.asset_files ? '✅ Asset Files Uploaded' : '📦 Upload Asset Files (ZIP)'}
+                  {formData.asset_files ? '✅ Asset Files Uploaded' : '📦 Upload Asset Files (Optional)'}
                 </button>
                 {formData.asset_files && (
                   <div className="file-info">
                     <p>✅ Asset files uploaded successfully</p>
                   </div>
                 )}
+                <small className="form-help">Upload a ZIP file with your design files (PSD, AI, etc.). Optional for preview-only assets.</small>
               </div>
             </div>
           </div>
@@ -367,7 +387,7 @@ const AssetUpload = ({ onAssetCreated }) => {
           <button 
             type="submit" 
             className="submit-btn"
-            disabled={loading || !formData.preview_image || !formData.asset_files}
+            disabled={loading || !formData.preview_image}
           >
             {loading ? 'Uploading...' : 'Upload Asset'}
           </button>
