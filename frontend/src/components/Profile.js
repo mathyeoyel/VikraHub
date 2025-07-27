@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './Auth/AuthContext';
-import { userAPI } from '../api';
+import { userAPI, assetAPI } from '../api';
 import EditProfile from './EditProfile';
 import ClientProfile from './ClientProfile';
 import './Profile.css';
@@ -8,6 +8,7 @@ import './Profile.css';
 const Profile = () => {
   const { user } = useAuth();
   const [profile, setProfile] = useState(null);
+  const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [activePortfolioTab, setActivePortfolioTab] = useState('All');
@@ -22,9 +23,25 @@ const Profile = () => {
     
     try {
       setLoading(true);
-      const response = await userAPI.getMyProfile();
-      console.log('Profile data received:', response.data);
-      setProfile(response.data);
+      // Fetch both profile and assets data
+      const [profileResponse, assetsResponse] = await Promise.all([
+        userAPI.getMyProfile(),
+        assetAPI.getMyAssets().catch(err => {
+          console.warn('Failed to fetch assets:', err);
+          return { data: [], results: [] };
+        })
+      ]);
+      
+      console.log('Profile data received:', profileResponse.data);
+      setProfile(profileResponse.data);
+      
+      // Normalize assets response (handle both arrays and paginated objects)
+      const normalizedAssets = Array.isArray(assetsResponse) 
+        ? assetsResponse 
+        : assetsResponse?.results || assetsResponse?.data || [];
+      
+      console.log('Assets data received:', normalizedAssets);
+      setAssets(normalizedAssets);
     } catch (error) {
       console.error('Failed to fetch profile:', error);
     } finally {
@@ -39,8 +56,23 @@ const Profile = () => {
     console.log('Profile updated successfully:', updatedProfile);
   };
 
-  // Get portfolio works from profile data
-  const portfolioWorks = profile?.portfolio_items || [];
+  // Get portfolio works from profile data and combine with uploaded assets
+  const portfolioItems = profile?.portfolio_items || [];
+  
+  // Convert assets to portfolio format for consistent display
+  const assetPortfolioItems = assets.map(asset => ({
+    id: `asset-${asset.id}`,
+    title: asset.title,
+    category: asset.category || 'Creative Assets',
+    image: asset.file_url || asset.thumbnail_url,
+    description: asset.description,
+    url: asset.file_url,
+    tags_list: asset.tags ? asset.tags.split(',').map(tag => tag.trim()) : [],
+    type: 'asset' // Mark as asset for identification
+  }));
+  
+  // Combine portfolio items and assets
+  const portfolioWorks = [...portfolioItems, ...assetPortfolioItems];
 
   // Get real social links from profile
   const socialLinks = [
@@ -309,6 +341,9 @@ const Profile = () => {
                     className="portfolio-item"
                     onClick={() => setSelectedWork(work)}
                   >
+                    {work.type === 'asset' && (
+                      <div className="asset-badge">Creative Asset</div>
+                    )}
                     <img 
                       src={work.image || '/assets/default-portfolio.jpg'} 
                       alt={work.title}
@@ -328,29 +363,6 @@ const Profile = () => {
                 <p>No portfolio items to display yet. Add some work to showcase your skills!</p>
               </div>
             )}
-          </div>
-
-          {/* About/Story Section */}
-          <div className="about-section">
-            <h2>About Me</h2>
-            <div className="about-content">
-              <div className="bio-text">
-                {profile?.bio ? (
-                  <p>{profile.bio}</p>
-                ) : (
-                  <p>No bio information available. Update your profile to share more about yourself!</p>
-                )}
-              </div>
-              
-              {profile?.headline && (
-                <div className="creative-statement">
-                  <h3>Professional Headline</h3>
-                  <blockquote>
-                    "{profile.headline}"
-                  </blockquote>
-                </div>
-              )}
-            </div>
           </div>
 
           {/* Achievements & Highlights - Show only for Creator and Freelancer */}
