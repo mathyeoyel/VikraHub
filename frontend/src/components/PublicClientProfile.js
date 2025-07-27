@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { publicProfileAPI, userAPI, followAPI } from '../api';
 import { useAuth } from './Auth/AuthContext';
 import notificationService from '../services/notificationService';
-import ChatButton from './Chat/ChatButton';
 import './PublicClientProfile.css';
 
 const PublicClientProfile = () => {
   const { username } = useParams();
   const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [clientProfile, setClientProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -192,7 +192,12 @@ const PublicClientProfile = () => {
   };
 
   const handleMessage = () => {
-    alert('Messaging feature coming soon!');
+    if (!isAuthenticated) {
+      alert('Please log in to send messages.');
+      return;
+    }
+    // Navigate to messages page with the recipient's username
+    navigate('/messages', { state: { recipientUsername: username } });
   };
 
   const handleProposal = () => {
@@ -302,12 +307,13 @@ const PublicClientProfile = () => {
               Send Proposal
             </button>
             {isAuthenticated && user?.username !== username && (
-              <ChatButton 
-                recipientUsername={username}
-                recipientName={profile?.full_name || username}
+              <button 
                 className="btn-secondary-public"
-                size="medium"
-              />
+                onClick={handleMessage}
+                title={`Send a message to ${profile?.full_name || username}`}
+              >
+                💬 Message
+              </button>
             )}
             {isAuthenticated && user?.username !== username && (
               <button 
