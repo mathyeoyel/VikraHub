@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import SearchBar from './SearchBar';
 import './Freelance.css';
 
 const Freelance = () => {
@@ -21,15 +20,6 @@ const Freelance = () => {
         <div className="hero-section">
           <h1>Freelance Platform</h1>
           <p>Connect with skilled professionals and find your next project</p>
-          
-          {/* Search Bar for Freelance Platform */}
-          <div className="freelance-search">
-            <SearchBar 
-              variant="hero"
-              placeholder="Find freelancers, projects, or services..."
-              showFilters={true}
-            />
-          </div>
         </div>
 
         <div className="platform-features">
