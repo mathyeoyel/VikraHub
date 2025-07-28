@@ -65,7 +65,7 @@ const Profile = () => {
     title: asset.title,
     category: typeof asset.category === 'object' && asset.category ? asset.category.name : 
               typeof asset.category === 'string' ? asset.category : 'Creative Assets',
-    image: asset.file_url || asset.thumbnail_url,
+    image: asset.preview_image || asset.file_url || asset.thumbnail_url,
     description: asset.description,
     url: asset.file_url,
     tags_list: asset.tags ? asset.tags.split(',').map(tag => tag.trim()) : [],
@@ -196,9 +196,13 @@ const Profile = () => {
       {/* Cover Banner */}
       <div className="cover-banner">
         <img 
-          src={profile?.cover_photo || 'https://picsum.photos/1200/300?blur=2'} 
+          src={profile?.cover_photo || '/assets/default-cover-placeholder.svg'} 
           alt="Cover"
           className="cover-image"
+          onError={(e) => {
+            // Use a CSS-based cover placeholder if the SVG also fails
+            e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwMCIgaGVpZ2h0PSIzMDAiIHZpZXdCb3g9IjAgMCAxMjAwIDMwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0iY292ZXJHcmFkaWVudCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMDAyMjMiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojNGE1NTY4Ii8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPHJlY3Qgd2lkdGg9IjEyMDAiIGhlaWdodD0iMzAwIiBmaWxsPSJ1cmwoI2NvdmVyR3JhZGllbnQpIi8+CjxnIG9wYWNpdHk9IjAuNiI+CjxjaXJjbGUgY3g9IjIwMCIgY3k9IjEwMCIgcj0iMyIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAwMCIgY3k9IjgwIiByPSIyIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI4MDAiIGN5PSIxNTAiIHI9IjIuNSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iNDAwIiBjeT0iNjAiIHI9IjEuNSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iNjAwIiBjeT0iMjAwIiByPSIyIiBmaWxsPSJ3aGl0ZSIvPgo8L2c+Cjx0ZXh0IHg9IjYwMCIgeT0iMTYwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjciPkNvdmVyIFBob3RvPC90ZXh0Pgo8L3N2Zz4=';
+          }}
         />
         <div className="cover-overlay"></div>
       </div>
@@ -346,10 +350,14 @@ const Profile = () => {
                       <div className="asset-badge">Creative Asset</div>
                     )}
                     <img 
-                      src={work.image || 'https://picsum.photos/300/200?grayscale'} 
+                      src={work.image || '/assets/default-asset-placeholder.svg'} 
                       alt={work.title}
                       onError={(e) => {
-                        e.target.src = 'https://picsum.photos/300/200?grayscale';
+                        // If asset placeholder also fails, show a CSS-based placeholder
+                        if (!e.target.classList.contains('placeholder-fallback')) {
+                          e.target.classList.add('placeholder-fallback');
+                          e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjVmNWY1Ii8+CjxwYXRoIGQ9Ik0xNTAgNzVWMTI1TTE3NSAxMDBIMTI1IiBzdHJva2U9IiM5OTkiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvU3ZnPg==';
+                        }
                       }}
                     />
                     <div className="portfolio-overlay">
@@ -495,7 +503,8 @@ const Profile = () => {
                 src={selectedWork.image} 
                 alt={selectedWork.title}
                 onError={(e) => {
-                  e.target.src = 'https://picsum.photos/600/400?grayscale';
+                  // Use the same SVG placeholder for modal
+                  e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDYwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjZjVmNWY1Ii8+CjxwYXRoIGQ9Ik0zMDAgMTUwVjI1ME0zNTAgMjAwSDI1MCIgc3Ryb2tlPSIjOTk5IiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4=';
                 }}
               />
             )}
