@@ -2,7 +2,7 @@
 .profile-page {
   min-height: 100vh;
   background: #f8f9fa;
-  padding-top: 100px; /* Account for fixed header - reduced from default 120px */
+  padding-top: 80px; /* Reduced to be slightly less than main layout */
 }
 
 /* Cover Banner */

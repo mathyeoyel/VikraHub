@@ -330,7 +330,7 @@ body {
 /* Main Content */
 .main-content {
   flex: 1;
-  padding-top: 120px; /* Account for floating header */
+  padding-top: 100px; /* Reduced from 120px for tighter layout */
   padding-bottom: 2rem;
 }
 
@@ -541,7 +541,7 @@ body {
   }
   
   .main-content {
-    padding-top: 140px;
+    padding-top: 110px; /* Reduced from 140px for mobile */
   }
   
   .footer-content {
@@ -621,7 +621,7 @@ body {
   }
   
   .main-content {
-    padding-top: 160px;
+    padding-top: 120px; /* Reduced from 160px for smaller mobile */
   }
 }
 
