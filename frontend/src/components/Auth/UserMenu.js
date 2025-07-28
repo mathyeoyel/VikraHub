@@ -45,10 +45,39 @@ const UserMenu = ({ onMenuAction }) => {
 
   const getInitials = (user) => {
     if (user.first_name && user.last_name) {
-      return `${user.first_name[0]}${user.last_name[0]}`;
+      return `${user.first_name[0]}${user.last_name[0]}`.toUpperCase();
     }
-    return user.username[0].toUpperCase();
+    if (user.first_name) {
+      return user.first_name.slice(0, 2).toUpperCase();
+    }
+    if (user.last_name) {
+      return user.last_name.slice(0, 2).toUpperCase();
+    }
+    if (user.username) {
+      return user.username.slice(0, 2).toUpperCase();
+    }
+    if (user.email) {
+      return user.email.slice(0, 2).toUpperCase();
+    }
+    return 'U'; // Ultimate fallback
   };
+
+  const getProfileImageUrl = (user) => {
+    // Check for various possible profile image fields
+    if (user.profile_picture) return user.profile_picture;
+    if (user.profile_image) return user.profile_image;
+    if (user.avatar) return user.avatar;
+    if (user.photo) return user.photo;
+    return null;
+  };
+
+  const handleImageError = (e) => {
+    // Hide the image and show initials fallback
+    e.target.style.display = 'none';
+    e.target.nextSibling.style.display = 'flex';
+  };
+
+  const profileImageUrl = getProfileImageUrl(user);
 
   return (
     <div className="user-menu" ref={dropdownRef}>
@@ -57,8 +86,23 @@ const UserMenu = ({ onMenuAction }) => {
         onClick={toggleUserMenu}
         title={`${user.first_name} ${user.last_name}` || user.username}
       >
-        <span className="user-icon">👤</span>
-        <span className="user-initials">{getInitials(user)}</span>
+        {profileImageUrl ? (
+          <>
+            <img 
+              src={profileImageUrl} 
+              alt="Profile" 
+              className="user-avatar-image"
+              onError={handleImageError}
+            />
+            <div className="user-avatar-initials" style={{ display: 'none' }}>
+              {getInitials(user)}
+            </div>
+          </>
+        ) : (
+          <div className="user-avatar-initials">
+            {getInitials(user)}
+          </div>
+        )}
         {(unreadMessages + unreadNotifications) > 0 && (
           <span className="user-avatar-badge">
             {unreadMessages + unreadNotifications}
