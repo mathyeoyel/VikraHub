@@ -2,7 +2,7 @@
 .profile-page {
   min-height: 100vh;
   background: #f8f9fa;
-  padding-top: 80px; /* Reduced to be slightly less than main layout */
+  padding-top: 60px; /* Further reduced for minimal gap */
 }
 
 /* Cover Banner */

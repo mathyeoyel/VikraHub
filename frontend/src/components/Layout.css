@@ -330,7 +330,7 @@ body {
 /* Main Content */
 .main-content {
   flex: 1;
-  padding-top: 100px; /* Reduced from 120px for tighter layout */
+  padding-top: 80px; /* Further reduced from 100px for minimal gap */
   padding-bottom: 2rem;
 }
 
@@ -541,7 +541,7 @@ body {
   }
   
   .main-content {
-    padding-top: 110px; /* Reduced from 140px for mobile */
+    padding-top: 90px; /* Further reduced from 110px for mobile */
   }
   
   .footer-content {
@@ -621,7 +621,7 @@ body {
   }
   
   .main-content {
-    padding-top: 120px; /* Reduced from 160px for smaller mobile */
+    padding-top: 100px; /* Further reduced from 120px for smaller mobile */
   }
 }
 
