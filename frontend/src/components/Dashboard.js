@@ -450,6 +450,8 @@ const Dashboard = () => {
   const handleProfileUpdate = (updatedProfile) => {
     console.log('Profile updated:', updatedProfile);
     setProfile(updatedProfile);
+    // Switch back to overview tab after successful update
+    setActiveTab('overview');
     // Also refresh to get any server-side processed data
     setTimeout(() => {
       refreshProfileData();
@@ -859,6 +861,7 @@ const Dashboard = () => {
               <EditProfile 
                 profile={profile} 
                 onProfileUpdate={handleProfileUpdate}
+                onClose={() => setActiveTab('overview')}
               />
             </div>
           )}
