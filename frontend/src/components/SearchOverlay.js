@@ -27,57 +27,22 @@ const SearchOverlay = ({ query, isVisible, onClose }) => {
   }, [query]);
 
   const performSearch = async (searchQuery) => {
+    console.log('🔍 Starting search for:', searchQuery);
     setResults(prev => ({ ...prev, loading: true, error: null }));
     
     try {
-      // For now, we'll simulate the search since the backend endpoint might not be ready
-      // In a real implementation, you would call: await searchAPI.universal(searchQuery);
+      // Call the real API for universal search
+      console.log('📡 Calling searchAPI.universal...');
+      const searchResults = await searchAPI.universal(searchQuery);
+      console.log('✅ Search results received:', searchResults);
       
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock results - replace this with actual API call when backend is ready
-      const mockResults = {
-        users: [
-          {
-            id: 1,
-            username: 'john_doe',
-            full_name: 'John Doe',
-            bio: 'Creative professional',
-            profile_picture: null
-          }
-        ],
-        freelancers: [
-          {
-            id: 1,
-            title: 'UI/UX Designer',
-            skills: ['Design', 'Figma', 'Adobe'],
-            user: {
-              username: 'designer_pro',
-              full_name: 'Jane Smith',
-              profile_picture: null
-            }
-          }
-        ],
-        creators: [],
-        assets: [
-          {
-            id: 1,
-            title: 'Modern Logo Pack',
-            category: 'Graphics',
-            price: 29.99,
-            thumbnail: null
-          }
-        ],
-        collections: [],
-        services: [],
-        portfolios: [],
-        loading: false
-      };
-      
-      setResults(mockResults);
+      setResults({
+        ...searchResults,
+        loading: false,
+        error: null
+      });
     } catch (error) {
-      console.error('Search failed:', error);
+      console.error('❌ Search failed:', error);
       setResults(prev => ({
         ...prev,
         loading: false,
@@ -101,21 +66,23 @@ const SearchOverlay = ({ query, isVisible, onClose }) => {
     onClose();
   };
 
+  // Render a user result card using real backend fields
   const renderUserResult = (user) => (
-    <Link to={`/profile/${user.username}`} key={user.id} className="search-result-item" onClick={onClose}>
+    <Link to={`/profile/${user.username}`} key={user.id || user.username} className="search-result-item" onClick={onClose}>
       <div className="result-avatar">
         {user.profile_picture ? (
-          <img src={user.profile_picture} alt={user.full_name} />
+          <img src={user.profile_picture} alt={user.username} />
         ) : (
-          <div className="result-avatar-initials">
-            {user.full_name?.charAt(0) || user.username?.charAt(0) || 'U'}
+          <div className="avatar-fallback">
+            {user.first_name?.[0] || user.username?.[0]}
+            {user.last_name?.[0] || ''}
           </div>
         )}
       </div>
       <div className="result-content">
-        <h4>{user.full_name || user.username}</h4>
-        <p>@{user.username}</p>
-        {user.bio && <span className="result-bio">{user.bio}</span>}
+        <h4>{user.first_name || ''} {user.last_name || ''} <span style={{color:'#aaa', fontWeight:400}}>@{user.username}</span></h4>
+        {user.headline && <p>{user.headline}</p>}
+        {user.bio && <p>{user.bio}</p>}
       </div>
       <div className="result-type">User</div>
     </Link>

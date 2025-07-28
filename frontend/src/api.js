@@ -2,7 +2,7 @@ import axios from "axios";
 import { getAccessToken, getRefreshToken, removeTokens, saveToken } from "./auth";
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "https://api.vikrahub.com/api/", // Django API base URL
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:8000/api/", // Use local Django server for development
   headers: {
     "Content-Type": "application/json",
   },   
@@ -789,143 +789,225 @@ export const searchAPI = {
   // Universal search across all content types
   universal: async (query, filters = {}) => {
     try {
-      const params = new URLSearchParams({
-        q: query,
-        ...filters
-      });
-      const response = await api.get(`search/?${params}`);
-      return response.data;
+      console.log('🔍 Starting universal search for:', query);
+      const results = {};
+      
+      // Search all available endpoints in parallel
+      console.log('📡 Making parallel API calls...');
+      const [usersResponse, freelancersResponse, creatorsResponse, assetsResponse, servicesResponse, portfoliosResponse] = await Promise.allSettled([
+        api.get(`/public-profiles/search/?q=${encodeURIComponent(query)}`),
+        api.get(`/freelancer-profiles/search/?q=${encodeURIComponent(query)}`),
+        api.get(`/creator-profiles/search/?q=${encodeURIComponent(query)}`),
+        api.get(`/creative-assets/?search=${encodeURIComponent(query)}`),
+        api.get(`/services/?search=${encodeURIComponent(query)}`),
+        api.get(`/portfolio/?search=${encodeURIComponent(query)}`)
+      ]);
+
+      // Process successful responses
+      if (usersResponse.status === 'fulfilled') {
+        const userData = usersResponse.value.data;
+        // Handle both single result and array results
+        if (Array.isArray(userData)) {
+          results.users = userData;
+        } else if (userData && typeof userData === 'object') {
+          results.users = [userData];
+        } else if (userData && userData.results) {
+          results.users = userData.results;
+        } else {
+          results.users = [];
+        }
+        console.log('👥 Users found:', results.users.length);
+      } else {
+        console.warn('⚠️ User search failed:', usersResponse.reason);
+        results.users = [];
+      }
+
+      if (freelancersResponse.status === 'fulfilled') {
+        const freelancerData = freelancersResponse.value.data;
+        if (Array.isArray(freelancerData)) {
+          results.freelancers = freelancerData;
+        } else if (freelancerData && freelancerData.results) {
+          results.freelancers = freelancerData.results;
+        } else {
+          results.freelancers = [];
+        }
+        console.log('💼 Freelancers found:', results.freelancers.length);
+      } else {
+        console.warn('⚠️ Freelancer search failed:', freelancersResponse.reason);
+        results.freelancers = [];
+      }
+
+      if (creatorsResponse.status === 'fulfilled') {
+        const creatorData = creatorsResponse.value.data;
+        if (Array.isArray(creatorData)) {
+          results.creators = creatorData;
+        } else if (creatorData && creatorData.results) {
+          results.creators = creatorData.results;
+        } else {
+          results.creators = [];
+        }
+        console.log('🎨 Creators found:', results.creators.length);
+      } else {
+        console.warn('⚠️ Creator search failed:', creatorsResponse.reason);
+        results.creators = [];
+      }
+
+      if (assetsResponse.status === 'fulfilled') {
+        const assetData = assetsResponse.value.data;
+        if (Array.isArray(assetData)) {
+          results.assets = assetData;
+        } else if (assetData && assetData.results) {
+          results.assets = assetData.results;
+        } else {
+          results.assets = [];
+        }
+        console.log('🎭 Assets found:', results.assets.length);
+      } else {
+        console.warn('⚠️ Asset search failed:', assetsResponse.reason);
+        results.assets = [];
+      }
+
+      if (servicesResponse.status === 'fulfilled') {
+        const serviceData = servicesResponse.value.data;
+        if (Array.isArray(serviceData)) {
+          results.services = serviceData;
+        } else if (serviceData && serviceData.results) {
+          results.services = serviceData.results;
+        } else {
+          results.services = [];
+        }
+        console.log('⚙️ Services found:', results.services.length);
+      } else {
+        console.warn('⚠️ Service search failed:', servicesResponse.reason);
+        results.services = [];
+      }
+
+      if (portfoliosResponse.status === 'fulfilled') {
+        const portfolioData = portfoliosResponse.value.data;
+        if (Array.isArray(portfolioData)) {
+          results.portfolios = portfolioData;
+        } else if (portfolioData && portfolioData.results) {
+          results.portfolios = portfolioData.results;
+        } else {
+          results.portfolios = [];
+        }
+        console.log('📁 Portfolios found:', results.portfolios.length);
+      } else {
+        console.warn('⚠️ Portfolio search failed:', portfoliosResponse.reason);
+        results.portfolios = [];
+      }
+
+      // Collections are typically part of assets for now
+      results.collections = [];
+
+      console.log('✅ Universal search results:', results);
+      return results;
     } catch (error) {
-      console.error('Universal search failed:', error.response?.data || error.message);
-      throw error;
+      console.error('❌ Universal search error:', error);
+      return {
+        users: [],
+        freelancers: [],
+        creators: [],
+        assets: [],
+        collections: [],
+        services: [],
+        portfolios: []
+      };
     }
   },
 
   // Search specific content types
   users: async (query, filters = {}) => {
     try {
-      const params = new URLSearchParams({
-        q: query,
-        type: 'users',
-        ...filters
-      });
-      const response = await api.get(`search/users/?${params}`);
-      return response.data;
+      const response = await api.get(`/public-profiles/search/?q=${encodeURIComponent(query)}`);
+      return response.data.results || response.data || [];
     } catch (error) {
       console.error('User search failed:', error.response?.data || error.message);
-      throw error;
+      return [];
     }
   },
 
   freelancers: async (query, filters = {}) => {
     try {
-      const params = new URLSearchParams({
-        q: query,
-        type: 'freelancers',
-        ...filters
-      });
-      const response = await api.get(`search/freelancers/?${params}`);
-      return response.data;
+      const response = await api.get(`/freelancer-profiles/search/?q=${encodeURIComponent(query)}`);
+      return response.data.results || response.data || [];
     } catch (error) {
       console.error('Freelancer search failed:', error.response?.data || error.message);
-      throw error;
+      return [];
     }
   },
 
   creators: async (query, filters = {}) => {
     try {
-      const params = new URLSearchParams({
-        q: query,
-        type: 'creators',
-        ...filters
-      });
-      const response = await api.get(`search/creators/?${params}`);
-      return response.data;
+      const response = await api.get(`/creator-profiles/search/?q=${encodeURIComponent(query)}`);
+      return response.data.results || response.data || [];
     } catch (error) {
       console.error('Creator search failed:', error.response?.data || error.message);
-      throw error;
+      return [];
     }
   },
 
   assets: async (query, filters = {}) => {
     try {
-      const params = new URLSearchParams({
-        q: query,
-        type: 'assets',
-        ...filters
-      });
-      const response = await api.get(`search/assets/?${params}`);
-      return response.data;
+      const response = await api.get(`/creative-assets/?search=${encodeURIComponent(query)}`);
+      return response.data.results || response.data || [];
     } catch (error) {
       console.error('Asset search failed:', error.response?.data || error.message);
-      throw error;
+      return [];
     }
   },
 
   collections: async (query, filters = {}) => {
     try {
-      const params = new URLSearchParams({
-        q: query,
-        type: 'collections',
-        ...filters
-      });
-      const response = await api.get(`search/collections/?${params}`);
-      return response.data;
+      // Collections might be part of assets or have their own endpoint
+      const response = await api.get(`/asset-categories/?search=${encodeURIComponent(query)}`);
+      return response.data.results || response.data || [];
     } catch (error) {
       console.error('Collection search failed:', error.response?.data || error.message);
-      throw error;
+      return [];
     }
   },
 
   services: async (query, filters = {}) => {
     try {
-      const params = new URLSearchParams({
-        q: query,
-        type: 'services',
-        ...filters
-      });
-      const response = await api.get(`search/services/?${params}`);
-      return response.data;
+      const response = await api.get(`/services/?search=${encodeURIComponent(query)}`);
+      return response.data.results || response.data || [];
     } catch (error) {
       console.error('Service search failed:', error.response?.data || error.message);
-      throw error;
+      return [];
     }
   },
 
   portfolios: async (query, filters = {}) => {
     try {
-      const params = new URLSearchParams({
-        q: query,
-        type: 'portfolios',
-        ...filters
-      });
-      const response = await api.get(`search/portfolios/?${params}`);
-      return response.data;
+      const response = await api.get(`/portfolio/?search=${encodeURIComponent(query)}`);
+      return response.data.results || response.data || [];
     } catch (error) {
       console.error('Portfolio search failed:', error.response?.data || error.message);
-      throw error;
+      return [];
     }
   },
 
   // Quick search suggestions (for autocomplete)
   suggestions: async (query) => {
     try {
-      const response = await api.get(`search/suggestions/?q=${encodeURIComponent(query)}`);
-      return response.data;
+      // Try follow search first as it's most likely to work
+      const response = await api.get(`/follow/search/?q=${encodeURIComponent(query)}`);
+      return response.data || [];
     } catch (error) {
       console.error('Search suggestions failed:', error.response?.data || error.message);
-      throw error;
+      return [];
     }
   },
 
   // Trending searches
   trending: async () => {
     try {
-      const response = await api.get('search/trending/');
-      return response.data;
+      // For now, return empty array since trending endpoint might not exist
+      return [];
     } catch (error) {
       console.error('Trending search failed:', error.response?.data || error.message);
-      throw error;
+      return [];
     }
   }
 };

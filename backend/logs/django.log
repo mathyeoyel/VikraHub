@@ -3463,3 +3463,11 @@ WARNING 2025-07-28 19:14:01,436 log 16632 9112 Not Found: /ws/messaging/messagin
 WARNING 2025-07-28 19:14:01,437 basehttp 16632 9112 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzIzMDYyLCJpYXQiOjE3NTM3MTkxMDQsImp0aSI6IjI4MTc3YzkxMTUyODQ4NTBhNWU0NmM3NWM5OTAzYjU2IiwidXNlcl9pZCI6Mjh9.9-24HGKeGhzUKMNmAdOYKdgRG6Fa8Oxen3L1ePGpxXU HTTP/1.1" 404 3653
 WARNING 2025-07-28 19:14:07,800 log 16632 3340 Not Found: /ws/messaging/messaging/
 WARNING 2025-07-28 19:14:07,800 basehttp 16632 3340 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzIzMDYyLCJpYXQiOjE3NTM3MTkxMDQsImp0aSI6IjI4MTc3YzkxMTUyODQ4NTBhNWU0NmM3NWM5OTAzYjU2IiwidXNlcl9pZCI6Mjh9.9-24HGKeGhzUKMNmAdOYKdgRG6Fa8Oxen3L1ePGpxXU HTTP/1.1" 404 3653
+INFO 2025-07-28 19:41:07,756 autoreload 17780 16760 Watching for file changes with StatReloader
+INFO 2025-07-28 19:43:06,527 basehttp 16632 12384 "GET /api/public-profiles/search/?q=Mathew HTTP/1.1" 200 1865
+INFO 2025-07-28 19:43:22,346 basehttp 16632 12384 "GET /api/public-profiles/search/?q=Mathew HTTP/1.1" 200 1865
+INFO 2025-07-28 19:47:08,450 basehttp 16632 8864 "GET /api/public-profiles/search/?q=Mathew HTTP/1.1" 200 1865
+WARNING 2025-07-28 19:47:54,871 log 16632 24584 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-28 19:47:54,874 basehttp 16632 24584 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzIzMDYyLCJpYXQiOjE3NTM3MTkxMDQsImp0aSI6IjI4MTc3YzkxMTUyODQ4NTBhNWU0NmM3NWM5OTAzYjU2IiwidXNlcl9pZCI6Mjh9.9-24HGKeGhzUKMNmAdOYKdgRG6Fa8Oxen3L1ePGpxXU HTTP/1.1" 404 3653
+INFO 2025-07-28 20:12:02,710 autoreload 5060 18908 Watching for file changes with StatReloader
+INFO 2025-07-28 20:13:16,175 basehttp 5060 9936 "GET /api/public-profiles/search/?q=Mathew HTTP/1.1" 200 1865
