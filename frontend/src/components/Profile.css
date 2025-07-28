@@ -926,3 +926,142 @@
   text-decoration: none;
   color: white;
 }
+
+@media (max-width: 480px) {
+  .user-profile .container {
+    padding: 0 0.5rem;
+  }
+  
+  .profile-header {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+  
+  .profile-picture-large {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .profile-name {
+    font-size: 1.5rem;
+  }
+  
+  .profile-title {
+    font-size: 0.9rem;
+  }
+  
+  .profile-bio {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+  
+  .profile-actions-header {
+    gap: 0.5rem;
+  }
+  
+  .profile-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .quick-info-section {
+    gap: 20px;
+  }
+  
+  .info-card {
+    padding: 1rem;
+    border-radius: 10px;
+  }
+  
+  .info-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  
+  .stat-item h4 {
+    font-size: 1.2rem;
+  }
+  
+  .stat-item span {
+    font-size: 0.8rem;
+  }
+  
+  .achievements-list {
+    gap: 0.5rem;
+  }
+  
+  .achievement-item {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  
+  .services-list {
+    gap: 0.75rem;
+  }
+  
+  .service-item {
+    padding: 0.75rem;
+    border-radius: 8px;
+  }
+  
+  .service-item h4 {
+    font-size: 0.9rem;
+  }
+  
+  .service-item p {
+    font-size: 0.8rem;
+  }
+  
+  .service-price {
+    font-size: 0.85rem;
+  }
+  
+  .profile-tabs {
+    margin: 1.5rem 0;
+  }
+  
+  .tab-button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .portfolio-item {
+    border-radius: 10px;
+  }
+  
+  .portfolio-item h4 {
+    font-size: 1rem;
+  }
+  
+  .portfolio-item p {
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+  
+  .portfolio-empty {
+    padding: 2rem 1rem;
+  }
+  
+  .portfolio-empty h3 {
+    font-size: 1.2rem;
+  }
+  
+  .portfolio-empty p {
+    font-size: 0.9rem;
+  }
+  
+  .modal-link {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }
+}

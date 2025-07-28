@@ -145,3 +145,57 @@
     font-size: 0.9rem;
   }
 }
+
+@media (max-width: 480px) {
+  .activity-feed {
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+  }
+  
+  .activity-header {
+    gap: 8px;
+  }
+  
+  .activity-header h3 {
+    font-size: 1rem;
+  }
+  
+  .activity-item {
+    padding: 8px 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .activity-icon {
+    font-size: 1.1rem;
+    margin-right: 8px;
+  }
+  
+  .activity-content {
+    width: 100%;
+  }
+  
+  .activity-message {
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+  
+  .activity-time {
+    font-size: 0.7rem;
+    margin-top: 0.25rem;
+  }
+  
+  .no-activity {
+    padding: 20px 15px;
+  }
+  
+  .no-activity h4 {
+    font-size: 1rem;
+  }
+  
+  .no-activity p {
+    font-size: 0.8rem;
+  }
+}

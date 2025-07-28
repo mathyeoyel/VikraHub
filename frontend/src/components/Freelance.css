@@ -148,16 +148,100 @@
 }
 
 @media (max-width: 768px) {
+  .freelance-page {
+    padding: 1rem 0;
+  }
+  
+  .freelance-page .container {
+    padding: 0 0.75rem;
+  }
+  
+  .hero-section {
+    padding: 3rem 0;
+  }
+  
   .hero-section h1 {
     font-size: 2rem;
   }
   
+  .hero-section p {
+    font-size: 1rem;
+  }
+  
   .feature-grid {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .feature-card {
+    padding: 1.5rem;
   }
   
   .cta-buttons {
     flex-direction: column;
     align-items: center;
+    gap: 1rem;
+  }
+  
+  .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .freelance-page {
+    padding: 0.75rem 0;
+  }
+  
+  .freelance-page .container {
+    padding: 0 0.5rem;
+  }
+  
+  .hero-section {
+    padding: 2rem 0;
+  }
+  
+  .hero-section h1 {
+    font-size: 1.75rem;
+    line-height: 1.2;
+  }
+  
+  .hero-section p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  
+  .feature-grid {
+    gap: 1rem;
+  }
+  
+  .feature-card {
+    padding: 1rem;
+    border-radius: 10px;
+  }
+  
+  .feature-card h3 {
+    font-size: 1.1rem;
+  }
+  
+  .feature-card p {
+    font-size: 0.85rem;
+  }
+  
+  .cta-buttons {
+    gap: 0.75rem;
+  }
+  
+  .btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.8rem;
+    width: 100%;
+    max-width: 200px;
+  }
+  
+  .loading {
+    padding: 3rem 1rem;
+    font-size: 1rem;
   }
 }

@@ -276,6 +276,14 @@
     padding: 1rem 0;
   }
   
+  .public-profiles-list .container {
+    padding: 0 0.75rem;
+  }
+  
+  .page-header {
+    margin-bottom: 2rem;
+  }
+  
   .page-header h1 {
     font-size: 2.5rem;
   }
@@ -286,6 +294,7 @@
   
   .search-section {
     padding: 1.5rem;
+    border-radius: 15px;
   }
   
   .search-input-group {
@@ -308,5 +317,95 @@
   
   .profile-card {
     padding: 1.5rem;
+  }
+  
+  .avatar-placeholder {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .public-profiles-list {
+    padding: 0.75rem 0;
+  }
+  
+  .public-profiles-list .container {
+    padding: 0 0.5rem;
+  }
+  
+  .page-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .page-header h1 {
+    font-size: 2rem;
+  }
+  
+  .page-header p {
+    font-size: 0.9rem;
+  }
+  
+  .search-section {
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .search-input-group {
+    flex-direction: column;
+  }
+  
+  .search-input {
+    border-radius: 8px 8px 0 0;
+  }
+  
+  .search-btn {
+    border-radius: 0 0 8px 8px;
+    padding: 0.75rem;
+  }
+  
+  .filter-buttons {
+    gap: 0.25rem;
+    flex-wrap: wrap;
+  }
+  
+  .filter-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+  }
+  
+  .profiles-grid {
+    gap: 1rem;
+  }
+  
+  .profile-card {
+    padding: 1rem;
+    border-radius: 10px;
+  }
+  
+  .profile-card h3 {
+    font-size: 1.1rem;
+  }
+  
+  .profile-card p {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+  
+  .avatar-placeholder {
+    font-size: 1.2rem;
+  }
+  
+  .no-profiles {
+    padding: 2rem 1rem;
+  }
+  
+  .no-profiles h3 {
+    font-size: 1.2rem;
+  }
+  
+  .no-profiles p {
+    font-size: 0.9rem;
   }
 }

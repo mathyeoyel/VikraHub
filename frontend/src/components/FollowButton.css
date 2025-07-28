@@ -212,6 +212,33 @@
   }
 }
 
+@media (max-width: 480px) {
+  .follow-button--large {
+    padding: 8px 16px;
+    font-size: 14px;
+    min-height: 36px;
+    min-width: 100px;
+  }
+  
+  .follow-button--medium {
+    padding: 6px 12px;
+    font-size: 12px;
+    min-height: 32px;
+    min-width: 80px;
+  }
+  
+  .follow-button--small {
+    padding: 4px 8px;
+    font-size: 11px;
+    min-height: 28px;
+    min-width: 65px;
+  }
+  
+  .follow-button {
+    border-radius: 6px;
+  }
+}
+
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .follow-button--outline {

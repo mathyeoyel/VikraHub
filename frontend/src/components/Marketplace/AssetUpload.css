@@ -233,3 +233,79 @@
     gap: 10px;
   }
 }
+
+@media (max-width: 480px) {
+  .asset-upload-container {
+    padding: 10px;
+  }
+  
+  .upload-form {
+    padding: 15px;
+    border-radius: 10px;
+  }
+  
+  .upload-header {
+    margin-bottom: 20px;
+  }
+  
+  .upload-header h2 {
+    font-size: 1.4rem;
+  }
+  
+  .upload-header p {
+    font-size: 0.85rem;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-label {
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+  }
+  
+  .form-input,
+  .form-select,
+  .form-textarea {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+  }
+  
+  .form-textarea {
+    min-height: 80px;
+  }
+  
+  .upload-area {
+    padding: 30px 15px;
+    border-radius: 8px;
+  }
+  
+  .upload-icon {
+    font-size: 2rem;
+  }
+  
+  .upload-text {
+    font-size: 0.85rem;
+  }
+  
+  .upload-hint {
+    font-size: 0.75rem;
+  }
+  
+  .btn-primary {
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    width: 100%;
+  }
+  
+  .btn-secondary {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }
+  
+  .form-help {
+    font-size: 11px;
+  }
+}
