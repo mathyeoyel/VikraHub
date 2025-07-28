@@ -91,6 +91,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
     business_registration = serializers.CharField(write_only=True, required=False)
     tax_id = serializers.CharField(write_only=True, required=False)
     
+    # Experience fields (for freelancer and creator profiles)
+    years_experience = serializers.IntegerField(write_only=True, required=False)
+    experience_level = serializers.CharField(write_only=True, required=False)
+    
     class Meta:
         model = UserProfile
         fields = ['id', 'user', 'user_type', 'avatar', 'cover_photo', 'bio', 'location', 
@@ -100,7 +104,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
                  'client_type', 'company_name', 'company_size', 'industry', 
                  'business_address', 'contact_person', 'phone_number', 
                  'typical_budget_range', 'project_types', 'preferred_communication',
-                 'business_registration', 'tax_id']
+                 'business_registration', 'tax_id', 'years_experience', 'experience_level']
         read_only_fields = ['id', 'user', 'followers_count', 'following_count', 'is_following']
     
     def get_followers_count(self, obj):
@@ -158,6 +162,95 @@ class UserProfileSerializer(serializers.ModelSerializer):
                 # Client profile doesn't exist yet
                 data['client_profile'] = None
         
+        # Add freelancer profile data if user is a freelancer
+        if instance.user_type == 'freelancer':
+            try:
+                freelancer_profile = instance.user.freelancer_profile
+                data['freelancer_profile'] = {
+                    'years_experience': freelancer_profile.years_experience,
+                    'hourly_rate': freelancer_profile.hourly_rate,
+                    'availability': freelancer_profile.availability,
+                    'skill_level': freelancer_profile.skill_level,
+                    'portfolio_url': freelancer_profile.portfolio_url,
+                    'rating': freelancer_profile.rating,
+                    'total_jobs': freelancer_profile.total_jobs,
+                    'completed_jobs': freelancer_profile.completed_jobs,
+                    'is_available': freelancer_profile.is_available,
+                    'is_verified': freelancer_profile.is_verified,
+                }
+            except AttributeError:
+                # Freelancer profile doesn't exist yet
+                data['freelancer_profile'] = None
+        
+        # Add creator profile data if user is a creator
+        if instance.user_type == 'creator':
+            try:
+                creator_profile = instance.user.creator_profile
+                data['creator_profile'] = {
+                    'creator_type': creator_profile.creator_type,
+                    'artistic_style': creator_profile.artistic_style,
+                    'experience_level': creator_profile.experience_level,
+                    'portfolio_url': creator_profile.portfolio_url,
+                    'featured_work': creator_profile.featured_work,
+                    'art_statement': creator_profile.art_statement,
+                    'commissions_open': creator_profile.commissions_open,
+                    'commission_rates': creator_profile.commission_rates,
+                    'cultural_focus': creator_profile.cultural_focus,
+                    'rating': creator_profile.rating,
+                    'total_commissions': creator_profile.total_commissions,
+                    'completed_commissions': creator_profile.completed_commissions,
+                }
+            except AttributeError:
+                # Creator profile doesn't exist yet
+                data['creator_profile'] = None
+        
+        # Add freelancer profile data if user is a freelancer
+        if instance.user_type == 'freelancer':
+            try:
+                freelancer_profile = instance.user.freelancer_profile
+                data['freelancer_profile'] = {
+                    'years_experience': freelancer_profile.years_experience,
+                    'hourly_rate': freelancer_profile.hourly_rate,
+                    'availability': freelancer_profile.availability,
+                    'skill_level': freelancer_profile.skill_level,
+                    'portfolio_url': freelancer_profile.portfolio_url,
+                    'rating': freelancer_profile.rating,
+                    'total_jobs': freelancer_profile.total_jobs,
+                    'completed_jobs': freelancer_profile.completed_jobs,
+                    'is_available': freelancer_profile.is_available,
+                    'is_verified': freelancer_profile.is_verified,
+                }
+            except AttributeError:
+                # Freelancer profile doesn't exist yet
+                data['freelancer_profile'] = None
+        
+        # Add creator profile data if user is a creator
+        if instance.user_type == 'creator':
+            try:
+                creator_profile = instance.user.creator_profile
+                data['creator_profile'] = {
+                    'creator_type': creator_profile.creator_type,
+                    'artistic_style': creator_profile.artistic_style,
+                    'experience_level': creator_profile.experience_level,
+                    'portfolio_url': creator_profile.portfolio_url,
+                    'featured_work': creator_profile.featured_work,
+                    'art_statement': creator_profile.art_statement,
+                    'commission_types': creator_profile.commission_types,
+                    'pricing_range': creator_profile.pricing_range,
+                    'turnaround_time': creator_profile.turnaround_time,
+                    'cultural_focus': creator_profile.cultural_focus,
+                    'languages_spoken': creator_profile.languages_spoken,
+                    'preferred_subjects': creator_profile.preferred_subjects,
+                    'materials_used': creator_profile.materials_used,
+                    'rating': creator_profile.rating,
+                    'total_commissions': creator_profile.total_commissions,
+                    'is_available': creator_profile.is_available,
+                    'is_verified': creator_profile.is_verified,
+                }
+            except AttributeError:
+                # Creator profile doesn't exist yet
+                data['creator_profile'] = None
+        
         # Add optimized avatar URLs
         if data.get('avatar'):
             data['avatar_small'] = get_optimized_avatar_url(data['avatar'], size=100)
@@ -198,6 +291,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
         ]
         client_data = {}
         
+        # Extract experience fields for freelancer and creator profiles
+        experience_fields = ['years_experience', 'experience_level']
+        experience_data = {}
+        
         # Handle direct user fields
         for field in user_fields:
             if field in validated_data:
@@ -207,6 +304,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
         for field in client_fields:
             if field in validated_data:
                 client_data[field] = validated_data.pop(field)
+        
+        # Handle experience fields
+        for field in experience_fields:
+            if field in validated_data:
+                experience_data[field] = validated_data.pop(field)
         
         # Handle nested user data (from source fields)
         if 'user' in validated_data:
@@ -228,6 +330,22 @@ class UserProfileSerializer(serializers.ModelSerializer):
             for field_name, value in client_data.items():
                 setattr(client_profile, field_name, value)
             client_profile.save()
+        
+        # Update freelancer profile experience fields if user is a freelancer
+        if experience_data and instance.user_type == 'freelancer':
+            from .models import FreelancerProfile
+            freelancer_profile, created = FreelancerProfile.objects.get_or_create(user=instance.user)
+            if 'years_experience' in experience_data:
+                freelancer_profile.years_experience = experience_data['years_experience']
+            freelancer_profile.save()
+        
+        # Update creator profile experience fields if user is a creator
+        if experience_data and instance.user_type == 'creator':
+            from .models import CreatorProfile
+            creator_profile, created = CreatorProfile.objects.get_or_create(user=instance.user)
+            if 'experience_level' in experience_data:
+                creator_profile.experience_level = experience_data['experience_level']
+            creator_profile.save()
         
         # Update profile fields
         for field_name, value in validated_data.items():

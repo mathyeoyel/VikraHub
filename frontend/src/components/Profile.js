@@ -238,6 +238,17 @@ const Profile = () => {
                   profile?.user_type === 'client' ? 'Client' : 'Professional')
                 }
               </p>
+              {/* Experience Information */}
+              {(profile?.user_type === 'creator' || profile?.user_type === 'freelancer') && (
+                <p className="profile-experience">
+                  {profile?.user_type === 'freelancer' && profile?.freelancer_profile?.years_experience > 0 && (
+                    <>💼 {profile.freelancer_profile.years_experience} years experience</>
+                  )}
+                  {profile?.user_type === 'creator' && profile?.creator_profile?.experience_level && (
+                    <>⭐ {profile.creator_profile.experience_level.charAt(0).toUpperCase() + profile.creator_profile.experience_level.slice(1)} Level</>
+                  )}
+                </p>
+              )}
               <p className="profile-location">📍 {profile?.location || 'Location not specified'}</p>
               <p className="profile-tagline">
                 {profile?.bio ? 

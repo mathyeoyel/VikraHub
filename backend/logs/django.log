@@ -2483,3 +2483,101 @@ WARNING 2025-07-28 09:06:07,757 log 17624 12756 Not Found: /ws/messaging/messagi
 WARNING 2025-07-28 09:06:07,771 basehttp 17624 12756 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjg2MjE5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6ImY1MDRkYTkwOTIzMTQ0YTk5MzE5YmY4ZjEwM2U0YzE4IiwidXNlcl9pZCI6Mjh9.k0H1SY-hZ8nSkwDjHfOZr9RCkCxd4w5lfg4NeDtY6R8 HTTP/1.1" 404 3653
 WARNING 2025-07-28 09:08:03,986 log 17624 3316 Not Found: /ws/messaging/messaging/
 WARNING 2025-07-28 09:08:03,996 basehttp 17624 3316 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjg2MjE5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6ImY1MDRkYTkwOTIzMTQ0YTk5MzE5YmY4ZjEwM2U0YzE4IiwidXNlcl9pZCI6Mjh9.k0H1SY-hZ8nSkwDjHfOZr9RCkCxd4w5lfg4NeDtY6R8 HTTP/1.1" 404 3653
+INFO 2025-07-28 10:58:55,102 basehttp 17624 18428 "OPTIONS /api/creator-profiles/featured/ HTTP/1.1" 200 0
+WARNING 2025-07-28 10:58:55,165 log 17624 18428 Unauthorized: /api/creator-profiles/featured/
+WARNING 2025-07-28 10:58:55,166 log 17624 14624 Unauthorized: /api/users/me/
+WARNING 2025-07-28 10:58:55,167 basehttp 17624 18428 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
+INFO 2025-07-28 10:58:55,167 basehttp 17624 16496 "OPTIONS /api/creator-profiles/featured/ HTTP/1.1" 200 0
+WARNING 2025-07-28 10:58:55,168 basehttp 17624 14624 "GET /api/users/me/ HTTP/1.1" 401 183
+WARNING 2025-07-28 10:58:55,172 log 17624 18428 Unauthorized: /api/creator-profiles/featured/
+WARNING 2025-07-28 10:58:55,175 log 17624 14624 Unauthorized: /api/users/me/
+WARNING 2025-07-28 10:58:55,177 basehttp 17624 18428 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
+WARNING 2025-07-28 10:58:55,178 basehttp 17624 14624 "GET /api/users/me/ HTTP/1.1" 401 183
+INFO 2025-07-28 10:58:55,227 basehttp 17624 14624 "OPTIONS /api/auth/token/refresh/ HTTP/1.1" 200 0
+INFO 2025-07-28 10:58:55,243 basehttp 17624 14624 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-28 10:58:55,361 basehttp 17624 14624 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-28 11:00:39,866 basehttp 17624 3372 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-28 11:00:39,929 basehttp 17624 21236 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-28 11:20:26,577 basehttp 17624 11660 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-28 11:20:26,615 basehttp 17624 12004 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-28 11:37:19,292 basehttp 17624 20704 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-28 11:37:19,321 basehttp 17624 200 "OPTIONS /api/users/me/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:37:19,325 basehttp 17624 23916 "OPTIONS /api/users/me/ HTTP/1.1" 200 0
+WARNING 2025-07-28 11:37:19,346 log 17624 200 Unauthorized: /api/users/me/
+WARNING 2025-07-28 11:37:19,350 log 17624 23916 Unauthorized: /api/creator-profiles/featured/
+WARNING 2025-07-28 11:37:19,357 basehttp 17624 23916 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
+WARNING 2025-07-28 11:37:19,360 log 17624 18848 Unauthorized: /api/users/me/
+WARNING 2025-07-28 11:37:19,360 basehttp 17624 200 "GET /api/users/me/ HTTP/1.1" 401 183
+WARNING 2025-07-28 11:37:19,363 log 17624 23916 Unauthorized: /api/creator-profiles/featured/
+WARNING 2025-07-28 11:37:19,367 basehttp 17624 18848 "GET /api/users/me/ HTTP/1.1" 401 183
+WARNING 2025-07-28 11:37:19,369 basehttp 17624 23916 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
+INFO 2025-07-28 11:37:19,390 basehttp 17624 15104 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-28 11:37:19,485 basehttp 17624 23916 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-28 11:37:19,615 basehttp 17624 23916 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-28 11:39:40,459 basehttp 17624 7324 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-28 11:39:40,504 basehttp 17624 21324 "GET /api/users/me/ HTTP/1.1" 200 259
+INFO 2025-07-28 11:39:40,566 basehttp 17624 21324 "GET /api/users/me/ HTTP/1.1" 200 259
+INFO 2025-07-28 11:39:40,603 basehttp 17624 24232 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-28 11:39:40,632 basehttp 17624 23276 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-28 11:39:40,716 basehttp 17624 23276 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-28 11:39:40,933 basehttp 17624 21324 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:39:40,934 basehttp 17624 23276 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+WARNING 2025-07-28 11:39:40,979 log 17624 20780 Not Found: /ws/messaging/messaging/
+INFO 2025-07-28 11:39:40,988 basehttp 17624 21840 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:39:40,989 basehttp 17624 23276 "OPTIONS /api/follow/notifications/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:39:40,989 basehttp 17624 21324 "OPTIONS /api/follow/my-stats/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:39:40,990 basehttp 17624 10856 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+WARNING 2025-07-28 11:39:40,998 basehttp 17624 20780 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjk1NzM5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6IjllOTM4MjI5M2MwMTQ2ODVhODlmZWZhM2RiOTA5ODdmIiwidXNlcl9pZCI6Mjh9.Hk0oAlOrVOxsJTDwW08wLOCbyYs_x5VACwAFWp1g3Lo HTTP/1.1" 404 3653
+INFO 2025-07-28 11:39:40,999 basehttp 17624 21840 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:39:40,999 basehttp 17624 23276 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:39:41,002 basehttp 17624 16608 "OPTIONS /api/follow/suggestions/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:39:41,007 basehttp 17624 21324 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:39:41,008 basehttp 17624 16960 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:39:41,044 basehttp 17624 10856 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-28 11:39:41,100 basehttp 17624 23276 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-28 11:39:41,104 basehttp 17624 10856 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-28 11:39:41,105 basehttp 17624 16608 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-28 11:39:41,122 basehttp 17624 21840 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-28 11:39:41,132 basehttp 17624 10856 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-28 11:39:41,132 basehttp 17624 21324 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+INFO 2025-07-28 11:39:41,142 basehttp 17624 16608 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-28 11:39:41,154 basehttp 17624 10856 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-28 11:39:41,163 basehttp 17624 16608 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-28 11:39:41,182 basehttp 17624 16608 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+WARNING 2025-07-28 11:39:44,322 log 17624 8140 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-28 11:39:44,322 basehttp 17624 8140 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjk1NzM5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6IjllOTM4MjI5M2MwMTQ2ODVhODlmZWZhM2RiOTA5ODdmIiwidXNlcl9pZCI6Mjh9.Hk0oAlOrVOxsJTDwW08wLOCbyYs_x5VACwAFWp1g3Lo HTTP/1.1" 404 3653
+WARNING 2025-07-28 11:39:48,327 log 17624 15036 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-28 11:39:48,328 basehttp 17624 15036 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjk1NzM5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6IjllOTM4MjI5M2MwMTQ2ODVhODlmZWZhM2RiOTA5ODdmIiwidXNlcl9pZCI6Mjh9.Hk0oAlOrVOxsJTDwW08wLOCbyYs_x5VACwAFWp1g3Lo HTTP/1.1" 404 3653
+WARNING 2025-07-28 11:39:52,330 log 17624 2792 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-28 11:39:52,331 basehttp 17624 2792 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjk1NzM5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6IjllOTM4MjI5M2MwMTQ2ODVhODlmZWZhM2RiOTA5ODdmIiwidXNlcl9pZCI6Mjh9.Hk0oAlOrVOxsJTDwW08wLOCbyYs_x5VACwAFWp1g3Lo HTTP/1.1" 404 3653
+WARNING 2025-07-28 11:39:56,323 log 17624 9916 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-28 11:39:56,324 basehttp 17624 9916 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjk1NzM5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6IjllOTM4MjI5M2MwMTQ2ODVhODlmZWZhM2RiOTA5ODdmIiwidXNlcl9pZCI6Mjh9.Hk0oAlOrVOxsJTDwW08wLOCbyYs_x5VACwAFWp1g3Lo HTTP/1.1" 404 3653
+WARNING 2025-07-28 11:40:00,325 log 17624 8832 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-28 11:40:00,326 basehttp 17624 8832 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjk1NzM5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6IjllOTM4MjI5M2MwMTQ2ODVhODlmZWZhM2RiOTA5ODdmIiwidXNlcl9pZCI6Mjh9.Hk0oAlOrVOxsJTDwW08wLOCbyYs_x5VACwAFWp1g3Lo HTTP/1.1" 404 3653
+WARNING 2025-07-28 11:56:06,222 log 17624 21248 Unauthorized: /api/users/me/
+WARNING 2025-07-28 11:56:06,231 log 17624 4216 Unauthorized: /api/creator-profiles/featured/
+WARNING 2025-07-28 11:56:06,259 basehttp 17624 21248 "GET /api/users/me/ HTTP/1.1" 401 183
+WARNING 2025-07-28 11:56:06,260 basehttp 17624 4216 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
+WARNING 2025-07-28 11:56:06,264 log 17624 21248 Unauthorized: /api/users/me/
+WARNING 2025-07-28 11:56:06,280 log 17624 4216 Unauthorized: /api/creator-profiles/featured/
+WARNING 2025-07-28 11:56:06,284 basehttp 17624 21248 "GET /api/users/me/ HTTP/1.1" 401 183
+WARNING 2025-07-28 11:56:06,284 basehttp 17624 4216 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
+INFO 2025-07-28 11:56:06,312 basehttp 17624 23240 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-28 11:56:06,357 basehttp 17624 17892 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-28 12:11:35,669 autoreload 17624 9732 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-28 12:11:37,205 autoreload 24464 17880 Watching for file changes with StatReloader
+INFO 2025-07-28 12:11:48,552 autoreload 24464 17880 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-28 12:11:49,244 autoreload 6596 16432 Watching for file changes with StatReloader
+INFO 2025-07-28 12:12:29,491 autoreload 6596 16432 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-28 12:12:30,255 autoreload 4956 22308 Watching for file changes with StatReloader
+INFO 2025-07-28 12:12:56,403 autoreload 4956 22308 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-28 12:12:56,971 autoreload 8668 23056 Watching for file changes with StatReloader
+INFO 2025-07-28 12:13:20,872 autoreload 8668 23056 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-28 12:13:21,669 autoreload 2964 7060 Watching for file changes with StatReloader
+INFO 2025-07-28 12:18:05,935 autoreload 2964 7060 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-28 12:18:07,955 autoreload 16824 5724 Watching for file changes with StatReloader
+INFO 2025-07-28 12:20:03,376 basehttp 16824 17228 "GET / HTTP/1.1" 200 1195
+WARNING 2025-07-28 12:20:03,565 log 16824 17228 Not Found: /favicon.ico
+WARNING 2025-07-28 12:20:03,566 basehttp 16824 17228 "GET /favicon.ico HTTP/1.1" 404 3381
+INFO 2025-07-28 12:21:06,657 autoreload 16824 5724 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-28 12:21:07,528 autoreload 13208 9468 Watching for file changes with StatReloader

@@ -23,6 +23,8 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
     headline: '',
     achievements: '',
     services_offered: '',
+    years_experience: 0,
+    experience_level: 'beginner',
     avatar: '',  // Will store Cloudinary URL instead of File object
     cover_photo: '',  // Will store Cloudinary URL for cover photo
     
@@ -73,6 +75,10 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
         headline: profileData.headline || '',
         achievements: profileData.achievements || '',
         services_offered: profileData.services_offered || '',
+        years_experience: profileData.freelancer_profile?.years_experience || profileData.creator_profile?.experience_level === 'expert' ? 10 : 
+                         profileData.creator_profile?.experience_level === 'advanced' ? 8 : 
+                         profileData.creator_profile?.experience_level === 'intermediate' ? 4 : 0,
+        experience_level: profileData.creator_profile?.experience_level || profileData.freelancer_profile?.experience_level || 'beginner',
         avatar: profileData.avatar || '',  // Cloudinary URL
         cover_photo: profileData.cover_photo || '',  // Cloudinary URL
         
@@ -717,7 +723,8 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
             </div>
           </div>
 
-          {/* Services & Commissions */}
+          {/* Services & Commissions - Only for Creator and Freelancer */}
+          {(formData.user_type === 'creator' || formData.user_type === 'freelancer') && (
           <div className="form-section">
             <h3>Services & Commissions</h3>
             <div className="form-group">
@@ -732,7 +739,42 @@ const EditProfile = ({ onClose, onProfileUpdate }) => {
               />
               <small>Detail what services you provide, types of commissions you accept, pricing ranges, or any special offerings</small>
             </div>
+
+            {/* Experience Fields */}
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="years_experience">Years of Experience</label>
+                <input
+                  type="number"
+                  id="years_experience"
+                  name="years_experience"
+                  value={formData.years_experience}
+                  onChange={handleInputChange}
+                  min="0"
+                  max="50"
+                  placeholder="0"
+                />
+                <small>Total years of professional experience in your field</small>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="experience_level">Experience Level</label>
+                <select
+                  id="experience_level"
+                  name="experience_level"
+                  value={formData.experience_level}
+                  onChange={handleInputChange}
+                >
+                  <option value="beginner">Beginner (0-2 years)</option>
+                  <option value="intermediate">Intermediate (3-5 years)</option>
+                  <option value="advanced">Advanced (6-10 years)</option>
+                  <option value="expert">Expert (10+ years)</option>
+                </select>
+                <small>Your overall skill and experience level</small>
+              </div>
+            </div>
           </div>
+          )}
 
           {/* Action Buttons */}
           <div className="form-actions">
