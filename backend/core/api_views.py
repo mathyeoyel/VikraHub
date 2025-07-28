@@ -86,6 +86,16 @@ class UserViewSet(viewsets.ModelViewSet):
         user.is_staff = False
         user.save()
         return Response({'status': 'Staff privileges removed'})
+    
+    @action(detail=False, methods=['get'], url_path='username/(?P<username>[^/.]+)')
+    def get_by_username(self, request, username=None):
+        """Get user by username for chat functionality"""
+        try:
+            user = User.objects.get(username=username)
+            serializer = self.get_serializer(user)
+            return Response(serializer.data)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=404)
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
