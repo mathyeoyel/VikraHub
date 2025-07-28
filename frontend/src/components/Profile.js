@@ -63,7 +63,8 @@ const Profile = () => {
   const assetPortfolioItems = assets.map(asset => ({
     id: `asset-${asset.id}`,
     title: asset.title,
-    category: asset.category || 'Creative Assets',
+    category: typeof asset.category === 'object' && asset.category ? asset.category.name : 
+              typeof asset.category === 'string' ? asset.category : 'Creative Assets',
     image: asset.file_url || asset.thumbnail_url,
     description: asset.description,
     url: asset.file_url,
@@ -353,7 +354,8 @@ const Profile = () => {
                     />
                     <div className="portfolio-overlay">
                       <h4>{work.title}</h4>
-                      <p>{work.category || 'General'}</p>
+                      <p>{typeof work.category === 'object' && work.category ? work.category.name : 
+                          typeof work.category === 'string' ? work.category : 'General'}</p>
                     </div>
                   </div>
                 ))}
@@ -499,7 +501,8 @@ const Profile = () => {
             )}
             <div className="modal-info">
               <h3>{selectedWork.title}</h3>
-              <p className="modal-category">{selectedWork.category || 'General'}</p>
+              <p className="modal-category">{typeof selectedWork.category === 'object' && selectedWork.category ? selectedWork.category.name : 
+                                             typeof selectedWork.category === 'string' ? selectedWork.category : 'General'}</p>
               <p className="modal-description">{selectedWork.description}</p>
               {selectedWork.url && (
                 <a 

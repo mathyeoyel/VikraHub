@@ -66,10 +66,13 @@ const ToastNotifications = () => {
           className={`toast toast-${toast.type}`}
           onClick={() => handleToastClick(toast)}
         >
-          <div className="toast-icon">{toast.icon}</div>
+          <div className="toast-icon">{typeof toast.icon === 'object' && toast.icon ? (toast.icon.name || toast.icon.icon || '📄') : 
+                                      typeof toast.icon === 'string' ? toast.icon : '📄'}</div>
           <div className="toast-content">
-            <div className="toast-title">{toast.title}</div>
-            <div className="toast-message">{toast.message}</div>
+            <div className="toast-title">{typeof toast.title === 'object' && toast.title ? (toast.title.name || 'Notification') : 
+                                         typeof toast.title === 'string' ? toast.title : 'Notification'}</div>
+            <div className="toast-message">{typeof toast.message === 'object' && toast.message ? (toast.message.name || toast.message.description || 'New notification') : 
+                                           typeof toast.message === 'string' ? toast.message : 'New notification'}</div>
           </div>
           <button
             className="toast-close"
