@@ -399,7 +399,7 @@ const Creators = () => {
                     ))}
                   </div>
                   <div className="featured-creator-actions">
-                    <Link to={`/profile/${creator.username}`} className="btn-secondary">
+                    <Link to={`/profile/${creator.username}`} className="view-profile-link">
                       View Profile
                     </Link>
                     {creator.id && creator.username && !creator.isMockData ? (
@@ -407,17 +407,19 @@ const Creators = () => {
                         recipientId={creator.id}
                         recipientUsername={creator.username}
                         recipientName={creator.name}
-                        size="medium"
+                        size="small"
+                        buttonText="Message"
+                        className="message-btn"
                       />
                     ) : creator.isMockData ? (
                       <button 
-                        className="btn-primary" 
+                        className="message-btn" 
                         onClick={() => alert('This is a sample profile. Real messaging will be available with actual user profiles.')}
                       >
                         Message (Demo)
                       </button>
                     ) : (
-                      <button className="btn-primary disabled" disabled>
+                      <button className="message-btn disabled" disabled>
                         Chat Unavailable
                       </button>
                     )}

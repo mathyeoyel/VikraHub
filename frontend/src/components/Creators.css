@@ -154,6 +154,12 @@
   font-weight: 500;
 }
 
+.featured-creator-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
 .featured-cta {
   text-align: center;
   margin-top: 2rem;
