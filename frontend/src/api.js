@@ -784,4 +784,150 @@ export const getFollowSuggestions = async () => {
   }
 };
 
+// 🔍 Universal Search API - Search across all VikraHub content
+export const searchAPI = {
+  // Universal search across all content types
+  universal: async (query, filters = {}) => {
+    try {
+      const params = new URLSearchParams({
+        q: query,
+        ...filters
+      });
+      const response = await api.get(`search/?${params}`);
+      return response.data;
+    } catch (error) {
+      console.error('Universal search failed:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  // Search specific content types
+  users: async (query, filters = {}) => {
+    try {
+      const params = new URLSearchParams({
+        q: query,
+        type: 'users',
+        ...filters
+      });
+      const response = await api.get(`search/users/?${params}`);
+      return response.data;
+    } catch (error) {
+      console.error('User search failed:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  freelancers: async (query, filters = {}) => {
+    try {
+      const params = new URLSearchParams({
+        q: query,
+        type: 'freelancers',
+        ...filters
+      });
+      const response = await api.get(`search/freelancers/?${params}`);
+      return response.data;
+    } catch (error) {
+      console.error('Freelancer search failed:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  creators: async (query, filters = {}) => {
+    try {
+      const params = new URLSearchParams({
+        q: query,
+        type: 'creators',
+        ...filters
+      });
+      const response = await api.get(`search/creators/?${params}`);
+      return response.data;
+    } catch (error) {
+      console.error('Creator search failed:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  assets: async (query, filters = {}) => {
+    try {
+      const params = new URLSearchParams({
+        q: query,
+        type: 'assets',
+        ...filters
+      });
+      const response = await api.get(`search/assets/?${params}`);
+      return response.data;
+    } catch (error) {
+      console.error('Asset search failed:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  collections: async (query, filters = {}) => {
+    try {
+      const params = new URLSearchParams({
+        q: query,
+        type: 'collections',
+        ...filters
+      });
+      const response = await api.get(`search/collections/?${params}`);
+      return response.data;
+    } catch (error) {
+      console.error('Collection search failed:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  services: async (query, filters = {}) => {
+    try {
+      const params = new URLSearchParams({
+        q: query,
+        type: 'services',
+        ...filters
+      });
+      const response = await api.get(`search/services/?${params}`);
+      return response.data;
+    } catch (error) {
+      console.error('Service search failed:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  portfolios: async (query, filters = {}) => {
+    try {
+      const params = new URLSearchParams({
+        q: query,
+        type: 'portfolios',
+        ...filters
+      });
+      const response = await api.get(`search/portfolios/?${params}`);
+      return response.data;
+    } catch (error) {
+      console.error('Portfolio search failed:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  // Quick search suggestions (for autocomplete)
+  suggestions: async (query) => {
+    try {
+      const response = await api.get(`search/suggestions/?q=${encodeURIComponent(query)}`);
+      return response.data;
+    } catch (error) {
+      console.error('Search suggestions failed:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  // Trending searches
+  trending: async () => {
+    try {
+      const response = await api.get('search/trending/');
+      return response.data;
+    } catch (error) {
+      console.error('Trending search failed:', error.response?.data || error.message);
+      throw error;
+    }
+  }
+};
+
 export default api;

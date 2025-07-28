@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './Auth/AuthContext';
 import UserMenu from './Auth/UserMenu';
 import AuthModal from './Auth/AuthModal';
+import SearchOverlay from './SearchOverlay';
 import logoImage from '../assets/images/logo.webp';
 import './Layout.css';
 
@@ -12,8 +13,10 @@ const Layout = ({ children }) => {
   const [authMode, setAuthMode] = useState('login');
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showSearchOverlay, setShowSearchOverlay] = useState(false);
   const { isAuthenticated, user } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const navRef = useRef(null);
   const menuToggleRef = useRef(null);
   const searchRef = useRef(null);
@@ -96,15 +99,24 @@ const Layout = ({ children }) => {
   };
 
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+    const value = e.target.value;
+    setSearchQuery(value);
+    
+    // Show search overlay for longer queries
+    if (value.trim().length > 2) {
+      setShowSearchOverlay(true);
+    } else {
+      setShowSearchOverlay(false);
+    }
   };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       console.log('Searching for:', searchQuery);
-      // Here you can implement actual search functionality
-      // For now, we'll just log the search query
+      setShowSearchOverlay(true);
+      // Also collapse the expandable search on mobile
+      setIsSearchExpanded(false);
     }
   };
 
@@ -436,6 +448,12 @@ const Layout = ({ children }) => {
         isOpen={authModalOpen}
         onClose={closeAuthModal}
         initialMode={authMode}
+      />
+      
+      <SearchOverlay
+        query={searchQuery}
+        isVisible={showSearchOverlay}
+        onClose={() => setShowSearchOverlay(false)}
       />
     </div>
   );
