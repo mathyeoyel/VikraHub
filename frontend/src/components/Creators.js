@@ -126,180 +126,10 @@ const Creators = () => {
     return skills.split(',').map(skill => skill.trim()).slice(0, 3);
   };
 
-  // Sample fallback data (to show during loading or if no real data)
-  const fallbackCreators = [
-    {
-      id: null, // No real user ID for fallback data
-      username: null, // No real username for fallback data
-      name: "Akon Peter",
-      title: "Photographer",
-      location: "Juba",
-      category: "Photography",
-      image: require('../assets/Akon-peter.jpg'),
-      bio: "Through my lens, I tell stories of resilience and the vibrant spirit of my community.",
-      specialties: ["Portrait Photography", "Street Photography", "Event Photography"],
-      yearsExperience: 5,
-      featured: true
-    },
-    {
-      id: null, // No real user ID for fallback data
-      username: null, // No real username for fallback data
-      name: "Maduot Chongo",
-      title: "Designer",
-      location: "Gudele",
-      category: "Design",
-      image: require('../assets/Maduot_chongo.jpg'),
-      bio: "Art is my universal language—I use creativity to share our stories with the world.",
-      specialties: ["Graphic Design", "Brand Identity", "Digital Art"],
-      yearsExperience: 4,
-      featured: true
-    },
-    {
-      id: null, // No real user ID for fallback data
-      username: null, // No real username for fallback data
-      name: "Awut Paul",
-      title: "Programmer",
-      location: "Munuki",
-      category: "Technology",
-      image: require('../assets/Awut_paul.jpg'),
-      bio: "I blend technology and culture, building digital solutions that reflect and celebrate our heritage.",
-      specialties: ["Web Development", "Mobile Apps", "UI/UX Design"],
-      yearsExperience: 6,
-      featured: true
-    },
-    {
-      id: null, // No real user ID for fallback data
-      username: null, // No real username for fallback data
-      name: "Buay Moses",
-      title: "Entrepreneur",
-      location: "Juba",
-      category: "Business",
-      image: require('../assets/buay_moses.jpg'),
-      bio: "Building innovative businesses that drive economic growth and create opportunities in South Sudan.",
-      specialties: ["Business Development", "Startup Strategy", "Innovation"],
-      yearsExperience: 5,
-      featured: false
-    },
-    {
-      id: null, // No real user ID for fallback data
-      username: null, // No real username for fallback data
-      name: "John Marit",
-      title: "Developer",
-      location: "Juba",
-      category: "Technology",
-      image: require('../assets/john-marit.jpg'),
-      bio: "Developing cutting-edge software solutions that solve real-world problems in our community.",
-      specialties: ["Software Development", "Mobile Apps", "System Architecture"],
-      yearsExperience: 4,
-      featured: false
-    },
-    {
-      id: null, // No real user ID for fallback data
-      username: null, // No real username for fallback data
-      name: "Ayen",
-      title: "Digital Creator",
-      location: "Juba",
-      category: "Digital Art",
-      image: require('../assets/ayen.jpg'),
-      bio: "Creating compelling digital content that tells our stories and connects with audiences worldwide.",
-      specialties: ["Content Creation", "Social Media", "Digital Marketing"],
-      yearsExperience: 3,
-      featured: false
-    },
-    {
-      id: null, // No real user ID for fallback data
-      username: null, // No real username for fallback data
-      name: "Grace Paskal",
-      title: "Tech Enthusiast",
-      location: "Juba",
-      category: "Technology",
-      image: require('../assets/grace_pascal.jpg'),
-      bio: "Passionate about leveraging technology to empower communities and drive positive change.",
-      specialties: ["Tech Innovation", "Community Outreach", "Digital Literacy"],
-      yearsExperience: 3,
-      featured: false
-    },
-    {
-      id: null, // No real user ID for fallback data
-      username: null, // No real username for fallback data
-      name: "James Mayen",
-      title: "Tech Enthusiast",
-      location: "Wau",
-      category: "Technology",
-      image: require('../assets/james_mayen.jpg'),
-      bio: "Exploring emerging technologies and their potential to transform our digital landscape.",
-      specialties: ["Emerging Tech", "Research", "Tech Education"],
-      yearsExperience: 2,
-      featured: false
-    },
-    {
-      id: null, // No real user ID for fallback data
-      username: null, // No real username for fallback data
-      name: "Barnabas Malek",
-      title: "Web Designer",
-      location: "Juba",
-      category: "Design",
-      image: require('../assets/barnaba_malek.png'),
-      bio: "Designing beautiful and functional websites that showcase the best of South Sudanese creativity.",
-      specialties: ["Web Design", "UI Design", "Responsive Design"],
-      yearsExperience: 4,
-      featured: false
-    },
-    {
-      id: null, // No real user ID for fallback data
-      username: null, // No real username for fallback data
-      name: "Pal James",
-      title: "Brand Specialist",
-      location: "Juba",
-      category: "Design",
-      image: require('../assets/pal_james.png'),
-      bio: "Building strong brand identities that resonate with audiences and drive business success.",
-      specialties: ["Brand Strategy", "Visual Identity", "Brand Management"],
-      yearsExperience: 5,
-      featured: false
-    },
-    {
-      id: null, // No real user ID for fallback data
-      username: null, // No real username for fallback data
-      name: "Thomas Obotte",
-      title: "Cyber Analyst",
-      location: "Juba",
-      category: "Technology",
-      image: require('../assets/thomas_obote.jpg'),
-      bio: "Protecting digital infrastructure and ensuring cybersecurity for a safer online environment.",
-      specialties: ["Cybersecurity", "Threat Analysis", "Digital Forensics"],
-      yearsExperience: 6,
-      featured: false
-    },
-    {
-      id: null, // No real user ID for fallback data
-      username: null, // No real username for fallback data
-      name: "Wai Mike",
-      title: "Digital Artist",
-      location: "Malakal",
-      category: "Digital Art",
-      image: require('../assets/wai_mike.jpg'),
-      bio: "Creating stunning digital artworks that blend traditional South Sudanese culture with modern techniques.",
-      specialties: ["Digital Illustration", "Concept Art", "Visual Effects"],
-      yearsExperience: 4,
-      featured: false
-    }
-  ];
-
   const categories = ['All', 'Photography', 'Design', 'Art', 'Digital Art', 'Writing', 'Music', 'Video', 'Creative'];
 
-  // Use real data if available, combine with enhanced fallback data
-  const realCreators = creators.length > 0 ? creators.map(mapCreatorData) : [];
-  const enhancedFallbackCreators = fallbackCreators.map((creator, index) => ({
-    ...creator,
-    // Add mock user data for demonstration purposes - in production, only use real data
-    id: 1000 + index, // Mock user IDs starting from 1000
-    username: creator.name.toLowerCase().replace(/\s+/g, '_'), // Generate username from name
-    isMockData: true // Flag to identify this as sample data
-  }));
-  
-  // Combine real and fallback data for demonstration
-  const displayCreators = [...realCreators, ...enhancedFallbackCreators];
+  // Use only real data from backend
+  const displayCreators = creators.length > 0 ? creators.map(mapCreatorData) : [];
 
   // Filter creators based on category and search term
   const filteredCreators = displayCreators.filter(creator => {
@@ -310,8 +140,10 @@ const Creators = () => {
     return matchesCategory && matchesSearch;
   });
 
-  // Featured creators: first 3 creators from the database/display list
-  const featuredCreators = displayCreators.slice(0, 3);
+  // Featured creators: show featured creators from real data, or first 3 if none are marked as featured
+  const featuredCreators = displayCreators.filter(creator => creator.featured).length > 0 
+    ? displayCreators.filter(creator => creator.featured).slice(0, 3)
+    : displayCreators.slice(0, 3);
 
   // Loading state
   if (loading) {
@@ -371,68 +203,63 @@ const Creators = () => {
       </section>
 
       {/* Featured Creators Section */}
-      <section className="featured-section">
-        <div className="container">
-          <div className="section-header">
-            <h2>Featured Creators</h2>
-            <p className="section-subtitle">Spotlight on exceptional South Sudanese talent</p>
-          </div>
-          <div className="featured-creators-grid">
-            {featuredCreators.map(creator => (
-              <div key={creator.id} className="featured-creator-card">
-                <div className="creator-avatar-featured">
-                  <img 
-                    src={creator.image} 
-                    alt={creator.name}
-                    onError={(e) => {
-                      e.target.src = `https://ui-avatars.com/api/?name=${creator.name}&background=000223&color=ffffff&size=200`;
-                    }}
-                  />
-                </div>
-                <div className="creator-info-featured">
-                  <h3>{creator.name}</h3>
-                  <p className="creator-title-featured">{creator.title} | {creator.location}</p>
-                  <p className="creator-bio-featured">"{creator.bio}"</p>
-                  <div className="creator-specialties-featured">
-                    {creator.specialties.slice(0, 2).map((specialty, index) => (
-                      <span key={index} className="specialty-tag-featured">{specialty}</span>
-                    ))}
+      {featuredCreators.length > 0 && (
+        <section className="featured-section">
+          <div className="container">
+            <div className="section-header">
+              <h2>Featured Creators</h2>
+              <p className="section-subtitle">Spotlight on exceptional South Sudanese talent</p>
+            </div>
+            <div className="featured-creators-grid">
+              {featuredCreators.map(creator => (
+                <div key={creator.id} className="featured-creator-card">
+                  <div className="creator-avatar-featured">
+                    <img 
+                      src={creator.image} 
+                      alt={creator.name}
+                      onError={(e) => {
+                        e.target.src = `https://ui-avatars.com/api/?name=${creator.name}&background=000223&color=ffffff&size=200`;
+                      }}
+                    />
                   </div>
-                  <div className="featured-creator-actions">
-                    <Link to={`/profile/${creator.username}`} className="view-profile-link">
-                      View Profile
-                    </Link>
-                    {creator.id && creator.username && !creator.isMockData ? (
-                      <ChatButton 
-                        recipientId={creator.id}
-                        recipientUsername={creator.username}
-                        recipientName={creator.name}
-                        size="small"
-                        buttonText="Message"
-                        className="message-btn"
-                      />
-                    ) : creator.isMockData ? (
-                      <button 
-                        className="message-btn" 
-                        onClick={() => alert('This is a sample profile. Real messaging will be available with actual user profiles.')}
-                      >
-                        Message (Demo)
-                      </button>
-                    ) : (
-                      <button className="message-btn disabled" disabled>
-                        Chat Unavailable
-                      </button>
-                    )}
+                  <div className="creator-info-featured">
+                    <h3>{creator.name}</h3>
+                    <p className="creator-title-featured">{creator.title} | {creator.location}</p>
+                    <p className="creator-bio-featured">"{creator.bio}"</p>
+                    <div className="creator-specialties-featured">
+                      {creator.specialties.slice(0, 2).map((specialty, index) => (
+                        <span key={index} className="specialty-tag-featured">{specialty}</span>
+                      ))}
+                    </div>
+                    <div className="featured-creator-actions">
+                      <Link to={`/profile/${creator.username}`} className="view-profile-link">
+                        View Profile
+                      </Link>
+                      {creator.id && creator.username ? (
+                        <ChatButton 
+                          recipientId={creator.id}
+                          recipientUsername={creator.username}
+                          recipientName={creator.name}
+                          size="small"
+                          buttonText="Message"
+                          className="message-btn"
+                        />
+                      ) : (
+                        <button className="message-btn disabled" disabled>
+                          Chat Unavailable
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <div className="featured-cta">
+              <p>Discover more talented creators in our directory below</p>
+            </div>
           </div>
-          <div className="featured-cta">
-            <p>Discover more talented creators in our directory below</p>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Search and Filter Section */}
       <section className="creators-directory">
@@ -489,7 +316,7 @@ const Creators = () => {
                     <Link to={`/profile/${creator.username}`} className="view-profile-link">
                       View Profile
                     </Link>
-                    {creator.id && creator.username && !creator.isMockData ? (
+                    {creator.id && creator.username ? (
                       <ChatButton 
                         recipientId={creator.id}
                         recipientUsername={creator.username}
@@ -498,15 +325,8 @@ const Creators = () => {
                         buttonText="Message"
                         className="message-btn"
                       />
-                    ) : creator.isMockData ? (
-                      <button 
-                        className="message-btn" 
-                        onClick={() => alert('This is a sample profile. Real messaging will be available with actual user profiles.')}
-                      >
-                        Message (Demo)
-                      </button>
                     ) : (
-                      <button className="btn-small disabled" disabled>
+                      <button className="message-btn disabled" disabled>
                         Chat Unavailable
                       </button>
                     )}
@@ -516,10 +336,20 @@ const Creators = () => {
             ))}
           </div>
 
-          {filteredCreators.length === 0 && (
+          {filteredCreators.length === 0 && !loading && (
             <div className="no-results">
-              <h3>No creators found</h3>
-              <p>Try adjusting your search or filter criteria.</p>
+              {displayCreators.length === 0 ? (
+                <>
+                  <h3>No creators found</h3>
+                  <p>Be the first to join our creative community! Sign up as a creator to showcase your talent.</p>
+                  <Link to="/register" className="btn-primary">Join as Creator</Link>
+                </>
+              ) : (
+                <>
+                  <h3>No creators match your search</h3>
+                  <p>Try adjusting your search or filter criteria.</p>
+                </>
+              )}
             </div>
           )}
         </div>
