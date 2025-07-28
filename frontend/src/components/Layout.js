@@ -11,6 +11,7 @@ const Layout = ({ children }) => {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login');
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { isAuthenticated, user } = useAuth();
   const location = useLocation();
   const navRef = useRef(null);
@@ -61,7 +62,7 @@ const Layout = ({ children }) => {
     if (isMenuOpen || isSearchExpanded) {
       document.addEventListener('mousedown', handleClickOutside);
       document.addEventListener('keydown', handleEscape);
-      // Prevent scrolling when menu is open
+      // Prevent scrolling when menu is open, but not when search is expanded
       if (isMenuOpen) {
         document.body.style.overflow = 'hidden';
       }
@@ -94,6 +95,19 @@ const Layout = ({ children }) => {
     setAuthModalOpen(false);
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      console.log('Searching for:', searchQuery);
+      // Here you can implement actual search functionality
+      // For now, we'll just log the search query
+    }
+  };
+
   return (
     <div className="layout">
       <header className="header">
@@ -109,7 +123,7 @@ const Layout = ({ children }) => {
           {/* Search Bar - Facebook-style - Only show when not authenticated on desktop */}
           {!isAuthenticated && (
             <div className="header-search">
-              <div className="search-container">
+              <form className="search-container" onSubmit={handleSearchSubmit}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="search-icon">
                   <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
                 </svg>
@@ -117,8 +131,10 @@ const Layout = ({ children }) => {
                   type="text" 
                   placeholder="Search VikraHub..." 
                   className="search-input"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
                 />
-              </div>
+              </form>
             </div>
           )}
           
@@ -137,12 +153,16 @@ const Layout = ({ children }) => {
                     </svg>
                   </button>
                   <div className="expandable-search-input">
-                    <input 
-                      type="text" 
-                      placeholder="Search VikraHub..." 
-                      className="search-input-expanded"
-                      autoFocus={isSearchExpanded}
-                    />
+                    <form onSubmit={handleSearchSubmit}>
+                      <input 
+                        type="text" 
+                        placeholder="Search VikraHub..." 
+                        className="search-input-expanded"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        autoFocus={isSearchExpanded}
+                      />
+                    </form>
                   </div>
                 </div>
                 {user && (user.is_staff || user.is_superuser) && (
@@ -226,12 +246,16 @@ const Layout = ({ children }) => {
                         </svg>
                       </button>
                       <div className="expandable-search-input">
-                        <input 
-                          type="text" 
-                          placeholder="Search VikraHub..." 
-                          className="search-input-expanded"
-                          autoFocus={isSearchExpanded}
-                        />
+                        <form onSubmit={handleSearchSubmit}>
+                          <input 
+                            type="text" 
+                            placeholder="Search VikraHub..." 
+                            className="search-input-expanded"
+                            value={searchQuery}
+                            onChange={handleSearchChange}
+                            autoFocus={isSearchExpanded}
+                          />
+                        </form>
                       </div>
                     </div>
                     <button className="icon-button" title="Messages">
