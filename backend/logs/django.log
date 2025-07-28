@@ -2386,3 +2386,96 @@ INFO 2025-07-27 14:32:07,435 basehttp 10780 18056 "POST /api/auth/token/ HTTP/1.
 INFO 2025-07-27 14:32:07,504 basehttp 10780 10244 "POST /api/creative-assets/ HTTP/1.1" 201 882
 INFO 2025-07-27 14:38:06,864 basehttp 10780 15644 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
 INFO 2025-07-27 14:38:07,339 basehttp 10780 1852 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7476
+INFO 2025-07-28 08:58:24,283 autoreload 17624 9732 Watching for file changes with StatReloader
+INFO 2025-07-28 08:58:30,416 basehttp 17624 8668 "GET / HTTP/1.1" 200 1195
+WARNING 2025-07-28 08:58:30,697 log 17624 8668 Not Found: /favicon.ico
+WARNING 2025-07-28 08:58:30,697 basehttp 17624 8668 "GET /favicon.ico HTTP/1.1" 404 3381
+INFO 2025-07-28 08:58:39,315 basehttp 17624 20008 "OPTIONS /api/auth/token/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:58:39,766 basehttp 17624 20008 "POST /api/auth/token/ HTTP/1.1" 200 486
+INFO 2025-07-28 08:58:39,771 basehttp 17624 20008 "OPTIONS /api/users/me/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:58:39,798 basehttp 17624 20008 "GET /api/users/me/ HTTP/1.1" 200 259
+INFO 2025-07-28 08:58:39,867 basehttp 17624 20008 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:58:39,870 basehttp 17624 22824 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+WARNING 2025-07-28 08:58:39,875 log 17624 13420 Not Found: /ws/messaging/messaging/
+INFO 2025-07-28 08:58:39,876 basehttp 17624 18616 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:58:39,877 basehttp 17624 17084 "OPTIONS /api/follow/my-stats/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:58:39,878 basehttp 17624 20008 "OPTIONS /api/follow/suggestions/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:58:39,879 basehttp 17624 10068 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+WARNING 2025-07-28 08:58:39,880 basehttp 17624 13420 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjg2MjE5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6ImY1MDRkYTkwOTIzMTQ0YTk5MzE5YmY4ZjEwM2U0YzE4IiwidXNlcl9pZCI6Mjh9.k0H1SY-hZ8nSkwDjHfOZr9RCkCxd4w5lfg4NeDtY6R8 HTTP/1.1" 404 3653
+INFO 2025-07-28 08:58:39,880 basehttp 17624 18616 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:58:39,881 basehttp 17624 20800 "OPTIONS /api/follow/notifications/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:58:39,881 basehttp 17624 22824 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:58:39,888 basehttp 17624 13420 - Broken pipe from ('127.0.0.1', 61578)
+INFO 2025-07-28 08:58:39,888 basehttp 17624 20008 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:58:39,892 basehttp 17624 17084 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:58:39,907 basehttp 17624 10068 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-28 08:58:39,919 basehttp 17624 18616 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-28 08:58:39,920 basehttp 17624 20008 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-28 08:58:39,928 basehttp 17624 20800 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-28 08:58:39,934 basehttp 17624 10068 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-28 08:58:39,940 basehttp 17624 22824 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+INFO 2025-07-28 08:58:39,977 basehttp 17624 20008 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-28 08:58:39,980 basehttp 17624 10068 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-28 08:58:39,985 basehttp 17624 20008 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-28 08:58:39,993 basehttp 17624 10068 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-28 08:58:39,997 basehttp 17624 20008 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+WARNING 2025-07-28 08:58:42,898 log 17624 9072 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-28 08:58:42,899 basehttp 17624 9072 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjg2MjE5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6ImY1MDRkYTkwOTIzMTQ0YTk5MzE5YmY4ZjEwM2U0YzE4IiwidXNlcl9pZCI6Mjh9.k0H1SY-hZ8nSkwDjHfOZr9RCkCxd4w5lfg4NeDtY6R8 HTTP/1.1" 404 3653
+WARNING 2025-07-28 08:58:45,916 log 17624 6348 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-28 08:58:45,916 basehttp 17624 6348 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjg2MjE5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6ImY1MDRkYTkwOTIzMTQ0YTk5MzE5YmY4ZjEwM2U0YzE4IiwidXNlcl9pZCI6Mjh9.k0H1SY-hZ8nSkwDjHfOZr9RCkCxd4w5lfg4NeDtY6R8 HTTP/1.1" 404 3653
+INFO 2025-07-28 08:58:47,054 basehttp 17624 20800 "OPTIONS /api/creative-assets/my_assets/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:58:47,055 basehttp 17624 20008 "OPTIONS /api/profiles/my_profile/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:58:47,055 basehttp 17624 22824 "OPTIONS /api/profiles/my_profile/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:58:47,055 basehttp 17624 10068 "OPTIONS /api/creative-assets/my_assets/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:58:47,068 basehttp 17624 10068 "GET /api/creative-assets/my_assets/ HTTP/1.1" 200 24
+INFO 2025-07-28 08:58:47,085 basehttp 17624 10068 "GET /api/creative-assets/my_assets/ HTTP/1.1" 200 24
+INFO 2025-07-28 08:58:47,086 basehttp 17624 22824 "GET /api/profiles/my_profile/ HTTP/1.1" 200 633
+INFO 2025-07-28 08:58:47,105 basehttp 17624 22824 "GET /api/profiles/my_profile/ HTTP/1.1" 200 633
+WARNING 2025-07-28 08:58:48,928 log 17624 23564 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-28 08:58:48,929 basehttp 17624 23564 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjg2MjE5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6ImY1MDRkYTkwOTIzMTQ0YTk5MzE5YmY4ZjEwM2U0YzE4IiwidXNlcl9pZCI6Mjh9.k0H1SY-hZ8nSkwDjHfOZr9RCkCxd4w5lfg4NeDtY6R8 HTTP/1.1" 404 3653
+WARNING 2025-07-28 08:58:51,962 log 17624 22924 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-28 08:58:51,965 basehttp 17624 22924 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjg2MjE5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6ImY1MDRkYTkwOTIzMTQ0YTk5MzE5YmY4ZjEwM2U0YzE4IiwidXNlcl9pZCI6Mjh9.k0H1SY-hZ8nSkwDjHfOZr9RCkCxd4w5lfg4NeDtY6R8 HTTP/1.1" 404 3653
+WARNING 2025-07-28 08:58:54,978 log 17624 18848 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-28 08:58:54,979 basehttp 17624 18848 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjg2MjE5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6ImY1MDRkYTkwOTIzMTQ0YTk5MzE5YmY4ZjEwM2U0YzE4IiwidXNlcl9pZCI6Mjh9.k0H1SY-hZ8nSkwDjHfOZr9RCkCxd4w5lfg4NeDtY6R8 HTTP/1.1" 404 3653
+INFO 2025-07-28 08:59:22,598 basehttp 17624 23832 "OPTIONS /api/users/me/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:59:22,603 basehttp 17624 18948 "OPTIONS /api/users/me/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:59:22,626 basehttp 17624 23832 "GET /api/users/me/ HTTP/1.1" 200 259
+INFO 2025-07-28 08:59:22,626 basehttp 17624 18948 "GET /api/users/me/ HTTP/1.1" 200 259
+INFO 2025-07-28 08:59:22,684 basehttp 17624 23832 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:59:22,685 basehttp 17624 18948 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:59:22,721 basehttp 17624 23832 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:59:22,727 basehttp 17624 16824 "OPTIONS /api/follow/notifications/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:59:22,727 basehttp 17624 13832 "OPTIONS /api/follow/suggestions/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:59:22,727 basehttp 17624 23028 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:59:22,728 basehttp 17624 18948 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+WARNING 2025-07-28 08:59:22,740 log 17624 4268 Not Found: /ws/messaging/messaging/
+INFO 2025-07-28 08:59:22,743 basehttp 17624 9536 "OPTIONS /api/follow/my-stats/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:59:22,755 basehttp 17624 23832 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:59:22,763 basehttp 17624 23028 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-28 08:59:22,763 basehttp 17624 13832 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+WARNING 2025-07-28 08:59:22,775 basehttp 17624 4268 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjg2MjE5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6ImY1MDRkYTkwOTIzMTQ0YTk5MzE5YmY4ZjEwM2U0YzE4IiwidXNlcl9pZCI6Mjh9.k0H1SY-hZ8nSkwDjHfOZr9RCkCxd4w5lfg4NeDtY6R8 HTTP/1.1" 404 3653
+INFO 2025-07-28 08:59:22,776 basehttp 17624 16824 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-28 08:59:22,803 basehttp 17624 18948 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-28 08:59:22,832 basehttp 17624 13832 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-28 08:59:22,849 basehttp 17624 23832 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-28 08:59:22,867 basehttp 17624 9536 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-28 08:59:22,877 basehttp 17624 16824 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-28 08:59:22,883 basehttp 17624 18948 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-28 08:59:22,887 basehttp 17624 23028 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+INFO 2025-07-28 08:59:22,894 basehttp 17624 13832 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-28 08:59:22,897 basehttp 17624 23832 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-28 08:59:22,902 basehttp 17624 9536 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-28 08:59:22,987 basehttp 17624 23832 "GET /api/creative-assets/my_assets/ HTTP/1.1" 200 24
+INFO 2025-07-28 08:59:23,009 basehttp 17624 9536 "GET /api/profiles/my_profile/ HTTP/1.1" 200 633
+INFO 2025-07-28 08:59:23,013 basehttp 17624 23832 "GET /api/creative-assets/my_assets/ HTTP/1.1" 200 24
+INFO 2025-07-28 08:59:23,032 basehttp 17624 9536 "GET /api/profiles/my_profile/ HTTP/1.1" 200 633
+WARNING 2025-07-28 08:59:25,875 log 17624 17812 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-28 08:59:25,876 basehttp 17624 17812 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjg2MjE5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6ImY1MDRkYTkwOTIzMTQ0YTk5MzE5YmY4ZjEwM2U0YzE4IiwidXNlcl9pZCI6Mjh9.k0H1SY-hZ8nSkwDjHfOZr9RCkCxd4w5lfg4NeDtY6R8 HTTP/1.1" 404 3653
+WARNING 2025-07-28 08:59:28,891 log 17624 16508 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-28 08:59:28,893 basehttp 17624 16508 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjg2MjE5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6ImY1MDRkYTkwOTIzMTQ0YTk5MzE5YmY4ZjEwM2U0YzE4IiwidXNlcl9pZCI6Mjh9.k0H1SY-hZ8nSkwDjHfOZr9RCkCxd4w5lfg4NeDtY6R8 HTTP/1.1" 404 3653
+WARNING 2025-07-28 08:59:31,906 log 17624 15400 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-28 08:59:31,907 basehttp 17624 15400 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjg2MjE5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6ImY1MDRkYTkwOTIzMTQ0YTk5MzE5YmY4ZjEwM2U0YzE4IiwidXNlcl9pZCI6Mjh9.k0H1SY-hZ8nSkwDjHfOZr9RCkCxd4w5lfg4NeDtY6R8 HTTP/1.1" 404 3653
+WARNING 2025-07-28 08:59:35,319 log 17624 20720 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-28 08:59:35,320 basehttp 17624 20720 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjg2MjE5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6ImY1MDRkYTkwOTIzMTQ0YTk5MzE5YmY4ZjEwM2U0YzE4IiwidXNlcl9pZCI6Mjh9.k0H1SY-hZ8nSkwDjHfOZr9RCkCxd4w5lfg4NeDtY6R8 HTTP/1.1" 404 3653
+WARNING 2025-07-28 08:59:39,318 log 17624 23024 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-28 08:59:39,319 basehttp 17624 23024 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjg2MjE5LCJpYXQiOjE3NTM2ODU5MTksImp0aSI6ImY1MDRkYTkwOTIzMTQ0YTk5MzE5YmY4ZjEwM2U0YzE4IiwidXNlcl9pZCI6Mjh9.k0H1SY-hZ8nSkwDjHfOZr9RCkCxd4w5lfg4NeDtY6R8 HTTP/1.1" 404 3653

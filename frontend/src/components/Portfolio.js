@@ -60,7 +60,9 @@ const Portfolio = () => {
                 )}
                 <div className="portfolio-info">
                   <h4>{item.title}</h4>
-                  <p>{item.category}</p>
+                  <p>{typeof item.category === 'string' ? item.category : 
+                      typeof item.category === 'object' && item.category ? 
+                      (item.category.name || 'General') : 'General'}</p>
                   <div className="portfolio-links">
                     {item.project_url && (
                       <a 

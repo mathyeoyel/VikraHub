@@ -425,7 +425,7 @@ const PublicProfile = () => {
             <div className="profile-info">
               <h1 className="profile-name">
                 {typeof profile.full_name === 'string' ? profile.full_name : 
-                 typeof profile.full_name === 'object' ? (profile.full_name.name || 'Unknown User') : 
+                 typeof profile.full_name === 'object' && profile.full_name ? (profile.full_name.name || 'Unknown User') : 
                  'Unknown User'}
               </h1>
               <p className="username">@{profile.user?.username || 'unknown'}</p>
@@ -434,7 +434,7 @@ const PublicProfile = () => {
               {profile.headline && (
                 <p className="profile-headline">
                   {typeof profile.headline === 'string' ? profile.headline : 
-                   typeof profile.headline === 'object' ? (profile.headline.name || 'Professional') : 
+                   typeof profile.headline === 'object' && profile.headline ? (profile.headline.name || 'Professional') : 
                    'Professional'}
                 </p>
               )}
@@ -518,7 +518,7 @@ const PublicProfile = () => {
             {profile.bio ? (
               <p className="bio">
                 {typeof profile.bio === 'string' ? profile.bio : 
-                 typeof profile.bio === 'object' ? (profile.bio.name || profile.bio.description || 'Bio available') : 
+                 typeof profile.bio === 'object' && profile.bio ? (profile.bio.name || profile.bio.description || 'Bio available') : 
                  'Bio available'}
               </p>
             ) : (
@@ -554,7 +554,9 @@ const PublicProfile = () => {
                     ? profile.achievements.map((achievement, index) => (
                         <div key={index} className="achievement-item">
                           <span className="achievement-icon">🏆</span>
-                          <p>{typeof achievement === 'string' ? achievement : (achievement.name || achievement.title || 'Achievement earned')}</p>
+                          <p>{typeof achievement === 'string' ? achievement : 
+                              typeof achievement === 'object' && achievement ? (achievement.name || achievement.title || 'Achievement earned') : 
+                              'Achievement earned'}</p>
                         </div>
                       ))
                     : typeof profile.achievements === 'string'
@@ -582,7 +584,9 @@ const PublicProfile = () => {
                     ? profile.services_offered.map((service, index) => (
                         <div key={index} className="service-item">
                           <span className="service-icon">⚡</span>
-                          <p>{typeof service === 'string' ? service : (service.name || service.title || 'Service available')}</p>
+                          <p>{typeof service === 'string' ? service : 
+                              typeof service === 'object' && service ? (service.name || service.title || 'Service available') : 
+                              'Service available'}</p>
                         </div>
                       ))
                     : typeof profile.services_offered === 'string'
@@ -644,7 +648,7 @@ const PublicProfile = () => {
                     <h4>Location</h4>
                     <p>
                       {typeof profile.location === 'string' ? profile.location : 
-                       typeof profile.location === 'object' ? (profile.location.name || 'Location provided') : 
+                       typeof profile.location === 'object' && profile.location ? (profile.location.name || 'Location provided') : 
                        'Location provided'}
                     </p>
                   </div>
@@ -714,12 +718,12 @@ const PublicProfile = () => {
                           <div className="featured-work-content">
                             <h5>
                               {typeof profile.portfolio_items[0].title === 'string' ? profile.portfolio_items[0].title : 
-                               typeof profile.portfolio_items[0].title === 'object' ? (profile.portfolio_items[0].title.name || 'Featured Work') : 
+                               typeof profile.portfolio_items[0].title === 'object' && profile.portfolio_items[0].title ? (profile.portfolio_items[0].title.name || 'Featured Work') : 
                                'Featured Work'}
                             </h5>
                             <p>
                               {typeof profile.portfolio_items[0].description === 'string' ? profile.portfolio_items[0].description : 
-                               typeof profile.portfolio_items[0].description === 'object' ? (profile.portfolio_items[0].description.name || 'Description available') : 
+                               typeof profile.portfolio_items[0].description === 'object' && profile.portfolio_items[0].description ? (profile.portfolio_items[0].description.name || 'Description available') : 
                                'Description available'}
                             </p>
                           </div>
@@ -744,12 +748,12 @@ const PublicProfile = () => {
                           <div className="featured-work-content">
                             <h5>
                               {typeof assets[0].title === 'string' ? assets[0].title : 
-                               typeof assets[0].title === 'object' ? (assets[0].title.name || 'Latest Asset') : 
+                               typeof assets[0].title === 'object' && assets[0].title ? (assets[0].title.name || 'Latest Asset') : 
                                'Latest Asset'}
                             </h5>
                             <p>
                               {typeof assets[0].description === 'string' ? assets[0].description : 
-                               typeof assets[0].description === 'object' ? (assets[0].description.name || 'Asset description') : 
+                               typeof assets[0].description === 'object' && assets[0].description ? (assets[0].description.name || 'Asset description') : 
                                'Asset description'}
                             </p>
                           </div>
@@ -776,12 +780,12 @@ const PublicProfile = () => {
                           <div className="portfolio-content">
                             <h4>
                               {typeof item.title === 'string' ? item.title : 
-                               typeof item.title === 'object' ? (item.title.name || 'Project') : 
+                               typeof item.title === 'object' && item.title ? (item.title.name || 'Project') : 
                                'Project'}
                             </h4>
                             <p>
                               {typeof item.description === 'string' ? item.description : 
-                               typeof item.description === 'object' ? (item.description.name || 'Project description') : 
+                               typeof item.description === 'object' && item.description ? (item.description.name || 'Project description') : 
                                'Project description'}
                             </p>
                             {item.tags_list && item.tags_list.length > 0 && (
@@ -836,11 +840,17 @@ const PublicProfile = () => {
                             </div>
                           </div>
                           <div className="portfolio-content">
-                            <h4>{typeof asset.title === 'string' ? asset.title : 'Untitled Asset'}</h4>
-                            <p>{typeof asset.description === 'string' ? asset.description : 'No description available'}</p>
+                            <h4>{typeof asset.title === 'string' ? asset.title : 
+                                 typeof asset.title === 'object' && asset.title ? (asset.title.name || 'Untitled Asset') : 
+                                 'Untitled Asset'}</h4>
+                            <p>{typeof asset.description === 'string' ? asset.description : 
+                               typeof asset.description === 'object' && asset.description ? (asset.description.name || 'No description available') : 
+                               'No description available'}</p>
                             <div className="asset-meta">
                               <span className="asset-type-badge">
-                                {typeof asset.asset_type === 'string' ? asset.asset_type : 
+                                {typeof asset.category === 'object' && asset.category ? asset.category.name :
+                                 typeof asset.category === 'string' ? asset.category :
+                                 typeof asset.asset_type === 'string' ? asset.asset_type : 
                                  typeof asset.asset_type === 'object' ? (asset.asset_type.name || 'Unknown') : 
                                  'Unknown'}
                               </span>
