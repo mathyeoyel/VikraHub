@@ -139,13 +139,13 @@ const Profile = () => {
       name: "Sarah Akech",
       role: "Business Owner",
       text: "Amazing work! They captured the essence of our brand perfectly.",
-      avatar: "https://via.placeholder.com/60x60/4a90e2/ffffff?text=SA"
+      avatar: "https://ui-avatars.com/api/?name=Sarah+Akech&background=4a90e2&color=fff&size=60"
     },
     {
       name: "John Marial",
       role: "Event Coordinator", 
       text: "Professional, creative, and delivered beyond our expectations.",
-      avatar: "https://via.placeholder.com/60x60/50c878/ffffff?text=JM"
+      avatar: "https://ui-avatars.com/api/?name=John+Marial&background=50c878&color=fff&size=60"
     }
   ];
 
@@ -196,7 +196,7 @@ const Profile = () => {
       {/* Cover Banner */}
       <div className="cover-banner">
         <img 
-          src={profile?.cover_photo || 'https://via.placeholder.com/1200x300/667eea/ffffff?text=Cover+Photo'} 
+          src={profile?.cover_photo || 'https://picsum.photos/1200/300?blur=2'} 
           alt="Cover"
           className="cover-image"
         />
@@ -209,11 +209,11 @@ const Profile = () => {
           <div className="profile-header-content">
             <div className="profile-picture-container">
               <img 
-                src={profile?.avatar || 'https://via.placeholder.com/150x150/4a5568/ffffff?text=User'} 
+                src={profile?.avatar || 'https://ui-avatars.com/api/?name=User&background=4a5568&color=fff&size=150'} 
                 alt={`${profile?.user?.first_name || 'User'}'s profile`}
                 className="profile-picture-large"
                 onError={(e) => {
-                  e.target.src = 'https://via.placeholder.com/150x150/4a5568/ffffff?text=User';
+                  e.target.src = 'https://ui-avatars.com/api/?name=User&background=4a5568&color=fff&size=150';
                 }}
               />
               <div className="online-indicator"></div>
@@ -346,10 +346,10 @@ const Profile = () => {
                       <div className="asset-badge">Creative Asset</div>
                     )}
                     <img 
-                      src={work.image || '/assets/default-portfolio.jpg'} 
+                      src={work.image || 'https://picsum.photos/300/200?grayscale'} 
                       alt={work.title}
                       onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/300x200/e2e8f0/4a5568?text=Portfolio+Item';
+                        e.target.src = 'https://picsum.photos/300/200?grayscale';
                       }}
                     />
                     <div className="portfolio-overlay">
@@ -495,7 +495,7 @@ const Profile = () => {
                 src={selectedWork.image} 
                 alt={selectedWork.title}
                 onError={(e) => {
-                  e.target.src = 'https://via.placeholder.com/300x200/e2e8f0/4a5568?text=Portfolio+Item';
+                  e.target.src = 'https://picsum.photos/600/400?grayscale';
                 }}
               />
             )}
