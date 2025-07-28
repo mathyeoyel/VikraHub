@@ -108,6 +108,22 @@ const Layout = ({ children }) => {
     }
   };
 
+  const toggleSearch = () => {
+    console.log('Search toggle clicked, current state:', isSearchExpanded);
+    const newExpanded = !isSearchExpanded;
+    setIsSearchExpanded(newExpanded);
+    
+    // Focus the search input when expanding, especially important for mobile
+    if (newExpanded) {
+      setTimeout(() => {
+        const searchInput = document.querySelector('.search-input-expanded');
+        if (searchInput) {
+          searchInput.focus();
+        }
+      }, 100); // Small delay to ensure the input is rendered
+    }
+  };
+
   return (
     <div className="layout">
       <header className="header">
@@ -145,7 +161,7 @@ const Layout = ({ children }) => {
                 <div ref={searchRef} className={`expandable-search mobile-search ${isSearchExpanded ? 'expanded' : ''}`}>
                   <button 
                     className="icon-button search-toggle" 
-                    onClick={() => setIsSearchExpanded(!isSearchExpanded)}
+                    onClick={toggleSearch}
                     title="Search"
                   >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -155,12 +171,17 @@ const Layout = ({ children }) => {
                   <div className="expandable-search-input">
                     <form onSubmit={handleSearchSubmit}>
                       <input 
-                        type="text" 
+                        type="search" 
                         placeholder="Search VikraHub..." 
                         className="search-input-expanded"
                         value={searchQuery}
                         onChange={handleSearchChange}
                         autoFocus={isSearchExpanded}
+                        autoComplete="off"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        spellCheck="false"
+                        inputMode="search"
                       />
                     </form>
                   </div>
@@ -248,12 +269,17 @@ const Layout = ({ children }) => {
                       <div className="expandable-search-input">
                         <form onSubmit={handleSearchSubmit}>
                           <input 
-                            type="text" 
+                            type="search" 
                             placeholder="Search VikraHub..." 
                             className="search-input-expanded"
                             value={searchQuery}
                             onChange={handleSearchChange}
                             autoFocus={isSearchExpanded}
+                            autoComplete="off"
+                            autoCorrect="off"
+                            autoCapitalize="off"
+                            spellCheck="false"
+                            inputMode="search"
                           />
                         </form>
                       </div>
