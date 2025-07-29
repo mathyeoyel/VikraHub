@@ -2,7 +2,7 @@ import axios from "axios";
 import { getAccessToken, getRefreshToken, removeTokens, saveToken } from "./auth";
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:8000/api/", // Use local Django server for development
+  baseURL: process.env.REACT_APP_API_URL || "https://api.vikrahub.com/api/", // Use production API for deployment
   headers: {
     "Content-Type": "application/json",
   },   
@@ -796,8 +796,13 @@ export const searchAPI = {
       console.log('📡 Making parallel API calls...');
       const [usersResponse, freelancersResponse, creatorsResponse, assetsResponse, servicesResponse, portfoliosResponse] = await Promise.allSettled([
         api.get(`/public-profiles/search/?q=${encodeURIComponent(query)}`),
-        api.get(`/freelancer-profiles/search/?q=${encodeURIComponent(query)}`),
-        api.get(`/creator-profiles/search/?q=${encodeURIComponent(query)}`),
+        // For freelancers, try both skills search and getting all then filtering
+        Promise.race([
+          api.get(`/freelancer-profiles/?skills=${encodeURIComponent(query)}`),
+          api.get(`/freelancer-profiles/`)
+        ]),
+        // For creators, get all and let frontend filter
+        api.get(`/creator-profiles/`),
         api.get(`/creative-assets/?search=${encodeURIComponent(query)}`),
         api.get(`/services/?search=${encodeURIComponent(query)}`),
         api.get(`/portfolio/?search=${encodeURIComponent(query)}`)
@@ -824,12 +829,29 @@ export const searchAPI = {
 
       if (freelancersResponse.status === 'fulfilled') {
         const freelancerData = freelancersResponse.value.data;
+        let freelancers = [];
         if (Array.isArray(freelancerData)) {
-          results.freelancers = freelancerData;
+          freelancers = freelancerData;
         } else if (freelancerData && freelancerData.results) {
-          results.freelancers = freelancerData.results;
+          freelancers = freelancerData.results;
+        }
+        
+        // Filter freelancers by name if we have the query
+        if (query && freelancers.length > 0) {
+          results.freelancers = freelancers.filter(freelancer => {
+            const fullName = `${freelancer.user?.first_name || ''} ${freelancer.user?.last_name || ''}`.toLowerCase();
+            const username = freelancer.user?.username?.toLowerCase() || '';
+            const title = freelancer.title?.toLowerCase() || '';
+            const skills = freelancer.skills?.toLowerCase() || '';
+            const queryLower = query.toLowerCase();
+            
+            return fullName.includes(queryLower) || 
+                   username.includes(queryLower) || 
+                   title.includes(queryLower) ||
+                   skills.includes(queryLower);
+          });
         } else {
-          results.freelancers = [];
+          results.freelancers = freelancers;
         }
         console.log('💼 Freelancers found:', results.freelancers.length);
       } else {
@@ -839,12 +861,29 @@ export const searchAPI = {
 
       if (creatorsResponse.status === 'fulfilled') {
         const creatorData = creatorsResponse.value.data;
+        let creators = [];
         if (Array.isArray(creatorData)) {
-          results.creators = creatorData;
+          creators = creatorData;
         } else if (creatorData && creatorData.results) {
-          results.creators = creatorData.results;
+          creators = creatorData.results;
+        }
+        
+        // Filter creators by name if we have the query
+        if (query && creators.length > 0) {
+          results.creators = creators.filter(creator => {
+            const fullName = `${creator.user?.first_name || ''} ${creator.user?.last_name || ''}`.toLowerCase();
+            const username = creator.user?.username?.toLowerCase() || '';
+            const artisticStyle = creator.artistic_style?.toLowerCase() || '';
+            const specialization = creator.specialization?.toLowerCase() || '';
+            const queryLower = query.toLowerCase();
+            
+            return fullName.includes(queryLower) || 
+                   username.includes(queryLower) || 
+                   artisticStyle.includes(queryLower) ||
+                   specialization.includes(queryLower);
+          });
         } else {
-          results.creators = [];
+          results.creators = creators;
         }
         console.log('🎨 Creators found:', results.creators.length);
       } else {
@@ -929,8 +968,24 @@ export const searchAPI = {
 
   freelancers: async (query, filters = {}) => {
     try {
-      const response = await api.get(`/freelancer-profiles/search/?q=${encodeURIComponent(query)}`);
-      return response.data.results || response.data || [];
+      // Get all freelancers and filter on frontend
+      const response = await api.get(`/freelancer-profiles/`);
+      const freelancers = response.data.results || response.data || [];
+      
+      if (!query) return freelancers;
+      
+      return freelancers.filter(freelancer => {
+        const fullName = `${freelancer.user?.first_name || ''} ${freelancer.user?.last_name || ''}`.toLowerCase();
+        const username = freelancer.user?.username?.toLowerCase() || '';
+        const title = freelancer.title?.toLowerCase() || '';
+        const skills = freelancer.skills?.toLowerCase() || '';
+        const queryLower = query.toLowerCase();
+        
+        return fullName.includes(queryLower) || 
+               username.includes(queryLower) || 
+               title.includes(queryLower) ||
+               skills.includes(queryLower);
+      });
     } catch (error) {
       console.error('Freelancer search failed:', error.response?.data || error.message);
       return [];
@@ -939,8 +994,24 @@ export const searchAPI = {
 
   creators: async (query, filters = {}) => {
     try {
-      const response = await api.get(`/creator-profiles/search/?q=${encodeURIComponent(query)}`);
-      return response.data.results || response.data || [];
+      // Get all creators and filter on frontend
+      const response = await api.get(`/creator-profiles/`);
+      const creators = response.data.results || response.data || [];
+      
+      if (!query) return creators;
+      
+      return creators.filter(creator => {
+        const fullName = `${creator.user?.first_name || ''} ${creator.user?.last_name || ''}`.toLowerCase();
+        const username = creator.user?.username?.toLowerCase() || '';
+        const artisticStyle = creator.artistic_style?.toLowerCase() || '';
+        const specialization = creator.specialization?.toLowerCase() || '';
+        const queryLower = query.toLowerCase();
+        
+        return fullName.includes(queryLower) || 
+               username.includes(queryLower) || 
+               artisticStyle.includes(queryLower) ||
+               specialization.includes(queryLower);
+      });
     } catch (error) {
       console.error('Creator search failed:', error.response?.data || error.message);
       return [];
