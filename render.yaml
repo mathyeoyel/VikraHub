@@ -34,6 +34,11 @@ services:
       - key: CLOUDINARY_API_SECRET
         fromSecret:
           name: CLOUDINARY_API_SECRET
+      - key: GOOGLE_OAUTH2_CLIENT_ID
+        value: 47691699395-89mtbiinbln0jvvkcsirmrocj55in98t.apps.googleusercontent.com
+      - key: GOOGLE_OAUTH2_CLIENT_SECRET
+        fromSecret:
+          name: GOOGLE_OAUTH2_CLIENT_SECRET
 
   # React Frontend with proper API configuration
   - type: static

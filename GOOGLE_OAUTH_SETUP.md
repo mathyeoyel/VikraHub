@@ -35,10 +35,12 @@ This guide will help you set up Google OAuth2 authentication for VikraHub.
    - Name: VikraHub Web Client
    - Authorized JavaScript origins:
      - `http://localhost:3000` (for development)
-     - `https://yourdomain.com` (for production)
+     - `https://vikrahub.com` (for production)
+     - `https://www.vikrahub.com` (for production)
    - Authorized redirect URIs:
      - `http://localhost:3000/auth/google/callback/` (for development)
-     - `https://yourdomain.com/auth/google/callback/` (for production)
+     - `https://vikrahub.com/auth/google/callback/` (for production)
+     - `https://www.vikrahub.com/auth/google/callback/` (for production)
 
 5. Copy the Client ID and Client Secret
 
@@ -66,7 +68,7 @@ GOOGLE_OAUTH2_CLIENT_SECRET=your_client_secret_here
 1. In Google Cloud Console, go to "APIs & Services" > "OAuth consent screen"
 2. Add your domains to "Authorized domains":
    - `localhost` (for development)
-   - `yourdomain.com` (for production)
+   - `vikrahub.com` (for production)
 
 ## Step 6: Test the Integration
 
