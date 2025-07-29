@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './components/Auth/AuthContext';
 import { NotificationProvider } from './components/common/NotificationContext';
 import { WebSocketProvider } from './contexts/WebSocketContext';
@@ -39,7 +39,7 @@ function App() {
         <AuthProvider>
           <WebSocketProvider>
             <FollowProvider>
-              <HashRouter>
+              <BrowserRouter>
                 <Layout>
                   <Suspense fallback={<LoadingSpinner message="Loading page..." />}>
                       <Routes>
@@ -130,7 +130,7 @@ function App() {
           </Layout>
           <NotificationContainer />
           <ToastNotifications />
-        </HashRouter>
+        </BrowserRouter>
             </FollowProvider>
           </WebSocketProvider>
         </AuthProvider>
