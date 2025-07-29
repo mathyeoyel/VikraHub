@@ -3,6 +3,7 @@
   "version": "1.0.0-follow-system",
   "homepage": "/",
   "private": true,
+  "proxy": "http://localhost:8000",
   "dependencies": {
     "@cloudinary/react": "^1.14.3",
     "@cloudinary/url-gen": "^1.21.0",

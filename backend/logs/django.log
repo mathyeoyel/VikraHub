@@ -3836,3 +3836,8 @@ INFO 2025-07-29 11:51:25,541 basehttp 18948 12632 "GET /api/creator-profiles/fea
 INFO 2025-07-29 11:57:37,688 basehttp 18948 22912 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
 INFO 2025-07-29 11:57:37,782 basehttp 18948 22912 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
 INFO 2025-07-29 16:21:00,196 autoreload 22068 19668 Watching for file changes with StatReloader
+ERROR 2025-07-29 16:26:03,674 log 22068 22160 Service Unavailable: /api/auth/google/config/
+ERROR 2025-07-29 16:26:03,679 basehttp 22068 22160 "GET /api/auth/google/config/ HTTP/1.1" 503 40
+INFO 2025-07-29 16:31:47,486 autoreload 22068 19668 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\google_auth.py changed, reloading.
+INFO 2025-07-29 16:31:48,650 autoreload 21164 20928 Watching for file changes with StatReloader
+INFO 2025-07-29 17:05:18,128 autoreload 22132 9816 Watching for file changes with StatReloader
