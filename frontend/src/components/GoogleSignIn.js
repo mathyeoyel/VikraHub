@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from './Auth/AuthContext';
+import api from '../api';
 
 const GoogleSignIn = ({ onSuccess, onError }) => {
   const googleButtonRef = useRef(null);
@@ -27,8 +28,8 @@ const GoogleSignIn = ({ onSuccess, onError }) => {
   const initializeGoogleSignIn = async () => {
     try {
       // Get Google OAuth config from backend
-      const response = await fetch('/api/auth/google/config/');
-      const config = await response.json();
+      const response = await api.get('auth/google/config/');
+      const config = response.data;
       
       if (!config.client_id) {
         console.error('Google OAuth not configured on backend');
@@ -66,17 +67,11 @@ const GoogleSignIn = ({ onSuccess, onError }) => {
     
     try {
       // Send the Google ID token to our backend
-      const backendResponse = await fetch('/api/auth/google/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id_token: response.credential,
-        }),
+      const backendResponse = await api.post('auth/google/', {
+        id_token: response.credential,
       });
 
-      const data = await backendResponse.json();
+      const data = backendResponse.data;
 
       if (data.success) {
         // Update the auth context with the authenticated user
