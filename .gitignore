@@ -13,3 +13,78 @@ env/
 env.bak/
 venv.bak/
 .venv/
+
+# Database files
+*.sqlite3
+*.db
+
+# Static files and media
+staticfiles/
+media/assets/
+build/
+dist/
+
+# IDE and OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test and build scripts
+test_*.ps1
+test_*.sh
+test_*.html
+test_*.js
+verify_*.ps1
+verify_*.sh
+emergency_*.sh
+force_*.sh
+
+# Image files (keep essential ones only)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+# Keep SVG files as they're often used in code
+# *.svg
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# VS Code specific
+.vscode/launch.json
+.vscode/tasks.json
+
+# Documentation that might be large
+Screenshot_*.png
+Screenshot_*.jpg
+
+# Less important files and directories for performance
+deployment-methods/
+render*.yaml
+ASSET_UPLOAD_GUIDE.md
+CLOUDINARY_SETUP.md
+COMMIT_MESSAGE.md
+DEPLOYMENT.md
+MIGRATION_CHECKLIST.md
+MIGRATION_GUIDE.md
+README_BACKEND.md
+build.sh
+test_backend.sh
+test_deployment.sh
+
+# Keep only essential documentation
+!README.md
+!package.json
+!requirements.txt
+!manage.py
