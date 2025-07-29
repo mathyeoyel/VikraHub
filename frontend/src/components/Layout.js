@@ -4,6 +4,7 @@ import { useAuth } from './Auth/AuthContext';
 import UserMenu from './Auth/UserMenu';
 import AuthModal from './Auth/AuthModal';
 import SearchOverlay from './SearchOverlay';
+import CreateButton from './common/CreateButton';
 import logoImage from '../assets/images/logo.webp';
 import './Layout.css';
 
@@ -346,8 +347,12 @@ const Layout = ({ children }) => {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
               </svg>
-              <span>Inspirations</span>
+              <span>Inspiration</span>
             </Link>
+            
+            {/* Create Button */}
+            <CreateButton />
+            
             <Link to="/creators" className="secondary-nav-link" onClick={closeMenu}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>

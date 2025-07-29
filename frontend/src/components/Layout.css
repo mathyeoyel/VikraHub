@@ -661,6 +661,12 @@ body {
   min-width: 60px;
 }
 
+/* CreateButton alignment in secondary navbar */
+.secondary-nav-links .create-button-container {
+  align-self: center;
+  margin: 0 0.5rem;
+}
+
 .secondary-nav-link:hover {
   background: rgba(255, 160, 0, 0.15);
   color: #ffa000;
@@ -876,6 +882,16 @@ body {
   
   .secondary-nav-link span {
     font-size: 13px;
+  }
+  
+  /* CreateButton mobile adjustments in secondary navbar */
+  .secondary-nav-links .create-button-container {
+    margin: 0 0.25rem;
+  }
+  
+  .secondary-nav-links .create-button {
+    width: 30px;
+    height: 30px;
   }
   
   .header .container {
