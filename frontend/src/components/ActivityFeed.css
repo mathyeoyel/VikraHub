@@ -5,6 +5,9 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin-bottom: 20px;
+  border: 1px solid rgba(255, 160, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .activity-header {
@@ -13,12 +16,12 @@
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid rgba(255, 160, 0, 0.2);
 }
 
 .activity-header h3 {
   margin: 0;
-  color: #333;
+  color: #000223;
   font-size: 1.2rem;
   font-weight: 600;
 }
@@ -36,8 +39,9 @@
 }
 
 .status-indicator.connected {
-  background-color: #e8f5e8;
-  color: #2d5a2d;
+  background-color: rgba(255, 160, 0, 0.1);
+  color: #000223;
+  border: 1px solid rgba(255, 160, 0, 0.3);
 }
 
 .status-indicator.disconnected {
@@ -197,5 +201,61 @@
   
   .no-activity p {
     font-size: 0.8rem;
+  }
+}
+
+/* Enhanced mobile responsiveness */
+@media (max-width: 768px) {
+  .activity-feed {
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+  }
+  
+  .activity-header {
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+  }
+  
+  .activity-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .activities-list {
+    max-height: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .activity-feed {
+    padding: 12px;
+    border-radius: 8px;
+  }
+  
+  .activity-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .activity-header h3 {
+    font-size: 1rem;
+  }
+  
+  .status-indicator {
+    font-size: 0.75rem;
+    padding: 3px 6px;
+  }
+  
+  .activities-list {
+    max-height: 300px;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  .activity-item {
+    min-height: 44px; /* Minimum touch target */
   }
 }

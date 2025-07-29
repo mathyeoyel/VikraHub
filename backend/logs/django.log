@@ -3471,3 +3471,326 @@ WARNING 2025-07-28 19:47:54,871 log 16632 24584 Not Found: /ws/messaging/messagi
 WARNING 2025-07-28 19:47:54,874 basehttp 16632 24584 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzIzMDYyLCJpYXQiOjE3NTM3MTkxMDQsImp0aSI6IjI4MTc3YzkxMTUyODQ4NTBhNWU0NmM3NWM5OTAzYjU2IiwidXNlcl9pZCI6Mjh9.9-24HGKeGhzUKMNmAdOYKdgRG6Fa8Oxen3L1ePGpxXU HTTP/1.1" 404 3653
 INFO 2025-07-28 20:12:02,710 autoreload 5060 18908 Watching for file changes with StatReloader
 INFO 2025-07-28 20:13:16,175 basehttp 5060 9936 "GET /api/public-profiles/search/?q=Mathew HTTP/1.1" 200 1865
+INFO 2025-07-29 09:54:34,059 autoreload 18948 7764 Watching for file changes with StatReloader
+INFO 2025-07-29 09:55:13,199 basehttp 18948 1416 "OPTIONS /api/users/me/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:13,204 basehttp 18948 1416 "OPTIONS /api/creator-profiles/featured/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:13,204 basehttp 18948 19776 "OPTIONS /api/users/me/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:13,206 basehttp 18948 6520 "OPTIONS /api/creator-profiles/featured/ HTTP/1.1" 200 0
+WARNING 2025-07-29 09:55:13,258 log 18948 1416 Unauthorized: /api/users/me/
+WARNING 2025-07-29 09:55:13,258 log 18948 6520 Unauthorized: /api/creator-profiles/featured/
+WARNING 2025-07-29 09:55:13,259 basehttp 18948 1416 "GET /api/users/me/ HTTP/1.1" 401 183
+WARNING 2025-07-29 09:55:13,259 basehttp 18948 6520 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
+WARNING 2025-07-29 09:55:13,261 log 18948 1416 Unauthorized: /api/users/me/
+WARNING 2025-07-29 09:55:13,263 log 18948 6520 Unauthorized: /api/creator-profiles/featured/
+WARNING 2025-07-29 09:55:13,264 basehttp 18948 1416 "GET /api/users/me/ HTTP/1.1" 401 183
+WARNING 2025-07-29 09:55:13,264 basehttp 18948 6520 "GET /api/creator-profiles/featured/ HTTP/1.1" 401 183
+INFO 2025-07-29 09:55:13,491 basehttp 18948 1416 "OPTIONS /api/auth/token/refresh/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:13,499 basehttp 18948 1416 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-29 09:55:13,581 basehttp 18948 1416 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-07-29 09:55:18,179 basehttp 18948 6704 "OPTIONS /api/auth/token/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:18,550 basehttp 18948 6704 "POST /api/auth/token/ HTTP/1.1" 200 486
+INFO 2025-07-29 09:55:18,581 basehttp 18948 6704 "GET /api/users/me/ HTTP/1.1" 200 259
+INFO 2025-07-29 09:55:18,644 basehttp 18948 6704 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:18,654 basehttp 18948 19744 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:18,655 basehttp 18948 14808 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:18,657 basehttp 18948 6704 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:18,658 basehttp 18948 5456 "OPTIONS /api/follow/my-stats/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:18,659 basehttp 18948 1520 "OPTIONS /api/follow/suggestions/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:18,659 basehttp 18948 19156 "OPTIONS /api/follow/notifications/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:18,660 basehttp 18948 19744 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:18,660 basehttp 18948 14808 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:18,660 basehttp 18948 6704 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:18,673 basehttp 18948 19156 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:18,688 basehttp 18948 1520 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 09:55:18,688 basehttp 18948 5456 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 09:55:18,758 basehttp 18948 14808 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-29 09:55:18,767 basehttp 18948 1520 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 09:55:18,768 basehttp 18948 19744 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-29 09:55:18,773 basehttp 18948 5456 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+WARNING 2025-07-29 09:55:18,778 log 18948 21520 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 09:55:18,789 basehttp 18948 21520 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2MDE4LCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6IjRjMzBlMWUyMGI1MzQxMGJhMjZkNDgzZmM5ZjE2NzgzIiwidXNlcl9pZCI6Mjh9.m1QZhS749Y9jZFzxsaG2mN5Txx-xvR9jUWNsQ_GgmeM HTTP/1.1" 404 3653
+INFO 2025-07-29 09:55:18,789 basehttp 18948 6704 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+INFO 2025-07-29 09:55:18,790 basehttp 18948 1520 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 09:55:18,795 basehttp 18948 21520 - Broken pipe from ('127.0.0.1', 53576)
+INFO 2025-07-29 09:55:18,800 basehttp 18948 5456 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 09:55:18,811 basehttp 18948 1520 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 09:55:18,812 basehttp 18948 5456 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+WARNING 2025-07-29 09:55:21,811 log 18948 1380 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 09:55:21,811 basehttp 18948 1380 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2MDE4LCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6IjRjMzBlMWUyMGI1MzQxMGJhMjZkNDgzZmM5ZjE2NzgzIiwidXNlcl9pZCI6Mjh9.m1QZhS749Y9jZFzxsaG2mN5Txx-xvR9jUWNsQ_GgmeM HTTP/1.1" 404 3653
+INFO 2025-07-29 09:55:22,830 basehttp 18948 1520 "OPTIONS /api/notifications/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:22,831 basehttp 18948 5456 "OPTIONS /api/notifications/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:22,839 basehttp 18948 5456 "GET /api/notifications/ HTTP/1.1" 200 2
+INFO 2025-07-29 09:55:22,847 basehttp 18948 5456 "GET /api/notifications/ HTTP/1.1" 200 2
+WARNING 2025-07-29 09:55:24,823 log 18948 17396 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 09:55:24,823 basehttp 18948 17396 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2MDE4LCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6IjRjMzBlMWUyMGI1MzQxMGJhMjZkNDgzZmM5ZjE2NzgzIiwidXNlcl9pZCI6Mjh9.m1QZhS749Y9jZFzxsaG2mN5Txx-xvR9jUWNsQ_GgmeM HTTP/1.1" 404 3653
+WARNING 2025-07-29 09:55:27,786 log 18948 5760 Not Found: /ws/messaging/messaging/
+INFO 2025-07-29 09:55:27,788 basehttp 18948 19952 "OPTIONS /api/profiles/my_profile/ HTTP/1.1" 200 0
+WARNING 2025-07-29 09:55:27,788 basehttp 18948 5760 "GET /ws/messaging/messaging/ HTTP/1.1" 404 3417
+INFO 2025-07-29 09:55:27,790 basehttp 18948 7716 "OPTIONS /api/blog/my_posts/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:27,795 basehttp 18948 8592 "OPTIONS /api/portfolio/ HTTP/1.1" 200 0
+INFO 2025-07-29 09:55:27,799 basehttp 18948 22440 "OPTIONS /api/creative-assets/my_assets/ HTTP/1.1" 200 0
+WARNING 2025-07-29 09:55:27,816 log 18948 11760 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 09:55:27,818 basehttp 18948 11760 "GET /ws/messaging/messaging/ HTTP/1.1" 404 3417
+INFO 2025-07-29 09:55:27,818 basehttp 18948 19952 "GET /api/notifications/ HTTP/1.1" 200 2
+INFO 2025-07-29 09:55:27,833 basehttp 18948 4788 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-29 09:55:27,838 basehttp 18948 8592 "GET /api/portfolio/ HTTP/1.1" 200 708
+INFO 2025-07-29 09:55:27,838 basehttp 18948 22440 "GET /api/creative-assets/my_assets/ HTTP/1.1" 200 24
+INFO 2025-07-29 09:55:27,838 basehttp 18948 14916 "GET /api/blog/my_posts/ HTTP/1.1" 200 24
+WARNING 2025-07-29 09:55:27,847 log 18948 6968 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 09:55:27,853 basehttp 18948 6968 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2MDE4LCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6IjRjMzBlMWUyMGI1MzQxMGJhMjZkNDgzZmM5ZjE2NzgzIiwidXNlcl9pZCI6Mjh9.m1QZhS749Y9jZFzxsaG2mN5Txx-xvR9jUWNsQ_GgmeM HTTP/1.1" 404 3653
+INFO 2025-07-29 09:55:27,854 basehttp 18948 7716 "GET /api/profiles/my_profile/ HTTP/1.1" 200 656
+WARNING 2025-07-29 09:55:30,861 log 18948 20684 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 09:55:30,861 basehttp 18948 20684 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2MDE4LCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6IjRjMzBlMWUyMGI1MzQxMGJhMjZkNDgzZmM5ZjE2NzgzIiwidXNlcl9pZCI6Mjh9.m1QZhS749Y9jZFzxsaG2mN5Txx-xvR9jUWNsQ_GgmeM HTTP/1.1" 404 3653
+WARNING 2025-07-29 09:55:33,875 log 18948 9160 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 09:55:33,876 basehttp 18948 9160 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2MDE4LCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6IjRjMzBlMWUyMGI1MzQxMGJhMjZkNDgzZmM5ZjE2NzgzIiwidXNlcl9pZCI6Mjh9.m1QZhS749Y9jZFzxsaG2mN5Txx-xvR9jUWNsQ_GgmeM HTTP/1.1" 404 3653
+WARNING 2025-07-29 10:09:42,441 log 18948 15024 Unauthorized: /api/notifications/
+WARNING 2025-07-29 10:09:42,449 log 18948 5524 Unauthorized: /api/profiles/my_profile/
+WARNING 2025-07-29 10:09:42,455 log 18948 21284 Unauthorized: /api/blog/my_posts/
+WARNING 2025-07-29 10:09:42,488 log 18948 14100 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:09:42,492 log 18948 15688 Unauthorized: /api/portfolio/
+WARNING 2025-07-29 10:09:42,492 basehttp 18948 15024 "GET /api/notifications/ HTTP/1.1" 401 183
+WARNING 2025-07-29 10:09:42,497 log 18948 21972 Unauthorized: /api/creative-assets/my_assets/
+WARNING 2025-07-29 10:09:42,498 basehttp 18948 5524 "GET /api/profiles/my_profile/ HTTP/1.1" 401 183
+WARNING 2025-07-29 10:09:42,507 log 18948 6516 Unauthorized: /api/follow/my-stats/
+WARNING 2025-07-29 10:09:42,509 basehttp 18948 21284 "GET /api/blog/my_posts/ HTTP/1.1" 401 183
+WARNING 2025-07-29 10:09:42,509 basehttp 18948 14100 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2MDE4LCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6IjRjMzBlMWUyMGI1MzQxMGJhMjZkNDgzZmM5ZjE2NzgzIiwidXNlcl9pZCI6Mjh9.m1QZhS749Y9jZFzxsaG2mN5Txx-xvR9jUWNsQ_GgmeM HTTP/1.1" 404 3653
+WARNING 2025-07-29 10:09:42,512 basehttp 18948 15688 "GET /api/portfolio/ HTTP/1.1" 401 183
+WARNING 2025-07-29 10:09:42,515 basehttp 18948 21972 "GET /api/creative-assets/my_assets/ HTTP/1.1" 401 183
+WARNING 2025-07-29 10:09:42,517 basehttp 18948 6516 "GET /api/follow/my-stats/ HTTP/1.1" 401 183
+INFO 2025-07-29 10:09:42,612 basehttp 18948 15688 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-29 10:09:42,613 basehttp 18948 21284 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-29 10:09:42,614 basehttp 18948 15024 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-29 10:09:42,614 basehttp 18948 21972 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-29 10:09:42,614 basehttp 18948 6516 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-29 10:09:42,616 basehttp 18948 5524 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-29 10:09:42,786 basehttp 18948 21284 "GET /api/notifications/ HTTP/1.1" 200 2
+INFO 2025-07-29 10:09:42,825 basehttp 18948 6516 "GET /api/portfolio/ HTTP/1.1" 200 708
+INFO 2025-07-29 10:09:42,828 basehttp 18948 15688 "GET /api/creative-assets/my_assets/ HTTP/1.1" 200 24
+INFO 2025-07-29 10:09:42,830 basehttp 18948 5524 "GET /api/blog/my_posts/ HTTP/1.1" 200 24
+INFO 2025-07-29 10:09:42,834 basehttp 18948 21972 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-29 10:09:42,863 basehttp 18948 15024 "GET /api/profiles/my_profile/ HTTP/1.1" 200 656
+INFO 2025-07-29 10:09:48,914 basehttp 18948 23448 "GET /api/users/me/ HTTP/1.1" 200 259
+INFO 2025-07-29 10:09:48,927 basehttp 18948 23448 "GET /api/users/me/ HTTP/1.1" 200 259
+WARNING 2025-07-29 10:09:48,994 log 18948 23428 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:09:49,002 basehttp 18948 23428 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+INFO 2025-07-29 10:09:49,028 basehttp 18948 23448 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:09:49,029 basehttp 18948 23424 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:09:49,044 basehttp 18948 23296 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-29 10:09:49,070 basehttp 18948 23276 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-29 10:09:49,070 basehttp 18948 23448 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:09:49,073 basehttp 18948 23424 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:09:49,089 basehttp 18948 23272 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+INFO 2025-07-29 10:09:49,091 basehttp 18948 23448 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:09:49,092 basehttp 18948 23424 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:09:49,106 basehttp 18948 23448 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:09:49,107 basehttp 18948 23424 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+WARNING 2025-07-29 10:09:49,293 log 18948 23408 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:09:49,299 basehttp 18948 23408 "GET /ws/messaging/messaging/ HTTP/1.1" 404 3417
+INFO 2025-07-29 10:09:49,310 basehttp 18948 23448 "GET /api/notifications/ HTTP/1.1" 200 2
+INFO 2025-07-29 10:09:49,321 basehttp 18948 23384 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-29 10:09:49,321 basehttp 18948 23272 "GET /api/blog/my_posts/ HTTP/1.1" 200 24
+WARNING 2025-07-29 10:09:49,325 log 18948 23416 Not Found: /ws/messaging/messaging/
+INFO 2025-07-29 10:09:49,335 basehttp 18948 23276 "GET /api/portfolio/ HTTP/1.1" 200 708
+WARNING 2025-07-29 10:09:49,336 basehttp 18948 23416 "GET /ws/messaging/messaging/ HTTP/1.1" 404 3417
+INFO 2025-07-29 10:09:49,336 basehttp 18948 23296 "GET /api/creative-assets/my_assets/ HTTP/1.1" 200 24
+INFO 2025-07-29 10:09:49,338 basehttp 18948 23416 - Broken pipe from ('127.0.0.1', 64005)
+INFO 2025-07-29 10:09:49,342 basehttp 18948 23424 "GET /api/profiles/my_profile/ HTTP/1.1" 200 656
+WARNING 2025-07-29 10:09:52,042 log 18948 23480 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:09:52,043 basehttp 18948 23480 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+INFO 2025-07-29 10:09:53,433 basehttp 18948 23424 "GET /api/users/me/ HTTP/1.1" 200 259
+INFO 2025-07-29 10:09:53,455 basehttp 18948 23424 "GET /api/users/me/ HTTP/1.1" 200 259
+WARNING 2025-07-29 10:09:53,523 log 18948 21844 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:09:53,525 basehttp 18948 21844 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+INFO 2025-07-29 10:09:53,526 basehttp 18948 21844 - Broken pipe from ('127.0.0.1', 64064)
+INFO 2025-07-29 10:09:53,554 basehttp 18948 23296 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:09:53,554 basehttp 18948 23424 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:09:53,556 basehttp 18948 23272 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-29 10:09:53,570 basehttp 18948 23276 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-29 10:09:53,577 basehttp 18948 23448 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:09:53,584 basehttp 18948 23384 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+INFO 2025-07-29 10:09:53,584 basehttp 18948 23424 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-29 10:09:53,585 basehttp 18948 23296 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:09:53,627 basehttp 18948 23384 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:09:53,631 basehttp 18948 23296 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:09:53,631 basehttp 18948 23276 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-29 10:09:53,636 basehttp 18948 23424 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+INFO 2025-07-29 10:09:53,667 basehttp 18948 23296 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:09:53,667 basehttp 18948 23424 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+WARNING 2025-07-29 10:09:53,826 log 18948 7776 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:09:53,830 basehttp 18948 7776 "GET /ws/messaging/messaging/ HTTP/1.1" 404 3417
+INFO 2025-07-29 10:09:53,838 basehttp 18948 7776 - Broken pipe from ('127.0.0.1', 64070)
+INFO 2025-07-29 10:09:53,868 basehttp 18948 23296 "GET /api/notifications/ HTTP/1.1" 200 2
+WARNING 2025-07-29 10:09:53,910 log 18948 12788 Not Found: /ws/messaging/messaging/
+INFO 2025-07-29 10:09:53,911 basehttp 18948 23276 "GET /api/blog/my_posts/ HTTP/1.1" 200 24
+INFO 2025-07-29 10:09:53,916 basehttp 18948 23384 "GET /api/portfolio/ HTTP/1.1" 200 708
+INFO 2025-07-29 10:09:53,917 basehttp 18948 23448 "GET /api/creative-assets/my_assets/ HTTP/1.1" 200 24
+INFO 2025-07-29 10:09:53,917 basehttp 18948 23272 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+WARNING 2025-07-29 10:09:53,918 basehttp 18948 12788 "GET /ws/messaging/messaging/ HTTP/1.1" 404 3417
+INFO 2025-07-29 10:09:53,923 basehttp 18948 12788 - Broken pipe from ('127.0.0.1', 64071)
+INFO 2025-07-29 10:09:53,923 basehttp 18948 23424 "GET /api/profiles/my_profile/ HTTP/1.1" 200 656
+INFO 2025-07-29 10:09:55,464 basehttp 18948 23424 "GET /api/users/me/ HTTP/1.1" 200 259
+INFO 2025-07-29 10:09:55,483 basehttp 18948 23424 "GET /api/users/me/ HTTP/1.1" 200 259
+WARNING 2025-07-29 10:09:55,507 log 18948 11988 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:09:55,527 basehttp 18948 11988 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+INFO 2025-07-29 10:09:55,527 basehttp 18948 11988 - Broken pipe from ('127.0.0.1', 64093)
+INFO 2025-07-29 10:09:55,542 basehttp 18948 23272 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:09:55,552 basehttp 18948 23448 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-29 10:09:55,552 basehttp 18948 23424 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:09:55,557 basehttp 18948 23384 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-29 10:09:55,568 basehttp 18948 23272 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:09:55,583 basehttp 18948 23540 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+INFO 2025-07-29 10:09:55,586 basehttp 18948 23424 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-29 10:09:55,586 basehttp 18948 4316 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-29 10:09:55,589 basehttp 18948 23448 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:09:55,592 basehttp 18948 23272 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:09:55,603 basehttp 18948 23448 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:09:55,608 basehttp 18948 23272 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:09:55,622 basehttp 18948 23448 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:09:55,624 basehttp 18948 23384 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+WARNING 2025-07-29 10:09:55,815 log 18948 5548 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:09:55,824 basehttp 18948 5548 "GET /ws/messaging/messaging/ HTTP/1.1" 404 3417
+INFO 2025-07-29 10:09:55,839 basehttp 18948 23272 "GET /api/blog/my_posts/ HTTP/1.1" 200 24
+INFO 2025-07-29 10:09:55,842 basehttp 18948 23424 "GET /api/creative-assets/my_assets/ HTTP/1.1" 200 24
+INFO 2025-07-29 10:09:55,845 basehttp 18948 23448 "GET /api/notifications/ HTTP/1.1" 200 2
+WARNING 2025-07-29 10:09:55,851 log 18948 21120 Not Found: /ws/messaging/messaging/
+INFO 2025-07-29 10:09:55,851 basehttp 18948 4316 "GET /api/portfolio/ HTTP/1.1" 200 708
+INFO 2025-07-29 10:09:55,856 basehttp 18948 23540 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+WARNING 2025-07-29 10:09:55,860 basehttp 18948 21120 "GET /ws/messaging/messaging/ HTTP/1.1" 404 3417
+INFO 2025-07-29 10:09:55,860 basehttp 18948 21120 - Broken pipe from ('127.0.0.1', 64107)
+INFO 2025-07-29 10:09:55,869 basehttp 18948 23384 "GET /api/profiles/my_profile/ HTTP/1.1" 200 656
+WARNING 2025-07-29 10:09:58,546 log 18948 22728 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:09:58,547 basehttp 18948 22728 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+INFO 2025-07-29 10:09:59,440 basehttp 18948 23384 "OPTIONS /api/users/me/ HTTP/1.1" 200 0
+INFO 2025-07-29 10:09:59,441 basehttp 18948 23540 "OPTIONS /api/users/me/ HTTP/1.1" 200 0
+INFO 2025-07-29 10:09:59,460 basehttp 18948 23384 "GET /api/users/me/ HTTP/1.1" 200 259
+INFO 2025-07-29 10:09:59,467 basehttp 18948 23540 "GET /api/users/me/ HTTP/1.1" 200 259
+WARNING 2025-07-29 10:09:59,489 log 18948 22768 Not Found: /ws/messaging/messaging/
+INFO 2025-07-29 10:09:59,496 basehttp 18948 23384 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-29 10:09:59,496 basehttp 18948 4316 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-29 10:09:59,497 basehttp 18948 23424 "OPTIONS /api/follow/my-stats/ HTTP/1.1" 200 0
+INFO 2025-07-29 10:09:59,497 basehttp 18948 23448 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-29 10:09:59,498 basehttp 18948 23540 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+WARNING 2025-07-29 10:09:59,498 basehttp 18948 22768 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+INFO 2025-07-29 10:09:59,499 basehttp 18948 23272 "OPTIONS /api/follow/notifications/ HTTP/1.1" 200 0
+INFO 2025-07-29 10:09:59,508 basehttp 18948 23384 "OPTIONS /api/follow/suggestions/ HTTP/1.1" 200 0
+INFO 2025-07-29 10:09:59,511 basehttp 18948 23272 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-29 10:09:59,511 basehttp 18948 23448 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-29 10:09:59,512 basehttp 18948 23540 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-29 10:09:59,512 basehttp 18948 4316 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-29 10:09:59,512 basehttp 18948 23384 "OPTIONS /api/follow/notifications/ HTTP/1.1" 200 0
+INFO 2025-07-29 10:09:59,512 basehttp 18948 23424 "OPTIONS /api/follow/my-stats/ HTTP/1.1" 200 0
+INFO 2025-07-29 10:09:59,528 basehttp 18948 23272 "OPTIONS /api/follow/suggestions/ HTTP/1.1" 200 0
+INFO 2025-07-29 10:09:59,536 basehttp 18948 23384 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:09:59,536 basehttp 18948 4316 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:09:59,552 basehttp 18948 23272 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:09:59,556 basehttp 18948 23448 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-29 10:09:59,564 basehttp 18948 23424 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-29 10:09:59,567 basehttp 18948 23540 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:09:59,573 basehttp 18948 4316 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:09:59,584 basehttp 18948 23272 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:09:59,592 basehttp 18948 23448 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:09:59,599 basehttp 18948 23540 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-29 10:09:59,603 basehttp 18948 23424 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:09:59,608 basehttp 18948 4316 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-29 10:09:59,613 basehttp 18948 23384 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+INFO 2025-07-29 10:09:59,619 basehttp 18948 23272 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+WARNING 2025-07-29 10:09:59,803 log 18948 22772 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:09:59,806 basehttp 18948 22772 "GET /ws/messaging/messaging/ HTTP/1.1" 404 3417
+INFO 2025-07-29 10:09:59,821 basehttp 18948 23424 "GET /api/portfolio/ HTTP/1.1" 200 708
+INFO 2025-07-29 10:09:59,830 basehttp 18948 4316 "GET /api/blog/my_posts/ HTTP/1.1" 200 24
+INFO 2025-07-29 10:09:59,834 basehttp 18948 23540 "GET /api/creative-assets/my_assets/ HTTP/1.1" 200 24
+WARNING 2025-07-29 10:09:59,840 log 18948 22784 Not Found: /ws/messaging/messaging/
+INFO 2025-07-29 10:09:59,845 basehttp 18948 23448 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+WARNING 2025-07-29 10:09:59,850 basehttp 18948 22784 "GET /ws/messaging/messaging/ HTTP/1.1" 404 3417
+INFO 2025-07-29 10:09:59,850 basehttp 18948 23384 "GET /api/notifications/ HTTP/1.1" 200 2
+INFO 2025-07-29 10:09:59,851 basehttp 18948 22784 - Broken pipe from ('127.0.0.1', 64166)
+INFO 2025-07-29 10:09:59,855 basehttp 18948 23272 "GET /api/profiles/my_profile/ HTTP/1.1" 200 656
+WARNING 2025-07-29 10:10:02,522 log 18948 20684 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:10:02,523 basehttp 18948 20684 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+INFO 2025-07-29 10:10:52,847 basehttp 18948 22764 "GET /api/users/me/ HTTP/1.1" 200 259
+INFO 2025-07-29 10:10:52,879 basehttp 18948 22764 "GET /api/users/me/ HTTP/1.1" 200 259
+INFO 2025-07-29 10:10:52,904 basehttp 18948 12564 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-07-29 10:10:52,955 basehttp 18948 22764 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-07-29 10:10:53,233 basehttp 18948 12564 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:10:53,233 basehttp 18948 22764 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:10:53,247 basehttp 18948 23016 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-29 10:10:53,248 basehttp 18948 23020 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-29 10:10:53,274 basehttp 18948 23044 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+INFO 2025-07-29 10:10:53,274 basehttp 18948 12564 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:10:53,286 basehttp 18948 23020 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-29 10:10:53,288 basehttp 18948 23036 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-29 10:10:53,290 basehttp 18948 22764 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:10:53,307 basehttp 18948 12564 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:10:53,321 basehttp 18948 22764 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:10:53,341 basehttp 18948 12564 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:10:53,350 basehttp 18948 23044 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+INFO 2025-07-29 10:10:53,352 basehttp 18948 22764 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+WARNING 2025-07-29 10:10:53,406 log 18948 22984 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:10:53,408 basehttp 18948 22984 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+WARNING 2025-07-29 10:10:53,434 log 18948 22924 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:10:53,435 basehttp 18948 22924 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+WARNING 2025-07-29 10:10:56,427 log 18948 3208 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:10:56,429 basehttp 18948 3208 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+INFO 2025-07-29 10:10:56,431 basehttp 18948 3208 - Broken pipe from ('127.0.0.1', 64868)
+WARNING 2025-07-29 10:10:56,464 log 18948 18324 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:10:56,467 basehttp 18948 18324 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+INFO 2025-07-29 10:10:58,484 basehttp 18948 22764 "GET /api/users/me/ HTTP/1.1" 200 259
+INFO 2025-07-29 10:10:58,507 basehttp 18948 22764 "GET /api/users/me/ HTTP/1.1" 200 259
+WARNING 2025-07-29 10:10:58,538 log 18948 16644 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:10:58,541 basehttp 18948 16644 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+INFO 2025-07-29 10:10:58,560 basehttp 18948 23020 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-29 10:10:58,574 basehttp 18948 12564 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:10:58,575 basehttp 18948 22764 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:10:58,586 basehttp 18948 23036 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-29 10:10:58,606 basehttp 18948 12564 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+WARNING 2025-07-29 10:10:58,627 log 18948 13320 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:10:58,634 basehttp 18948 13320 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+INFO 2025-07-29 10:10:58,635 basehttp 18948 22764 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:10:58,637 basehttp 18948 13320 - Broken pipe from ('127.0.0.1', 64901)
+INFO 2025-07-29 10:10:58,639 basehttp 18948 23016 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+INFO 2025-07-29 10:10:58,656 basehttp 18948 23020 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-29 10:10:58,669 basehttp 18948 12564 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:10:58,674 basehttp 18948 23036 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-29 10:10:58,677 basehttp 18948 22764 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:10:58,694 basehttp 18948 23044 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-07-29 10:10:58,704 basehttp 18948 12564 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-29 10:10:58,713 basehttp 18948 23036 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-29 10:10:58,719 basehttp 18948 23016 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+INFO 2025-07-29 10:10:58,771 basehttp 18948 23044 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-07-29 10:11:00,059 basehttp 18948 23044 "OPTIONS /api/creator-profiles/ HTTP/1.1" 200 0
+INFO 2025-07-29 10:11:00,060 basehttp 18948 23016 "OPTIONS /api/creator-profiles/ HTTP/1.1" 200 0
+INFO 2025-07-29 10:11:00,169 basehttp 18948 23016 "GET /api/creator-profiles/ HTTP/1.1" 200 12349
+INFO 2025-07-29 10:11:00,297 basehttp 18948 23016 "GET /api/creator-profiles/ HTTP/1.1" 200 12349
+WARNING 2025-07-29 10:11:01,652 log 18948 18236 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:11:01,653 basehttp 18948 18236 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+WARNING 2025-07-29 10:11:04,664 log 18948 23264 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:11:04,665 basehttp 18948 23264 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+WARNING 2025-07-29 10:11:05,868 log 18948 10480 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:11:05,879 basehttp 18948 10480 "GET /ws/messaging/messaging/ HTTP/1.1" 404 3417
+INFO 2025-07-29 10:11:05,905 basehttp 18948 10824 "GET /api/notifications/ HTTP/1.1" 200 2
+WARNING 2025-07-29 10:11:05,917 log 18948 6384 Not Found: /ws/messaging/messaging/
+INFO 2025-07-29 10:11:05,927 basehttp 18948 19316 "GET /api/blog/my_posts/ HTTP/1.1" 200 24
+WARNING 2025-07-29 10:11:05,929 basehttp 18948 6384 "GET /ws/messaging/messaging/ HTTP/1.1" 404 3417
+INFO 2025-07-29 10:11:05,929 basehttp 18948 10280 "GET /api/portfolio/ HTTP/1.1" 200 708
+INFO 2025-07-29 10:11:05,943 basehttp 18948 10200 "GET /api/profiles/my_profile/ HTTP/1.1" 200 656
+INFO 2025-07-29 10:11:05,943 basehttp 18948 22880 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-29 10:11:05,948 basehttp 18948 14360 "GET /api/creative-assets/my_assets/ HTTP/1.1" 200 24
+WARNING 2025-07-29 10:11:07,682 log 18948 23416 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:11:07,682 basehttp 18948 23416 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+WARNING 2025-07-29 10:11:10,697 log 18948 14048 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:11:10,698 basehttp 18948 14048 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+WARNING 2025-07-29 10:11:14,469 log 18948 23544 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:11:14,470 basehttp 18948 23544 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+WARNING 2025-07-29 10:11:33,828 log 18948 10820 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-29 10:11:33,839 basehttp 18948 10820 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNzc2ODgyLCJpYXQiOjE3NTM3NzU3MTgsImp0aSI6ImMxOTEwNGIxZTFjMTQzYjQ5M2FmYzg0OTgxNDU3Y2VhIiwidXNlcl9pZCI6Mjh9.bvyUKFw4unemB4nZy_jCtgj4RA8PMhaX0Y7IZYayTHs HTTP/1.1" 404 3653
+INFO 2025-07-29 10:11:33,847 basehttp 18948 10820 - Broken pipe from ('127.0.0.1', 65253)
+INFO 2025-07-29 10:11:33,861 basehttp 18948 1860 "GET /api/notifications/ HTTP/1.1" 200 2
+INFO 2025-07-29 10:11:33,870 basehttp 18948 18324 "GET /api/blog/my_posts/ HTTP/1.1" 200 24
+INFO 2025-07-29 10:11:33,870 basehttp 18948 7808 "GET /api/portfolio/ HTTP/1.1" 200 708
+INFO 2025-07-29 10:11:33,880 basehttp 18948 22920 "GET /api/creative-assets/my_assets/ HTTP/1.1" 200 24
+INFO 2025-07-29 10:11:33,882 basehttp 18948 22672 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-29 10:11:33,884 basehttp 18948 16760 "GET /api/profiles/my_profile/ HTTP/1.1" 200 656
+WARNING 2025-07-29 10:21:07,381 log 18948 24568 Unauthorized: /api/users/me/
+WARNING 2025-07-29 10:21:07,386 basehttp 18948 24568 "GET /api/users/me/ HTTP/1.1" 401 183
+WARNING 2025-07-29 10:21:07,391 log 18948 24568 Unauthorized: /api/users/me/
+WARNING 2025-07-29 10:21:07,392 basehttp 18948 24568 "GET /api/users/me/ HTTP/1.1" 401 183
