@@ -3835,3 +3835,4 @@ INFO 2025-07-29 11:51:03,903 basehttp 18948 15900 "GET /api/creator-profiles/fea
 INFO 2025-07-29 11:51:25,541 basehttp 18948 12632 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
 INFO 2025-07-29 11:57:37,688 basehttp 18948 22912 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
 INFO 2025-07-29 11:57:37,782 basehttp 18948 22912 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-07-29 16:21:00,196 autoreload 22068 19668 Watching for file changes with StatReloader

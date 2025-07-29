@@ -81,17 +81,34 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     try {
       console.log('AuthContext login called with:', credentials);
-      const response = await authAPI.login(credentials);
-      console.log('AuthAPI response:', response);
       
-      const { access, refresh } = response.data;
-      
-      localStorage.setItem('access', access);
-      localStorage.setItem('refresh', refresh);
-      setToken(access);
-      
-      await fetchUser(access); // Pass the access token directly
-      return { success: true };
+      // Check if this is a Google OAuth login
+      if (credentials.googleAuth && credentials.accessToken) {
+        // Google OAuth login - tokens and user data already provided
+        const { accessToken, refreshToken, user } = credentials;
+        
+        localStorage.setItem('access', accessToken);
+        localStorage.setItem('refresh', refreshToken);
+        setToken(accessToken);
+        setUser(user);
+        setLoading(false);
+        
+        console.log('Google OAuth login successful:', user);
+        return { success: true, user };
+      } else {
+        // Regular username/password login
+        const response = await authAPI.login(credentials);
+        console.log('AuthAPI response:', response);
+        
+        const { access, refresh } = response.data;
+        
+        localStorage.setItem('access', access);
+        localStorage.setItem('refresh', refresh);
+        setToken(access);
+        
+        await fetchUser(access); // Pass the access token directly
+        return { success: true };
+      }
     } catch (error) {
       console.error('AuthContext login error:', error);
       console.error('Error response:', error.response);

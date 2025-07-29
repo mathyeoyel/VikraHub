@@ -9,6 +9,7 @@ from .api_views import (
     ProjectCategoryViewSet, ProjectViewSet, ProjectApplicationViewSet, 
     ProjectContractViewSet, ProjectReviewViewSet, unread_notifications_count
 )
+from .google_auth import google_auth, google_auth_config
 
 # API Router for DRF ViewSets
 router = routers.DefaultRouter()
@@ -38,6 +39,10 @@ router.register(r'project-contracts', ProjectContractViewSet)
 router.register(r'project-reviews', ProjectReviewViewSet)
 
 urlpatterns = [
+    # Google OAuth2 authentication endpoints
+    path('auth/google/', google_auth, name='google_auth'),
+    path('auth/google/config/', google_auth_config, name='google_auth_config'),
+    
     # Unread count endpoints - Must be before router.urls to avoid conflict
     path('notifications/unread_count/', unread_notifications_count, name='unread_notifications_count'),
     

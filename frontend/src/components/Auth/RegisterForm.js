@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import GoogleSignIn from '../GoogleSignIn';
 import './Auth.css';
 
 const RegisterForm = ({ onClose, switchToLogin }) => {
@@ -70,6 +71,18 @@ const RegisterForm = ({ onClose, switchToLogin }) => {
     }
     
     setLoading(false);
+  };
+
+  const handleGoogleSuccess = (googleData) => {
+    console.log('Google sign-up successful in modal:', googleData);
+    setError('');
+    // For Google sign-up, the user is already created and logged in
+    onClose(); // Close the modal after successful Google signup
+  };
+
+  const handleGoogleError = (errorMessage) => {
+    console.error('Google sign-up error in modal:', errorMessage);
+    setError(errorMessage || 'Google sign-up failed. Please try again.');
   };
 
   return (
@@ -182,6 +195,17 @@ const RegisterForm = ({ onClose, switchToLogin }) => {
             {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
+        
+        {/* Divider */}
+        <div className="auth-divider">
+          <span>OR</span>
+        </div>
+        
+        {/* Google Sign-In */}
+        <GoogleSignIn 
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+        />
         
         <div className="auth-footer">
           <p>Already have an account? 

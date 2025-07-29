@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
+import GoogleSignIn from '../GoogleSignIn';
 import './Auth.css';
 
 const LoginForm = ({ onClose, switchToRegister }) => {
@@ -32,6 +33,17 @@ const LoginForm = ({ onClose, switchToRegister }) => {
     }
     
     setLoading(false);
+  };
+
+  const handleGoogleSuccess = (googleData) => {
+    console.log('Google sign-in successful in modal:', googleData);
+    setError('');
+    onClose(); // Close the modal after successful Google login
+  };
+
+  const handleGoogleError = (errorMessage) => {
+    console.error('Google sign-in error in modal:', errorMessage);
+    setError(errorMessage || 'Google sign-in failed. Please try again.');
   };
 
   return (
@@ -75,6 +87,17 @@ const LoginForm = ({ onClose, switchToRegister }) => {
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
+        
+        {/* Divider */}
+        <div className="auth-divider">
+          <span>OR</span>
+        </div>
+        
+        {/* Google Sign-In */}
+        <GoogleSignIn 
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+        />
         
         <div className="auth-footer">
           <p>Don't have an account? 

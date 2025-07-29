@@ -175,6 +175,23 @@
   color: #ffb84d;
 }
 
+/* Google Sign-In Divider */
+.auth-divider {
+  margin: 20px 0;
+  text-align: center;
+  position: relative;
+  border-bottom: 1px solid rgba(255, 160, 0, 0.2);
+  line-height: 0.1em;
+}
+
+.auth-divider span {
+  background: var(--background-color);
+  padding: 0 15px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
 /* User Menu Styles */
 .user-menu {
   position: relative;
