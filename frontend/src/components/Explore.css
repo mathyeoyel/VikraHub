@@ -91,8 +91,87 @@ section h2::after {
 }
 
 .creator-avatar {
-  font-size: 4rem;
+  position: relative;
+  display: inline-block;
   margin-bottom: 1rem;
+}
+
+.creator-avatar img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e0e6ff;
+  transition: all 0.3s ease;
+}
+
+.creator-card:hover .creator-avatar img {
+  border-color: #ffa000;
+}
+
+.online-indicator {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 16px;
+  height: 16px;
+  background: #4caf50;
+  border: 2px solid white;
+  border-radius: 50%;
+}
+
+.creator-location {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.creator-stats {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.verified-badge {
+  color: #4caf50;
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #ffa000;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.no-creators {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.no-creators p {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
 }
 
 .creator-card h3 {
@@ -105,7 +184,7 @@ section h2::after {
 .creator-specialty {
   color: #ffa000;
   font-weight: 500;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .creator-stats {

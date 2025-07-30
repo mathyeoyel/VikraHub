@@ -1,36 +1,122 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { assetAPI } from '../api';
 import './Explore.css';
 
 const Explore = () => {
   const navigate = useNavigate();
+  const [creators, setCreators] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const featuredCreators = [
-    {
-      id: 1,
-      name: 'Sarah Johnson',
-      avatar: '👩‍🎨',
-      specialty: 'UI/UX Design',
-      portfolio: ['Design System', 'Mobile App', 'Website Redesign'],
-      followers: '2.5K'
-    },
-    {
-      id: 2,
-      name: 'Mike Chen',
-      avatar: '👨‍💻',
-      specialty: 'Frontend Development',
-      portfolio: ['React Dashboard', 'E-commerce Site', 'Portfolio Website'],
-      followers: '1.8K'
-    },
-    {
-      id: 3,
-      name: 'Elena Rodriguez',
-      avatar: '👩‍🎤',
-      specialty: 'Brand Design',
-      portfolio: ['Logo Collection', 'Brand Identity', 'Marketing Materials'],
-      followers: '3.2K'
+  // Fetch creators data from backend
+  useEffect(() => {
+    const fetchCreators = async () => {
+      try {
+        setLoading(true);
+        // Try to get featured creators first, fall back to all creators if needed
+        let response;
+        try {
+          response = await assetAPI.getFeaturedCreators();
+          console.log('Featured creators received for Explore:', response.data);
+        } catch (featuredError) {
+          console.log('No featured creators endpoint, fetching all creators:', featuredError);
+          response = await assetAPI.getCreators();
+        }
+        
+        const creatorsData = response.data.results || response.data;
+        setCreators(creatorsData);
+      } catch (err) {
+        console.error('Error fetching creators for Explore:', err);
+        setCreators([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCreators();
+  }, []);
+
+  // Map backend CreatorProfile data to frontend format (same as Creators.js)
+  const mapCreatorData = (creatorProfile) => {
+    const user = creatorProfile.user;
+    const userProfile = user.userprofile || {};
+    
+    return {
+      id: user.id,
+      username: user.username,
+      name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username,
+      title: creatorProfile.creator_type_display || 'Creative Professional',
+      location: getLocationFromBio(userProfile.bio) || 'South Sudan',
+      category: mapCreatorTypeToCategory(creatorProfile.creator_type),
+      image: getProfileImage(userProfile.avatar, user.first_name, user.last_name),
+      bio: creatorProfile.art_statement || userProfile.bio || 'Passionate creative professional.',
+      skills: getSkillsArray(creatorProfile.skills),
+      featured: creatorProfile.featured || false,
+      isOnline: user.last_login && isRecentlyActive(user.last_login),
+      portfolioCount: creatorProfile.total_assets || 0,
+      isVerified: userProfile.verified || false
+    };
+  };
+
+  // Helper functions (same as Creators.js)
+  const mapCreatorTypeToCategory = (creatorType) => {
+    const typeMap = {
+      'photographer': 'Photography',
+      'designer': 'Design',
+      'artist': 'Art',
+      'digital_artist': 'Digital Art',
+      'traditional_artist': 'Art',
+      'writer': 'Writing',
+      'musician': 'Music',
+      'filmmaker': 'Video',
+      'other': 'Creative'
+    };
+    return typeMap[creatorType] || 'Creative';
+  };
+
+  const getLocationFromBio = (bio) => {
+    if (!bio) return null;
+    const locations = ['Juba', 'Gudele', 'Munuki', 'Wau', 'Malakal', 'South Sudan'];
+    for (const location of locations) {
+      if (bio.includes(location)) {
+        return location;
+      }
     }
-  ];
+    return null;
+  };
+
+  const getProfileImage = (avatar, firstName, lastName) => {
+    if (avatar && avatar.includes('cloudinary')) {
+      return avatar;
+    }
+    const name = `${firstName || ''} ${lastName || ''}`.trim();
+    if (name) {
+      return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=300&background=ffa000&color=ffffff&font-size=0.33&rounded=true`;
+    }
+    return '/assets/default-avatar.jpg';
+  };
+
+  const getSkillsArray = (skills) => {
+    if (!skills) return ['Creative Services'];
+    return skills.split(',').map(skill => skill.trim()).slice(0, 3);
+  };
+
+  const isRecentlyActive = (lastLogin) => {
+    if (!lastLogin) return false;
+    const now = new Date();
+    const loginDate = new Date(lastLogin);
+    const diffInHours = (now - loginDate) / (1000 * 60 * 60);
+    return diffInHours <= 24;
+  };
+
+  // Use only real data from backend
+  const displayCreators = creators.length > 0 ? creators.map(mapCreatorData) : [];
+
+  // Featured creators: if we got data from getFeaturedCreators, use all of it (max 3)
+  // Otherwise, show featured creators from general data, or first 3 if none are marked as featured
+  const featuredCreators = displayCreators.length > 0 
+    ? displayCreators.slice(0, 3) // Take first 3 (they're already featured if from getFeaturedCreators)
+    : [];
 
   const featuredWorks = [
     {
@@ -78,30 +164,48 @@ const Explore = () => {
       </div>
 
       <div className="explore-content">
+        {/* Featured Creators Section */}
         <section className="featured-creators">
           <h2>Featured Creators</h2>
-          <div className="creators-grid">
-            {featuredCreators.map(creator => (
-              <div key={creator.id} className="creator-card">
-                <div className="creator-avatar">{creator.avatar}</div>
-                <h3>{creator.name}</h3>
-                <p className="creator-specialty">{creator.specialty}</p>
-                <div className="creator-stats">
-                  <span>{creator.followers} followers</span>
+          {loading ? (
+            <div className="loading-state">
+              <div className="loading-spinner"></div>
+              <p>Loading amazing creators...</p>
+            </div>
+          ) : featuredCreators.length > 0 ? (
+            <div className="creators-grid">
+              {featuredCreators.map(creator => (
+                <div key={creator.id} className="creator-card">
+                  <div className="creator-avatar">
+                    <img src={creator.image} alt={creator.name} />
+                    {creator.isOnline && <div className="online-indicator"></div>}
+                  </div>
+                  <h3>{creator.name}</h3>
+                  <p className="creator-specialty">{creator.title}</p>
+                  <p className="creator-location">{creator.location}</p>
+                  <div className="creator-stats">
+                    <span>{creator.portfolioCount} works</span>
+                    {creator.isVerified && <span className="verified-badge">✓ Verified</span>}
+                  </div>
+                  <div className="creator-portfolio">
+                    {creator.skills.map((skill, index) => (
+                      <span key={index} className="portfolio-tag">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                  <Link to="/signup" className="btn btn-outline">
+                    View Profile
+                  </Link>
                 </div>
-                <div className="creator-portfolio">
-                  {creator.portfolio.map((work, index) => (
-                    <span key={index} className="portfolio-tag">
-                      {work}
-                    </span>
-                  ))}
-                </div>
-                <Link to="/signup" className="btn btn-outline">
-                  View Profile
-                </Link>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="no-creators">
+              <p>No featured creators available at the moment.</p>
+              <Link to="/signup" className="btn btn-primary">Join as a Creator</Link>
+            </div>
+          )}
         </section>
 
         <section className="featured-works">
