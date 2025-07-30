@@ -250,6 +250,7 @@ const Layout = ({ children }) => {
               </svg>
               <span>Marketplace</span>
             </Link>
+
             <Link to="/freelance" className="nav-link" onClick={closeMenu} title="Freelance">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z"/>
@@ -343,7 +344,7 @@ const Layout = ({ children }) => {
               </svg>
               <span>Home</span>
             </a>
-            <Link to="/marketplace" className="secondary-nav-link" onClick={closeMenu}>
+            <Link to="/inspiration" className="secondary-nav-link" onClick={closeMenu}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
               </svg>
@@ -353,17 +354,18 @@ const Layout = ({ children }) => {
             {/* Create Button */}
             <CreateButton />
             
-            <Link to="/creators" className="secondary-nav-link" onClick={closeMenu}>
+            <Link to="/posts" className="secondary-nav-link" onClick={closeMenu}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
               </svg>
-              <span>Creators</span>
+              <span>Posts</span>
             </Link>
-            <Link to="/freelance" className="secondary-nav-link" onClick={closeMenu}>
+            
+            <Link to="/blog" className="secondary-nav-link" onClick={closeMenu}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z"/>
+                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
               </svg>
-              <span>Freelance</span>
+              <span>Blog</span>
             </Link>
           </div>
         </div>

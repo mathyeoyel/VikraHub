@@ -1,0 +1,164 @@
+.like-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0.5rem;
+  border-radius: 8px;
+  font-family: inherit;
+  user-select: none;
+  position: relative;
+}
+
+.like-button:hover {
+  background-color: rgba(255, 107, 107, 0.1);
+  transform: scale(1.05);
+}
+
+.like-button:active {
+  transform: scale(0.95);
+}
+
+.like-button--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.like-button--loading {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+/* Size variants */
+.like-button--small {
+  font-size: 0.875rem;
+  padding: 0.25rem;
+  gap: 0.25rem;
+}
+
+.like-button--small .like-button__icon {
+  font-size: 1rem;
+}
+
+.like-button--medium {
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  gap: 0.5rem;
+}
+
+.like-button--medium .like-button__icon {
+  font-size: 1.2rem;
+}
+
+.like-button--large {
+  font-size: 1rem;
+  padding: 0.75rem;
+  gap: 0.75rem;
+}
+
+.like-button--large .like-button__icon {
+  font-size: 1.5rem;
+}
+
+/* Icon styling */
+.like-button__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.like-button--liked .like-button__icon {
+  animation: likeHeartbeat 0.6s ease;
+}
+
+.like-button__spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Count styling */
+.like-button__count {
+  font-weight: 500;
+  color: #666;
+  transition: color 0.2s ease;
+}
+
+.like-button--liked .like-button__count {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+.like-button:hover .like-button__count {
+  color: #ff6b6b;
+}
+
+/* Animations */
+@keyframes likeHeartbeat {
+  0% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.3);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.2);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .like-button {
+    padding: 0.4rem;
+    gap: 0.4rem;
+  }
+  
+  .like-button--small {
+    padding: 0.2rem;
+    gap: 0.2rem;
+  }
+  
+  .like-button--large {
+    padding: 0.6rem;
+    gap: 0.6rem;
+  }
+}
+
+/* Focus states for accessibility */
+.like-button:focus {
+  outline: 2px solid #ffa000;
+  outline-offset: 2px;
+}
+
+.like-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .like-button__count {
+    color: #ccc;
+  }
+  
+  .like-button:hover {
+    background-color: rgba(255, 107, 107, 0.2);
+  }
+}

@@ -5,7 +5,8 @@ from .models import (
     Service, PortfolioItem, BlogPost, TeamMember, AssetCategory, CreativeAsset,
     UserProfile, FreelancerProfile, CreatorProfile, ClientProfile, Notification, 
     ProjectCategory, Project, ProjectApplication, ProjectContract, ProjectReview, 
-    AssetPurchase, AssetReview
+    AssetPurchase, AssetReview, Post, Like, Comment, CommentLike,
+    BlogLike, BlogComment, BlogCommentLike
 )
 
 # Register your models here.
@@ -215,3 +216,86 @@ class CreativeAssetAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         })
     )
+
+# Social Media Admin Classes
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ['title', 'user', 'category', 'is_public', 'like_count', 'comment_count', 'created_at']
+    list_filter = ['category', 'is_public', 'allow_comments', 'allow_sharing', 'created_at']
+    search_fields = ['title', 'content', 'user__username', 'tags']
+    readonly_fields = ['like_count', 'comment_count', 'share_count', 'view_count', 'created_at', 'updated_at']
+    raw_id_fields = ['user']
+    
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('user', 'title', 'content', 'category', 'tags', 'image')
+        }),
+        ('Privacy Settings', {
+            'fields': ('is_public', 'allow_comments', 'allow_sharing'),
+        }),
+        ('Engagement Metrics', {
+            'fields': ('like_count', 'comment_count', 'share_count', 'view_count'),
+            'classes': ('collapse',)
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        })
+    )
+
+@admin.register(Like)
+class LikeAdmin(admin.ModelAdmin):
+    list_display = ['user', 'post', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['user__username', 'post__title']
+    raw_id_fields = ['user', 'post']
+    readonly_fields = ['created_at']
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['user', 'post', 'content_preview', 'parent', 'like_count', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['user__username', 'post__title', 'content']
+    raw_id_fields = ['user', 'post', 'parent']
+    readonly_fields = ['like_count', 'created_at', 'updated_at']
+    
+    def content_preview(self, obj):
+        return obj.content[:50] + '...' if len(obj.content) > 50 else obj.content
+    content_preview.short_description = 'Content Preview'
+
+@admin.register(CommentLike)
+class CommentLikeAdmin(admin.ModelAdmin):
+    list_display = ['user', 'comment', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['user__username', 'comment__content']
+    raw_id_fields = ['user', 'comment']
+    readonly_fields = ['created_at']
+
+# Blog Engagement Admin Classes
+@admin.register(BlogLike)
+class BlogLikeAdmin(admin.ModelAdmin):
+    list_display = ['user', 'blog_post', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['user__username', 'blog_post__title']
+    raw_id_fields = ['user', 'blog_post']
+    readonly_fields = ['created_at']
+
+@admin.register(BlogComment)
+class BlogCommentAdmin(admin.ModelAdmin):
+    list_display = ['user', 'blog_post', 'content_preview', 'parent', 'like_count', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['user__username', 'blog_post__title', 'content']
+    raw_id_fields = ['user', 'blog_post', 'parent']
+    readonly_fields = ['like_count', 'created_at', 'updated_at']
+    
+    def content_preview(self, obj):
+        return obj.content[:50] + '...' if len(obj.content) > 50 else obj.content
+    content_preview.short_description = 'Content Preview'
+
+@admin.register(BlogCommentLike)
+class BlogCommentLikeAdmin(admin.ModelAdmin):
+    list_display = ['user', 'comment', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['user__username', 'comment__content']
+    raw_id_fields = ['user', 'comment']
+    readonly_fields = ['created_at']

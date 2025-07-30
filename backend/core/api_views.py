@@ -16,7 +16,8 @@ from .models import (
     TeamMember, Service, PortfolioItem, BlogPost, UserProfile, Notification,
     AssetCategory, CreativeAsset, AssetPurchase, AssetReview,
     FreelancerProfile, CreatorProfile, ClientProfile, ProjectCategory, Project, 
-    ProjectApplication, ProjectContract, ProjectReview
+    ProjectApplication, ProjectContract, ProjectReview,
+    Post, Like, Comment, CommentLike, BlogLike, BlogComment, BlogCommentLike
 )
 from .serializers import (
     UserSerializer, UserProfileSerializer, PublicUserProfileSerializer,
@@ -25,7 +26,9 @@ from .serializers import (
     CreativeAssetSerializer, AssetPurchaseSerializer, AssetReviewSerializer, 
     FreelancerProfileSerializer, CreatorProfileSerializer, ClientProfileSerializer,
     ProjectCategorySerializer, ProjectSerializer, ProjectApplicationSerializer, 
-    ProjectContractSerializer, ProjectReviewSerializer
+    ProjectContractSerializer, ProjectReviewSerializer,
+    PostSerializer, LikeSerializer, CommentSerializer, CommentLikeSerializer,
+    BlogLikeSerializer, BlogCommentSerializer
 )
 
 # Setup logging
@@ -212,12 +215,32 @@ class PortfolioItemViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 class BlogPostViewSet(viewsets.ModelViewSet):
-    queryset = BlogPost.objects.filter(published=True)
     serializer_class = BlogPostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     
+    def get_queryset(self):
+        """Return all published blogs, ordered by creation date"""
+        return BlogPost.objects.filter(published=True).order_by('-created_at')
+    
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+    
+    @action(detail=False, methods=['get'])
+    def all_posts(self, request):
+        """Get all published blog posts from all users"""
+        try:
+            posts = BlogPost.objects.filter(published=True).order_by('-created_at')
+            serializer = self.get_serializer(posts, many=True)
+            return Response({
+                'count': posts.count(),
+                'results': serializer.data
+            })
+        except Exception as e:
+            logger.error(f"Error fetching all blog posts: {e}")
+            return Response({
+                'error': 'Failed to fetch blog posts',
+                'detail': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     @action(detail=False, methods=['get'])
     def my_posts(self, request):
@@ -890,3 +913,266 @@ class ProjectReviewViewSet(viewsets.ModelViewSet):
                 freelancer_profile.save()
             except FreelancerProfile.DoesNotExist:
                 pass
+
+# Social Media API Views for Posts, Likes, and Comments
+class PostViewSet(viewsets.ModelViewSet):
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    def get_queryset(self):
+        """Return posts based on privacy settings and user authentication"""
+        user = self.request.user
+        queryset = Post.objects.all()
+        
+        if not user.is_authenticated:
+            # Only show public posts to anonymous users
+            queryset = queryset.filter(is_public=True)
+        else:
+            # Authenticated users see public posts and their own private posts
+            queryset = queryset.filter(
+                Q(is_public=True) | Q(user=user)
+            )
+        
+        # Filter by category if specified
+        category = self.request.query_params.get('category', None)
+        if category:
+            queryset = queryset.filter(category=category)
+        
+        # Filter by tag if specified
+        tag = self.request.query_params.get('tag', None)
+        if tag:
+            queryset = queryset.filter(tags__icontains=tag)
+        
+        # Filter by user if specified
+        username = self.request.query_params.get('user', None)
+        if username:
+            queryset = queryset.filter(user__username=username)
+        
+        return queryset.order_by('-created_at')
+    
+    def perform_create(self, serializer):
+        """Set the post creator to the current user"""
+        serializer.save(user=self.request.user)
+    
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def like(self, request, pk=None):
+        """Like or unlike a post"""
+        post = self.get_object()
+        user = request.user
+        
+        # Check if user already liked this post
+        like, created = Like.objects.get_or_create(user=user, post=post)
+        
+        if created:
+            # New like
+            post.increment_like_count()
+            return Response({
+                'status': 'liked',
+                'like_count': post.like_count,
+                'message': 'Post liked successfully'
+            })
+        else:
+            # Unlike
+            like.delete()
+            post.decrement_like_count()
+            return Response({
+                'status': 'unliked',
+                'like_count': post.like_count,
+                'message': 'Post unliked successfully'
+            })
+    
+    @action(detail=True, methods=['get'], permission_classes=[IsAuthenticatedOrReadOnly])
+    def comments(self, request, pk=None):
+        """Get comments for a post"""
+        post = self.get_object()
+        comments = Comment.objects.filter(post=post, parent=None).order_by('created_at')
+        serializer = CommentSerializer(comments, many=True, context={'request': request})
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def add_comment(self, request, pk=None):
+        """Add a comment to a post"""
+        post = self.get_object()
+        
+        if not post.allow_comments:
+            return Response(
+                {'error': 'Comments are not allowed on this post'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        serializer = CommentSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            comment = serializer.save(user=request.user, post=post)
+            post.increment_comment_count()
+            return Response(CommentSerializer(comment, context={'request': request}).data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def increment_view(self, request, pk=None):
+        """Increment view count for a post"""
+        post = self.get_object()
+        post.view_count += 1
+        post.save(update_fields=['view_count'])
+        return Response({'view_count': post.view_count})
+
+class CommentViewSet(viewsets.ModelViewSet):
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    def get_queryset(self):
+        return Comment.objects.all().order_by('created_at')
+    
+    def perform_create(self, serializer):
+        """Set the comment creator to the current user"""
+        post = serializer.validated_data['post']
+        if not post.allow_comments:
+            raise serializers.ValidationError("Comments are not allowed on this post")
+        
+        comment = serializer.save(user=self.request.user)
+        post.increment_comment_count()
+        return comment
+    
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def like(self, request, pk=None):
+        """Like or unlike a comment"""
+        comment = self.get_object()
+        user = request.user
+        
+        # Check if user already liked this comment
+        like, created = CommentLike.objects.get_or_create(user=user, comment=comment)
+        
+        if created:
+            # New like
+            comment.like_count += 1
+            comment.save(update_fields=['like_count'])
+            return Response({
+                'status': 'liked',
+                'like_count': comment.like_count,
+                'message': 'Comment liked successfully'
+            })
+        else:
+            # Unlike
+            like.delete()
+            comment.like_count = max(0, comment.like_count - 1)
+            comment.save(update_fields=['like_count'])
+            return Response({
+                'status': 'unliked',
+                'like_count': comment.like_count,
+                'message': 'Comment unliked successfully'
+            })
+    
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def reply(self, request, pk=None):
+        """Reply to a comment"""
+        parent_comment = self.get_object()
+        
+        serializer = CommentSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            reply = serializer.save(
+                user=request.user, 
+                post=parent_comment.post,
+                parent=parent_comment
+            )
+            return Response(CommentSerializer(reply, context={'request': request}).data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Blog engagement views
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def blog_like(request, blog_id):
+    """Like or unlike a blog post"""
+    try:
+        blog_post = BlogPost.objects.get(id=blog_id)
+    except BlogPost.DoesNotExist:
+        return Response({'error': 'Blog post not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    user = request.user
+    
+    # Check if user already liked this blog
+    like, created = BlogLike.objects.get_or_create(user=user, blog_post=blog_post)
+    
+    if created:
+        # New like
+        blog_post.increment_like_count()
+        return Response({
+            'status': 'liked',
+            'like_count': blog_post.like_count,
+            'message': 'Blog post liked successfully'
+        })
+    else:
+        # Unlike
+        like.delete()
+        blog_post.decrement_like_count()
+        return Response({
+            'status': 'unliked',
+            'like_count': blog_post.like_count,
+            'message': 'Blog post unliked successfully'
+        })
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticatedOrReadOnly])
+def blog_comments(request, blog_id):
+    """Get or add comments for a blog post"""
+    try:
+        blog_post = BlogPost.objects.get(id=blog_id)
+    except BlogPost.DoesNotExist:
+        return Response({'error': 'Blog post not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        # Get comments
+        comments = BlogComment.objects.filter(blog_post=blog_post, parent=None).order_by('created_at')
+        serializer = BlogCommentSerializer(comments, many=True, context={'request': request})
+        return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        # Add comment
+        if not request.user.is_authenticated:
+            return Response({'error': 'Authentication required'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        if not blog_post.allow_comments:
+            return Response(
+                {'error': 'Comments are not allowed on this blog post'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        serializer = BlogCommentSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            comment = serializer.save(user=request.user, blog_post=blog_post)
+            blog_post.comment_count += 1
+            blog_post.save(update_fields=['comment_count'])
+            return Response(BlogCommentSerializer(comment, context={'request': request}).data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def blog_comment_like(request, comment_id):
+    """Like or unlike a blog comment"""
+    try:
+        comment = BlogComment.objects.get(id=comment_id)
+    except BlogComment.DoesNotExist:
+        return Response({'error': 'Comment not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    user = request.user
+    
+    # Check if user already liked this comment
+    like, created = BlogCommentLike.objects.get_or_create(user=user, comment=comment)
+    
+    if created:
+        # New like
+        comment.like_count += 1
+        comment.save(update_fields=['like_count'])
+        return Response({
+            'status': 'liked',
+            'like_count': comment.like_count,
+            'message': 'Comment liked successfully'
+        })
+    else:
+        # Unlike
+        like.delete()
+        comment.like_count = max(0, comment.like_count - 1)
+        comment.save(update_fields=['like_count'])
+        return Response({
+            'status': 'unliked',
+            'like_count': comment.like_count,
+            'message': 'Comment unliked successfully'
+        })

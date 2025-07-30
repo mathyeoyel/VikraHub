@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Auth/AuthContext';
+import { blogAPI } from '../../api';
 import './CreateBlog.css';
 
 const CreateBlog = () => {
@@ -11,7 +12,7 @@ const CreateBlog = () => {
     category: 'general',
     tags: '',
     featuredImage: null,
-    isPublished: false,
+    isPublished: true,  // Default to published
     allowComments: true
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,11 +58,21 @@ const CreateBlog = () => {
     setIsSubmitting(true);
 
     try {
-      // Here you would typically make an API call to create the blog
-      console.log('Creating blog:', blogData);
+      // Prepare blog data for API
+      const formData = new FormData();
+      formData.append('title', blogData.title);
+      formData.append('excerpt', blogData.excerpt);
+      formData.append('content', blogData.content);
+      formData.append('category', blogData.category);
+      formData.append('tags', blogData.tags);
+      formData.append('published', blogData.isPublished);
+      formData.append('allow_comments', blogData.allowComments);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      if (blogData.featuredImage) {
+        formData.append('featured_image', blogData.featuredImage);
+      }
+
+      const createdBlog = await blogAPI.create(formData);
       
       // Navigate to the created blog or dashboard
       navigate('/blog', { 

@@ -4,6 +4,7 @@ from django.contrib.postgres.fields import ArrayField  # for Postgres
 from django.urls import reverse # for URL reversing in templates
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.text import slugify
 from .cloudinary_utils import validate_cloudinary_url
 
 # Import follow system models
@@ -104,15 +105,100 @@ class PortfolioItem(models.Model):
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, blank=True)
     content = models.TextField()
+    excerpt = models.TextField(blank=True, max_length=300, help_text="Brief description for previews")
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts', null=True, blank=True)
     image = models.URLField(blank=True, null=True, help_text="Cloudinary URL for blog post image")
-    created_at = models.DateTimeField(auto_now_add=True)
+    
+    # Categories and tags
+    category = models.CharField(max_length=50, blank=True)
+    tags = models.CharField(max_length=500, blank=True, help_text="Comma-separated tags")
+    
+    # Publishing settings
     published = models.BooleanField(default=False)
+    allow_comments = models.BooleanField(default=True)
+    
+    # Engagement metrics
+    like_count = models.PositiveIntegerField(default=0)
+    comment_count = models.PositiveIntegerField(default=0)
+    view_count = models.PositiveIntegerField(default=0)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+            while BlogPost.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+    
+    def get_tags_list(self):
+        return [tag.strip() for tag in self.tags.split(',')] if self.tags else []
+    
+    def increment_like_count(self):
+        self.like_count += 1
+        self.save(update_fields=['like_count'])
+    
+    def decrement_like_count(self):
+        self.like_count = max(0, self.like_count - 1)
+        self.save(update_fields=['like_count'])
+
+# Blog likes and comments
+class BlogLike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_likes')
+    blog_post = models.ForeignKey(BlogPost, on_delete=models.CASCADE, related_name='blog_likes')
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('user', 'blog_post')
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} likes {self.blog_post.title[:30]}"
+
+class BlogComment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_comments')
+    blog_post = models.ForeignKey(BlogPost, on_delete=models.CASCADE, related_name='blog_comments')
+    content = models.TextField()
+    
+    # Optional: Parent comment for reply functionality
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+    
+    # Engagement for comments
+    like_count = models.PositiveIntegerField(default=0)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} commented on {self.blog_post.title[:30]}"
+
+class BlogCommentLike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_comment_likes')
+    comment = models.ForeignKey(BlogComment, on_delete=models.CASCADE, related_name='comment_likes')
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('user', 'comment')
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} likes blog comment by {self.comment.user.username}"
 
 class TeamMember(models.Model):
     name = models.CharField(max_length=100)
@@ -537,6 +623,123 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
         if not created:
             # If profile already exists, ensure specialized profile exists
             create_specialized_profile(instance, profile.user_type)
+
+# Social Media Models for Posts, Likes, and Comments
+class Post(models.Model):
+    POST_CATEGORIES = [
+        ('general', 'General'),
+        ('art', 'Art & Design'),
+        ('music', 'Music'),
+        ('photography', 'Photography'),
+        ('writing', 'Writing'),
+        ('tech', 'Technology'),
+        ('business', 'Business'),
+        ('lifestyle', 'Lifestyle'),
+        ('education', 'Education'),
+        ('entertainment', 'Entertainment'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    category = models.CharField(max_length=20, choices=POST_CATEGORIES, default='general')
+    tags = models.CharField(max_length=500, blank=True, help_text="Comma-separated tags")
+    
+    # Privacy settings
+    is_public = models.BooleanField(default=True)
+    allow_comments = models.BooleanField(default=True)
+    allow_sharing = models.BooleanField(default=True)
+    
+    # Engagement metrics
+    like_count = models.PositiveIntegerField(default=0)
+    comment_count = models.PositiveIntegerField(default=0)
+    share_count = models.PositiveIntegerField(default=0)
+    view_count = models.PositiveIntegerField(default=0)
+    
+    # Optional media
+    image = models.URLField(blank=True, null=True, help_text="Cloudinary URL for post image", validators=[validate_cloudinary_url])
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username}: {self.title[:50]}"
+    
+    def get_tags_list(self):
+        return [tag.strip() for tag in self.tags.split(',')] if self.tags else []
+    
+    def increment_like_count(self):
+        self.like_count += 1
+        self.save(update_fields=['like_count'])
+    
+    def decrement_like_count(self):
+        self.like_count = max(0, self.like_count - 1)
+        self.save(update_fields=['like_count'])
+    
+    def increment_comment_count(self):
+        self.comment_count += 1
+        self.save(update_fields=['comment_count'])
+    
+    def decrement_comment_count(self):
+        self.comment_count = max(0, self.comment_count - 1)
+        self.save(update_fields=['comment_count'])
+
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('user', 'post')  # Prevent duplicate likes
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} likes {self.post.title[:30]}"
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    content = models.TextField()
+    
+    # Optional: Parent comment for reply functionality
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+    
+    # Engagement for comments
+    like_count = models.PositiveIntegerField(default=0)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} commented on {self.post.title[:30]}"
+    
+    @property
+    def is_reply(self):
+        return self.parent is not None
+
+class CommentLike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comment_likes')
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='comment_likes')
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('user', 'comment')
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} likes comment by {self.comment.user.username}"
+
+# Add likes and comments to BlogPost model
+def add_engagement_to_blogpost():
+    """Add engagement fields to existing BlogPost model"""
+    # We'll update the BlogPost model to include engagement metrics
+    pass
 
 @receiver(post_save, sender=UserProfile)
 def create_specialized_profile_on_userprofile_save(sender, instance, created, **kwargs):

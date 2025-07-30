@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Auth/AuthContext';
+import { postsAPI } from '../../api';
 import './CreatePost.css';
 
 const CreatePost = () => {
@@ -41,11 +42,18 @@ const CreatePost = () => {
     setIsSubmitting(true);
 
     try {
-      // Here you would typically make an API call to create the post
-      console.log('Creating post:', postData);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Prepare post data for API
+      const apiPostData = {
+        title: postData.title,
+        content: postData.content,
+        category: postData.category,
+        tags: postData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+        is_public: postData.isPublic,
+        allow_comments: postData.allowComments,
+        allow_sharing: postData.allowSharing
+      };
+
+      const createdPost = await postsAPI.create(apiPostData);
       
       // Navigate to the created post or dashboard
       navigate('/dashboard', { 

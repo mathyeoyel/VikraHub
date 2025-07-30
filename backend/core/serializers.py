@@ -4,7 +4,8 @@ from .models import (
     TeamMember, Service, PortfolioItem, BlogPost, UserProfile, Notification,
     AssetCategory, CreativeAsset, AssetPurchase, AssetReview,
     FreelancerProfile, CreatorProfile, ClientProfile, ProjectCategory, Project, 
-    ProjectApplication, ProjectContract, ProjectReview
+    ProjectApplication, ProjectContract, ProjectReview,
+    Post, Like, Comment, CommentLike, BlogLike, BlogComment, BlogCommentLike
 )
 from .cloudinary_utils import get_optimized_avatar_url, validate_cloudinary_url
 from .asset_utils import validate_asset_price, validate_asset_tags
@@ -462,11 +463,50 @@ class ServiceSerializer(serializers.ModelSerializer):
 
 class BlogPostSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
+    tags_list = serializers.SerializerMethodField()
+    is_liked = serializers.SerializerMethodField()
+    can_comment = serializers.SerializerMethodField()
+    time_since_posted = serializers.SerializerMethodField()
     
     class Meta:
         model = BlogPost
-        fields = '__all__'
-        read_only_fields = ['id', 'created_at', 'author', 'slug']
+        fields = [
+            'id', 'title', 'slug', 'content', 'excerpt', 'author', 'image',
+            'category', 'tags', 'tags_list', 'published', 'allow_comments',
+            'like_count', 'comment_count', 'view_count', 'created_at', 'updated_at',
+            'is_liked', 'can_comment', 'time_since_posted'
+        ]
+        read_only_fields = ['id', 'created_at', 'author', 'slug', 'like_count', 'comment_count', 'view_count']
+    
+    def get_tags_list(self, obj):
+        return obj.get_tags_list()
+    
+    def get_is_liked(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.blog_likes.filter(user=request.user).exists()
+        return False
+    
+    def get_can_comment(self, obj):
+        return obj.allow_comments
+    
+    def get_time_since_posted(self, obj):
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        now = timezone.now()
+        diff = now - obj.created_at
+        
+        if diff < timedelta(minutes=1):
+            return "Just now"
+        elif diff < timedelta(hours=1):
+            return f"{diff.seconds // 60}m ago"
+        elif diff < timedelta(days=1):
+            return f"{diff.seconds // 3600}h ago"
+        elif diff < timedelta(days=7):
+            return f"{diff.days}d ago"
+        else:
+            return obj.created_at.strftime("%b %d, %Y")
 
 class NotificationSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
@@ -685,4 +725,163 @@ class ProjectReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectReview
         fields = '__all__'
-        read_only_fields = ['id', 'reviewer', 'reviewee', 'created_at']   
+        read_only_fields = ['id', 'reviewer', 'reviewee', 'created_at']
+
+# Social Media Serializers for Posts, Likes, and Comments
+class PostSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    tags_list = serializers.SerializerMethodField()
+    is_liked = serializers.SerializerMethodField()
+    can_comment = serializers.SerializerMethodField()
+    time_since_posted = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Post
+        fields = [
+            'id', 'user', 'title', 'content', 'category', 'tags', 'tags_list',
+            'is_public', 'allow_comments', 'allow_sharing', 'like_count', 
+            'comment_count', 'share_count', 'view_count', 'image', 
+            'created_at', 'updated_at', 'is_liked', 'can_comment', 'time_since_posted'
+        ]
+        read_only_fields = ['id', 'user', 'like_count', 'comment_count', 'share_count', 'view_count', 'created_at', 'updated_at']
+    
+    def get_tags_list(self, obj):
+        return obj.get_tags_list()
+    
+    def get_is_liked(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.likes.filter(user=request.user).exists()
+        return False
+    
+    def get_can_comment(self, obj):
+        return obj.allow_comments
+    
+    def get_time_since_posted(self, obj):
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        now = timezone.now()
+        diff = now - obj.created_at
+        
+        if diff < timedelta(minutes=1):
+            return "Just now"
+        elif diff < timedelta(hours=1):
+            return f"{diff.seconds // 60}m ago"
+        elif diff < timedelta(days=1):
+            return f"{diff.seconds // 3600}h ago"
+        elif diff < timedelta(days=7):
+            return f"{diff.days}d ago"
+        else:
+            return obj.created_at.strftime("%b %d, %Y")
+
+class LikeSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    
+    class Meta:
+        model = Like
+        fields = ['id', 'user', 'post', 'created_at']
+        read_only_fields = ['id', 'user', 'created_at']
+
+class CommentSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    replies = serializers.SerializerMethodField()
+    is_liked = serializers.SerializerMethodField()
+    time_since_posted = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Comment
+        fields = [
+            'id', 'user', 'post', 'content', 'parent', 'like_count',
+            'created_at', 'updated_at', 'replies', 'is_liked', 'time_since_posted'
+        ]
+        read_only_fields = ['id', 'user', 'like_count', 'created_at', 'updated_at']
+    
+    def get_replies(self, obj):
+        if obj.replies.exists():
+            return CommentSerializer(obj.replies.all(), many=True, context=self.context).data
+        return []
+    
+    def get_is_liked(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.comment_likes.filter(user=request.user).exists()
+        return False
+    
+    def get_time_since_posted(self, obj):
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        now = timezone.now()
+        diff = now - obj.created_at
+        
+        if diff < timedelta(minutes=1):
+            return "Just now"
+        elif diff < timedelta(hours=1):
+            return f"{diff.seconds // 60}m ago"
+        elif diff < timedelta(days=1):
+            return f"{diff.seconds // 3600}h ago"
+        elif diff < timedelta(days=7):
+            return f"{diff.days}d ago"
+        else:
+            return obj.created_at.strftime("%b %d, %Y")
+
+class CommentLikeSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    
+    class Meta:
+        model = CommentLike
+        fields = ['id', 'user', 'comment', 'created_at']
+        read_only_fields = ['id', 'user', 'created_at']
+
+# Blog engagement serializers
+class BlogLikeSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    
+    class Meta:
+        model = BlogLike
+        fields = ['id', 'user', 'blog_post', 'created_at']
+        read_only_fields = ['id', 'user', 'created_at']
+
+class BlogCommentSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    replies = serializers.SerializerMethodField()
+    is_liked = serializers.SerializerMethodField()
+    time_since_posted = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = BlogComment
+        fields = [
+            'id', 'user', 'blog_post', 'content', 'parent', 'like_count',
+            'created_at', 'updated_at', 'replies', 'is_liked', 'time_since_posted'
+        ]
+        read_only_fields = ['id', 'user', 'like_count', 'created_at', 'updated_at']
+    
+    def get_replies(self, obj):
+        if obj.replies.exists():
+            return BlogCommentSerializer(obj.replies.all(), many=True, context=self.context).data
+        return []
+    
+    def get_is_liked(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.comment_likes.filter(user=request.user).exists()
+        return False
+    
+    def get_time_since_posted(self, obj):
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        now = timezone.now()
+        diff = now - obj.created_at
+        
+        if diff < timedelta(minutes=1):
+            return "Just now"
+        elif diff < timedelta(hours=1):
+            return f"{diff.seconds // 60}m ago"
+        elif diff < timedelta(days=1):
+            return f"{diff.seconds // 3600}h ago"
+        elif diff < timedelta(days=7):
+            return f"{diff.days}d ago"
+        else:
+            return obj.created_at.strftime("%b %d, %Y")

@@ -35,7 +35,9 @@ const CreatePost = React.lazy(() => import("./components/Create/CreatePost"));
 const CreateBlog = React.lazy(() => import("./components/Create/CreateBlog"));
 const UploadWork = React.lazy(() => import("./components/Create/UploadWork"));
 const CreateProject = React.lazy(() => import("./components/Create/CreateProject"));
+const PostFeed = React.lazy(() => import("./components/Social/PostFeed"));
 const Explore = React.lazy(() => import("./components/Explore"));
+const Inspiration = React.lazy(() => import("./components/Inspiration"));
 const Signup = React.lazy(() => import("./components/Signup"));
 
 function App() {
@@ -59,9 +61,11 @@ function App() {
             <Route path="/creators" element={<Creators />} />
             <Route path="/profile/:username" element={<PublicProfile />} />
             <Route path="/marketplace" element={<AssetsMarketplace />} />
+            <Route path="/inspiration" element={<Inspiration />} />
             <Route path="/freelance" element={<Freelance />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path="/explore" element={<Explore />} />
+            <Route path="/posts" element={<PostFeed />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />            {/* Protected Routes */}
             <Route

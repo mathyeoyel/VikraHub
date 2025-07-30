@@ -1083,4 +1083,80 @@ export const searchAPI = {
   }
 };
 
+// Social Media API - Posts, Likes, and Comments
+export const postsAPI = {
+  // Get all posts with optional filters
+  getAll: (params = {}) => api.get('posts/', { params }),
+  
+  // Get a specific post
+  get: (id) => api.get(`posts/${id}/`),
+  
+  // Create a new post
+  create: (postData) => api.post('posts/', postData),
+  
+  // Update a post
+  update: (id, postData) => api.put(`posts/${id}/`, postData),
+  
+  // Delete a post
+  delete: (id) => api.delete(`posts/${id}/`),
+  
+  // Like/unlike a post
+  like: (id) => api.post(`posts/${id}/like/`),
+  
+  // Get comments for a post
+  getComments: (id) => api.get(`posts/${id}/comments/`),
+  
+  // Add a comment to a post
+  addComment: (id, commentData) => api.post(`posts/${id}/add_comment/`, commentData),
+  
+  // Increment view count
+  incrementView: (id) => api.post(`posts/${id}/increment_view/`),
+  
+  // Get posts by user
+  getByUser: (username) => api.get('posts/', { params: { user: username } }),
+  
+  // Get posts by category
+  getByCategory: (category) => api.get('posts/', { params: { category } }),
+  
+  // Get posts by tag
+  getByTag: (tag) => api.get('posts/', { params: { tag } })
+};
+
+export const commentsAPI = {
+  // Get all comments
+  getAll: () => api.get('comments/'),
+  
+  // Get a specific comment
+  get: (id) => api.get(`comments/${id}/`),
+  
+  // Create a new comment
+  create: (commentData) => api.post('comments/', commentData),
+  
+  // Update a comment
+  update: (id, commentData) => api.put(`comments/${id}/`, commentData),
+  
+  // Delete a comment
+  delete: (id) => api.delete(`comments/${id}/`),
+  
+  // Like/unlike a comment
+  like: (id) => api.post(`comments/${id}/like/`),
+  
+  // Reply to a comment
+  reply: (id, replyData) => api.post(`comments/${id}/reply/`, replyData)
+};
+
+export const blogEngagementAPI = {
+  // Like/unlike a blog post
+  likeBlog: (blogId) => api.post(`blog/${blogId}/like/`),
+  
+  // Get comments for a blog post
+  getBlogComments: (blogId) => api.get(`blog/${blogId}/comments/`),
+  
+  // Add a comment to a blog post
+  addBlogComment: (blogId, commentData) => api.post(`blog/${blogId}/comments/`, commentData),
+  
+  // Like/unlike a blog comment
+  likeBlogComment: (commentId) => api.post(`blog/comments/${commentId}/like/`)
+};
+
 export default api;
