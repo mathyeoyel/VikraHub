@@ -31,6 +31,12 @@ const Settings = React.lazy(() => import("./components/Settings"));
 const Messages = React.lazy(() => import("./components/Messages/Messages"));
 const Notifications = React.lazy(() => import("./components/Notifications"));
 const ChatExample = React.lazy(() => import("./components/Chat/ChatExample"));
+const CreatePost = React.lazy(() => import("./components/Create/CreatePost"));
+const CreateBlog = React.lazy(() => import("./components/Create/CreateBlog"));
+const UploadWork = React.lazy(() => import("./components/Create/UploadWork"));
+const CreateProject = React.lazy(() => import("./components/Create/CreateProject"));
+const Explore = React.lazy(() => import("./components/Explore"));
+const Signup = React.lazy(() => import("./components/Signup"));
 
 function App() {
   return (
@@ -55,6 +61,8 @@ function App() {
             <Route path="/marketplace" element={<AssetsMarketplace />} />
             <Route path="/freelance" element={<Freelance />} />
             <Route path="/search" element={<SearchResults />} />
+            <Route path="/explore" element={<Explore />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />            {/* Protected Routes */}
             <Route
               path="/profile"
@@ -101,6 +109,40 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Notifications />
+                </ProtectedRoute>
+              }
+            />
+            
+            {/* Content Creation Routes */}
+            <Route
+              path="/create/post"
+              element={
+                <ProtectedRoute>
+                  <CreatePost />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/create/blog"
+              element={
+                <ProtectedRoute>
+                  <CreateBlog />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/create/upload-work"
+              element={
+                <ProtectedRoute>
+                  <UploadWork />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/create/project"
+              element={
+                <ProtectedRoute>
+                  <CreateProject />
                 </ProtectedRoute>
               }
             />

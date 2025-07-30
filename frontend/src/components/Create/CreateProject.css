@@ -1,0 +1,475 @@
+.create-project-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+  min-height: 100vh;
+}
+
+.create-project-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem 0;
+  border-bottom: 2px solid #f0f2ff;
+}
+
+.create-project-header h1 {
+  color: #000223;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.create-project-header p {
+  color: #666;
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.create-project-form {
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e6ff;
+}
+
+.form-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.form-section {
+  background: #f8f9ff;
+  padding: 2rem;
+  border-radius: 15px;
+  border: 1px solid #e0e6ff;
+}
+
+.form-section h3 {
+  color: #000223;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #ffa000;
+  padding-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-section h3::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: linear-gradient(135deg, #ffa000 0%, #e68900 100%);
+  border-radius: 2px;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  color: #000223;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e0e6ff;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  outline: none;
+  border-color: #ffa000;
+  box-shadow: 0 0 0 3px rgba(255, 160, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.6;
+}
+
+.form-hint {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.5rem;
+  text-align: right;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #ffa000;
+  cursor: pointer;
+}
+
+.checkbox-label {
+  color: #000223;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 0;
+  user-select: none;
+}
+
+.price-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.currency-symbol {
+  position: absolute;
+  left: 1rem;
+  color: #666;
+  font-weight: 600;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.price-input {
+  padding-left: 3.5rem !important;
+}
+
+.collaborator-roles {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e0e6ff;
+  margin-top: 1rem;
+}
+
+.role-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.role-tag {
+  padding: 0.5rem 1rem;
+  border: 2px solid #e0e6ff;
+  border-radius: 20px;
+  background: white;
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.role-tag:hover {
+  border-color: #ffa000;
+  color: #000223;
+  transform: translateY(-1px);
+}
+
+.role-tag.selected {
+  background: linear-gradient(135deg, #ffa000 0%, #e68900 100%);
+  border-color: #ffa000;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 160, 0, 0.3);
+}
+
+.milestones-container,
+.resources-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.milestone-item,
+.resource-item {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid #e0e6ff;
+  transition: all 0.3s ease;
+}
+
+.milestone-item:hover,
+.resource-item:hover {
+  border-color: #ffa000;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.milestone-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #f0f2ff;
+}
+
+.milestone-header h4 {
+  color: #000223;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.remove-milestone,
+.remove-resource {
+  background: rgba(255, 0, 0, 0.1);
+  color: #ff4444;
+  border: 2px solid rgba(255, 0, 0, 0.2);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.remove-milestone:hover,
+.remove-resource:hover {
+  background: rgba(255, 0, 0, 0.2);
+  border-color: rgba(255, 0, 0, 0.4);
+  transform: scale(1.1);
+}
+
+.milestone-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.resource-fields {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.add-milestone-btn,
+.add-resource-btn {
+  align-self: flex-start;
+  margin-top: 1rem;
+}
+
+.btn {
+  padding: 0.875rem 2rem;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #ffa000 0%, #e68900 100%);
+  color: white;
+  border-color: #ffa000;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e68900 0%, #cc7700 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 160, 0, 0.3);
+}
+
+.btn-primary:disabled {
+  background: #ccc;
+  border-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: white;
+  color: #666;
+  border-color: #ddd;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #f8f9ff;
+  border-color: #ffa000;
+  color: #000223;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #ffa000;
+  border-color: #ffa000;
+  font-size: 0.9rem;
+  padding: 0.75rem 1.5rem;
+  min-width: auto;
+}
+
+.btn-outline:hover {
+  background: #ffa000;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 160, 0, 0.2);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid #f0f2ff;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .create-project-container {
+    padding: 1rem;
+  }
+
+  .create-project-header {
+    margin-bottom: 2rem;
+    padding: 1rem 0;
+  }
+
+  .create-project-header h1 {
+    font-size: 2rem;
+  }
+
+  .create-project-header p {
+    font-size: 1rem;
+  }
+
+  .create-project-form {
+    padding: 1.5rem;
+  }
+
+  .form-section {
+    padding: 1.5rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .resource-fields {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .role-tags {
+    gap: 0.5rem;
+  }
+
+  .role-tag {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .milestone-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .add-milestone-btn,
+  .add-resource-btn {
+    align-self: stretch;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-project-container {
+    padding: 0.5rem;
+  }
+
+  .create-project-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .create-project-form {
+    padding: 1rem;
+    border-radius: 15px;
+  }
+
+  .form-section {
+    padding: 1rem;
+  }
+
+  .form-section h3 {
+    font-size: 1.2rem;
+  }
+
+  .milestone-item,
+  .resource-item {
+    padding: 1rem;
+  }
+}

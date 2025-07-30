@@ -3841,3 +3841,82 @@ ERROR 2025-07-29 16:26:03,679 basehttp 22068 22160 "GET /api/auth/google/config/
 INFO 2025-07-29 16:31:47,486 autoreload 22068 19668 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\google_auth.py changed, reloading.
 INFO 2025-07-29 16:31:48,650 autoreload 21164 20928 Watching for file changes with StatReloader
 INFO 2025-07-29 17:05:18,128 autoreload 22132 9816 Watching for file changes with StatReloader
+INFO 2025-07-30 15:56:56,315 autoreload 20168 22164 Watching for file changes with StatReloader
+INFO 2025-07-30 16:00:45,464 basehttp 20168 18720 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-07-30 16:00:45,511 basehttp 20168 18484 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-07-30 16:01:46,482 basehttp 20168 22676 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-07-30 16:01:46,539 basehttp 20168 22676 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-07-30 16:01:50,193 basehttp 20168 16732 "GET /api/auth/google/config/ HTTP/1.1" 200 148
+INFO 2025-07-30 16:01:50,196 basehttp 20168 16732 "GET /api/auth/google/config/ HTTP/1.1" 200 148
+INFO 2025-07-30 16:01:54,211 basehttp 20168 16732 "OPTIONS /api/auth/token/ HTTP/1.1" 200 0
+INFO 2025-07-30 16:01:54,768 basehttp 20168 16732 "POST /api/auth/token/ HTTP/1.1" 200 486
+INFO 2025-07-30 16:01:54,780 basehttp 20168 16732 "OPTIONS /api/users/me/ HTTP/1.1" 200 0
+INFO 2025-07-30 16:01:54,800 basehttp 20168 16732 "GET /api/users/me/ HTTP/1.1" 200 259
+INFO 2025-07-30 16:01:54,879 basehttp 20168 16732 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-30 16:01:54,893 basehttp 20168 22152 "OPTIONS /api/follow/notifications/ HTTP/1.1" 200 0
+INFO 2025-07-30 16:01:54,893 basehttp 20168 10820 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-30 16:01:54,894 basehttp 20168 25284 "OPTIONS /api/follow/suggestions/ HTTP/1.1" 200 0
+INFO 2025-07-30 16:01:54,894 basehttp 20168 16732 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-07-30 16:01:54,894 basehttp 20168 5864 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-30 16:01:54,894 basehttp 20168 23192 "OPTIONS /api/follow/my-stats/ HTTP/1.1" 200 0
+INFO 2025-07-30 16:01:54,915 basehttp 20168 23192 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-30 16:01:54,916 basehttp 20168 10820 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-07-30 16:01:54,948 basehttp 20168 5864 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-07-30 16:01:54,957 basehttp 20168 22152 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-30 16:01:54,972 basehttp 20168 16732 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-30 16:01:54,974 basehttp 20168 25284 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-07-30 16:01:54,991 basehttp 20168 5864 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-30 16:01:55,007 basehttp 20168 16732 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-30 16:01:55,019 basehttp 20168 23192 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+INFO 2025-07-30 16:01:55,022 basehttp 20168 25284 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-30 16:01:55,030 basehttp 20168 5864 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-30 16:01:55,038 basehttp 20168 25284 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-30 16:01:55,048 basehttp 20168 23192 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+WARNING 2025-07-30 16:01:55,218 log 20168 15608 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-30 16:01:55,221 basehttp 20168 15608 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzODg0NDE0LCJpYXQiOjE3NTM4ODQxMTQsImp0aSI6ImZkZDY2NjczOTY0NTRmYmNhMDhiMzhmMGVlMDI4NDIxIiwidXNlcl9pZCI6Mjh9.-NOJV6AY7ziUqSHVCQRG1MXBSwHaunK5H3dB0tziokQ HTTP/1.1" 404 3805
+WARNING 2025-07-30 16:01:58,245 log 20168 20560 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-30 16:01:58,246 basehttp 20168 20560 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzODg0NDE0LCJpYXQiOjE3NTM4ODQxMTQsImp0aSI6ImZkZDY2NjczOTY0NTRmYmNhMDhiMzhmMGVlMDI4NDIxIiwidXNlcl9pZCI6Mjh9.-NOJV6AY7ziUqSHVCQRG1MXBSwHaunK5H3dB0tziokQ HTTP/1.1" 404 3805
+WARNING 2025-07-30 16:02:01,257 log 20168 17988 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-30 16:02:01,258 basehttp 20168 17988 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzODg0NDE0LCJpYXQiOjE3NTM4ODQxMTQsImp0aSI6ImZkZDY2NjczOTY0NTRmYmNhMDhiMzhmMGVlMDI4NDIxIiwidXNlcl9pZCI6Mjh9.-NOJV6AY7ziUqSHVCQRG1MXBSwHaunK5H3dB0tziokQ HTTP/1.1" 404 3805
+WARNING 2025-07-30 16:02:04,278 log 20168 19752 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-30 16:02:04,279 basehttp 20168 19752 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzODg0NDE0LCJpYXQiOjE3NTM4ODQxMTQsImp0aSI6ImZkZDY2NjczOTY0NTRmYmNhMDhiMzhmMGVlMDI4NDIxIiwidXNlcl9pZCI6Mjh9.-NOJV6AY7ziUqSHVCQRG1MXBSwHaunK5H3dB0tziokQ HTTP/1.1" 404 3805
+WARNING 2025-07-30 16:02:07,362 log 20168 2888 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-30 16:02:07,363 basehttp 20168 2888 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzODg0NDE0LCJpYXQiOjE3NTM4ODQxMTQsImp0aSI6ImZkZDY2NjczOTY0NTRmYmNhMDhiMzhmMGVlMDI4NDIxIiwidXNlcl9pZCI6Mjh9.-NOJV6AY7ziUqSHVCQRG1MXBSwHaunK5H3dB0tziokQ HTTP/1.1" 404 3805
+WARNING 2025-07-30 16:02:10,392 log 20168 18040 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-30 16:02:10,393 basehttp 20168 18040 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzODg0NDE0LCJpYXQiOjE3NTM4ODQxMTQsImp0aSI6ImZkZDY2NjczOTY0NTRmYmNhMDhiMzhmMGVlMDI4NDIxIiwidXNlcl9pZCI6Mjh9.-NOJV6AY7ziUqSHVCQRG1MXBSwHaunK5H3dB0tziokQ HTTP/1.1" 404 3805
+INFO 2025-07-30 16:02:55,622 basehttp 20168 23084 "OPTIONS /api/creator-profiles/featured/ HTTP/1.1" 200 0
+INFO 2025-07-30 16:02:55,622 basehttp 20168 14284 "OPTIONS /api/creator-profiles/featured/ HTTP/1.1" 200 0
+INFO 2025-07-30 16:02:55,689 basehttp 20168 23084 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-07-30 16:02:55,737 basehttp 20168 23084 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-07-30 16:03:07,490 basehttp 20168 23084 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-07-30 16:03:07,537 basehttp 20168 14284 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-07-30 16:03:37,797 basehttp 20168 14284 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-07-30 16:03:37,878 basehttp 20168 14284 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+WARNING 2025-07-30 16:06:33,324 log 20168 12672 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-30 16:06:33,341 basehttp 20168 12672 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzODg0NDE0LCJpYXQiOjE3NTM4ODQxMTQsImp0aSI6ImZkZDY2NjczOTY0NTRmYmNhMDhiMzhmMGVlMDI4NDIxIiwidXNlcl9pZCI6Mjh9.-NOJV6AY7ziUqSHVCQRG1MXBSwHaunK5H3dB0tziokQ HTTP/1.1" 404 3805
+WARNING 2025-07-30 16:06:54,929 log 20168 2844 Unauthorized: /api/messaging/unread-count/
+WARNING 2025-07-30 16:06:54,932 log 20168 7372 Unauthorized: /api/notifications/unread_count/
+WARNING 2025-07-30 16:06:54,932 basehttp 20168 2844 "GET /api/messaging/unread-count/ HTTP/1.1" 401 183
+WARNING 2025-07-30 16:06:54,933 basehttp 20168 7372 "GET /api/notifications/unread_count/ HTTP/1.1" 401 183
+WARNING 2025-07-30 16:06:54,938 log 20168 7372 Unauthorized: /api/messaging/unread-count/
+WARNING 2025-07-30 16:06:54,940 log 20168 2844 Unauthorized: /api/notifications/unread_count/
+WARNING 2025-07-30 16:06:54,941 basehttp 20168 2844 "GET /api/notifications/unread_count/ HTTP/1.1" 401 183
+WARNING 2025-07-30 16:06:54,941 basehttp 20168 7372 "GET /api/messaging/unread-count/ HTTP/1.1" 401 183
+INFO 2025-07-30 16:06:54,947 basehttp 20168 9680 "OPTIONS /api/auth/token/refresh/ HTTP/1.1" 200 0
+INFO 2025-07-30 16:06:54,947 basehttp 20168 7372 "OPTIONS /api/auth/token/refresh/ HTTP/1.1" 200 0
+INFO 2025-07-30 16:06:54,947 basehttp 20168 2844 "OPTIONS /api/auth/token/refresh/ HTTP/1.1" 200 0
+INFO 2025-07-30 16:06:54,948 basehttp 20168 16212 "OPTIONS /api/auth/token/refresh/ HTTP/1.1" 200 0
+INFO 2025-07-30 16:06:54,965 basehttp 20168 16212 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-30 16:06:54,965 basehttp 20168 2844 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-30 16:06:54,966 basehttp 20168 9680 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-30 16:06:54,966 basehttp 20168 7372 "POST /api/auth/token/refresh/ HTTP/1.1" 200 242
+INFO 2025-07-30 16:06:55,013 basehttp 20168 9680 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-30 16:06:55,014 basehttp 20168 7372 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-07-30 16:06:55,026 basehttp 20168 9680 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-07-30 16:06:55,027 basehttp 20168 7372 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+WARNING 2025-07-30 16:07:01,655 log 20168 9372 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-30 16:07:01,656 basehttp 20168 9372 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzODg0NzE0LCJpYXQiOjE3NTM4ODQxMTQsImp0aSI6ImZiNWQ0ZjczNTBlNDQxZmFhMjNjNDQxNjU0N2EzMDAzIiwidXNlcl9pZCI6Mjh9.tPLsIDNaRG0S2MQhChtxS1L103clV5OHZ0NIdRtudkY HTTP/1.1" 404 3805
+INFO 2025-07-30 16:15:03,591 basehttp 20168 9696 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-07-30 16:15:03,619 basehttp 20168 18708 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+WARNING 2025-07-30 16:17:43,493 log 20168 22176 Not Found: /ws/messaging/messaging/
+WARNING 2025-07-30 16:17:43,498 basehttp 20168 22176 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzODg0NzE0LCJpYXQiOjE3NTM4ODQxMTQsImp0aSI6ImZiNWQ0ZjczNTBlNDQxZmFhMjNjNDQxNjU0N2EzMDAzIiwidXNlcl9pZCI6Mjh9.tPLsIDNaRG0S2MQhChtxS1L103clV5OHZ0NIdRtudkY HTTP/1.1" 404 3805

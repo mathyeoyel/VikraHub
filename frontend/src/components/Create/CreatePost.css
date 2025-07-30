@@ -1,0 +1,344 @@
+/* Create Post Styles */
+.create-post-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.create-post-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.create-post-header h1 {
+  color: var(--dark-color, #000223);
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.create-post-header p {
+  color: #6c757d;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.create-post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-weight: 500;
+  color: var(--dark-color, #000223);
+  font-size: 0.95rem;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  padding: 12px 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  background: white;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--primary-color, #ffa000);
+  box-shadow: 0 0 0 3px rgba(255, 160, 0, 0.1);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+.form-hint {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.form-checkbox {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--primary-color, #ffa000);
+}
+
+.checkbox-label {
+  flex: 1;
+  font-weight: 500;
+  color: var(--dark-color, #000223);
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.checkbox-description {
+  display: block;
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--primary-color, #ffa000);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-dark, #cc8000);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #5a6268;
+  transform: translateY(-1px);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .create-post-container {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .create-post-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .checkbox-group {
+    padding: 0.75rem;
+  }
+}
+
+/* Enhanced Privacy Section Styling */
+.privacy-section {
+  background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+  border: 2px solid #e0e6ff;
+  border-radius: 15px;
+  padding: 2rem;
+  margin-top: 2rem;
+  transition: all 0.3s ease;
+}
+
+.privacy-section:hover {
+  border-color: #ffa000;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 160, 0, 0.1);
+}
+
+.privacy-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #000223;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e0e6ff;
+}
+
+.privacy-icon {
+  font-size: 1.3rem;
+}
+
+.privacy-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.privacy-option {
+  background: white;
+  border: 2px solid #e0e6ff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.privacy-option:hover {
+  border-color: #ffa000;
+  transform: translateX(5px);
+  box-shadow: 0 5px 15px rgba(255, 160, 0, 0.1);
+}
+
+.privacy-option.main-privacy {
+  background: linear-gradient(135deg, #ffa000 0%, #e68900 100%);
+  border-color: #ffa000;
+  color: white;
+}
+
+.privacy-option.main-privacy .checkbox-title,
+.privacy-option.main-privacy .checkbox-label {
+  color: white;
+}
+
+.privacy-option.main-privacy .checkbox-description {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.privacy-option.main-privacy .form-checkbox {
+  accent-color: white;
+}
+
+.privacy-option.main-privacy:hover {
+  background: linear-gradient(135deg, #e68900 0%, #cc7700 100%);
+  transform: translateX(8px);
+  box-shadow: 0 8px 25px rgba(255, 160, 0, 0.3);
+}
+
+.privacy-option .checkbox-group {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.privacy-option .checkbox-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #000223;
+  margin-bottom: 0.25rem;
+}
+
+.privacy-option .checkbox-description {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 400;
+  line-height: 1.4;
+  margin-top: 0.25rem;
+}
+
+/* Mobile responsiveness for privacy section */
+@media (max-width: 768px) {
+  .privacy-section {
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  
+  .privacy-title {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .privacy-options {
+    gap: 1rem;
+  }
+  
+  .privacy-option {
+    padding: 1rem;
+  }
+  
+  .privacy-option:hover {
+    transform: none;
+  }
+  
+  .privacy-option.main-privacy:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-post-container {
+    margin: 0.5rem;
+    padding: 1rem;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    padding: 10px 12px;
+  }
+}

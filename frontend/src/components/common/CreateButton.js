@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Auth/AuthContext';
 import './CreateButton.css';
 
 const CreateButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
   // Handle click outside to close dropdown
@@ -37,10 +39,32 @@ const CreateButton = () => {
   };
 
   const handleCreateAction = (action) => {
-    console.log(`Creating: ${action}`);
     setIsOpen(false);
-    // Add your navigation logic here
-    // For example: navigate('/create/' + action)
+    
+    switch (action) {
+      case 'post':
+        navigate('/create/post');
+        break;
+      case 'blog':
+        navigate('/create/blog');
+        break;
+      case 'work':
+        navigate('/create/upload-work');
+        break;
+      case 'project':
+        navigate('/create/project');
+        break;
+      case 'explore':
+        // For non-authenticated users - could navigate to explore page or show modal
+        navigate('/explore');
+        break;
+      case 'join':
+        // For non-authenticated users - could navigate to signup or show modal
+        navigate('/signup');
+        break;
+      default:
+        console.log('Unknown action:', action);
+    }
   };
 
   const createOptions = isAuthenticated ? [
