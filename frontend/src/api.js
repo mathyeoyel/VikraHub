@@ -14,7 +14,8 @@ api.interceptors.request.use(
     // Skip authentication for public routes
     const publicRoutes = [
       'public-profiles/',
-      'freelancer-profiles/' // Freelancer profiles should be publicly viewable
+      'freelancer-profiles/', // Freelancer profiles should be publicly viewable
+      'creator-profiles/' // Creator profiles should be publicly viewable
     ];
     
     // Special handling for creative-assets: only GET requests to marketplace listings are public
@@ -26,7 +27,16 @@ api.interceptors.request.use(
       !config.url.includes('review/') &&
       !config.url.includes('recommended/'); // Recommended endpoint requires authentication
     
-    const isPublicRoute = publicRoutes.some(route => config.url.includes(route)) || isCreativeAssetsPublic;
+    // Special handling for posts: only GET requests to view posts are public
+    const isPostsPublic = config.method === 'get' && 
+      config.url.includes('posts/') && 
+      !config.url.includes('/like/') &&
+      !config.url.includes('/add_comment/') &&
+      !config.url.includes('/increment_view/');
+    
+    const isPublicRoute = publicRoutes.some(route => config.url.includes(route)) || 
+                         isCreativeAssetsPublic || 
+                         isPostsPublic;
     
     if (!isPublicRoute) {
       const token = getAccessToken();
