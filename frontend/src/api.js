@@ -35,9 +35,17 @@ api.interceptors.request.use(
       !config.url.includes('/add_comment/') &&
       !config.url.includes('/increment_view/');
     
+    // Special handling for blog: only GET requests to view blog posts are public
+    const isBlogPublic = config.method === 'get' && 
+      config.url.includes('blog/') && 
+      !config.url.includes('/like/') &&
+      !config.url.includes('/comments/') &&
+      !config.url.includes('my_posts/');
+    
     const isPublicRoute = publicRoutes.some(route => config.url.includes(route)) || 
                          isCreativeAssetsPublic || 
-                         isPostsPublic;
+                         isPostsPublic ||
+                         isBlogPublic;
     
     if (!isPublicRoute) {
       const token = getAccessToken();

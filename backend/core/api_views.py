@@ -217,6 +217,7 @@ class PortfolioItemViewSet(viewsets.ModelViewSet):
 class BlogPostViewSet(viewsets.ModelViewSet):
     serializer_class = BlogPostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    lookup_field = 'slug'  # Enable slug-based lookups
     
     def get_queryset(self):
         """Return all published blogs, ordered by creation date"""
