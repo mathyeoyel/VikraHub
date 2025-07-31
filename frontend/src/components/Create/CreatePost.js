@@ -55,8 +55,8 @@ const CreatePost = () => {
 
       const createdPost = await postsAPI.create(apiPostData);
       
-      // Navigate to the created post or dashboard
-      navigate('/dashboard', { 
+      // Navigate to the posts page after successful creation
+      navigate('/posts', { 
         state: { message: 'Post created successfully!' }
       });
     } catch (error) {
