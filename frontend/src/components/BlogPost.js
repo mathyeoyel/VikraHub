@@ -152,11 +152,11 @@ const BlogPost = () => {
               </div>
 
               {/* Tags */}
-              {blog.tags && blog.tags.length > 0 && (
+              {blog.tags_list && blog.tags_list.length > 0 && (
                 <div className="blog-post-tags mt-4">
                   <h6>Tags:</h6>
                   <div className="tags-list">
-                    {blog.tags.map((tag, index) => (
+                    {blog.tags_list.map((tag, index) => (
                       <span key={index} className="badge bg-secondary me-2 mb-2">
                         {tag}
                       </span>
