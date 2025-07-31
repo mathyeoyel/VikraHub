@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { blogAPI } from '../api';
 import LikeButton from './Social/LikeButton';
 import './Blog.css';
@@ -47,7 +48,7 @@ const Blog = () => {
           </div>
           <div className="no-blogs-message">
             <p>No blog posts available yet. Be the first to create one!</p>
-            <a href="/create/blog" className="btn btn-primary">Create Your First Blog Post</a>
+            <Link to="/create/blog" className="btn btn-primary">Create Your First Blog Post</Link>
           </div>
         </div>
       </section>
@@ -83,7 +84,7 @@ const Blog = () => {
                 </div>
 
                 <h2 className="entry-title">
-                  <a href={`/blog/${blog.slug}`}>{blog.title}</a>
+                  <Link to={`/blog/${blog.slug}`}>{blog.title}</Link>
                 </h2>
 
                 <div className="entry-meta">
@@ -111,10 +112,12 @@ const Blog = () => {
                   {/* Blog engagement */}
                   <div className="blog-engagement">
                     <LikeButton 
-                      contentType="blog" 
-                      contentId={blog.id} 
-                      initialLikes={blog.like_count || 0}
-                      initialIsLiked={blog.is_liked || false}
+                      type="blog" 
+                      id={blog.id} 
+                      initialCount={blog.like_count || 0}
+                      initialLiked={blog.is_liked || false}
+                      size="small"
+                      showCount={true}
                     />
                     <span className="comments-count">
                       <i className="bi bi-chat"></i>
@@ -123,7 +126,7 @@ const Blog = () => {
                   </div>
                   
                   <div className="read-more">
-                    <a href={`/blog/${blog.slug}`}>Read More</a>
+                    <Link to={`/blog/${blog.slug}`}>Read More</Link>
                   </div>
                 </div>
               </article>

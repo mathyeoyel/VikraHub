@@ -15,7 +15,8 @@ api.interceptors.request.use(
     const publicRoutes = [
       'public-profiles/',
       'freelancer-profiles/', // Freelancer profiles should be publicly viewable
-      'creator-profiles/' // Creator profiles should be publicly viewable
+      'creator-profiles/', // Creator profiles should be publicly viewable
+      'portfolio/' // Portfolio should be publicly viewable
     ];
     
     // Special handling for creative-assets: only GET requests to marketplace listings are public
@@ -267,6 +268,14 @@ export const blogAPI = {
       return response.data;
     } catch (error) {
       return handleAPIError(error, "Failed to delete blog post");
+    }
+  },
+  getBySlug: async (slug) => {
+    try {
+      const response = await api.get(`blog/${slug}/`);
+      return response.data;
+    } catch (error) {
+      return handleAPIError(error, "Failed to fetch blog post");
     }
   },
 };
@@ -1100,6 +1109,9 @@ export const postsAPI = {
   
   // Get a specific post
   get: (id) => api.get(`posts/${id}/`),
+  
+  // Get a specific post by ID (alias for get)
+  getById: (id) => api.get(`posts/${id}/`),
   
   // Create a new post
   create: (postData) => api.post('posts/', postData),

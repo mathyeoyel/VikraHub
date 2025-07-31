@@ -14,7 +14,18 @@ const PostCard = ({
   const [showCommentSection, setShowCommentSection] = useState(showComments);
   const [postData, setPostData] = useState(post);
 
+  // Early return if post data is invalid
+  if (!post || !postData) {
+    return (
+      <div className="post-card__error">
+        <p>Unable to load post data</p>
+      </div>
+    );
+  }
+
   const handleViewPost = async () => {
+    if (!post?.id) return;
+    
     try {
       await postsAPI.incrementView(post.id);
       setPostData(prev => ({ 
@@ -153,15 +164,17 @@ const PostCard = ({
       {/* Post Engagement */}
       <div className="post-card__engagement">
         <div className="post-card__stats">
-          <LikeButton
-            type="post"
-            id={postData.id}
-            initialLiked={postData.is_liked}
-            initialCount={postData.like_count}
-            onLikeChange={handleLikeChange}
-            size="medium"
-            showCount={true}
-          />
+          {postData.id && (
+            <LikeButton
+              type="post"
+              id={postData.id}
+              initialLiked={postData.is_liked}
+              initialCount={postData.like_count}
+              onLikeChange={handleLikeChange}
+              size="medium"
+              showCount={true}
+            />
+          )}
           
           <button
             className={`post-card__comment-btn ${showCommentSection ? 'post-card__comment-btn--active' : ''}`}
@@ -185,7 +198,7 @@ const PostCard = ({
       </div>
 
       {/* Comments Section */}
-      {showCommentSection && postData.allow_comments && (
+      {showCommentSection && postData.allow_comments && postData.id && (
         <CommentSection
           type="post"
           id={postData.id}

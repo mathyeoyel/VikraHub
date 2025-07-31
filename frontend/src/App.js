@@ -20,6 +20,8 @@ const Dashboard = React.lazy(() => import("./components/Dashboard"));
 const Services = React.lazy(() => import("./components/Services"));
 const Portfolio = React.lazy(() => import("./components/Portfolio"));
 const Blog = React.lazy(() => import("./components/Blog"));
+const BlogPost = React.lazy(() => import("./components/BlogPost"));
+const PostDetail = React.lazy(() => import("./components/PostDetail"));
 const About = React.lazy(() => import("./components/About"));
 const PublicProfile = React.lazy(() => import("./components/PublicProfile"));
 const AdminDashboard = React.lazy(() => import("./components/Admin/AdminDashboard"));
@@ -35,6 +37,7 @@ const CreatePost = React.lazy(() => import("./components/Create/CreatePost"));
 const CreateBlog = React.lazy(() => import("./components/Create/CreateBlog"));
 const UploadWork = React.lazy(() => import("./components/Create/UploadWork"));
 const CreateProject = React.lazy(() => import("./components/Create/CreateProject"));
+const Projects = React.lazy(() => import("./components/Projects"));
 const PostFeed = React.lazy(() => import("./components/Social/PostFeed"));
 const Explore = React.lazy(() => import("./components/Explore"));
 const Inspiration = React.lazy(() => import("./components/Inspiration"));
@@ -57,10 +60,13 @@ function App() {
             <Route path="/services" element={<Services />} />
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/posts/:id" element={<PostDetail />} />
             <Route path="/team" element={<Team />} />
             <Route path="/creators" element={<Creators />} />
             <Route path="/profile/:username" element={<PublicProfile />} />
             <Route path="/marketplace" element={<AssetsMarketplace />} />
+            <Route path="/projects" element={<Projects />} />
             <Route path="/inspiration" element={<Inspiration />} />
             <Route path="/freelance" element={<Freelance />} />
             <Route path="/search" element={<SearchResults />} />

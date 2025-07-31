@@ -23,7 +23,7 @@ const Portfolio = () => {
   useEffect(() => {
     const fetchPortfolios = async () => {
       try {
-        const response = await portfolioAPI.list();
+        const response = await portfolioAPI.getAll();
         setPortfolios(response.data || []);
       } catch (error) {
         console.error('Error fetching portfolios:', error);

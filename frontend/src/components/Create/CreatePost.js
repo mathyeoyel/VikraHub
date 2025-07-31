@@ -47,7 +47,7 @@ const CreatePost = () => {
         title: postData.title,
         content: postData.content,
         category: postData.category,
-        tags: postData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+        tags: postData.tags, // Send as string, not array
         is_public: postData.isPublic,
         allow_comments: postData.allowComments,
         allow_sharing: postData.allowSharing
