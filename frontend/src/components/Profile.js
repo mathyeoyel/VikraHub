@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './Auth/AuthContext';
 import { userAPI, assetAPI } from '../api';
+import { handleImageError, createPortfolioImageUrl } from '../utils/portfolioImageUtils';
 import EditProfile from './EditProfile';
 import ClientProfile from './ClientProfile';
 import './Profile.css';
@@ -361,15 +362,10 @@ const Profile = () => {
                       <div className="asset-badge">Creative Asset</div>
                     )}
                     <img 
-                      src={work.image || '/assets/default-asset-placeholder.svg'} 
+                      src={createPortfolioImageUrl(work.image) || '/assets/default-asset-placeholder.svg'} 
                       alt={work.title}
-                      onError={(e) => {
-                        // If asset placeholder also fails, show a CSS-based placeholder
-                        if (!e.target.classList.contains('placeholder-fallback')) {
-                          e.target.classList.add('placeholder-fallback');
-                          e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjVmNWY1Ii8+CjxwYXRoIGQ9Ik0xNTAgNzVWMTI1TTE3NSAxMDBIMTI1IiBzdHJva2U9IiM5OTkiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvU3ZnPg==';
-                        }
-                      }}
+                      onError={handleImageError}
+                      data-original-src={work.image}
                     />
                     <div className="portfolio-overlay">
                       <h4>{work.title}</h4>
@@ -511,12 +507,10 @@ const Profile = () => {
             <button className="modal-close" onClick={() => setSelectedWork(null)}>×</button>
             {selectedWork.image && (
               <img 
-                src={selectedWork.image} 
+                src={createPortfolioImageUrl(selectedWork.image)} 
                 alt={selectedWork.title}
-                onError={(e) => {
-                  // Use the same SVG placeholder for modal
-                  e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDYwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjZjVmNWY1Ii8+CjxwYXRoIGQ9Ik0zMDAgMTUwVjI1ME0zNTAgMjAwSDI1MCIgc3Ryb2tlPSIjOTk5IiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4=';
-                }}
+                onError={handleImageError}
+                data-original-src={selectedWork.image}
               />
             )}
             <div className="modal-info">

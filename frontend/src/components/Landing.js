@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../assets/css/main.css';
+import { handleImageError } from '../utils/portfolioImageUtils';
 
 const Landing = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -212,7 +213,12 @@ const Landing = () => {
               <div className="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
                 <div className="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
                   <div className="portfolio-content h-100">
-                    <img src="/assets/images/portfolio/app-1.jpg" className="img-fluid" alt="" />
+                    <img 
+                      src="/assets/images/portfolio/app-1.jpg" 
+                      className="img-fluid" 
+                      alt="App Portfolio Sample"
+                      onError={handleImageError}
+                    />
                     <div className="portfolio-info">
                       <h4>App 1</h4>
                       <p>Lorem ipsum, dolor sit amet consectetur</p>
@@ -224,7 +230,12 @@ const Landing = () => {
                 
                 <div className="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
                   <div className="portfolio-content h-100">
-                    <img src="/assets/images/portfolio/product-1.jpg" className="img-fluid" alt="" />
+                    <img 
+                      src="/assets/images/portfolio/product-1.jpg" 
+                      className="img-fluid" 
+                      alt="Product Portfolio Sample"
+                      onError={handleImageError}
+                    />
                     <div className="portfolio-info">
                       <h4>Product 1</h4>
                       <p>Lorem ipsum, dolor sit amet consectetur</p>
@@ -236,7 +247,12 @@ const Landing = () => {
                 
                 <div className="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
                   <div className="portfolio-content h-100">
-                    <img src="/assets/images/portfolio/branding-1.jpg" className="img-fluid" alt="" />
+                    <img 
+                      src="/assets/images/portfolio/branding-1.jpg" 
+                      className="img-fluid" 
+                      alt="Branding Portfolio Sample"
+                      onError={handleImageError}
+                    />
                     <div className="portfolio-info">
                       <h4>Branding 1</h4>
                       <p>Lorem ipsum, dolor sit amet consectetur</p>

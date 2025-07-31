@@ -357,6 +357,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 class PortfolioItemSerializer(serializers.ModelSerializer):
     tags_list = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
     
     class Meta:
         model = PortfolioItem
@@ -365,6 +366,25 @@ class PortfolioItemSerializer(serializers.ModelSerializer):
     
     def get_tags_list(self, obj):
         return obj.get_tags_list()
+    
+    def get_image(self, obj):
+        """Ensure image URL is properly formatted"""
+        if not obj.image:
+            return None
+        
+        # If it's already a full URL (starts with http/https), return as is
+        if obj.image.startswith(('http://', 'https://')):
+            return obj.image
+        
+        # If it's a Cloudinary URL path, construct the full URL
+        if obj.image.startswith('/'):
+            return f"https://res.cloudinary.com/your-cloud-name{obj.image}"
+        
+        # If it's just a filename, return None to use fallback
+        if '/' not in obj.image and '.' in obj.image:
+            return None
+        
+        return obj.image
 
 class PublicUserProfileSerializer(serializers.ModelSerializer):
     """Serializer for public user profiles (only public information)"""

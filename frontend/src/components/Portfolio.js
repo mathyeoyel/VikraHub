@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { portfolioAPI } from '../api';
+import { handleImageError, createPortfolioImageUrl } from '../utils/portfolioImageUtils';
 
 const Portfolio = () => {
   const [portfolios, setPortfolios] = useState([]);
@@ -53,10 +54,30 @@ const Portfolio = () => {
               <div className="portfolio-wrap">
                 {item.image && (
                   <img 
-                    src={item.image} 
+                    src={createPortfolioImageUrl(item.image)}
                     className="img-fluid" 
                     alt={item.title}
+                    data-original-src={item.image}
+                    onError={handleImageError}
                   />
+                )}
+                {!item.image && (
+                  <div className="portfolio-placeholder" style={{
+                    height: '200px',
+                    backgroundColor: '#f8f9fa',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#6c757d',
+                    fontSize: '14px',
+                    border: '2px dashed #dee2e6',
+                    borderRadius: '8px'
+                  }}>
+                    <div style={{ textAlign: 'center' }}>
+                      <i className="fas fa-image" style={{ fontSize: '2em', marginBottom: '8px', opacity: 0.5 }}></i>
+                      <div>No Image Available</div>
+                    </div>
+                  </div>
                 )}
                 <div className="portfolio-info">
                   <h4>{item.title}</h4>

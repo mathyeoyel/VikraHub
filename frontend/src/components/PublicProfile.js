@@ -5,6 +5,7 @@ import { useAuth } from './Auth/AuthContext';
 import notificationService from '../services/notificationService';
 import PublicClientProfile from './PublicClientProfile';
 import ErrorBoundary from './ErrorBoundary';
+import { handleImageError, createPortfolioImageUrl } from '../utils/portfolioImageUtils';
 import './PublicProfile.css';
 
 const PublicProfile = () => {
@@ -709,7 +710,12 @@ const PublicProfile = () => {
                         <div className="featured-work-item">
                           {profile.portfolio_items[0].image && (
                             <div className="featured-work-image">
-                              <img src={profile.portfolio_items[0].image} alt={profile.portfolio_items[0].title} />
+                              <img 
+                                src={createPortfolioImageUrl(profile.portfolio_items[0].image)} 
+                                alt={profile.portfolio_items[0].title}
+                                onError={handleImageError}
+                                data-original-src={profile.portfolio_items[0].image}
+                              />
                               <div className="featured-work-overlay">
                                 <span className="featured-badge">Featured</span>
                               </div>
@@ -774,7 +780,12 @@ const PublicProfile = () => {
                         <div key={`portfolio-${item.id}`} className="portfolio-item">
                           {item.image && (
                             <div className="portfolio-image">
-                              <img src={item.image} alt={item.title} />
+                              <img 
+                                src={createPortfolioImageUrl(item.image)} 
+                                alt={item.title}
+                                onError={handleImageError}
+                                data-original-src={item.image}
+                              />
                             </div>
                           )}
                           <div className="portfolio-content">

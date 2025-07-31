@@ -4283,3 +4283,25 @@ WARNING 2025-07-30 20:02:04,786 log 18448 24272 Not Found: /assets/trending-4.jp
 WARNING 2025-07-30 20:02:04,791 basehttp 18448 17504 "GET /assets/trending-1.jpg HTTP/1.1" 404 3563
 WARNING 2025-07-30 20:02:04,796 basehttp 18448 24272 "GET /assets/trending-4.jpg HTTP/1.1" 404 3563
 INFO 2025-07-31 15:49:25,466 autoreload 11620 14412 Watching for file changes with StatReloader
+INFO 2025-07-31 15:54:24,003 basehttp 11620 24092 "GET /api/posts/ HTTP/1.1" 200 2
+INFO 2025-07-31 15:55:11,462 autoreload 11620 14412 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-07-31 15:55:12,733 autoreload 11256 8436 Watching for file changes with StatReloader
+INFO 2025-07-31 17:19:22,789 autoreload 11256 8436 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\api_views.py changed, reloading.
+INFO 2025-07-31 17:19:24,312 autoreload 19572 19060 Watching for file changes with StatReloader
+INFO 2025-07-31 17:20:41,221 autoreload 1512 7096 Watching for file changes with StatReloader
+INFO 2025-07-31 17:57:28,224 autoreload 1512 7096 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-31 17:57:28,472 autoreload 19572 19060 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-31 17:57:29,970 autoreload 20016 17632 Watching for file changes with StatReloader
+INFO 2025-07-31 17:57:29,971 autoreload 14400 14808 Watching for file changes with StatReloader
+INFO 2025-07-31 19:17:07,319 autoreload 14400 14808 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\api_views.py changed, reloading.
+INFO 2025-07-31 19:17:07,789 autoreload 20016 17632 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\api_views.py changed, reloading.
+INFO 2025-07-31 19:17:09,457 autoreload 8340 8108 Watching for file changes with StatReloader
+INFO 2025-07-31 19:17:09,758 autoreload 3724 26716 Watching for file changes with StatReloader
+INFO 2025-07-31 19:27:56,900 autoreload 3724 26716 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-31 19:27:56,934 autoreload 8340 8108 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-31 19:27:58,396 autoreload 22356 6616 Watching for file changes with StatReloader
+INFO 2025-07-31 19:27:58,396 autoreload 10732 17176 Watching for file changes with StatReloader
+INFO 2025-07-31 19:42:45,158 autoreload 22356 6616 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-31 19:42:45,166 autoreload 10732 17176 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-07-31 19:42:46,934 autoreload 23988 9420 Watching for file changes with StatReloader
+INFO 2025-07-31 19:42:46,935 autoreload 2844 19628 Watching for file changes with StatReloader
