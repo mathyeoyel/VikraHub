@@ -69,8 +69,11 @@ const CommentSection = ({
         response = await blogEngagementAPI.addBlogComment(id, commentData);
       }
       
-      // Add new comment to the list
-      setComments(prev => [...prev, response.data]);
+      console.log('Comment API response:', response);
+      
+      // Add new comment to the list - handle different response structures
+      const newCommentData = response.data || response;
+      setComments(prev => [...prev, newCommentData]);
       setNewComment('');
       
       // Notify parent component
@@ -79,6 +82,9 @@ const CommentSection = ({
       }
     } catch (error) {
       console.error('Error posting comment:', error);
+      console.error('Error response data:', error.response?.data);
+      console.error('Error status:', error.response?.status);
+      console.error('Comment data sent:', commentData);
       alert('Failed to post comment. Please try again.');
     } finally {
       setIsSubmitting(false);
