@@ -57,10 +57,10 @@ const CommentSection = ({
     if (!newComment.trim()) return;
 
     setIsSubmitting(true);
+    const commentData = { content: newComment.trim() };
+    
     try {
       const { postsAPI, blogEngagementAPI } = await import('../../api');
-      
-      const commentData = { content: newComment.trim() };
       
       let response;
       if (type === 'post') {
