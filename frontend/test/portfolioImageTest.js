@@ -17,7 +17,7 @@ const relativePath = 'user123/project.jpg';
 console.log('✅ Relative path:', createPortfolioImageUrl(relativePath));
 
 // Test 4: Just filename (should use fallback)
-const justFilename = 'W.png';
+const justFilename = 'sample.jpg';
 console.log('⚠️  Just filename (fallback):', createPortfolioImageUrl(justFilename));
 
 // Test 5: Empty/null (should use fallback)
@@ -35,4 +35,4 @@ console.log('- Absolute paths to assets');
 console.log('- Relative portfolio paths');
 console.log('- Invalid filenames (uses fallback)');
 console.log('- Empty/null values (uses fallback)');
-console.log('\nThis should resolve the portfolio/W.png 404 error!');
+console.log('\nThis should ensure clean portfolio image handling!');

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Auth/AuthContext';
+import { portfolioAPI } from '../../api';
 import './UploadWork.css';
 
 const UploadWork = () => {
@@ -99,18 +100,32 @@ const UploadWork = () => {
     setIsSubmitting(true);
 
     try {
-      // Here you would typically upload files and create the work entry
-      console.log('Uploading work:', workData);
+      // Create portfolio item data
+      const portfolioData = {
+        title: workData.title,
+        description: workData.description,
+        tags: workData.tags,
+        // For now, we'll use a placeholder image URL
+        // In a real implementation, you'd upload the files to Cloudinary first
+        image: workData.files.length > 0 ? 
+          'https://res.cloudinary.com/demo/image/upload/sample.jpg' : 
+          '', // Empty string for no image
+        url: '' // Optional project URL
+      };
+
+      console.log('Creating portfolio item:', portfolioData);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Create the portfolio item via API
+      const response = await portfolioAPI.create(portfolioData);
+      console.log('Portfolio item created:', response.data);
       
-      // Navigate to portfolio or marketplace
+      // Navigate to portfolio with success message
       navigate('/portfolio', { 
-        state: { message: 'Work uploaded successfully!' }
+        state: { message: 'Work uploaded successfully and added to your portfolio!' }
       });
     } catch (error) {
       console.error('Error uploading work:', error);
+      alert('Failed to upload work. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

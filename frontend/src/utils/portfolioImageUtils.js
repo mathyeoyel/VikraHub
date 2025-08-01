@@ -29,7 +29,7 @@ export const createPortfolioImageUrl = (imagePath) => {
     return imagePath;
   }
   
-  // If it's just a filename (like "W.png"), check if it's likely an invalid reference
+  // If it's just a filename (like "sample.jpg"), check if it's likely an invalid reference
   if (!imagePath.includes('/') && imagePath.includes('.')) {
     console.warn(`Portfolio image appears to be just a filename: ${imagePath}, using fallback`);
     return '/assets/default-asset-placeholder.svg';
