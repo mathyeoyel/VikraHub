@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { portfolioAPI } from '../api';
 import { handleImageError, createPortfolioImageUrl } from '../utils/portfolioImageUtils';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from './Auth/AuthContext';
 import './Portfolio.css';
 
 const Portfolio = () => {
