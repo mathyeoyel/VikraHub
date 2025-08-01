@@ -100,11 +100,29 @@ const UploadWork = () => {
     setIsSubmitting(true);
 
     try {
+      // Check if user is authenticated
+      if (!user) {
+        alert('You must be logged in to upload work. Please log in and try again.');
+        navigate('/login');
+        return;
+      }
+
+      // Validate required fields
+      if (!workData.title.trim()) {
+        alert('Please enter a title for your work.');
+        return;
+      }
+
+      if (!workData.description.trim()) {
+        alert('Please enter a description for your work.');
+        return;
+      }
+
       // Create portfolio item data
       const portfolioData = {
-        title: workData.title,
-        description: workData.description,
-        tags: workData.tags,
+        title: workData.title.trim(),
+        description: workData.description.trim(),
+        tags: workData.tags.trim(),
         // For now, we'll use a placeholder image URL
         // In a real implementation, you'd upload the files to Cloudinary first
         image: workData.files.length > 0 ? 
@@ -125,7 +143,15 @@ const UploadWork = () => {
       });
     } catch (error) {
       console.error('Error uploading work:', error);
-      alert('Failed to upload work. Please try again.');
+      
+      if (error.response?.status === 401) {
+        alert('Authentication required. Please log in and try again.');
+        navigate('/login');
+      } else if (error.response?.status === 400) {
+        alert('Invalid data. Please check your input and try again.');
+      } else {
+        alert('Failed to upload work. Please try again later.');
+      }
     } finally {
       setIsSubmitting(false);
     }

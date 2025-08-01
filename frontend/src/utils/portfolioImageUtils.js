@@ -17,7 +17,10 @@ export const handleImageError = (event, fallbackSrc = '/assets/default-asset-pla
 };
 
 export const createPortfolioImageUrl = (imagePath) => {
-  if (!imagePath) return '/assets/default-asset-placeholder.svg';
+  if (!imagePath || imagePath === 'W.png') {
+    console.warn('Invalid or problematic image path detected, using fallback');
+    return '/assets/default-asset-placeholder.svg';
+  }
   
   // If already a full URL, return as is
   if (imagePath.startsWith('http') || imagePath.startsWith('//')) {
