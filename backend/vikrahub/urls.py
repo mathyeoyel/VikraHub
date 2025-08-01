@@ -2,12 +2,40 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.utils import timezone
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+
+# Sitemap imports
+from django.contrib.sitemaps.views import sitemap
+from core.sitemaps import StaticViewSitemap, BlogSitemap, APISitemap, PortfolioSitemap
+
+# Sitemap dictionary
+sitemaps = {
+    'static': StaticViewSitemap,
+    'blog': BlogSitemap,
+    'api': APISitemap,
+    'portfolio': PortfolioSitemap,
+}
+
+def robots_txt(request):
+    """Generate robots.txt for search engine crawlers"""
+    lines = [
+        "User-agent: *",
+        "Allow: /",
+        "",
+        "# Sitemap",
+        "Sitemap: https://www.vikrahub.com/sitemap.xml",
+        "",
+        "# Disallow admin and private areas",
+        "Disallow: /admin/",
+        "Disallow: /api/auth/",
+        "Disallow: /accounts/",
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")
 
 def api_root(request):
     """Root API endpoint providing information about available endpoints."""
@@ -16,6 +44,10 @@ def api_root(request):
         'version': '1.0',
         'status': 'healthy',
         'timestamp': str(timezone.now()),
+        'seo': {
+            'sitemap': '/sitemap.xml',
+            'robots': '/robots.txt',
+        },
         'endpoints': {
             'api': '/api/',
             'admin': '/admin/',
@@ -61,6 +93,10 @@ urlpatterns = [
     
     # API status endpoint (for testing)
     path('api/', api_root, name='api_status'),
+    
+    # SEO and crawlers
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path('robots.txt', robots_txt, name='robots_txt'),
     
     # API endpoints
     path('api/', include('core.urls')),

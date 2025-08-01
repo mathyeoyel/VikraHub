@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',  # Required for django-allauth
+    'django.contrib.sitemaps',  # For SEO sitemap generation
     'rest_framework',
     'corsheaders',
     'channels',
