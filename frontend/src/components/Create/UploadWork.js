@@ -333,7 +333,7 @@ const UploadWork = () => {
                   id="previewImage"
                   onChange={handlePreviewImageChange}
                   accept="image/*"
-                  className="file-input"
+                  className="preview-image-input"
                 />
                 <label htmlFor="previewImage" className="preview-upload-label">
                   {previewImagePreview ? (
