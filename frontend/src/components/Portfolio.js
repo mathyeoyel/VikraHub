@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { portfolioAPI } from '../api';
 import { handleImageError, createPortfolioImageUrl } from '../utils/portfolioImageUtils';
 import { useAuth } from './Auth/AuthContext';
@@ -8,8 +8,22 @@ import './Portfolio.css';
 const Portfolio = () => {
   const [portfolios, setPortfolios] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('all');
+  const [successMessage, setSuccessMessage] = useState('');
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check for success message from navigation state
+  useEffect(() => {
+    if (location.state?.message) {
+      setSuccessMessage(location.state.message);
+      // Clear the message after 5 seconds
+      setTimeout(() => setSuccessMessage(''), 5000);
+      // Clear the navigation state
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location, navigate]);
 
   const handleEdit = (portfolioId) => {
     navigate(`/upload-work/${portfolioId}`);
@@ -26,6 +40,54 @@ const Portfolio = () => {
         alert('Failed to delete portfolio item. Please try again.');
       }
     }
+  };
+
+  // Get unique categories for filtering
+  const categories = ['all', ...new Set(portfolios.map(item => 
+    typeof item.category === 'string' ? item.category : 
+    typeof item.category === 'object' && item.category ? 
+    (item.category.name || 'general') : 'general'
+  ))];
+
+  // Filter portfolios based on selected category
+  const filteredPortfolios = filter === 'all' 
+    ? portfolios 
+    : portfolios.filter(item => {
+        const itemCategory = typeof item.category === 'string' ? item.category : 
+                           typeof item.category === 'object' && item.category ? 
+                           (item.category.name || 'general') : 'general';
+        return itemCategory === filter;
+      });
+
+  const getImageUrl = (item) => {
+    // Priority: previewImage > image > first file > placeholder
+    if (item.preview_image) {
+      return createPortfolioImageUrl(item.preview_image);
+    }
+    if (item.image) {
+      return createPortfolioImageUrl(item.image);
+    }
+    if (item.files && item.files.length > 0) {
+      return createPortfolioImageUrl(item.files[0]);
+    }
+    return null;
+  };
+
+  const getCategoryIcon = (category) => {
+    const icons = {
+      design: '🎨',
+      photography: '📸',
+      illustration: '🖼️',
+      'ui-ux': '💻',
+      branding: '🏷️',
+      video: '🎬',
+      audio: '🎵',
+      writing: '✍️',
+      code: '💾',
+      general: '📦',
+      other: '📦'
+    };
+    return icons[category] || icons.general;
   };
 
   useEffect(() => {
@@ -59,88 +121,190 @@ const Portfolio = () => {
   }, []);
 
   if (loading) {
-    return <div className="text-center">Loading portfolio...</div>;
+    return (
+      <div className="portfolio-loading">
+        <div className="loading-spinner">
+          <div className="spinner"></div>
+          <p>Loading amazing portfolio pieces...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <section id="portfolio" className="portfolio">
-      <div className="container">
-        <div className="section-title">
-          <h2>Portfolio</h2>
-          <p>Our work</p>
+    <section className="portfolio-section">
+      <div className="portfolio-container">
+        {/* Header Section */}
+        <div className="portfolio-header">
+          <div className="header-content">
+            <h1 className="portfolio-title">Creative Portfolio</h1>
+            <p className="portfolio-subtitle">
+              Discover amazing work from talented creatives and showcase your own masterpieces
+            </p>
+          </div>
+          {user && (
+            <div className="header-actions">
+              <button 
+                onClick={() => navigate('/create/upload-work')}
+                className="add-work-btn"
+              >
+                <i className="fas fa-plus"></i>
+                Add New Work
+              </button>
+            </div>
+          )}
         </div>
 
-        <div className="row portfolio-container">
-          {portfolios.map(item => (
-            <div key={item.id} className="col-lg-4 col-md-6 portfolio-item">
-              <div className="portfolio-wrap">
-                {item.image && (
-                  <img 
-                    src={createPortfolioImageUrl(item.image)}
-                    className="img-fluid" 
-                    alt={item.title}
-                    data-original-src={item.image}
-                    onError={handleImageError}
-                  />
-                )}
-                {!item.image && (
-                  <div className="portfolio-placeholder" style={{
-                    height: '200px',
-                    backgroundColor: '#f8f9fa',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#6c757d',
-                    fontSize: '14px',
-                    border: '2px dashed #dee2e6',
-                    borderRadius: '8px'
-                  }}>
-                    <div style={{ textAlign: 'center' }}>
-                      <i className="fas fa-image" style={{ fontSize: '2em', marginBottom: '8px', opacity: 0.5 }}></i>
-                      <div>No Image Available</div>
+        {/* Success Message */}
+        {successMessage && (
+          <div className="success-message">
+            <i className="fas fa-check-circle"></i>
+            {successMessage}
+          </div>
+        )}
+
+        {/* Filter Section */}
+        <div className="portfolio-filters">
+          <h3>Filter by Category</h3>
+          <div className="filter-buttons">
+            {categories.map(category => (
+              <button
+                key={category}
+                onClick={() => setFilter(category)}
+                className={`filter-btn ${filter === category ? 'active' : ''}`}
+              >
+                {category === 'all' ? '🌟' : getCategoryIcon(category)}
+                {category.charAt(0).toUpperCase() + category.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Portfolio Grid */}
+        <div className="portfolio-grid">
+          {filteredPortfolios.length === 0 ? (
+            <div className="empty-portfolio">
+              <div className="empty-icon">🎨</div>
+              <h3>No Portfolio Items Yet</h3>
+              <p>
+                {filter === 'all' 
+                  ? 'Be the first to showcase your creative work!' 
+                  : `No items found in "${filter}" category.`
+                }
+              </p>
+              {user && filter === 'all' && (
+                <button 
+                  onClick={() => navigate('/create/upload-work')}
+                  className="cta-btn"
+                >
+                  Upload Your First Work
+                </button>
+              )}
+            </div>
+          ) : (
+            filteredPortfolios.map(item => (
+              <div key={item.id} className="portfolio-card">
+                <div className="card-image">
+                  {getImageUrl(item) ? (
+                    <img 
+                      src={getImageUrl(item)}
+                      alt={item.title}
+                      className="portfolio-img"
+                      onError={handleImageError}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="placeholder-image">
+                      <i className="fas fa-image"></i>
+                      <span>No Preview</span>
+                    </div>
+                  )}
+                  
+                  {/* Overlay with actions */}
+                  <div className="card-overlay">
+                    <div className="overlay-actions">
+                      {item.project_url && (
+                        <a 
+                          href={item.project_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="action-btn view-btn"
+                          title="View Project"
+                        >
+                          <i className="fas fa-external-link-alt"></i>
+                        </a>
+                      )}
+                      {user && (
+                        <>
+                          <button 
+                            onClick={() => handleEdit(item.id)}
+                            className="action-btn edit-btn"
+                            title="Edit Portfolio Item"
+                          >
+                            <i className="fas fa-edit"></i>
+                          </button>
+                          <button 
+                            onClick={() => handleDelete(item.id)}
+                            className="action-btn delete-btn"
+                            title="Delete Portfolio Item"
+                          >
+                            <i className="fas fa-trash"></i>
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
-                )}
-                <div className="portfolio-info">
-                  <h4>{item.title}</h4>
-                  <p>{typeof item.category === 'string' ? item.category : 
-                      typeof item.category === 'object' && item.category ? 
-                      (item.category.name || 'General') : 'General'}</p>
-                  <div className="portfolio-links">
-                    {item.project_url && (
-                      <a 
-                        href={item.project_url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        title="Project Link"
-                      >
-                        <i className="bx bx-link"></i>
-                      </a>
-                    )}
-                    {user && (
-                      <>
-                        <button 
-                          onClick={() => handleEdit(item.id)}
-                          className="portfolio-edit-btn"
-                          title="Edit Portfolio Item"
-                        >
-                          <i className="bx bx-edit"></i>
-                        </button>
-                        <button 
-                          onClick={() => handleDelete(item.id)}
-                          className="portfolio-delete-btn"
-                          title="Delete Portfolio Item"
-                        >
-                          <i className="bx bx-trash"></i>
-                        </button>
-                      </>
-                    )}
+                </div>
+
+                <div className="card-content">
+                  <div className="card-header">
+                    <h3 className="card-title">{item.title}</h3>
+                    <div className="card-category">
+                      <span className="category-icon">
+                        {getCategoryIcon(
+                          typeof item.category === 'string' ? item.category : 
+                          typeof item.category === 'object' && item.category ? 
+                          (item.category.name || 'general') : 'general'
+                        )}
+                      </span>
+                      <span className="category-text">
+                        {typeof item.category === 'string' ? item.category : 
+                         typeof item.category === 'object' && item.category ? 
+                         (item.category.name || 'General') : 'General'}
+                      </span>
+                    </div>
                   </div>
+                  
+                  {item.description && (
+                    <p className="card-description">
+                      {item.description.length > 100 
+                        ? `${item.description.substring(0, 100)}...` 
+                        : item.description
+                      }
+                    </p>
+                  )}
+
+                  {item.tags && (
+                    <div className="card-tags">
+                      {item.tags.split(',').slice(0, 3).map((tag, index) => (
+                        <span key={index} className="tag">
+                          #{tag.trim()}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
+
+        {/* Show count */}
+        {filteredPortfolios.length > 0 && (
+          <div className="portfolio-count">
+            Showing {filteredPortfolios.length} of {portfolios.length} portfolio items
+          </div>
+        )}
       </div>
     </section>
   );
