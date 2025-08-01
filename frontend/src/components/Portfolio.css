@@ -1,0 +1,85 @@
+/* Portfolio Edit and Delete Button Styles */
+.portfolio-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.portfolio-edit-btn,
+.portfolio-delete-btn {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+
+.portfolio-edit-btn {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+}
+
+.portfolio-edit-btn:hover {
+  background: linear-gradient(135deg, #218838, #1a9c7e);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.portfolio-delete-btn {
+  background: linear-gradient(135deg, #dc3545, #e74c3c);
+  color: white;
+}
+
+.portfolio-delete-btn:hover {
+  background: linear-gradient(135deg, #c82333, #d62c1a);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.portfolio-edit-btn i,
+.portfolio-delete-btn i {
+  font-size: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .portfolio-edit-btn,
+  .portfolio-delete-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0.4rem;
+  }
+  
+  .portfolio-edit-btn i,
+  .portfolio-delete-btn i {
+    font-size: 0.9rem;
+  }
+}
+
+/* Portfolio item hover effects */
+.portfolio-item:hover .portfolio-links {
+  opacity: 1;
+}
+
+.portfolio-links {
+  transition: opacity 0.3s ease;
+}
+
+/* Show buttons only on authenticated user hover */
+.portfolio-item .portfolio-edit-btn,
+.portfolio-item .portfolio-delete-btn {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.portfolio-item:hover .portfolio-edit-btn,
+.portfolio-item:hover .portfolio-delete-btn {
+  opacity: 1;
+}

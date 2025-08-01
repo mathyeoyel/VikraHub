@@ -1,10 +1,32 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { portfolioAPI } from '../api';
 import { handleImageError, createPortfolioImageUrl } from '../utils/portfolioImageUtils';
+import { useAuth } from '../contexts/AuthContext';
+import './Portfolio.css';
 
 const Portfolio = () => {
   const [portfolios, setPortfolios] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleEdit = (portfolioId) => {
+    navigate(`/upload-work/${portfolioId}`);
+  };
+
+  const handleDelete = async (portfolioId) => {
+    if (window.confirm('Are you sure you want to delete this portfolio item?')) {
+      try {
+        await portfolioAPI.delete(portfolioId);
+        setPortfolios(portfolios.filter(item => item.id !== portfolioId));
+        alert('Portfolio item deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting portfolio item:', error);
+        alert('Failed to delete portfolio item. Please try again.');
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchPortfolio = async () => {
@@ -94,6 +116,24 @@ const Portfolio = () => {
                       >
                         <i className="bx bx-link"></i>
                       </a>
+                    )}
+                    {user && (
+                      <>
+                        <button 
+                          onClick={() => handleEdit(item.id)}
+                          className="portfolio-edit-btn"
+                          title="Edit Portfolio Item"
+                        >
+                          <i className="bx bx-edit"></i>
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(item.id)}
+                          className="portfolio-delete-btn"
+                          title="Delete Portfolio Item"
+                        >
+                          <i className="bx bx-trash"></i>
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>

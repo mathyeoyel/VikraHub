@@ -232,6 +232,7 @@ export const serviceAPI = {
 
 export const portfolioAPI = {
   getAll: () => api.get("portfolio/"),
+  getById: (id) => api.get(`portfolio/${id}/`),
   create: (data) => api.post("portfolio/", data),
   update: (id, data) => api.patch(`portfolio/${id}/`, data),
   delete: (id) => api.delete(`portfolio/${id}/`),

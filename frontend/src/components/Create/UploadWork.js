@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../Auth/AuthContext';
 import { portfolioAPI } from '../../api';
 import './UploadWork.css';
 
 const UploadWork = () => {
+  const { id } = useParams(); // For editing existing items
+  const location = useLocation();
+  const isEditing = !!id;
+  
   const [workData, setWorkData] = useState({
     title: '',
     description: '',
@@ -12,13 +16,17 @@ const UploadWork = () => {
     type: 'image',
     tags: '',
     files: [],
+    previewImage: null,
     price: '',
     isForSale: false,
     license: 'all-rights-reserved',
-    allowDownload: false
+    allowDownload: false,
+    url: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [previews, setPreviews] = useState([]);
+  const [previewImagePreview, setPreviewImagePreview] = useState(null);
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -87,6 +95,25 @@ const UploadWork = () => {
     setPreviews(newPreviews);
   };
 
+  const handlePreviewImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setWorkData(prev => ({ ...prev, previewImage: file }));
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removePreviewImage = () => {
+    setWorkData(prev => ({ ...prev, previewImage: null }));
+    setPreviewImagePreview(null);
+  };
+
   const formatFileSize = (bytes) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
@@ -123,34 +150,46 @@ const UploadWork = () => {
         title: workData.title.trim(),
         description: workData.description.trim(),
         tags: workData.tags.trim(),
-        // For now, we'll use a placeholder image URL
-        // In a real implementation, you'd upload the files to Cloudinary first
-        image: workData.files.length > 0 ? 
-          'https://res.cloudinary.com/demo/image/upload/sample.jpg' : 
-          '', // Empty string for no image
-        url: '' // Optional project URL
+        url: workData.url.trim(),
+        // For now, use preview image if uploaded, otherwise placeholder
+        image: previewImagePreview || 
+               (workData.files.length > 0 ? 'https://res.cloudinary.com/demo/image/upload/sample.jpg' : '')
       };
 
-      console.log('Creating portfolio item:', portfolioData);
+      console.log(isEditing ? 'Updating portfolio item:' : 'Creating portfolio item:', portfolioData);
       
-      // Create the portfolio item via API
-      const response = await portfolioAPI.create(portfolioData);
-      console.log('Portfolio item created:', response.data);
+      let response;
+      if (isEditing) {
+        // Update existing portfolio item
+        response = await portfolioAPI.update(id, portfolioData);
+        console.log('Portfolio item updated:', response.data);
+      } else {
+        // Create new portfolio item
+        response = await portfolioAPI.create(portfolioData);
+        console.log('Portfolio item created:', response.data);
+      }
       
       // Navigate to portfolio with success message
       navigate('/portfolio', { 
-        state: { message: 'Work uploaded successfully and added to your portfolio!' }
+        state: { 
+          message: isEditing ? 
+            'Work updated successfully!' : 
+            'Work uploaded successfully and added to your portfolio!' 
+        }
       });
     } catch (error) {
-      console.error('Error uploading work:', error);
+      console.error('Error with portfolio item:', error);
       
       if (error.response?.status === 401) {
         alert('Authentication required. Please log in and try again.');
         navigate('/login');
       } else if (error.response?.status === 400) {
         alert('Invalid data. Please check your input and try again.');
+      } else if (error.response?.status === 404 && isEditing) {
+        alert('Portfolio item not found. It may have been deleted.');
+        navigate('/portfolio');
       } else {
-        alert('Failed to upload work. Please try again later.');
+        alert(isEditing ? 'Failed to update work. Please try again later.' : 'Failed to upload work. Please try again later.');
       }
     } finally {
       setIsSubmitting(false);
@@ -161,11 +200,68 @@ const UploadWork = () => {
     navigate(-1);
   };
 
+  // Load existing portfolio item when editing
+  useEffect(() => {
+    const loadPortfolioItem = async () => {
+      if (isEditing && id) {
+        setIsLoading(true);
+        try {
+          const response = await portfolioAPI.getById(id);
+          const item = response.data;
+          
+          setWorkData({
+            title: item.title || '',
+            description: item.description || '',
+            category: item.category || 'design',
+            type: 'image', // Default for existing items
+            tags: item.tags || '',
+            files: [],
+            previewImage: null,
+            price: '',
+            isForSale: false,
+            license: 'all-rights-reserved',
+            allowDownload: false,
+            url: item.url || ''
+          });
+          
+          // Set preview image if exists
+          if (item.image) {
+            setPreviewImagePreview(item.image);
+          }
+        } catch (error) {
+          console.error('Error loading portfolio item:', error);
+          alert('Failed to load portfolio item for editing.');
+          navigate('/portfolio');
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadPortfolioItem();
+  }, [isEditing, id, navigate]);
+
+  if (isLoading) {
+    return (
+      <div className="upload-work-container">
+        <div className="upload-work-header">
+          <h1>Loading...</h1>
+          <p>Loading portfolio item for editing...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="upload-work-container">
       <div className="upload-work-header">
-        <h1>Upload Your Work</h1>
-        <p>Share your creative work with the VikraHub community and potential clients.</p>
+        <h1>{isEditing ? 'Edit Your Work' : 'Upload Your Work'}</h1>
+        <p>
+          {isEditing 
+            ? 'Update your creative work details and preview image.' 
+            : 'Share your creative work with the VikraHub community and potential clients.'
+          }
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="upload-work-form">
@@ -223,6 +319,55 @@ const UploadWork = () => {
                   ))}
                 </div>
               )}
+            </div>
+
+            <div className="upload-section">
+              <h3>Preview Image</h3>
+              <p className="section-description">
+                Upload a preview image that represents your work. This will be displayed in your portfolio.
+              </p>
+              
+              <div className="preview-image-upload">
+                <input
+                  type="file"
+                  id="previewImage"
+                  onChange={handlePreviewImageChange}
+                  accept="image/*"
+                  className="file-input"
+                />
+                <label htmlFor="previewImage" className="preview-upload-label">
+                  {previewImagePreview ? (
+                    <div className="preview-image-container">
+                      <img 
+                        src={previewImagePreview} 
+                        alt="Preview" 
+                        className="preview-image"
+                      />
+                      <div className="preview-overlay">
+                        <span>Click to change image</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="preview-placeholder">
+                      <div className="upload-icon">🖼️</div>
+                      <div className="upload-text">
+                        <h4>Upload Preview Image</h4>
+                        <p>Recommended: 1200x800px or 3:2 aspect ratio</p>
+                      </div>
+                    </div>
+                  )}
+                </label>
+                
+                {previewImagePreview && (
+                  <button
+                    type="button"
+                    onClick={removePreviewImage}
+                    className="remove-preview-btn"
+                  >
+                    Remove Image
+                  </button>
+                )}
+              </div>
             </div>
 
             <div className="form-group">
@@ -324,6 +469,24 @@ const UploadWork = () => {
               </div>
             </div>
 
+            <div className="form-group">
+              <label htmlFor="url" className="form-label">
+                Project URL (Optional)
+              </label>
+              <input
+                type="url"
+                id="url"
+                name="url"
+                value={workData.url}
+                onChange={handleInputChange}
+                placeholder="https://example.com"
+                className="form-input"
+              />
+              <div className="form-hint">
+                Link to live project, repository, or more info
+              </div>
+            </div>
+
             <div className="pricing-section">
               <h4>Pricing & Licensing</h4>
               
@@ -416,10 +579,10 @@ const UploadWork = () => {
             {isSubmitting ? (
               <>
                 <span className="spinner"></span>
-                Uploading...
+                {isEditing ? 'Updating...' : 'Uploading...'}
               </>
             ) : (
-              'Upload Work'
+              isEditing ? 'Update Work' : 'Upload Work'
             )}
           </button>
         </div>

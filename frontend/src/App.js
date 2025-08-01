@@ -149,6 +149,14 @@ function App() {
               }
             />
             <Route
+              path="/upload-work/:id"
+              element={
+                <ProtectedRoute>
+                  <UploadWork />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/create/project"
               element={
                 <ProtectedRoute>
