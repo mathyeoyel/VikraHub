@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { portfolioAPI } from '../api';
+import { handleImageError, createPortfolioImageUrl } from '../utils/portfolioImageUtils';
 import './Projects.css';
 
 const Projects = () => {
@@ -91,11 +92,10 @@ const Projects = () => {
                 <div className="project-image">
                   {project.image ? (
                     <img 
-                      src={project.image} 
+                      src={createPortfolioImageUrl(project.image)}
                       alt={project.title}
-                      onError={(e) => {
-                        e.target.src = '/hero-placeholder.jpg';
-                      }}
+                      data-original-src={project.image}
+                      onError={handleImageError}
                     />
                   ) : (
                     <div className="project-placeholder">
