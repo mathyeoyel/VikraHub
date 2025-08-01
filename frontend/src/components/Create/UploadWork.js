@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../Auth/AuthContext';
 import { portfolioAPI } from '../../api';
+import { createPortfolioImageUrl } from '../../utils/portfolioImageUtils';
+import { getAccessToken } from '../../auth';
 import './UploadWork.css';
 
 const UploadWork = () => {
@@ -145,27 +147,43 @@ const UploadWork = () => {
         return;
       }
 
-      // Create portfolio item data
-      const portfolioData = {
-        title: workData.title.trim(),
-        description: workData.description.trim(),
-        tags: workData.tags.trim(),
-        url: workData.url.trim(),
-        // For now, use preview image if uploaded, otherwise placeholder
-        image: previewImagePreview || 
-               (workData.files.length > 0 ? 'https://res.cloudinary.com/demo/image/upload/sample.jpg' : '')
-      };
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append('title', workData.title.trim());
+      formData.append('description', workData.description.trim());
+      formData.append('category', workData.category);
+      formData.append('tags', workData.tags.trim());
+      formData.append('url', workData.url.trim());
+      
+      // Add preview image if present (only if it's a new file, not a URL)
+      if (workData.previewImage && workData.previewImage instanceof File) {
+        formData.append('image', workData.previewImage);
+      }
+      
+      // For editing: only include image if user uploaded a new one
+      if (isEditing && !workData.previewImage) {
+        // Don't send image field if user didn't upload a new image
+        // This preserves the existing image
+      }
+      
+      // Add additional files if present
+      workData.files.forEach((file, index) => {
+        formData.append(`file_${index}`, file);
+      });
 
-      console.log(isEditing ? 'Updating portfolio item:' : 'Creating portfolio item:', portfolioData);
+      console.log(isEditing ? 'Updating portfolio item' : 'Creating portfolio item');
+      console.log('Form data keys:', Array.from(formData.keys()));
+      console.log('User authenticated:', !!user);
+      console.log('Auth token exists:', !!getAccessToken());
       
       let response;
       if (isEditing) {
         // Update existing portfolio item
-        response = await portfolioAPI.update(id, portfolioData);
+        response = await portfolioAPI.update(id, formData);
         console.log('Portfolio item updated:', response.data);
       } else {
         // Create new portfolio item
-        response = await portfolioAPI.create(portfolioData);
+        response = await portfolioAPI.create(formData);
         console.log('Portfolio item created:', response.data);
       }
       
@@ -226,7 +244,14 @@ const UploadWork = () => {
           
           // Set preview image if exists
           if (item.image) {
-            setPreviewImagePreview(item.image);
+            // For editing, just show the existing image preview
+            // Don't set it as a file object since we're not changing it
+            setPreviewImagePreview(createPortfolioImageUrl(item.image));
+          }
+          
+          // Handle preview_image field if it exists
+          if (item.preview_image) {
+            setPreviewImagePreview(createPortfolioImageUrl(item.preview_image));
           }
         } catch (error) {
           console.error('Error loading portfolio item:', error);

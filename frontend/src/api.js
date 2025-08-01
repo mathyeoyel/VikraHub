@@ -16,8 +16,12 @@ api.interceptors.request.use(
       'public-profiles/',
       'freelancer-profiles/', // Freelancer profiles should be publicly viewable
       'creator-profiles/', // Creator profiles should be publicly viewable
-      'portfolio/' // Portfolio should be publicly viewable
     ];
+    
+    // Special handling for portfolio: only GET requests for viewing are public
+    const isPortfolioPublic = config.method === 'get' && 
+      config.url.includes('portfolio/') && 
+      !config.url.includes('my-portfolio/'); // My portfolio requires authentication
     
     // Special handling for creative-assets: only GET requests to marketplace listings are public
     const isCreativeAssetsPublic = config.method === 'get' && 
@@ -43,6 +47,7 @@ api.interceptors.request.use(
       !config.url.includes('my_posts/');
     
     const isPublicRoute = publicRoutes.some(route => config.url.includes(route)) || 
+                         isPortfolioPublic ||
                          isCreativeAssetsPublic || 
                          isPostsPublic ||
                          isBlogPublic;
@@ -233,8 +238,20 @@ export const serviceAPI = {
 export const portfolioAPI = {
   getAll: () => api.get("portfolio/"),
   getById: (id) => api.get(`portfolio/${id}/`),
-  create: (data) => api.post("portfolio/", data),
-  update: (id, data) => api.patch(`portfolio/${id}/`, data),
+  create: (data) => {
+    // For FormData uploads, let axios set Content-Type automatically
+    const config = data instanceof FormData ? {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    } : {};
+    return api.post("portfolio/", data, config);
+  },
+  update: (id, data) => {
+    // For FormData uploads, let axios set Content-Type automatically
+    const config = data instanceof FormData ? {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    } : {};
+    return api.patch(`portfolio/${id}/`, data, config);
+  },
   delete: (id) => api.delete(`portfolio/${id}/`),
 };
 
