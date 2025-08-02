@@ -219,7 +219,7 @@ const Explore = () => {
                   <p>by {work.creator}</p>
                   <div className="work-meta">
                     <span className="work-category">{work.category}</span>
-                    <span className="work-likes">❤️ {work.likes}</span>
+                    <span className="work-likes"><i className="fas fa-heart icon"></i> {work.likes}</span>
                   </div>
                 </div>
               </div>
@@ -231,22 +231,22 @@ const Explore = () => {
           <h2>Why Join VikraHub?</h2>
           <div className="features-grid">
             <div className="feature-card">
-              <div className="feature-icon">🎨</div>
+              <div className="feature-icon"><i className="fas fa-palette icon"></i></div>
               <h3>Showcase Your Work</h3>
               <p>Create a stunning portfolio to display your creative projects and attract potential clients.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">🤝</div>
+              <div className="feature-icon"><i className="fas fa-handshake icon"></i></div>
               <h3>Collaborate</h3>
               <p>Connect with other creators and work together on exciting projects and creative challenges.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">💼</div>
+              <div className="feature-icon"><i className="fas fa-briefcase icon"></i></div>
               <h3>Find Opportunities</h3>
               <p>Discover freelance work, full-time positions, and project opportunities from clients worldwide.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">📚</div>
+              <div className="feature-icon"><i className="fas fa-book icon"></i></div>
               <h3>Learn & Grow</h3>
               <p>Access tutorials, resources, and feedback from the community to improve your skills.</p>
             </div>

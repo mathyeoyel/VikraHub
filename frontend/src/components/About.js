@@ -52,14 +52,14 @@ const About = () => {
             <h2 className="section-title">What We Do</h2>
             <div className="services-grid">
               <div className="service-card">
-                <div className="service-icon">🎨</div>
+                <div className="service-icon"><i className="fas fa-palette icon"></i></div>
                 <h3>Showcase Talent</h3>
                 <p>
                   Creators can build professional online portfolios and share their best work with the world.
                 </p>
               </div>
               <div className="service-card">
-                <div className="service-icon">🤝</div>
+                <div className="service-icon"><i className="fas fa-handshake icon"></i></div>
                 <h3>Foster Community</h3>
                 <p>
                   We bring together artists, designers, photographers, writers, and innovators into a 
@@ -67,7 +67,7 @@ const About = () => {
                 </p>
               </div>
               <div className="service-card">
-                <div className="service-icon">🔗</div>
+                <div className="service-icon"><i className="fas fa-link icon"></i></div>
                 <h3>Connect Opportunities</h3>
                 <p>
                   Organizations and clients can easily find and hire authentic South Sudanese talent 
@@ -75,7 +75,7 @@ const About = () => {
                 </p>
               </div>
               <div className="service-card">
-                <div className="service-icon">📈</div>
+                <div className="service-icon"><i className="fas fa-chart-line icon"></i></div>
                 <h3>Inspire Growth</h3>
                 <p>
                   Through curated collections, workshops, and stories, we spark inspiration and foster 
@@ -135,7 +135,7 @@ const About = () => {
                 </p>
               </div>
               <div className="audience-card">
-                <h3>❤️ Creative Enthusiasts</h3>
+                <h3><i className="fas fa-heart icon"></i> Creative Enthusiasts</h3>
                 <p>
                   Explore a world of inspiring art, stories, and innovation from the heart of South Sudan.
                 </p>

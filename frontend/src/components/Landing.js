@@ -71,7 +71,7 @@ const Landing = () => {
               <li><a href="#contact" onClick={(e) => handleSmoothScroll(e, '#contact')} className={activeSection === 'contact' ? 'active' : ''}>Contact</a></li>
             </ul>
             <i 
-              className="mobile-nav-toggle d-xl-none bi bi-list" 
+              className="mobile-nav-toggle d-xl-none fas fa-bars" 
               onClick={() => setMobileNavOpen(!mobileNavOpen)}
             ></i>
           </nav>
@@ -89,7 +89,7 @@ const Landing = () => {
                 <div className="d-flex">
                   <a href="#about" onClick={(e) => handleSmoothScroll(e, '#about')} className="btn-get-started">Get Started</a>
                   <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" className="glightbox btn-watch-video d-flex align-items-center">
-                    <i className="bi bi-play-circle"></i><span>Watch Video</span>
+                    <i className="fas fa-play-circle"></i><span>Watch Video</span>
                   </a>
                 </div>
               </div>
@@ -112,11 +112,11 @@ const Landing = () => {
                   Our team combines creativity, technical expertise, and strategic thinking to deliver exceptional results.
                 </p>
                 <ul>
-                  <li><i className="bi bi-check-circle"></i> <span>Expert team of developers and designers</span></li>
-                  <li><i className="bi bi-check-circle"></i> <span>Proven track record of successful projects</span></li>
-                  <li><i className="bi bi-check-circle"></i> <span>Customer-centric approach to every solution</span></li>
+                  <li><i className="fas fa-check-circle"></i> <span>Expert team of developers and designers</span></li>
+                  <li><i className="fas fa-check-circle"></i> <span>Proven track record of successful projects</span></li>
+                  <li><i className="fas fa-check-circle"></i> <span>Customer-centric approach to every solution</span></li>
                 </ul>
-                <a href="#services" onClick={(e) => handleSmoothScroll(e, '#services')} className="read-more"><span>Read More</span><i className="bi bi-arrow-right"></i></a>
+                <a href="#services" onClick={(e) => handleSmoothScroll(e, '#services')} className="read-more"><span>Read More</span><i className="fas fa-arrow-right"></i></a>
               </div>
               <div className="col-lg-6 about-images" data-aos="fade-up" data-aos-delay="200">
                 <div className="row gy-4">
@@ -149,44 +149,44 @@ const Landing = () => {
             <div className="row g-5">
               <div className="col-lg-6" data-aos="fade-up" data-aos-delay="100">
                 <div className="service-item item-cyan position-relative">
-                  <i className="bi bi-activity icon"></i>
+                  <i className="fas fa-chart-line icon"></i>
                   <div>
                     <h3>Web Development</h3>
                     <p>Custom web applications built with modern technologies like React, Django, and more. We create responsive, scalable solutions.</p>
-                    <a href="#contact" className="read-more stretched-link">Learn More <i className="bi bi-arrow-right"></i></a>
+                    <a href="#contact" className="read-more stretched-link">Learn More <i className="fas fa-arrow-right"></i></a>
                   </div>
                 </div>
               </div>
               
               <div className="col-lg-6" data-aos="fade-up" data-aos-delay="200">
                 <div className="service-item item-orange position-relative">
-                  <i className="bi bi-broadcast icon"></i>
+                  <i className="fas fa-broadcast-tower icon"></i>
                   <div>
                     <h3>Digital Marketing</h3>
                     <p>Comprehensive digital marketing strategies to boost your online presence and drive business growth.</p>
-                    <a href="#contact" className="read-more stretched-link">Learn More <i className="bi bi-arrow-right"></i></a>
+                    <a href="#contact" className="read-more stretched-link">Learn More <i className="fas fa-arrow-right"></i></a>
                   </div>
                 </div>
               </div>
 
               <div className="col-lg-6" data-aos="fade-up" data-aos-delay="300">
                 <div className="service-item item-teal position-relative">
-                  <i className="bi bi-easel icon"></i>
+                  <i className="fas fa-paint-brush icon"></i>
                   <div>
                     <h3>UI/UX Design</h3>
                     <p>Beautiful, intuitive designs that provide exceptional user experiences and drive engagement.</p>
-                    <a href="#contact" className="read-more stretched-link">Learn More <i className="bi bi-arrow-right"></i></a>
+                    <a href="#contact" className="read-more stretched-link">Learn More <i className="fas fa-arrow-right"></i></a>
                   </div>
                 </div>
               </div>
 
               <div className="col-lg-6" data-aos="fade-up" data-aos-delay="400">
                 <div className="service-item item-red position-relative">
-                  <i className="bi bi-bounding-box-circles icon"></i>
+                  <i className="fas fa-mobile-alt icon"></i>
                   <div>
                     <h3>Mobile Development</h3>
                     <p>Native and cross-platform mobile applications that deliver seamless user experiences.</p>
-                    <a href="#contact" className="read-more stretched-link">Learn More <i className="bi bi-arrow-right"></i></a>
+                    <a href="#contact" className="read-more stretched-link">Learn More <i className="fas fa-arrow-right"></i></a>
                   </div>
                 </div>
               </div>
@@ -222,8 +222,8 @@ const Landing = () => {
                     <div className="portfolio-info">
                       <h4>App 1</h4>
                       <p>Lorem ipsum, dolor sit amet consectetur</p>
-                      <a href="/assets/images/portfolio/app-1.jpg" title="App 1" data-gallery="portfolio-gallery-app" className="glightbox preview-link"><i className="bi bi-zoom-in"></i></a>
-                      <a href="portfolio-details.html" title="More Details" className="details-link"><i className="bi bi-link-45deg"></i></a>
+                      <a href="/assets/images/portfolio/app-1.jpg" title="App 1" data-gallery="portfolio-gallery-app" className="glightbox preview-link"><i className="fas fa-search-plus"></i></a>
+                      <a href="portfolio-details.html" title="More Details" className="details-link"><i className="fas fa-link"></i></a>
                     </div>
                   </div>
                 </div>
@@ -239,8 +239,8 @@ const Landing = () => {
                     <div className="portfolio-info">
                       <h4>Product 1</h4>
                       <p>Lorem ipsum, dolor sit amet consectetur</p>
-                      <a href="/assets/images/portfolio/product-1.jpg" title="Product 1" data-gallery="portfolio-gallery-product" className="glightbox preview-link"><i className="bi bi-zoom-in"></i></a>
-                      <a href="portfolio-details.html" title="More Details" className="details-link"><i className="bi bi-link-45deg"></i></a>
+                      <a href="/assets/images/portfolio/product-1.jpg" title="Product 1" data-gallery="portfolio-gallery-product" className="glightbox preview-link"><i className="fas fa-search-plus"></i></a>
+                      <a href="portfolio-details.html" title="More Details" className="details-link"><i className="fas fa-link"></i></a>
                     </div>
                   </div>
                 </div>
@@ -256,8 +256,8 @@ const Landing = () => {
                     <div className="portfolio-info">
                       <h4>Branding 1</h4>
                       <p>Lorem ipsum, dolor sit amet consectetur</p>
-                      <a href="/assets/images/portfolio/branding-1.jpg" title="Branding 1" data-gallery="portfolio-gallery-branding" className="glightbox preview-link"><i className="bi bi-zoom-in"></i></a>
-                      <a href="portfolio-details.html" title="More Details" className="details-link"><i className="bi bi-link-45deg"></i></a>
+                      <a href="/assets/images/portfolio/branding-1.jpg" title="Branding 1" data-gallery="portfolio-gallery-branding" className="glightbox preview-link"><i className="fas fa-search-plus"></i></a>
+                      <a href="portfolio-details.html" title="More Details" className="details-link"><i className="fas fa-link"></i></a>
                     </div>
                   </div>
                 </div>
@@ -282,10 +282,10 @@ const Landing = () => {
                     <span>Chief Executive Officer</span>
                     <p>Explicabo voluptatem mollitia et repellat qui dolorum quasi</p>
                     <div className="social">
-                      <a href=""><i className="bi bi-twitter-x"></i></a>
-                      <a href=""><i className="bi bi-facebook"></i></a>
-                      <a href=""><i className="bi bi-instagram"></i></a>
-                      <a href=""> <i className="bi bi-linkedin"></i> </a>
+                      <a href=""><i className="fab fa-x-twitter"></i></a>
+                      <a href=""><i className="fab fa-facebook"></i></a>
+                      <a href=""><i className="fab fa-instagram"></i></a>
+                      <a href=""> <i className="fab fa-linkedin"></i> </a>
                     </div>
                   </div>
                 </div>
@@ -299,10 +299,10 @@ const Landing = () => {
                     <span>Product Manager</span>
                     <p>Aut maiores voluptates amet et quis praesentium qui senda para</p>
                     <div className="social">
-                      <a href=""><i className="bi bi-twitter-x"></i></a>
-                      <a href=""><i className="bi bi-facebook"></i></a>
-                      <a href=""><i className="bi bi-instagram"></i></a>
-                      <a href=""> <i className="bi bi-linkedin"></i> </a>
+                      <a href=""><i className="fab fa-x-twitter"></i></a>
+                      <a href=""><i className="fab fa-facebook"></i></a>
+                      <a href=""><i className="fab fa-instagram"></i></a>
+                      <a href=""> <i className="fab fa-linkedin"></i> </a>
                     </div>
                   </div>
                 </div>
@@ -323,7 +323,7 @@ const Landing = () => {
                 <div className="row gy-4">
                   <div className="col-md-6">
                     <div className="info-item" data-aos="fade" data-aos-delay="200">
-                      <i className="bi bi-geo-alt"></i>
+                      <i className="fas fa-map-marker-alt"></i>
                       <h3>Address</h3>
                       <p>A108 Adam Street</p>
                       <p>New York, NY 535022</p>
@@ -332,7 +332,7 @@ const Landing = () => {
                   
                   <div className="col-md-6">
                     <div className="info-item" data-aos="fade" data-aos-delay="300">
-                      <i className="bi bi-telephone"></i>
+                      <i className="fas fa-phone"></i>
                       <h3>Call Us</h3>
                       <p>+1 5589 55488 55</p>
                       <p>+1 6678 254445 41</p>
@@ -341,7 +341,7 @@ const Landing = () => {
                   
                   <div className="col-md-6">
                     <div className="info-item" data-aos="fade" data-aos-delay="400">
-                      <i className="bi bi-envelope"></i>
+                      <i className="fas fa-envelope"></i>
                       <h3>Email Us</h3>
                       <p>info@example.com</p>
                       <p>contact@example.com</p>
@@ -350,7 +350,7 @@ const Landing = () => {
                   
                   <div className="col-md-6">
                     <div className="info-item" data-aos="fade" data-aos-delay="500">
-                      <i className="bi bi-clock"></i>
+                      <i className="fas fa-clock"></i>
                       <h3>Open Hours</h3>
                       <p>Monday - Friday</p>
                       <p>9:00AM - 05:00PM</p>
@@ -411,20 +411,20 @@ const Landing = () => {
             <div className="col-lg-2 col-md-3 footer-links">
               <h4>Useful Links</h4>
               <ul>
-                <li><i className="bi bi-chevron-right"></i> <a href="#home">Home</a></li>
-                <li><i className="bi bi-chevron-right"></i> <a href="#about">About us</a></li>
-                <li><i className="bi bi-chevron-right"></i> <a href="#services">Services</a></li>
-                <li><i className="bi bi-chevron-right"></i> <a href="#portfolio">Portfolio</a></li>
+                <li><i className="fas fa-chevron-right"></i> <a href="#home">Home</a></li>
+                <li><i className="fas fa-chevron-right"></i> <a href="#about">About us</a></li>
+                <li><i className="fas fa-chevron-right"></i> <a href="#services">Services</a></li>
+                <li><i className="fas fa-chevron-right"></i> <a href="#portfolio">Portfolio</a></li>
               </ul>
             </div>
             
             <div className="col-lg-2 col-md-3 footer-links">
               <h4>Our Services</h4>
               <ul>
-                <li><i className="bi bi-chevron-right"></i> <a href="#">Web Design</a></li>
-                <li><i className="bi bi-chevron-right"></i> <a href="#">Web Development</a></li>
-                <li><i className="bi bi-chevron-right"></i> <a href="#">Product Management</a></li>
-                <li><i className="bi bi-chevron-right"></i> <a href="#">Marketing</a></li>
+                <li><i className="fas fa-chevron-right"></i> <a href="#">Web Design</a></li>
+                <li><i className="fas fa-chevron-right"></i> <a href="#">Web Development</a></li>
+                <li><i className="fas fa-chevron-right"></i> <a href="#">Product Management</a></li>
+                <li><i className="fas fa-chevron-right"></i> <a href="#">Marketing</a></li>
               </ul>
             </div>
             
@@ -432,10 +432,10 @@ const Landing = () => {
               <h4>Follow Us</h4>
               <p>Cras fermentum odio eu feugiat lide par naso tierra videa magna derita valies</p>
               <div className="social-links d-flex">
-                <a href=""><i className="bi bi-twitter-x"></i></a>
-                <a href=""><i className="bi bi-facebook"></i></a>
-                <a href=""><i className="bi bi-instagram"></i></a>
-                <a href=""><i className="bi bi-linkedin"></i></a>
+                <a href=""><i className="fab fa-x-twitter"></i></a>
+                <a href=""><i className="fab fa-facebook"></i></a>
+                <a href=""><i className="fab fa-instagram"></i></a>
+                <a href=""><i className="fab fa-linkedin"></i></a>
               </div>
             </div>
           </div>
@@ -450,7 +450,7 @@ const Landing = () => {
       </footer>
 
       {/* Scroll Top */}
-      <a href="#" onClick={scrollToTop} className="scroll-top d-flex align-items-center justify-content-center"><i className="bi bi-arrow-up-short"></i></a>
+      <a href="#" onClick={scrollToTop} className="scroll-top d-flex align-items-center justify-content-center"><i className="fas fa-arrow-up"></i></a>
     </div>
   );
 };

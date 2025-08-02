@@ -134,7 +134,7 @@ const Notifications = () => {
 
   const getNotificationIcon = (type) => {
     switch (type) {
-      case 'message': return '💬';
+      case 'message': return <i className="fas fa-comment icon"></i>;
       case 'project': return '💼';
       case 'system': return '⚙️';
       case 'social': return '👥';

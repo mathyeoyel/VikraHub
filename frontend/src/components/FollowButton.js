@@ -122,26 +122,7 @@ const FollowButton = ({
         
         {(isLoading || loading.follow) && (
           <span className="follow-button__spinner">
-            <svg className="spinner" viewBox="0 0 24 24">
-              <circle 
-                cx="12" 
-                cy="12" 
-                r="10" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                fill="none"
-                strokeLinecap="round"
-                strokeDasharray="32"
-                strokeDashoffset="32"
-              >
-                <animate
-                  attributeName="stroke-dashoffset"
-                  values="32;0;32"
-                  dur="1s"
-                  repeatCount="indefinite"
-                />
-              </circle>
-            </svg>
+            <i className="fas fa-spinner spinner"></i>
           </span>
         )}
       </button>

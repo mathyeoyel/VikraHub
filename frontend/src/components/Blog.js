@@ -90,11 +90,11 @@ const Blog = () => {
                 <div className="entry-meta">
                   <ul>
                     <li className="d-flex align-items-center">
-                      <i className="bi bi-person"></i>
+                      <i className="fas fa-user"></i>
                       <span className="author-name">{blog.author?.username || 'Anonymous'}</span>
                     </li>
                     <li className="d-flex align-items-center">
-                      <i className="bi bi-clock"></i>
+                      <i className="fas fa-clock"></i>
                       <time dateTime={blog.created_at}>
                         {new Date(blog.created_at).toLocaleDateString('en-US', {
                           year: 'numeric',
@@ -120,7 +120,7 @@ const Blog = () => {
                       showCount={true}
                     />
                     <span className="comments-count">
-                      <i className="bi bi-chat"></i>
+                      <i className="fas fa-comments"></i>
                       {blog.comment_count || 0} comments
                     </span>
                   </div>

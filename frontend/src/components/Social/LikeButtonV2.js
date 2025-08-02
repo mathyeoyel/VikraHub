@@ -135,19 +135,19 @@ const LikeButtonV2 = ({
       case 'post':
       case 'blog':
         return {
-          activeIcon: '❤️',
-          inactiveIcon: '🤍'
+          activeIcon: <i className="fas fa-heart icon"></i>,
+          inactiveIcon: <i className="far fa-heart icon"></i>
         };
       case 'comment':
       case 'blog-comment':
         return {
-          activeIcon: '👍',
-          inactiveIcon: '👍🏻'
+          activeIcon: <i className="fas fa-thumbs-up icon"></i>,
+          inactiveIcon: <i className="far fa-thumbs-up icon"></i>
         };
       default:
         return {
-          activeIcon: '❤️',
-          inactiveIcon: '🤍'
+          activeIcon: <i className="fas fa-heart icon"></i>,
+          inactiveIcon: <i className="far fa-heart icon"></i>
         };
     }
   };
@@ -165,7 +165,7 @@ const LikeButtonV2 = ({
       inactiveText="Like"
       activeIcon={icons.activeIcon}
       inactiveIcon={icons.inactiveIcon}
-      loadingIcon="⟳"
+      loadingIcon={<i className="fas fa-spinner fa-spin icon"></i>}
       
       // API functions
       activateAPI={handleLike}

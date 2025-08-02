@@ -11,3 +11,190 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Font Awesome Icon Color Scheme */
+/* Default icon color for light backgrounds */
+.icon {
+  color: #7c521b !important;
+  font-size: 1rem; /* Default icon size */
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+/* Icons on dark navy backgrounds (#000223 and similar) */
+[style*="background: #000223"] .icon,
+[style*="background:#000223"] .icon,
+[style*="background-color: #000223"] .icon,
+[style*="background-color:#000223"] .icon,
+.hero .icon,
+.dark-navy .icon {
+  color: #ffa000 !important;
+}
+
+/* Hero section icons (dark navy background) */
+.hero-btn .icon,
+.hero-buttons .icon {
+  color: #ffa000 !important;
+}
+
+/* Navbar and header icons - default bronze */
+.navbar .icon {
+  color: #7c521b !important;
+}
+
+/* Card icons */
+.card .icon,
+.service-card .icon,
+.feature-card .icon {
+  color: #7c521b !important;
+}
+
+/* Special context icons */
+.btn-primary .icon {
+  color: #ffa000 !important;
+}
+
+.btn-secondary .icon,
+.btn-outline .icon {
+  color: #7c521b !important;
+}
+
+/* Dashboard and admin icons */
+.dashboard .icon,
+.admin-panel .icon {
+  color: #7c521b !important;
+}
+
+/* Profile and user icons */
+.profile .icon,
+.user-card .icon {
+  color: #7c521b !important;
+}
+
+/* Social media brand icons - default bronze */
+.fab {
+  color: #7c521b !important;
+}
+
+/* Only use orange for fab icons on dark navy backgrounds */
+.hero .fab,
+[style*="background: #000223"] .fab,
+[style*="background:#000223"] .fab,
+[style*="background-color: #000223"] .fab,
+[style*="background-color:#000223"] .fab {
+  color: #ffa000 !important;
+}
+
+/* Dropdown and menu icons */
+.dropdown-icon {
+  color: #7c521b !important;
+  font-size: 1.2rem;
+  margin-right: 0.75rem;
+}
+
+/* Stat and analytics icons */
+.stat-icon .icon,
+.analytics-card .icon,
+.card-icon .icon {
+  color: #7c521b !important;
+  font-size: 1.5rem;
+}
+
+/* Contact and communication icons */
+.contact-icon .icon,
+.btn-icon .icon,
+.method-icon .icon {
+  color: #7c521b !important;
+  font-size: 1.2rem; /* Better size for contact icons */
+  margin-right: 0.5rem;
+}
+
+/* Experience and achievement icons */
+.experience-icon .icon,
+.achievement-icon .icon {
+  color: #7c521b !important;
+  font-size: 1.3rem; /* Good size for achievement icons */
+}
+
+/* Service and feature icons */
+.service-icon .icon,
+.feature-icon .icon {
+  color: #7c521b !important;
+  font-size: 1.5rem; /* Larger for service/feature icons */
+}
+
+/* Search and navigation icons */
+.search-icon .icon,
+.suggestion-icon .icon {
+  color: #7c521b !important;
+  font-size: 1.1rem;
+}
+
+/* Privacy and security icons */
+.privacy-icon .icon {
+  color: #7c521b !important;
+  margin-right: 0.5rem;
+}
+
+/* Upload and file icons */
+.upload-icon .icon {
+  color: #7c521b !important;
+  font-size: 2rem;
+}
+
+/* Status and action icons */
+.action-icon .icon {
+  color: #7c521b !important;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.action-icon .icon:hover {
+  color: #ffa000 !important;
+}
+
+/* Size modifiers */
+.icon-sm {
+  font-size: 0.875rem !important;
+}
+
+.icon-lg {
+  font-size: 1.5rem !important;
+}
+
+.icon-xl {
+  font-size: 2rem !important;
+}
+
+.icon-2x {
+  font-size: 2.5rem !important;
+}
+
+.icon-3x {
+  font-size: 3rem !important;
+}
+
+/* Spacing helpers */
+.icon-mr-1 {
+  margin-right: 0.25rem !important;
+}
+
+.icon-mr-2 {
+  margin-right: 0.5rem !important;
+}
+
+.icon-mr-3 {
+  margin-right: 0.75rem !important;
+}
+
+.icon-ml-1 {
+  margin-left: 0.25rem !important;
+}
+
+.icon-ml-2 {
+  margin-left: 0.5rem !important;
+}
+
+.icon-ml-3 {
+  margin-left: 0.75rem !important;
+}

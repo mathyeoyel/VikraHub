@@ -279,7 +279,7 @@ const Creators = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="search-input"
               />
-              <button className="search-btn">🔍</button>
+              <button className="search-btn"><i className="fas fa-search"></i></button>
             </div>
 
             <div className="category-filters">
@@ -305,7 +305,7 @@ const Creators = () => {
                 <div className="creator-details">
                   <h3>{creator.name}</h3>
                   <p className="creator-role">{creator.title}</p>
-                  <p className="creator-location">📍 {creator.location}</p>
+                  <p className="creator-location"><i className="fas fa-map-marker-alt icon"></i> {creator.location}</p>
                   <p className="creator-experience">{creator.yearsExperience} years experience</p>
                   <div className="creator-skills">
                     {creator.specialties.slice(0, 3).map((specialty, index) => (

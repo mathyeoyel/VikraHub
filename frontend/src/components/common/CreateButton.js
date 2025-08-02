@@ -116,15 +116,7 @@ const CreateButton = () => {
         aria-label="Create new content"
         aria-expanded={isOpen}
       >
-        <svg 
-          width="20" 
-          height="20" 
-          viewBox="0 0 24 24" 
-          fill="currentColor"
-          className={`create-icon ${isOpen ? 'rotated' : ''}`}
-        >
-          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-        </svg>
+        <i className={`fas fa-plus create-icon ${isOpen ? 'rotated' : ''}`}></i>
       </button>
 
       {isOpen && (

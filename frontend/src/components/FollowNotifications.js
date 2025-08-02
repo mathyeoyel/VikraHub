@@ -164,9 +164,7 @@ const FollowNotifications = ({
         {displayedNotifications.length === 0 ? (
           <div className="follow-notifications__empty">
             <div className="follow-notifications__empty-icon">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V19C3 20.1 3.9 21 5 21H11V19H5V3H13V9H21ZM14 15.5C14 17.43 15.57 19 17.5 19S21 17.43 21 15.5S19.43 12 17.5 12S14 14.57 14 15.5ZM20 21V23H15V21H20Z"/>
-              </svg>
+              <i className="fas fa-user-plus"></i>
             </div>
             <p>No follow notifications yet</p>
             <small>You'll see notifications here when someone follows you</small>

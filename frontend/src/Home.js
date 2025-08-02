@@ -141,9 +141,9 @@ function Home() {
                   }}
                 />
                 <div className="hero-graphic">
-                  <div className="floating-card card-1">💻</div>
-                  <div className="floating-card card-2">🚀</div>
-                  <div className="floating-card card-3">⚡</div>
+                  <div className="floating-card card-1"><i className="fas fa-laptop icon"></i></div>
+                  <div className="floating-card card-2"><i className="fas fa-rocket icon"></i></div>
+                  <div className="floating-card card-3"><i className="fas fa-bolt icon"></i></div>
                 </div>
               </div>
             </div>
@@ -200,27 +200,27 @@ function Home() {
             </div>
             <div className="services-grid">
               <div className="service-card">
-                <div className="service-icon">📁</div>
+                <div className="service-icon"><i className="fas fa-folder-open icon"></i></div>
                 <h3>Creator Portfolios</h3>
                 <p>Build your digital showcase and grow your audience.</p>
               </div>
               <div className="service-card">
-                <div className="service-icon">🔍</div>
+                <div className="service-icon"><i className="fas fa-search icon"></i></div>
                 <h3>Talent Discovery</h3>
                 <p>Businesses and organizations can find the best creative talent for their projects.</p>
               </div>
               <div className="service-card">
-                <div className="service-icon">🎨</div>
+                <div className="service-icon"><i className="fas fa-palette icon"></i></div>
                 <h3>Custom Commissions</h3>
                 <p>Need art, photography, or design? Post your project and hire South Sudanese creatives directly.</p>
               </div>
               <div className="service-card">
-                <div className="service-icon">💡</div>
+                <div className="service-icon"><i className="fas fa-lightbulb icon"></i></div>
                 <h3>Inspiration & Resources</h3>
                 <p>Access curated galleries, creative guides, and resources made for and by local talent.</p>
               </div>
               <div className="service-card">
-                <div className="service-icon">🎓</div>
+                <div className="service-icon"><i className="fas fa-graduation-cap icon"></i></div>
                 <h3>Workshops & Events</h3>
                 <p>Participate in exclusive skill-building workshops, creative challenges, and community events.</p>
               </div>
@@ -315,27 +315,27 @@ function Home() {
             <h2 className="section-title">Why VikraHub?</h2>
             <div className="features-grid">
               <div className="feature-card">
-                <div className="feature-icon">🇸🇸</div>
+                <div className="feature-icon"><i className="fas fa-flag icon"></i></div>
                 <h3>Local Focus</h3>
                 <p>100% South Sudanese creative community, representing authentic stories and visions.</p>
               </div>
               <div className="feature-card">
-                <div className="feature-icon">🔍</div>
+                <div className="feature-icon"><i className="fas fa-search icon"></i></div>
                 <h3>Easy Discovery</h3>
                 <p>Search by skill, city, or creative field.</p>
               </div>
               <div className="feature-card">
-                <div className="feature-icon">🚀</div>
+                <div className="feature-icon"><i className="fas fa-rocket icon"></i></div>
                 <h3>Opportunities</h3>
                 <p>Get noticed by agencies, media, NGOs, and collaborators.</p>
               </div>
               <div className="feature-card">
-                <div className="feature-icon">🤝</div>
+                <div className="feature-icon"><i className="fas fa-handshake icon"></i></div>
                 <h3>Inclusive Community</h3>
                 <p>Connect, collaborate, and support each other.</p>
               </div>
               <div className="feature-card">
-                <div className="feature-icon">📈</div>
+                <div className="feature-icon"><i className="fas fa-chart-line icon"></i></div>
                 <h3>Growth-Oriented</h3>
                 <p>Workshops, competitions, and learning resources to help you level up.</p>
               </div>

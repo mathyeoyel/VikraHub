@@ -28,7 +28,7 @@ const PostCard = ({ post, currentUser }) => {
           onLikeChange={handleLikeChange}
         />
         <button className="comment-btn">
-          💬 {post.comment_count} Comments
+          <i className="fas fa-comment icon"></i> {post.comment_count} Comments
         </button>
       </div>
     </div>

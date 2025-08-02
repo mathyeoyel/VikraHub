@@ -174,7 +174,7 @@ const CommentSection = ({
               className="comment__reply-btn"
               onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)}
             >
-              💬 Reply
+              <i className="fas fa-reply icon"></i> Reply
             </button>
           )}
         </div>

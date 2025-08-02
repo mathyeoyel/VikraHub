@@ -77,7 +77,7 @@ const Projects = () => {
         {projects.length === 0 ? (
           <div className="no-projects">
             <div className="text-center">
-              <i className="bi bi-folder-x display-1 text-muted"></i>
+              <i className="fas fa-folder-open display-1 text-muted"></i>
               <h3>No projects found</h3>
               <p className="text-muted">Be the first to share your project with the community!</p>
               <Link to="/create/project" className="btn btn-primary">
@@ -99,7 +99,7 @@ const Projects = () => {
                     />
                   ) : (
                     <div className="project-placeholder">
-                      <i className="bi bi-image"></i>
+                      <i className="fas fa-image"></i>
                     </div>
                   )}
                   
@@ -123,13 +123,13 @@ const Projects = () => {
 
                   <div className="project-meta">
                     <div className="project-author">
-                      <i className="bi bi-person-circle"></i>
+                      <i className="fas fa-user-circle"></i>
                       <span>{project.user?.username || project.author?.username || 'Anonymous'}</span>
                     </div>
                     
                     {project.created_at && (
                       <div className="project-date">
-                        <i className="bi bi-calendar3"></i>
+                        <i className="fas fa-calendar"></i>
                         <span>
                           {new Date(project.created_at).toLocaleDateString('en-US', {
                             year: 'numeric',
@@ -171,7 +171,7 @@ const Projects = () => {
                         rel="noopener noreferrer"
                         className="btn btn-primary btn-sm"
                       >
-                        <i className="bi bi-box-arrow-up-right"></i>
+                        <i className="fas fa-external-link-alt"></i>
                         Live Demo
                       </a>
                     )}
@@ -183,7 +183,7 @@ const Projects = () => {
                         rel="noopener noreferrer"
                         className="btn btn-outline-dark btn-sm"
                       >
-                        <i className="bi bi-github"></i>
+                        <i className="fab fa-github"></i>
                         Code
                       </a>
                     )}
@@ -196,7 +196,7 @@ const Projects = () => {
 
         <div className="text-center mt-5">
           <Link to="/create/project" className="btn btn-primary btn-lg">
-            <i className="bi bi-plus-circle"></i>
+            <i className="fas fa-plus-circle"></i>
             Create New Project
           </Link>
         </div>

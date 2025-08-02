@@ -32,7 +32,7 @@ const Services = () => {
           <div className="services-grid">
             {/* Digital Asset Management */}
             <div className="service-card">
-              <div className="service-icon">🎨</div>
+              <div className="service-icon"><i className="fas fa-palette icon"></i></div>
               <h3>Digital Asset Management</h3>
               <p>Secure storage, organization, and management of your cultural and creative digital assets.</p>
               <ul className="service-features">
@@ -51,7 +51,7 @@ const Services = () => {
             {/* Cultural Documentation */}
             <div className="service-card featured">
               <div className="featured-badge">Most Popular</div>
-              <div className="service-icon">📚</div>
+              <div className="service-icon"><i className="fas fa-book icon"></i></div>
               <h3>Cultural Documentation</h3>
               <p>Professional documentation and preservation of South Sudanese cultural practices, stories, and traditions.</p>
               <ul className="service-features">
@@ -69,7 +69,7 @@ const Services = () => {
 
             {/* Marketplace Integration */}
             <div className="service-card">
-              <div className="service-icon">🛍️</div>
+              <div className="service-icon"><i className="fas fa-shopping-bag icon"></i></div>
               <h3>Marketplace Integration</h3>
               <p>Connect with buyers and sell your cultural assets through our integrated marketplace platform.</p>
               <ul className="service-features">
@@ -87,7 +87,7 @@ const Services = () => {
 
             {/* Creative Training */}
             <div className="service-card">
-              <div className="service-icon">🎓</div>
+              <div className="service-icon"><i className="fas fa-graduation-cap icon"></i></div>
               <h3>Creative Training & Workshops</h3>
               <p>Skill development programs for South Sudanese artists and cultural practitioners.</p>
               <ul className="service-features">
@@ -105,7 +105,7 @@ const Services = () => {
 
             {/* Cultural Research */}
             <div className="service-card">
-              <div className="service-icon">🔍</div>
+              <div className="service-icon"><i className="fas fa-search icon"></i></div>
               <h3>Cultural Research Services</h3>
               <p>In-depth research and analysis of South Sudanese cultural heritage and contemporary practices.</p>
               <ul className="service-features">
@@ -123,7 +123,7 @@ const Services = () => {
 
             {/* Technical Support */}
             <div className="service-card">
-              <div className="service-icon">⚙️</div>
+              <div className="service-icon"><i className="fas fa-cog icon"></i></div>
               <h3>Technical Support & Consulting</h3>
               <p>Expert technical guidance for digital transformation and technology adoption.</p>
               <ul className="service-features">

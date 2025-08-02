@@ -181,13 +181,13 @@ const PublicProfile = () => {
   const getUserTypeIcon = (userType) => {
     switch (userType) {
       case 'freelancer':
-        return '💼';
+        return 'fas fa-briefcase';
       case 'creator':
-        return '🛍️';
+        return 'fas fa-shopping-bag';
       case 'client':
-        return '👤';
+        return 'fas fa-user';
       default:
-        return '👤';
+        return 'fas fa-user';
     }
   };
 
@@ -197,13 +197,13 @@ const PublicProfile = () => {
 
   const getSocialIcon = (platform) => {
     const icons = {
-      facebook: '📘',
-      instagram: '📷',
-      twitter: '🐦',
-      linkedin: '💼',
-      github: '🐙'
+      facebook: 'fab fa-facebook',
+      instagram: 'fab fa-instagram',
+      twitter: 'fab fa-twitter',
+      linkedin: 'fab fa-linkedin',
+      github: 'fab fa-github'
     };
-    return icons[platform] || '🔗';
+    return icons[platform] || 'fas fa-link';
   };
 
   const handleContact = () => {
@@ -412,12 +412,12 @@ const PublicProfile = () => {
                     onClick={handleMessage}
                     title={`Send a message to ${profile.full_name || username}`}
                   >
-                    <span className="btn-icon">💬</span>
+                    <span className="btn-icon"><i className="fas fa-comment icon"></i></span>
                     Message
                   </button>
                 )}
                 <button className="action-btn share-btn" onClick={handleShare}>
-                  <span className="btn-icon">📤</span>
+                  <span className="btn-icon"><i className="fas fa-share icon"></i></span>
                   Share
                 </button>
               </div>
@@ -442,7 +442,7 @@ const PublicProfile = () => {
               
               <div className="profile-meta">
                 <div className="user-type">
-                  <span className="user-type-icon">{getUserTypeIcon(profile.user_type)}</span>
+                  <span className="user-type-icon"><i className={`${getUserTypeIcon(profile.user_type)} icon`}></i></span>
                   <span className="user-type-label">{getUserTypeLabel(profile.user_type)}</span>
                 </div>
                 <p className="member-since">
@@ -485,27 +485,27 @@ const PublicProfile = () => {
               )}
               {profile.linkedin && (
                 <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="social-link">
-                  {getSocialIcon('linkedin')} LinkedIn
+                  <i className={`${getSocialIcon('linkedin')} icon`}></i> LinkedIn
                 </a>
               )}
               {profile.github && (
                 <a href={profile.github} target="_blank" rel="noopener noreferrer" className="social-link">
-                  {getSocialIcon('github')} GitHub
+                  <i className={`${getSocialIcon('github')} icon`}></i> GitHub
                 </a>
               )}
               {profile.twitter && (
                 <a href={profile.twitter} target="_blank" rel="noopener noreferrer" className="social-link">
-                  {getSocialIcon('twitter')} Twitter
+                  <i className={`${getSocialIcon('twitter')} icon`}></i> Twitter
                 </a>
               )}
               {profile.instagram && (
                 <a href={profile.instagram} target="_blank" rel="noopener noreferrer" className="social-link">
-                  {getSocialIcon('instagram')} Instagram
+                  <i className={`${getSocialIcon('instagram')} icon`}></i> Instagram
                 </a>
               )}
               {profile.facebook && (
                 <a href={profile.facebook} target="_blank" rel="noopener noreferrer" className="social-link">
-                  {getSocialIcon('facebook')} Facebook
+                  <i className={`${getSocialIcon('facebook')} icon`}></i> Facebook
                 </a>
               )}
             </div>
@@ -554,7 +554,7 @@ const PublicProfile = () => {
                   {Array.isArray(profile.achievements)
                     ? profile.achievements.map((achievement, index) => (
                         <div key={index} className="achievement-item">
-                          <span className="achievement-icon">🏆</span>
+                          <span className="achievement-icon"><i className="fas fa-trophy icon"></i></span>
                           <p>{typeof achievement === 'string' ? achievement : 
                               typeof achievement === 'object' && achievement ? (achievement.name || achievement.title || 'Achievement earned') : 
                               'Achievement earned'}</p>
@@ -563,7 +563,7 @@ const PublicProfile = () => {
                     : typeof profile.achievements === 'string'
                     ? profile.achievements.split('\n').map((achievement, index) => (
                         <div key={index} className="achievement-item">
-                          <span className="achievement-icon">🏆</span>
+                          <span className="achievement-icon"><i className="fas fa-trophy icon"></i></span>
                           <p>{achievement.trim()}</p>
                         </div>
                       ))
@@ -584,7 +584,7 @@ const PublicProfile = () => {
                   {Array.isArray(profile.services_offered)
                     ? profile.services_offered.map((service, index) => (
                         <div key={index} className="service-item">
-                          <span className="service-icon">⚡</span>
+                          <span className="service-icon"><i className="fas fa-bolt icon"></i></span>
                           <p>{typeof service === 'string' ? service : 
                               typeof service === 'object' && service ? (service.name || service.title || 'Service available') : 
                               'Service available'}</p>
@@ -593,7 +593,7 @@ const PublicProfile = () => {
                     : typeof profile.services_offered === 'string'
                     ? profile.services_offered.split('\n').map((service, index) => (
                         <div key={index} className="service-item">
-                          <span className="service-icon">⚡</span>
+                          <span className="service-icon"><i className="fas fa-bolt icon"></i></span>
                           <p>{service.trim()}</p>
                         </div>
                       ))
@@ -610,21 +610,21 @@ const PublicProfile = () => {
               <div className="rates-content">
                 <div className="rates-grid">
                   <div className="rate-item">
-                    <div className="rate-icon">💰</div>
+                    <div className="rate-icon"><i className="fas fa-dollar-sign icon"></i></div>
                     <div className="rate-info">
                       <h4>Hourly Rate</h4>
                       <p>Contact for rates</p>
                     </div>
                   </div>
                   <div className="rate-item">
-                    <div className="rate-icon">📋</div>
+                    <div className="rate-icon"><i className="fas fa-clipboard icon"></i></div>
                     <div className="rate-info">
                       <h4>Project Rate</h4>
                       <p>Varies by scope</p>
                     </div>
                   </div>
                   <div className="rate-item">
-                    <div className="rate-icon">⚡</div>
+                    <div className="rate-icon"><i className="fas fa-bolt icon"></i></div>
                     <div className="rate-info">
                       <h4>Rush Jobs</h4>
                       <p>+50% surcharge</p>
@@ -666,7 +666,7 @@ const PublicProfile = () => {
               
               {profile.user_type === 'creator' && (
                 <div className="experience-item">
-                  <div className="experience-icon">🎨</div>
+                  <div className="experience-icon"><i className="fas fa-palette icon"></i></div>
                   <div className="experience-content">
                     <h4>Creator Type</h4>
                     <p>{getUserTypeLabel(profile.user_type)}</p>
@@ -676,7 +676,7 @@ const PublicProfile = () => {
               
               {profile.user_type === 'freelancer' && (
                 <div className="experience-item">
-                  <div className="experience-icon">💼</div>
+                  <div className="experience-icon"><i className="fas fa-briefcase icon"></i></div>
                   <div className="experience-content">
                     <h4>Professional</h4>
                     <p>Freelancer</p>
@@ -892,7 +892,7 @@ const PublicProfile = () => {
                 {(!profile.portfolio_items || profile.portfolio_items.length === 0) && 
                  (!assets || assets.length === 0) && (
                   <div className="no-content-state">
-                    <div className="no-content-icon">📁</div>
+                    <div className="no-content-icon"><i className="fas fa-folder-open icon"></i></div>
                     <h4>
                       {profile.user_type === 'client' ? 'No Projects Listed' : 'No Portfolio Items'}
                     </h4>
@@ -948,7 +948,7 @@ const PublicProfile = () => {
             <h3>Recent Activity</h3>
             <div className="activity-feed">
               <div className="activity-item">
-                <div className="activity-icon">🎨</div>
+                <div className="activity-icon"><i className="fas fa-palette icon"></i></div>
                 <div className="activity-content">
                   <p><strong>Joined VikraHub</strong></p>
                   <span className="activity-date">{formatDate(profile.member_since)}</span>
@@ -956,7 +956,7 @@ const PublicProfile = () => {
               </div>
               {assets.length > 0 && (
                 <div className="activity-item">
-                  <div className="activity-icon">📁</div>
+                  <div className="activity-icon"><i className="fas fa-folder-open icon"></i></div>
                   <div className="activity-content">
                     <p><strong>Added {assets.length} portfolio item{assets.length !== 1 ? 's' : ''}</strong></p>
                     <span className="activity-date">Various dates</span>
@@ -983,7 +983,7 @@ const PublicProfile = () => {
               </p>
               <div className="contact-methods">
                 <button className="contact-method-btn primary" onClick={handleMessage}>
-                  <span className="method-icon">💬</span>
+                  <span className="method-icon"><i className="fas fa-comment icon"></i></span>
                   <div className="method-info">
                     <h4>Send Message</h4>
                     <p>

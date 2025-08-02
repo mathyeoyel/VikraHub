@@ -306,7 +306,7 @@ const UploadWork = () => {
                   required
                 />
                 <label htmlFor="files" className="file-upload-label">
-                  <div className="upload-icon">📁</div>
+                  <div className="upload-icon"><i className="fas fa-folder-open icon"></i></div>
                   <div className="upload-text">
                     <h4>Drop files here or click to browse</h4>
                     <p>Supports images, videos, audio, documents, and archives</p>

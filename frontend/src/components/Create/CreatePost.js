@@ -159,7 +159,7 @@ const CreatePost = () => {
 
           <div className="privacy-section">
             <h3 className="privacy-title">
-              <span className="privacy-icon">🔒</span>
+              <span className="privacy-icon"><i className="fas fa-lock icon"></i></span>
               Privacy & Sharing Settings
             </h3>
             
@@ -199,7 +199,7 @@ const CreatePost = () => {
                     className="form-checkbox"
                   />
                   <label htmlFor="allowComments" className="checkbox-label">
-                    <span className="checkbox-title">💬 Allow Comments</span>
+                    <span className="checkbox-title"><i className="fas fa-comment icon"></i> Allow Comments</span>
                     <span className="checkbox-description">
                       Let others comment and engage with your post
                     </span>
@@ -218,7 +218,7 @@ const CreatePost = () => {
                     className="form-checkbox"
                   />
                   <label htmlFor="allowSharing" className="checkbox-label">
-                    <span className="checkbox-title">📤 Allow Sharing</span>
+                    <span className="checkbox-title"><i className="fas fa-share icon"></i> Allow Sharing</span>
                     <span className="checkbox-description">
                       Enable others to share your post with their networks
                     </span>

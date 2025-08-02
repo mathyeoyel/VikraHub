@@ -184,7 +184,7 @@ const Portfolio = () => {
         <div className="portfolio-grid">
           {filteredPortfolios.length === 0 ? (
             <div className="empty-portfolio">
-              <div className="empty-icon">🎨</div>
+              <div className="empty-icon"><i className="fas fa-palette icon"></i></div>
               <h3>No Portfolio Items Yet</h3>
               <p>
                 {filter === 'all' 

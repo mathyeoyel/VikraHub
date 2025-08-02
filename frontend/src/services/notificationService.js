@@ -66,7 +66,7 @@ class NotificationService {
         type: 'profile',
         data: { username: followerUsername }
       },
-      icon: '👤'
+      icon: 'fas fa-user'
     });
   }
 
@@ -79,7 +79,7 @@ class NotificationService {
         type: 'message',
         data: { username: senderUsername }
       },
-      icon: '💬'
+      icon: 'fas fa-comment'
     });
   }
 
@@ -99,7 +99,7 @@ class NotificationService {
         type: 'project',
         data: { title: projectTitle }
       },
-      icon: '📋'
+      icon: 'fas fa-clipboard'
     });
   }
 

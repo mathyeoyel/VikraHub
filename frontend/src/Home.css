@@ -1809,3 +1809,80 @@
     font-size: 2rem;
   }
 }
+
+/* Home Page Icon Styles */
+/* Hero section icons (dark navy #000223 background) */
+.hero .icon {
+  color: #ffa000 !important; /* Orange for dark navy hero background */
+}
+
+.hero-btn .icon {
+  color: #ffa000 !important;
+}
+
+/* Floating cards icons */
+.floating-card .icon {
+  color: #7c521b !important; /* Bronze for light card backgrounds */
+  font-size: 2rem; /* Larger for floating cards */
+}
+
+/* Service section icons */
+.services-section .icon,
+.service-card .icon {
+  color: #7c521b !important; /* Bronze for light backgrounds */
+  font-size: 1.8rem; /* Larger for service cards */
+}
+
+/* Feature section icons */
+.features-section .icon,
+.feature-card .icon {
+  color: #7c521b !important; /* Bronze for light backgrounds */
+  font-size: 1.5rem; /* Good size for feature icons */
+}
+
+/* Why VikraHub section icons */
+.why-vikrahub .icon {
+  color: #7c521b !important; /* Bronze for light backgrounds */
+}
+
+/* CTA section icons - only orange if dark navy background */
+.cta-section .icon,
+.join-section .icon {
+  color: #7c521b !important; /* Default bronze unless specifically dark navy */
+}
+
+/* Only use orange for join buttons if they have dark navy background */
+.join-btn .icon {
+  color: #7c521b !important; /* Default bronze */
+}
+
+/* Dark navy background CTA override */
+.cta-section[style*="background: #000223"] .icon,
+.cta-section[style*="background:#000223"] .icon,
+.join-section[style*="background: #000223"] .icon,
+.join-section[style*="background:#000223"] .icon,
+.join-btn[style*="background: #000223"] .icon,
+.join-btn[style*="background:#000223"] .icon {
+  color: #ffa000 !important;
+}
+
+/* Stats section icons */
+.stats-section .icon {
+  color: #7c521b !important; /* Bronze for light backgrounds */
+}
+
+/* Creator showcase icons */
+.creator-card .icon {
+  color: #7c521b !important; /* Bronze for light backgrounds */
+}
+
+/* Collection/portfolio icons */
+.collection-card .icon,
+.portfolio-preview .icon {
+  color: #7c521b !important; /* Bronze for light backgrounds */
+}
+
+/* Testimonial icons */
+.testimonial-card .icon {
+  color: #7c521b !important; /* Bronze for light backgrounds */
+}

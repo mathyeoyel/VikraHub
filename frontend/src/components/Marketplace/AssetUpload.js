@@ -175,7 +175,7 @@ const AssetUpload = ({ onAssetCreated }) => {
   return (
     <div className="asset-upload-container">
       <div className="upload-header">
-        <h2>📤 Upload Creative Asset</h2>
+        <h2><i className="fas fa-upload icon"></i> Upload Creative Asset</h2>
         <p>Share your creative work with the community and earn money</p>
       </div>
 

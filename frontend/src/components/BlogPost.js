@@ -122,11 +122,11 @@ const BlogPost = () => {
                 <div className="blog-post-meta">
                   <div className="d-flex align-items-center flex-wrap gap-3">
                     <div className="author-info d-flex align-items-center">
-                      <i className="bi bi-person-circle me-2"></i>
+                      <i className="fas fa-user-circle me-2"></i>
                       <span>By {blog.author?.username || blog.author?.first_name || 'Anonymous'}</span>
                     </div>
                     <div className="publish-date d-flex align-items-center">
-                      <i className="bi bi-calendar3 me-2"></i>
+                      <i className="fas fa-calendar me-2"></i>
                       <time dateTime={blog.created_at}>
                         {new Date(blog.created_at).toLocaleDateString('en-US', {
                           year: 'numeric',
@@ -136,7 +136,7 @@ const BlogPost = () => {
                       </time>
                     </div>
                     <div className="read-time d-flex align-items-center">
-                      <i className="bi bi-clock me-2"></i>
+                      <i className="fas fa-clock me-2"></i>
                       <span>{Math.ceil((blog.content?.length || 0) / 1000)} min read</span>
                     </div>
                   </div>
@@ -194,7 +194,7 @@ const BlogPost = () => {
                         }
                       }}
                     >
-                      <i className="bi bi-share"></i> Share
+                      <i className="fas fa-share"></i> Share
                     </button>
                   </div>
                 </div>
@@ -203,7 +203,7 @@ const BlogPost = () => {
               {/* Navigation */}
               <div className="blog-post-navigation mt-5 pt-4 border-top">
                 <Link to="/blog" className="btn btn-outline-primary">
-                  <i className="bi bi-arrow-left"></i> Back to Blog
+                  <i className="fas fa-arrow-left"></i> Back to Blog
                 </Link>
               </div>
             </article>

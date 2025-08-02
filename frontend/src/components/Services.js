@@ -31,7 +31,7 @@ const Services = () => {
           <div className="services-grid">
             {/* Creator Portfolios */}
             <div className="service-card">
-              <div className="service-icon">🎨</div>
+              <div className="service-icon"><i className="fas fa-palette icon"></i></div>
               <h3>Creator Portfolios</h3>
               <p>Showcase your creativity to the world.</p>
               <ul className="service-features">
@@ -43,7 +43,7 @@ const Services = () => {
 
             {/* Talent Discovery */}
             <div className="service-card">
-              <div className="service-icon">👥</div>
+              <div className="service-icon"><i className="fas fa-users icon"></i></div>
               <h3>Talent Discovery for Organizations</h3>
               <p>Find and collaborate with the best creative minds from South Sudan.</p>
               <ul className="service-features">
@@ -55,7 +55,7 @@ const Services = () => {
 
             {/* Custom Commissions */}
             <div className="service-card">
-              <div className="service-icon">💼</div>
+              <div className="service-icon"><i className="fas fa-briefcase icon"></i></div>
               <h3>Custom Commissions</h3>
               <p>Bring your project to life with local talent.</p>
               <ul className="service-features">
@@ -67,7 +67,7 @@ const Services = () => {
 
             {/* Curated Inspiration */}
             <div className="service-card">
-              <div className="service-icon">✨</div>
+              <div className="service-icon"><i className="fas fa-sparkles icon"></i></div>
               <h3>Curated Inspiration & Resources</h3>
               <p>Fuel your imagination and grow your skills.</p>
               <ul className="service-features">
@@ -79,7 +79,7 @@ const Services = () => {
 
             {/* Workshops & Events */}
             <div className="service-card">
-              <div className="service-icon">🎓</div>
+              <div className="service-icon"><i className="fas fa-graduation-cap icon"></i></div>
               <h3>Workshops & Events</h3>
               <p>Grow, learn, and connect—online and offline.</p>
               <ul className="service-features">
@@ -98,22 +98,22 @@ const Services = () => {
           <h2 className="section-title">Why Choose VikraHub?</h2>
           <div className="features-grid">
             <div className="feature-card">
-              <div className="feature-icon">🇸🇸</div>
+              <div className="feature-icon"><i className="fas fa-flag icon"></i></div>
               <h3>Local Focus</h3>
               <p>We are dedicated to uplifting South Sudanese talent.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">🤝</div>
+              <div className="feature-icon"><i className="fas fa-handshake icon"></i></div>
               <h3>Trusted Community</h3>
               <p>Safe, supportive, and inspiring space for all.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">🔗</div>
+              <div className="feature-icon"><i className="fas fa-link icon"></i></div>
               <h3>Easy Connections</h3>
               <p>Simple tools to connect creators with real opportunities.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">📈</div>
+              <div className="feature-icon"><i className="fas fa-chart-line icon"></i></div>
               <h3>Professional Growth</h3>
               <p>Resources and events designed to help you thrive.</p>
             </div>

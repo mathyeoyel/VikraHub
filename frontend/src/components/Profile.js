@@ -425,19 +425,19 @@ const Profile = () => {
               <h2>Rates & Pricing</h2>
               <div className="rates-grid">
                 <div className="rate-card">
-                  <div className="rate-icon">💰</div>
+                  <div className="rate-icon"><i className="fas fa-dollar-sign icon"></i></div>
                   <h4>Hourly Rate</h4>
                   <p className="rate-price">Contact for rates</p>
                   <p>Perfect for ongoing projects and consultations</p>
                 </div>
                 <div className="rate-card">
-                  <div className="rate-icon">📋</div>
+                  <div className="rate-icon"><i className="fas fa-clipboard icon"></i></div>
                   <h4>Project Rate</h4>
                   <p className="rate-price">Varies by scope</p>
                   <p>Fixed pricing based on project requirements</p>
                 </div>
                 <div className="rate-card">
-                  <div className="rate-icon">⚡</div>
+                  <div className="rate-icon"><i className="fas fa-bolt icon"></i></div>
                   <h4>Rush Jobs</h4>
                   <p className="rate-price">+50% surcharge</p>
                   <p>Priority delivery for urgent projects</p>

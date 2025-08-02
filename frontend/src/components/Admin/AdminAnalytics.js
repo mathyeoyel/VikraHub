@@ -116,7 +116,7 @@ const AdminAnalytics = () => {
 
       <div className="analytics-cards">
         <div className="analytics-card">
-          <div className="card-icon">👥</div>
+          <div className="card-icon"><i className="fas fa-users icon"></i></div>
           <div className="card-content">
             <h3>Total Users</h3>
             <div className="card-value">{analytics.totalUsers}</div>
@@ -125,7 +125,7 @@ const AdminAnalytics = () => {
         </div>
 
         <div className="analytics-card">
-          <div className="card-icon">🎨</div>
+          <div className="card-icon"><i className="fas fa-palette icon"></i></div>
           <div className="card-content">
             <h3>Creative Assets</h3>
             <div className="card-value">{analytics.totalAssets}</div>
@@ -134,7 +134,7 @@ const AdminAnalytics = () => {
         </div>
 
         <div className="analytics-card">
-          <div className="card-icon">📋</div>
+          <div className="card-icon"><i className="fas fa-clipboard icon"></i></div>
           <div className="card-content">
             <h3>Active Projects</h3>
             <div className="card-value">{analytics.totalProjects}</div>
@@ -143,7 +143,7 @@ const AdminAnalytics = () => {
         </div>
 
         <div className="analytics-card">
-          <div className="card-icon">💰</div>
+          <div className="card-icon"><i className="fas fa-dollar-sign icon"></i></div>
           <div className="card-content">
             <h3>Total Revenue</h3>
             <div className="card-value">${analytics.totalRevenue.toLocaleString()}</div>

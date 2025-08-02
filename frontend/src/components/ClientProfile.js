@@ -284,7 +284,7 @@ const ClientProfile = () => {
                   )}
                   {clientProfile?.preferred_communication && (
                     <div className="preference-item">
-                      <h4>💬 Communication</h4>
+                      <h4><i className="fas fa-comment icon"></i> Communication</h4>
                       <p>{clientProfile.preferred_communication}</p>
                     </div>
                   )}
@@ -486,7 +486,7 @@ const ClientProfile = () => {
                   
                   <div className="response-info">
                     <p>
-                      <span className="response-icon">⚡</span>
+                      <span className="response-icon"><i className="fas fa-bolt icon"></i></span>
                       Usually responds within 24 hours
                     </p>
                   </div>

@@ -105,11 +105,11 @@ const LikeButton = ({
     >
       <span className="like-button__icon">
         {isLoading ? (
-          <span className="like-button__spinner">⟳</span>
+          <span className="like-button__spinner"><i className="fas fa-spinner fa-spin icon"></i></span>
         ) : isLiked ? (
-          '❤️'
+          <i className="fas fa-heart icon"></i>
         ) : (
-          '🤍'
+          <i className="far fa-heart icon"></i>
         )}
       </span>
       {showCount && (

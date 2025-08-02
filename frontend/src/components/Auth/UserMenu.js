@@ -131,7 +131,7 @@ const UserMenu = ({ onMenuAction }) => {
             </Link>
             <Link to="/messages" className="user-dropdown-item" onClick={handleMenuClick}>
               <div className="dropdown-content">
-                <span className="dropdown-icon">💬</span>
+                <span className="dropdown-icon"><i className="fas fa-comment icon"></i></span>
                 Messages
               </div>
               {unreadMessages > 0 && <span className="unread-badge">{unreadMessages}</span>}
@@ -146,7 +146,7 @@ const UserMenu = ({ onMenuAction }) => {
             <div className="dropdown-divider"></div>
             <Link to="/dashboard" className="user-dropdown-item" onClick={handleMenuClick}>
               <div className="dropdown-content">
-                <span className="dropdown-icon">📊</span>
+                <span className="dropdown-icon"><i className="fas fa-chart-bar icon"></i></span>
                 Dashboard
               </div>
             </Link>

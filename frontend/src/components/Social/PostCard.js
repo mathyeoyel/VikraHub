@@ -182,17 +182,17 @@ const PostCard = ({
             disabled={!postData.allow_comments}
             title={postData.allow_comments ? 'View comments' : 'Comments disabled'}
           >
-            💬 {postData.comment_count || 0}
+            <i className="fas fa-comment icon"></i> {postData.comment_count || 0}
           </button>
           
           {postData.allow_sharing && (
             <button className="post-card__share-btn" title="Share post">
-              📤 {postData.share_count || 0}
+              <i className="fas fa-share icon"></i> {postData.share_count || 0}
             </button>
           )}
           
           <span className="post-card__views" title="Views">
-            👁️ {postData.view_count || 0}
+            <i className="fas fa-eye icon"></i> {postData.view_count || 0}
           </span>
         </div>
       </div>

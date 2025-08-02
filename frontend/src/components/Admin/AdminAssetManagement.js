@@ -242,7 +242,7 @@ const AdminAssetManagement = () => {
                 {asset.preview_image ? (
                   <img src={asset.preview_image} alt={asset.title} />
                 ) : (
-                  <div className="no-image">🎨</div>
+                  <div className="no-image"><i className="fas fa-palette icon"></i></div>
                 )}
               </div>
               <div className="asset-details">
@@ -287,7 +287,7 @@ const AdminAssetManagement = () => {
                 className="action-btn view"
                 title="View Details"
               >
-                👁️
+                <i className="fas fa-eye icon"></i>
               </button>
               
               <button

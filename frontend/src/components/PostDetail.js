@@ -111,7 +111,7 @@ const PostDetail = () => {
             {/* Navigation */}
             <div className="post-detail-navigation mt-4">
               <Link to="/posts" className="btn btn-outline-primary">
-                <i className="bi bi-arrow-left"></i> Back to Posts
+                <i className="fas fa-arrow-left"></i> Back to Posts
               </Link>
             </div>
           </div>

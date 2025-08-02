@@ -61,7 +61,7 @@ const ActivityFeed = () => {
   const getActivityIcon = (type) => {
     switch (type) {
       case 'follow': return '👤';
-      case 'message': return '💬';
+      case 'message': return <i className="fas fa-comment icon"></i>;
       case 'profile_update': return '✏️';
       case 'new_user': return '🎉';
       default: return '📌';

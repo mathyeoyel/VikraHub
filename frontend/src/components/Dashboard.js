@@ -530,8 +530,8 @@ const Dashboard = () => {
   const tabs = [
     { id: 'overview', label: 'Overview', icon: '📊' },
     { id: 'social', label: 'Social', icon: '👥' },
-    { id: 'messages', label: 'Messages', icon: '💬' },
-    { id: 'upload', label: 'Upload Asset', icon: '📤' },
+    { id: 'messages', label: 'Messages', icon: <i className="fas fa-comment icon"></i> },
+    { id: 'upload', label: 'Upload Asset', icon: <i className="fas fa-upload icon"></i> },
     { id: 'profile', label: 'Edit Profile', icon: '⚙️' },
     { id: 'notifications', label: 'Notifications', icon: '🔔' }
   ];
@@ -578,7 +578,7 @@ const Dashboard = () => {
         {/* Update Notification */}
         {updateNotification && (
           <div className="update-notification">
-            <span className="notification-icon">✨</span>
+            <span className="notification-icon"><i className="fas fa-sparkles icon"></i></span>
             {updateNotification}
           </div>
         )}
@@ -729,7 +729,7 @@ const Dashboard = () => {
               {/* Quick Stats */}
               <div className="stats-grid">
                 <div className="stat-card">
-                  <div className="stat-icon">🎨</div>
+                  <div className="stat-icon"><i className="fas fa-palette icon"></i></div>
                   <div className="stat-info">
                     <h3>{stats.portfolioItems}</h3>
                     <p>Portfolio Items</p>
@@ -756,7 +756,7 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-icon">💰</div>
+                  <div className="stat-icon"><i className="fas fa-dollar-sign icon"></i></div>
                   <div className="stat-info">
                     <h3>${stats.totalEarnings}</h3>
                     <p>Total Earnings</p>
@@ -770,14 +770,14 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-icon">❤️</div>
+                  <div className="stat-icon"><i className="fas fa-heart icon"></i></div>
                   <div className="stat-info">
                     <h3>{stats.totalLikes}</h3>
                     <p>Total Likes</p>
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-icon">👥</div>
+                  <div className="stat-icon"><i className="fas fa-users icon"></i></div>
                   <div className="stat-info">
                     <h3>{stats.followers}</h3>
                     <p>Followers</p>

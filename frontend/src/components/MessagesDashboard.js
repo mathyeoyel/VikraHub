@@ -112,7 +112,7 @@ const MessagesDashboard = () => {
 
       {conversations.length === 0 ? (
         <div className="no-conversations">
-          <div className="no-conversations-icon">💬</div>
+          <div className="no-conversations-icon"><i className="fas fa-comment icon"></i></div>
           <h4>No conversations yet</h4>
           <p>Start chatting with other members to see your conversations here.</p>
           <div className="conversation-suggestions">

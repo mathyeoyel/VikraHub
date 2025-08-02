@@ -142,15 +142,7 @@ const ChatButton = ({
         className={`chat-button chat-button-${variant} ${getSizeClass()} ${className}`}
         disabled
       >
-        <svg 
-          width="16" 
-          height="16" 
-          viewBox="0 0 24 24" 
-          fill="currentColor"
-          className="chat-icon spinning"
-        >
-          <path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"/>
-        </svg>
+        <i className="fas fa-spinner chat-icon spinning"></i>
         Loading...
       </button>
     );
@@ -164,15 +156,7 @@ const ChatButton = ({
         disabled
         title={`Error: ${error}`}
       >
-        <svg 
-          width="16" 
-          height="16" 
-          viewBox="0 0 24 24" 
-          fill="currentColor"
-          className="chat-icon"
-        >
-          <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/>
-        </svg>
+        <i className="fas fa-times chat-icon"></i>
         Unavailable
       </button>
     );
@@ -186,15 +170,7 @@ const ChatButton = ({
         title={`Send a message to ${recipientUser?.full_name || recipientUser?.username || 'user'}`}
         disabled={!recipientUser}
       >
-        <svg 
-          width="16" 
-          height="16" 
-          viewBox="0 0 24 24" 
-          fill="currentColor"
-          className="chat-icon"
-        >
-          <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
-        </svg>
+        <i className="fas fa-comments chat-icon"></i>
         {buttonText}
       </button>
       
