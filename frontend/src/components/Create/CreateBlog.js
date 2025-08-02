@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Auth/AuthContext';
 import { blogAPI } from '../../api';
+import RichTextEditor from '../common/RichTextEditor';
 import './CreateBlog.css';
 
 const CreateBlog = () => {
@@ -36,6 +37,13 @@ const CreateBlog = () => {
     setBlogData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleContentChange = (e) => {
+    setBlogData(prev => ({
+      ...prev,
+      content: e.target.value
     }));
   };
 
@@ -160,18 +168,14 @@ const CreateBlog = () => {
               <label htmlFor="content" className="form-label">
                 Content *
               </label>
-              <textarea
-                id="content"
-                name="content"
+              <RichTextEditor
                 value={blogData.content}
-                onChange={handleInputChange}
-                placeholder="Write your blog content here... You can use markdown formatting."
-                className="form-textarea blog-content"
-                rows="15"
-                required
+                onChange={handleContentChange}
+                placeholder="Write your blog content here... Use the toolbar above for formatting."
+                required={true}
               />
               <div className="form-hint">
-                Tip: Use markdown for formatting (e.g., **bold**, *italic*, # headings)
+                Tip: Use the formatting toolbar above for rich text editing. Preview your content before publishing.
               </div>
             </div>
           </div>
