@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { blogAPI } from '../api';
 import LikeButton from './Social/LikeButton';
+import CommentSection from './Social/CommentSection';
 import './BlogPost.css';
 
 const BlogPost = () => {
@@ -10,6 +11,58 @@ const BlogPost = () => {
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Format blog content with proper typography and formatting
+  const formatBlogContent = (content) => {
+    if (!content) return '';
+    
+    let formattedContent = content;
+    
+    // Convert numbered lists (1. 2. 3.) to proper HTML ordered lists
+    formattedContent = formattedContent.replace(
+      /(\d+\.\s+[^\n]+(?:\n(?!\d+\.\s+)[^\n]*)*)/g,
+      (match) => {
+        const items = match.split(/\d+\.\s+/).filter(item => item.trim());
+        const listItems = items.map(item => `<li>${item.trim()}</li>`).join('');
+        return `<ol class="blog-numbered-list">${listItems}</ol>`;
+      }
+    );
+    
+    // Convert bullet points (- or *) to proper HTML unordered lists
+    formattedContent = formattedContent.replace(
+      /(?:^|\n)([-*]\s+[^\n]+(?:\n(?![-*]\s+)[^\n]*)*)/gm,
+      (match) => {
+        const items = match.split(/\n?[-*]\s+/).filter(item => item.trim());
+        const listItems = items.map(item => `<li>${item.trim()}</li>`).join('');
+        return `<ul class="blog-bullet-list">${listItems}</ul>`;
+      }
+    );
+    
+    // Convert paragraph breaks
+    formattedContent = formattedContent.replace(/\n\n/g, '</p><p>');
+    
+    // Wrap in paragraph if not already wrapped
+    if (!formattedContent.startsWith('<p>') && !formattedContent.includes('<')) {
+      formattedContent = `<p>${formattedContent}</p>`;
+    }
+    
+    // Style headers
+    formattedContent = formattedContent.replace(
+      /^(#{1,6})\s+(.+)$/gm, 
+      (match, hashes, text) => {
+        const level = hashes.length;
+        return `<h${level} class="blog-heading">${text}</h${level}>`;
+      }
+    );
+    
+    // Style bold text
+    formattedContent = formattedContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Style italic text
+    formattedContent = formattedContent.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    
+    return formattedContent;
+  };
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -81,26 +134,23 @@ const BlogPost = () => {
             <article className="blog-post-content">
               {/* Breadcrumb */}
               <nav aria-label="breadcrumb" className="mb-4">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link to="/">Home</Link>
-                  </li>
-                  <li className="breadcrumb-item">
-                    <Link to="/blog">Blog</Link>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    {blog.title}
-                  </li>
-                </ol>
+                <div className="breadcrumb-nav">
+                  <Link to="/" className="breadcrumb-link">Home</Link>
+                  <span className="breadcrumb-separator">/</span>
+                  <Link to="/blog" className="breadcrumb-link">Blog</Link>
+                  <span className="breadcrumb-separator">/</span>
+                  <span className="breadcrumb-current">{blog.title}</span>
+                </div>
               </nav>
 
               {/* Featured Image */}
               {blog.image && (
-                <div className="blog-post-image mb-4">
+                <div className="blog-post-featured-image mb-4">
                   <img 
                     src={blog.image} 
                     alt={blog.title} 
-                    className="img-fluid rounded"
+                    className="img-fluid rounded w-100"
+                    style={{ maxHeight: '400px', objectFit: 'cover' }}
                   />
                 </div>
               )}
@@ -146,8 +196,8 @@ const BlogPost = () => {
               {/* Content */}
               <div className="blog-post-body">
                 <div 
-                  className="content"
-                  dangerouslySetInnerHTML={{ __html: blog.content }}
+                  className="blog-content"
+                  dangerouslySetInnerHTML={{ __html: formatBlogContent(blog.content) }}
                 />
               </div>
 
@@ -194,16 +244,29 @@ const BlogPost = () => {
                         }
                       }}
                     >
-                      <i className="fas fa-share"></i> Share
+                      <i className="fas fa-share icon"></i> Share
                     </button>
                   </div>
                 </div>
               </div>
 
+              {/* Comments Section */}
+              <div className="blog-post-comments mt-5 pt-4 border-top">
+                <h4 className="mb-4">
+                  <i className="fas fa-comment icon"></i> Comments
+                </h4>
+                <CommentSection 
+                  type="blog"
+                  id={blog.id}
+                  allowComments={blog.allow_comments !== false}
+                  className="blog-comments"
+                />
+              </div>
+
               {/* Navigation */}
               <div className="blog-post-navigation mt-5 pt-4 border-top">
                 <Link to="/blog" className="btn btn-outline-primary">
-                  <i className="fas fa-arrow-left"></i> Back to Blog
+                  <i className="fas fa-arrow-left icon"></i> Back to Blog
                 </Link>
               </div>
             </article>

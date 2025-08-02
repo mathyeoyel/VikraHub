@@ -60,7 +60,31 @@ const Blog = () => {
       <div className="container">
         <div className="section-title">
           <h2>Blog</h2>
-          <p>Latest insights and updates</p>
+          <p>Latest insights and updates from our creative community</p>
+        </div>
+
+        {/* Formatting Guide for Content Creators */}
+        <div className="blog-formatting-guide mb-5">
+          <div className="alert alert-info">
+            <h5><i className="fas fa-info-circle icon"></i> Formatting Guide for Blog Content</h5>
+            <div className="row">
+              <div className="col-md-6">
+                <h6>Lists & Bullets:</h6>
+                <ul className="formatting-examples">
+                  <li><strong>Numbered lists:</strong> Use "1. " for ordered lists</li>
+                  <li><strong>Bullet points:</strong> Use "- " or "* " for bullets</li>
+                </ul>
+              </div>
+              <div className="col-md-6">
+                <h6>Text Formatting:</h6>
+                <ul className="formatting-examples">
+                  <li><strong>Bold text:</strong> **bold text**</li>
+                  <li><strong>Italic text:</strong> *italic text*</li>
+                  <li><strong>Headers:</strong> # Header 1, ## Header 2</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="blog-grid">
@@ -90,11 +114,11 @@ const Blog = () => {
                 <div className="entry-meta">
                   <ul>
                     <li className="d-flex align-items-center">
-                      <i className="fas fa-user"></i>
+                      <i className="fas fa-user icon"></i>
                       <span className="author-name">{blog.author?.username || 'Anonymous'}</span>
                     </li>
                     <li className="d-flex align-items-center">
-                      <i className="fas fa-clock"></i>
+                      <i className="fas fa-clock icon"></i>
                       <time dateTime={blog.created_at}>
                         {new Date(blog.created_at).toLocaleDateString('en-US', {
                           year: 'numeric',
@@ -120,7 +144,7 @@ const Blog = () => {
                       showCount={true}
                     />
                     <span className="comments-count">
-                      <i className="fas fa-comments"></i>
+                      <i className="fas fa-comment icon"></i>
                       {blog.comment_count || 0} comments
                     </span>
                   </div>
