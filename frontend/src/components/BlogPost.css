@@ -48,6 +48,19 @@
   line-height: 1.2;
 }
 
+/* Mobile responsiveness for title */
+@media (max-width: 768px) {
+  .blog-post-title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .blog-post-title {
+    font-size: 1.75rem;
+  }
+}
+
 .blog-post-excerpt {
   font-size: 1.2rem;
   line-height: 1.6;
@@ -63,6 +76,14 @@
   justify-content: center;
   flex-wrap: nowrap;
   gap: 0;
+  white-space: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.blog-post-meta .meta-line::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .blog-post-meta .author-info,
@@ -71,18 +92,47 @@
   white-space: nowrap;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .blog-post-meta .meta-separator {
-  margin: 0 0.75rem;
+  margin: 0 0.5rem;
   color: #adb5bd;
   font-weight: 300;
+  flex-shrink: 0;
 }
 
 .blog-post-meta .icon {
   color: #7c521b !important;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   margin-right: 0.25rem !important;
+  flex-shrink: 0;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .blog-post-meta {
+    font-size: 0.8rem;
+  }
+  
+  .blog-post-meta .meta-separator {
+    margin: 0 0.3rem;
+  }
+  
+  .blog-post-meta .icon {
+    font-size: 0.75rem;
+    margin-right: 0.2rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .blog-post-meta {
+    font-size: 0.75rem;
+  }
+  
+  .blog-post-meta .meta-separator {
+    margin: 0 0.25rem;
+  }
 }
 
 .blog-post-body {
@@ -363,4 +413,56 @@
   background: white;
   border-radius: 8px;
   padding: 1.5rem;
+}
+
+/* Comprehensive Mobile Responsiveness */
+@media (max-width: 768px) {
+  .blog-post {
+    padding: 1rem 0;
+  }
+  
+  .blog-post-content {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .blog-post-header {
+    padding-bottom: 1.5rem;
+  }
+  
+  .breadcrumb-nav {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .breadcrumb-current {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .blog-post-content {
+    padding: 1rem;
+  }
+  
+  .blog-post-header {
+    padding-bottom: 1rem;
+  }
+  
+  .breadcrumb-nav {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+  }
+  
+  .breadcrumb-current {
+    max-width: 150px;
+  }
+  
+  .blog-post-comments {
+    padding: 1rem;
+  }
+  
+  .blog-comments {
+    padding: 1rem;
+  }
 }
