@@ -170,13 +170,14 @@ const BlogPost = () => {
                 )}
 
                 <div className="blog-post-meta">
-                  <div className="d-flex align-items-center flex-wrap gap-3">
-                    <div className="author-info d-flex align-items-center">
-                      <i className="fas fa-user-circle me-2"></i>
-                      <span>By {blog.author?.username || blog.author?.first_name || 'Anonymous'}</span>
-                    </div>
-                    <div className="publish-date d-flex align-items-center">
-                      <i className="fas fa-calendar me-2"></i>
+                  <div className="meta-line d-flex align-items-center">
+                    <span className="author-info d-flex align-items-center">
+                      <i className="fas fa-user icon me-1"></i>
+                      <span>By {blog.author?.username || blog.author?.first_name || 'mathyeoyel'}</span>
+                    </span>
+                    <span className="meta-separator">|</span>
+                    <span className="publish-date d-flex align-items-center">
+                      <i className="fas fa-calendar icon me-1"></i>
                       <time dateTime={blog.created_at}>
                         {new Date(blog.created_at).toLocaleDateString('en-US', {
                           year: 'numeric',
@@ -184,11 +185,12 @@ const BlogPost = () => {
                           day: 'numeric'
                         })}
                       </time>
-                    </div>
-                    <div className="read-time d-flex align-items-center">
-                      <i className="fas fa-clock me-2"></i>
+                    </span>
+                    <span className="meta-separator">|</span>
+                    <span className="read-time d-flex align-items-center">
+                      <i className="fas fa-clock icon me-1"></i>
                       <span>{Math.ceil((blog.content?.length || 0) / 1000)} min read</span>
-                    </div>
+                    </span>
                   </div>
                 </div>
               </header>
