@@ -73,7 +73,9 @@
 }
 
 .blog-post-meta .meta-line {
+  display: flex;
   justify-content: center;
+  align-items: center;
   flex-wrap: nowrap;
   gap: 0;
   white-space: nowrap;

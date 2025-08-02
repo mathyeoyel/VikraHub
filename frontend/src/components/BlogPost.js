@@ -170,14 +170,14 @@ const BlogPost = () => {
                 )}
 
                 <div className="blog-post-meta">
-                  <div className="meta-line d-flex align-items-center">
-                    <span className="author-info d-flex align-items-center">
-                      <i className="fas fa-user icon me-1"></i>
+                  <div className="meta-line">
+                    <span className="author-info">
+                      <i className="fas fa-user icon"></i>
                       <span>By {blog.author?.username || blog.author?.first_name || 'mathyeoyel'}</span>
                     </span>
                     <span className="meta-separator">|</span>
-                    <span className="publish-date d-flex align-items-center">
-                      <i className="fas fa-calendar icon me-1"></i>
+                    <span className="publish-date">
+                      <i className="fas fa-calendar icon"></i>
                       <time dateTime={blog.created_at}>
                         {new Date(blog.created_at).toLocaleDateString('en-US', {
                           year: 'numeric',
@@ -187,8 +187,8 @@ const BlogPost = () => {
                       </time>
                     </span>
                     <span className="meta-separator">|</span>
-                    <span className="read-time d-flex align-items-center">
-                      <i className="fas fa-clock icon me-1"></i>
+                    <span className="read-time">
+                      <i className="fas fa-clock icon"></i>
                       <span>{Math.ceil((blog.content?.length || 0) / 1000)} min read</span>
                     </span>
                   </div>
