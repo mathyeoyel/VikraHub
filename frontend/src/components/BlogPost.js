@@ -18,6 +18,42 @@ const BlogPost = () => {
     
     let formattedContent = content;
     
+    // Handle images with markdown syntax ![alt](url) and convert to responsive images
+    formattedContent = formattedContent.replace(
+      /!\[([^\]]*)\]\(([^)]+)\)/g,
+      '<div class="blog-image-container"><img src="$2" alt="$1" class="blog-image" loading="lazy" /><div class="blog-image-caption">$1</div></div>'
+    );
+    
+    // Handle plain image URLs and make them responsive
+    formattedContent = formattedContent.replace(
+      /(?:^|\s)(https?:\/\/[^\s]+\.(?:jpg|jpeg|png|gif|webp))(?:\s|$)/gi,
+      ' <div class="blog-image-container"><img src="$1" alt="Blog image" class="blog-image" loading="lazy" /></div> '
+    );
+    
+    // Handle links with markdown syntax [text](url)
+    formattedContent = formattedContent.replace(
+      /\[([^\]]+)\]\(([^)]+)\)/g,
+      '<a href="$2" class="blog-link" target="_blank" rel="noopener noreferrer">$1</a>'
+    );
+    
+    // Handle code blocks with triple backticks
+    formattedContent = formattedContent.replace(
+      /```([\s\S]*?)```/g,
+      '<div class="blog-code-block"><pre><code>$1</code></pre></div>'
+    );
+    
+    // Handle inline code with single backticks
+    formattedContent = formattedContent.replace(
+      /`([^`]+)`/g,
+      '<code class="blog-inline-code">$1</code>'
+    );
+    
+    // Handle blockquotes
+    formattedContent = formattedContent.replace(
+      /^>\s+(.+)$/gm,
+      '<blockquote class="blog-quote">$1</blockquote>'
+    );
+    
     // Convert numbered lists (1. 2. 3.) to proper HTML ordered lists
     formattedContent = formattedContent.replace(
       /(\d+\.\s+[^\n]+(?:\n(?!\d+\.\s+)[^\n]*)*)/g,
@@ -38,28 +74,36 @@ const BlogPost = () => {
       }
     );
     
-    // Convert paragraph breaks
-    formattedContent = formattedContent.replace(/\n\n/g, '</p><p>');
-    
-    // Wrap in paragraph if not already wrapped
-    if (!formattedContent.startsWith('<p>') && !formattedContent.includes('<')) {
-      formattedContent = `<p>${formattedContent}</p>`;
-    }
-    
-    // Style headers
+    // Style headers with proper hierarchy
     formattedContent = formattedContent.replace(
       /^(#{1,6})\s+(.+)$/gm, 
       (match, hashes, text) => {
         const level = hashes.length;
-        return `<h${level} class="blog-heading">${text}</h${level}>`;
+        return `<h${level} class="blog-heading blog-h${level}">${text}</h${level}>`;
       }
     );
     
     // Style bold text
-    formattedContent = formattedContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    formattedContent = formattedContent.replace(/\*\*(.*?)\*\*/g, '<strong class="blog-bold">$1</strong>');
     
     // Style italic text
-    formattedContent = formattedContent.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    formattedContent = formattedContent.replace(/\*(.*?)\*/g, '<em class="blog-italic">$1</em>');
+    
+    // Style underline text
+    formattedContent = formattedContent.replace(/<u>(.*?)<\/u>/g, '<u class="blog-underline">$1</u>');
+    
+    // Style strikethrough text
+    formattedContent = formattedContent.replace(/~~(.*?)~~/g, '<del class="blog-strikethrough">$1</del>');
+    
+    // Convert paragraph breaks and wrap paragraphs
+    formattedContent = formattedContent.replace(/\n\n/g, '</p><p class="blog-paragraph">');
+    
+    // Wrap in paragraph if not already wrapped and doesn't contain block elements
+    if (!formattedContent.includes('<p>') && !formattedContent.includes('<h') && 
+        !formattedContent.includes('<ul>') && !formattedContent.includes('<ol>') && 
+        !formattedContent.includes('<div>') && !formattedContent.includes('<blockquote>')) {
+      formattedContent = `<p class="blog-paragraph">${formattedContent}</p>`;
+    }
     
     return formattedContent;
   };
