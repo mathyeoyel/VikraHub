@@ -1,4 +1,5 @@
 import logging
+import cloudinary.uploader
 
 from rest_framework import viewsets, status, serializers
 from rest_framework.decorators import action, api_view, permission_classes
@@ -222,6 +223,39 @@ class BlogPostViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """Return all published blogs, ordered by creation date"""
         return BlogPost.objects.filter(published=True).order_by('-created_at')
+    
+    def create(self, request, *args, **kwargs):
+        """Custom create method to handle featured image upload"""
+        try:
+            # Handle featured image upload if provided
+            if 'featured_image' in request.FILES:
+                featured_image = request.FILES['featured_image']
+                
+                # Upload to Cloudinary
+                import cloudinary.uploader
+                result = cloudinary.uploader.upload(
+                    featured_image,
+                    folder="blog_images",
+                    allowed_formats=['jpg', 'jpeg', 'png', 'gif', 'webp'],
+                    transformation=[
+                        {'width': 1200, 'height': 800, 'crop': 'limit'},
+                        {'quality': 'auto', 'fetch_format': 'auto'}
+                    ]
+                )
+                
+                # Add the Cloudinary URL to the request data
+                mutable_data = request.data.copy()
+                mutable_data['image'] = result['secure_url']
+                request._full_data = mutable_data
+            
+            return super().create(request, *args, **kwargs)
+            
+        except Exception as e:
+            logger.error(f"Error creating blog post with image: {e}")
+            return Response({
+                'error': 'Failed to create blog post',
+                'detail': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
