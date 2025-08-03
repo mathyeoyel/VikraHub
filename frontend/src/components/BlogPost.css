@@ -576,13 +576,13 @@
 }
 
 .blog-content .blog-bullet-list {
-  background: linear-gradient(135deg, #e8f5e8, #d4edda);
-  border-left: 5px solid #28a745;
+  background: linear-gradient(135deg, #fff5e6, #ffeaa7);
+  border-left: 5px solid #7c521b;
   padding: 1.5rem 2rem;
   margin: 2rem 0;
   border-radius: 0 12px 12px 0;
   list-style-type: none;
-  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.15);
+  box-shadow: 0 4px 15px rgba(124, 82, 27, 0.15);
 }
 
 .blog-content .blog-bullet-list li {
@@ -596,7 +596,7 @@
 
 .blog-content .blog-bullet-list li:before {
   content: '●';
-  color: #28a745;
+  color: #7c521b;
   font-weight: bold;
   position: absolute;
   left: 0;
