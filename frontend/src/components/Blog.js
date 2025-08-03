@@ -63,30 +63,6 @@ const Blog = () => {
           <p>Latest insights and updates from our creative community</p>
         </div>
 
-        {/* Formatting Guide for Content Creators */}
-        <div className="blog-formatting-guide mb-5">
-          <div className="alert alert-info">
-            <h5><i className="fas fa-info-circle icon"></i> Formatting Guide for Blog Content</h5>
-            <div className="row">
-              <div className="col-md-6">
-                <h6>Lists & Bullets:</h6>
-                <ul className="formatting-examples">
-                  <li><strong>Numbered lists:</strong> Use "1. " for ordered lists</li>
-                  <li><strong>Bullet points:</strong> Use "- " or "* " for bullets</li>
-                </ul>
-              </div>
-              <div className="col-md-6">
-                <h6>Text Formatting:</h6>
-                <ul className="formatting-examples">
-                  <li><strong>Bold text:</strong> **bold text**</li>
-                  <li><strong>Italic text:</strong> *italic text*</li>
-                  <li><strong>Headers:</strong> # Header 1, ## Header 2</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div className="blog-grid">
           {blogs.map((blog, index) => (
             <div key={blog.id} className={`blog-item col-lg-4 col-md-6`}>
