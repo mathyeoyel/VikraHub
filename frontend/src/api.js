@@ -274,7 +274,15 @@ export const blogAPI = {
   },
   create: async (data) => {
     try {
-      const response = await api.post("blog/", data);
+      // Check if data is FormData (for file uploads)
+      const config = {};
+      if (data instanceof FormData) {
+        config.headers = {
+          'Content-Type': 'multipart/form-data',
+        };
+      }
+      
+      const response = await api.post("blog/", data, config);
       return response.data;
     } catch (error) {
       return handleAPIError(error, "Failed to create blog post");
