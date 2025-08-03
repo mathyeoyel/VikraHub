@@ -4308,3 +4308,5 @@ INFO 2025-07-31 19:42:46,935 autoreload 2844 19628 Watching for file changes wit
 WARNING 2025-08-03 15:52:46,325 log 7324 24640 Unauthorized: /api/blog/
 INFO 2025-08-03 17:11:34,803 api_views 22320 25044 Blog post validation failed: {'excerpt': [ErrorDetail(string='Ensure this field has no more than 300 characters.', code='max_length')]}
 WARNING 2025-08-03 17:11:34,818 log 22320 25044 Bad Request: /api/blog/
+WARNING 2025-08-03 19:07:47,385 log 25488 13380 Forbidden: /api/blog/test-blog-for-editdelete/
+INFO 2025-08-03 19:07:47,397 api_views 25488 13380 Blog post 'Updated Test Blog' deleted by user testuser1

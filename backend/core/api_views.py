@@ -223,6 +223,31 @@ class BlogPostViewSet(viewsets.ModelViewSet):
         """Return all published blogs, ordered by creation date"""
         return BlogPost.objects.filter(published=True).order_by('-created_at')
     
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action in ['update', 'partial_update', 'destroy']:
+            # Only authenticated users can update/delete, and only their own posts
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsAuthenticatedOrReadOnly]
+        return [permission() for permission in permission_classes]
+    
+    def get_object(self):
+        """
+        Override to ensure users can only access their own posts for edit/delete operations
+        """
+        obj = super().get_object()
+        
+        # For update/delete operations, ensure user owns the post
+        if self.action in ['update', 'partial_update', 'destroy']:
+            if obj.author != self.request.user:
+                from rest_framework.exceptions import PermissionDenied
+                raise PermissionDenied("You can only edit or delete your own blog posts.")
+        
+        return obj
+    
     def create(self, request, *args, **kwargs):
         """Custom create method to handle featured image upload"""
         from rest_framework import exceptions as drf_exceptions
@@ -290,6 +315,93 @@ class BlogPostViewSet(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+    
+    def update(self, request, *args, **kwargs):
+        """Custom update method to handle featured image upload"""
+        from rest_framework import exceptions as drf_exceptions
+        
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        
+        # Handle featured image upload if provided
+        if 'featured_image' in request.FILES:
+            featured_image = request.FILES['featured_image']
+            
+            try:
+                # Upload to Cloudinary
+                import cloudinary.uploader
+                result = cloudinary.uploader.upload(
+                    featured_image,
+                    folder="blog_images",
+                    allowed_formats=['jpg', 'jpeg', 'png', 'gif', 'webp'],
+                    transformation=[
+                        {'width': 1200, 'height': 800, 'crop': 'limit'},
+                        {'quality': 'auto', 'fetch_format': 'auto'}
+                    ]
+                )
+                
+                # Create a proper mutable copy of the request data
+                data = {}
+                if hasattr(request.data, 'dict'):
+                    data.update(request.data.dict())
+                else:
+                    data.update(request.data)
+                
+                # Add the image URL
+                data['image'] = result['secure_url']
+                
+                # Create serializer with the modified data
+                serializer = self.get_serializer(instance, data=data, partial=partial)
+                serializer.is_valid(raise_exception=True)
+                self.perform_update(serializer)
+                
+                if getattr(instance, '_prefetched_objects_cache', None):
+                    instance._prefetched_objects_cache = {}
+                
+                return Response(serializer.data)
+                
+            except (ImportError, Exception) as upload_error:
+                # Log upload failure but continue with normal update
+                if isinstance(upload_error, ImportError):
+                    logger.warning("Cloudinary not available - updating blog post without new image")
+                else:
+                    logger.warning(f"Cloudinary upload failed - updating blog post without new image: {upload_error}")
+                # Fall through to normal update without image
+        
+        # No image upload needed or upload failed, use default update
+        try:
+            return super().update(request, *args, **kwargs)
+        except (serializers.ValidationError, drf_exceptions.ValidationError) as e:
+            logger.info(f"Blog post validation failed during update: {e}")
+            raise  # Re-raise to let DRF handle the 400 response
+        except Exception as e:
+            logger.error(f"Unexpected error updating blog post: {e}")
+            import traceback
+            logger.error(f"Full traceback: {traceback.format_exc()}")
+            return Response({
+                'error': 'Internal server error',
+                'detail': 'An unexpected error occurred while updating the blog post'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def destroy(self, request, *args, **kwargs):
+        """Custom destroy method with proper logging and error handling"""
+        try:
+            instance = self.get_object()
+            blog_title = instance.title
+            self.perform_destroy(instance)
+            logger.info(f"Blog post '{blog_title}' deleted by user {request.user.username}")
+            return Response(
+                {'message': f"Blog post '{blog_title}' has been successfully deleted."},
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            logger.error(f"Error deleting blog post: {e}")
+            import traceback
+            logger.error(f"Full traceback: {traceback.format_exc()}")
+            return Response({
+                'error': 'Internal server error',
+                'detail': 'An unexpected error occurred while deleting the blog post'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     @action(detail=False, methods=['get'])
     def all_posts(self, request):

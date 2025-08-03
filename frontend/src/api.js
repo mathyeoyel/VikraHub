@@ -290,7 +290,15 @@ export const blogAPI = {
   },
   update: async (id, data) => {
     try {
-      const response = await api.patch(`blog/${id}/`, data);
+      // Check if data is FormData (for file uploads)
+      const config = {};
+      if (data instanceof FormData) {
+        config.headers = {
+          'Content-Type': 'multipart/form-data',
+        };
+      }
+      
+      const response = await api.patch(`blog/${id}/`, data, config);
       return response.data;
     } catch (error) {
       return handleAPIError(error, "Failed to update blog post");
