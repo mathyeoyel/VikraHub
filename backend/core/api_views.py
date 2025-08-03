@@ -243,8 +243,14 @@ class BlogPostViewSet(viewsets.ModelViewSet):
                         ]
                     )
                     
-                    # Create a mutable copy of the request data and add the image URL
-                    data = request.data.copy()
+                    # Create a proper mutable copy of the request data
+                    data = {}
+                    if hasattr(request.data, 'dict'):
+                        data.update(request.data.dict())
+                    else:
+                        data.update(request.data)
+                    
+                    # Add the image URL
                     data['image'] = result['secure_url']
                     
                     # Create serializer with the modified data
@@ -256,22 +262,20 @@ class BlogPostViewSet(viewsets.ModelViewSet):
                     
                 except ImportError:
                     logger.error("Cloudinary not available - image upload skipped")
-                    return Response({
-                        'error': 'Image upload not available',
-                        'detail': 'Cloudinary service is not configured'
-                    }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+                    # Continue with normal creation without image
+                    pass
                 except Exception as upload_error:
                     logger.error(f"Cloudinary upload failed: {upload_error}")
-                    return Response({
-                        'error': 'Image upload failed',
-                        'detail': str(upload_error)
-                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                    # Continue with normal creation without image
+                    pass
             
-            # No image upload needed, use default create
+            # No image upload needed or upload failed, use default create
             return super().create(request, *args, **kwargs)
             
         except Exception as e:
             logger.error(f"Error creating blog post: {e}")
+            import traceback
+            logger.error(f"Full traceback: {traceback.format_exc()}")
             return Response({
                 'error': 'Failed to create blog post',
                 'detail': str(e)

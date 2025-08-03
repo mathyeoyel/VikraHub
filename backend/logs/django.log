@@ -4305,3 +4305,4 @@ INFO 2025-07-31 19:42:45,158 autoreload 22356 6616 C:\Users\hp\Downloads\Project
 INFO 2025-07-31 19:42:45,166 autoreload 10732 17176 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
 INFO 2025-07-31 19:42:46,934 autoreload 23988 9420 Watching for file changes with StatReloader
 INFO 2025-07-31 19:42:46,935 autoreload 2844 19628 Watching for file changes with StatReloader
+WARNING 2025-08-03 15:52:46,325 log 7324 24640 Unauthorized: /api/blog/
