@@ -71,7 +71,7 @@ const PostCard = ({
 
   const getCategoryIcon = (category) => {
     const icons = {
-      art: '🎨',
+      art: <i className="fas fa-palette"></i>,
       music: '🎵',
       photography: '📸',
       writing: '✍️',
@@ -86,7 +86,7 @@ const PostCard = ({
   };
 
   const getPrivacyIcon = () => {
-    return postData.is_public ? '🌍' : '🔒';
+    return postData.is_public ? <i className="fas fa-globe"></i> : '🔒';
   };
 
   return (
