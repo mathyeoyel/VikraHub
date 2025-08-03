@@ -331,11 +331,10 @@
 
 .post-card__category {
   background: #f5f5f5 !important;
-    color: #666 !important;
-  }
-  
-  .post-card__comments {
-    background: white !important;
-    border-top-color: #e0e0e0 !important;
-  }
+  color: #666 !important;
+}
+
+.post-card__comments {
+  background: white !important;
+  border-top-color: #e0e0e0 !important;
 }
