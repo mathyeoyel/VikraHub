@@ -1,5 +1,4 @@
 import logging
-import cloudinary.uploader
 
 from rest_framework import viewsets, status, serializers
 from rest_framework.decorators import action, api_view, permission_classes

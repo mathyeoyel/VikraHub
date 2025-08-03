@@ -1,5 +1,6 @@
 # Django Backend API Requirements
 asgiref==3.9.1
+cloudinary==1.36.0
 dj-database-url==3.0.1
 Django==5.2.4
 django-cors-headers==4.7.0
