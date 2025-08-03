@@ -243,10 +243,16 @@ class BlogPostViewSet(viewsets.ModelViewSet):
                         ]
                     )
                     
-                    # Add the Cloudinary URL to the request data
-                    mutable_data = request.data.copy()
-                    mutable_data['image'] = result['secure_url']
-                    request._full_data = mutable_data
+                    # Create a mutable copy of the request data and add the image URL
+                    data = request.data.copy()
+                    data['image'] = result['secure_url']
+                    
+                    # Create serializer with the modified data
+                    serializer = self.get_serializer(data=data)
+                    serializer.is_valid(raise_exception=True)
+                    self.perform_create(serializer)
+                    headers = self.get_success_headers(serializer.data)
+                    return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
                     
                 except ImportError:
                     logger.error("Cloudinary not available - image upload skipped")
@@ -261,6 +267,7 @@ class BlogPostViewSet(viewsets.ModelViewSet):
                         'detail': str(upload_error)
                     }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
+            # No image upload needed, use default create
             return super().create(request, *args, **kwargs)
             
         except Exception as e:
