@@ -302,41 +302,40 @@
   }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .post-card {
-    background: #1a1a1a;
-    border-color: #333;
-  }
-  
-  .post-card__header {
-    border-bottom-color: #333;
-  }
-  
-  .post-card__author-name {
-    color: #e0e0e0;
-  }
-  
-  .post-card__title {
-    color: #e0e0e0;
-  }
-  
-  .post-card__text {
-    color: #ccc;
-  }
-  
-  .post-card__engagement {
-    background: #252525;
-    border-top-color: #333;
-  }
-  
-  .post-card__category {
-    background: #333;
-    color: #ccc;
+/* Ensure light background for post cards - Dark mode disabled for better UX */
+.post-card {
+  background: white !important;
+  border-color: #e0e0e0 !important;
+}
+
+.post-card__header {
+  border-bottom-color: #f0f0f0 !important;
+}
+
+.post-card__author-name {
+  color: #333 !important;
+}
+
+.post-card__title {
+  color: #333 !important;
+}
+
+.post-card__text {
+  color: #555 !important;
+}
+
+.post-card__engagement {
+  background: #fafafa !important;
+  border-top-color: #f0f0f0 !important;
+}
+
+.post-card__category {
+  background: #f5f5f5 !important;
+    color: #666 !important;
   }
   
   .post-card__comments {
-    background: #1a1a1a;
-    border-top-color: #333;
+    background: white !important;
+    border-top-color: #e0e0e0 !important;
   }
 }
