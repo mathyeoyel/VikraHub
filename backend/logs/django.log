@@ -4306,3 +4306,5 @@ INFO 2025-07-31 19:42:45,166 autoreload 10732 17176 C:\Users\hp\Downloads\Projec
 INFO 2025-07-31 19:42:46,934 autoreload 23988 9420 Watching for file changes with StatReloader
 INFO 2025-07-31 19:42:46,935 autoreload 2844 19628 Watching for file changes with StatReloader
 WARNING 2025-08-03 15:52:46,325 log 7324 24640 Unauthorized: /api/blog/
+INFO 2025-08-03 17:11:34,803 api_views 22320 25044 Blog post validation failed: {'excerpt': [ErrorDetail(string='Ensure this field has no more than 300 characters.', code='max_length')]}
+WARNING 2025-08-03 17:11:34,818 log 22320 25044 Bad Request: /api/blog/

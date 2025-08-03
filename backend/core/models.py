@@ -105,7 +105,7 @@ class PortfolioItem(models.Model):
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     content = models.TextField()
     excerpt = models.TextField(blank=True, max_length=300, help_text="Brief description for previews")
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts', null=True, blank=True)
