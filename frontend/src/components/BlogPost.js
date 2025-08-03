@@ -16,7 +16,12 @@ const BlogPost = () => {
   const formatBlogContent = (content) => {
     if (!content) return '';
     
+    console.log('Original content:', content);
+    
     let formattedContent = content;
+    
+    // Normalize line endings
+    formattedContent = formattedContent.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     
     // Handle images with markdown syntax ![alt](url) and convert to responsive images
     formattedContent = formattedContent.replace(
@@ -54,27 +59,7 @@ const BlogPost = () => {
       '<blockquote class="blog-quote">$1</blockquote>'
     );
     
-    // Convert numbered lists (1. 2. 3.) to proper HTML ordered lists
-    formattedContent = formattedContent.replace(
-      /(\d+\.\s+[^\n]+(?:\n(?!\d+\.\s+)[^\n]*)*)/g,
-      (match) => {
-        const items = match.split(/\d+\.\s+/).filter(item => item.trim());
-        const listItems = items.map(item => `<li>${item.trim()}</li>`).join('');
-        return `<ol class="blog-numbered-list">${listItems}</ol>`;
-      }
-    );
-    
-    // Convert bullet points (- or *) to proper HTML unordered lists
-    formattedContent = formattedContent.replace(
-      /(?:^|\n)([-*]\s+[^\n]+(?:\n(?![-*]\s+)[^\n]*)*)/gm,
-      (match) => {
-        const items = match.split(/\n?[-*]\s+/).filter(item => item.trim());
-        const listItems = items.map(item => `<li>${item.trim()}</li>`).join('');
-        return `<ul class="blog-bullet-list">${listItems}</ul>`;
-      }
-    );
-    
-    // Style headers with proper hierarchy
+    // Style headers with proper hierarchy FIRST (before other processing)
     formattedContent = formattedContent.replace(
       /^(#{1,6})\s+(.+)$/gm, 
       (match, hashes, text) => {
@@ -83,27 +68,93 @@ const BlogPost = () => {
       }
     );
     
-    // Style bold text
+    // Handle bullet points - MOST COMPREHENSIVE APPROACH
+    // Split content into lines and process each potential list
+    const lines = formattedContent.split('\n');
+    const processedLines = [];
+    let inList = false;
+    let currentList = [];
+    let listType = null;
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      
+      // Check if it's a bullet point (•, -, *, or ●)
+      const bulletMatch = line.match(/^[•\-*●]\s+(.+)/);
+      // Check if it's a numbered list
+      const numberMatch = line.match(/^(\d+)\.\s+(.+)/);
+      
+      if (bulletMatch) {
+        if (!inList || listType !== 'ul') {
+          if (inList) {
+            // Close previous list
+            processedLines.push(`</${listType} class="blog-${listType === 'ul' ? 'bullet' : 'numbered'}-list">`);
+          }
+          // Start new bullet list
+          processedLines.push('<ul class="blog-bullet-list">');
+          inList = true;
+          listType = 'ul';
+        }
+        processedLines.push(`<li>${bulletMatch[1]}</li>`);
+      } else if (numberMatch) {
+        if (!inList || listType !== 'ol') {
+          if (inList) {
+            // Close previous list
+            processedLines.push(`</${listType}>`);
+          }
+          // Start new numbered list
+          processedLines.push('<ol class="blog-numbered-list">');
+          inList = true;
+          listType = 'ol';
+        }
+        processedLines.push(`<li>${numberMatch[2]}</li>`);
+      } else {
+        // Not a list item
+        if (inList) {
+          processedLines.push(`</${listType}>`);
+          inList = false;
+          listType = null;
+        }
+        
+        if (line) {
+          processedLines.push(line);
+        } else {
+          processedLines.push(''); // Preserve empty lines
+        }
+      }
+    }
+    
+    // Close any remaining open list
+    if (inList) {
+      processedLines.push(`</${listType}>`);
+    }
+    
+    formattedContent = processedLines.join('\n');
+    
+    // Style text formatting
     formattedContent = formattedContent.replace(/\*\*(.*?)\*\*/g, '<strong class="blog-bold">$1</strong>');
-    
-    // Style italic text
     formattedContent = formattedContent.replace(/\*(.*?)\*/g, '<em class="blog-italic">$1</em>');
-    
-    // Style underline text
     formattedContent = formattedContent.replace(/<u>(.*?)<\/u>/g, '<u class="blog-underline">$1</u>');
-    
-    // Style strikethrough text
     formattedContent = formattedContent.replace(/~~(.*?)~~/g, '<del class="blog-strikethrough">$1</del>');
     
-    // Convert paragraph breaks and wrap paragraphs
-    formattedContent = formattedContent.replace(/\n\n/g, '</p><p class="blog-paragraph">');
+    // Handle paragraph breaks - split by double newlines or isolated single newlines
+    const paragraphs = formattedContent.split(/\n\s*\n/);
+    formattedContent = paragraphs.map(para => {
+      const trimmed = para.trim();
+      if (!trimmed) return '';
+      
+      // Don't wrap if it's already a block element
+      if (trimmed.startsWith('<h') || trimmed.startsWith('<ul') || 
+          trimmed.startsWith('<ol') || trimmed.startsWith('<div') || 
+          trimmed.startsWith('<blockquote') || trimmed.includes('</ul>') || 
+          trimmed.includes('</ol>')) {
+        return trimmed;
+      }
+      
+      return `<p class="blog-paragraph">${trimmed}</p>`;
+    }).filter(para => para).join('\n\n');
     
-    // Wrap in paragraph if not already wrapped and doesn't contain block elements
-    if (!formattedContent.includes('<p>') && !formattedContent.includes('<h') && 
-        !formattedContent.includes('<ul>') && !formattedContent.includes('<ol>') && 
-        !formattedContent.includes('<div>') && !formattedContent.includes('<blockquote>')) {
-      formattedContent = `<p class="blog-paragraph">${formattedContent}</p>`;
-    }
+    console.log('Formatted content:', formattedContent);
     
     return formattedContent;
   };
