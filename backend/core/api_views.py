@@ -225,60 +225,67 @@ class BlogPostViewSet(viewsets.ModelViewSet):
     
     def create(self, request, *args, **kwargs):
         """Custom create method to handle featured image upload"""
-        try:
-            # Handle featured image upload if provided
-            if 'featured_image' in request.FILES:
-                featured_image = request.FILES['featured_image']
+        from rest_framework import exceptions as drf_exceptions
+        
+        # Handle featured image upload if provided
+        if 'featured_image' in request.FILES:
+            featured_image = request.FILES['featured_image']
+            
+            try:
+                # Upload to Cloudinary
+                import cloudinary.uploader
+                result = cloudinary.uploader.upload(
+                    featured_image,
+                    folder="blog_images",
+                    allowed_formats=['jpg', 'jpeg', 'png', 'gif', 'webp'],
+                    transformation=[
+                        {'width': 1200, 'height': 800, 'crop': 'limit'},
+                        {'quality': 'auto', 'fetch_format': 'auto'}
+                    ]
+                )
                 
-                try:
-                    # Upload to Cloudinary
-                    import cloudinary.uploader
-                    result = cloudinary.uploader.upload(
-                        featured_image,
-                        folder="blog_images",
-                        allowed_formats=['jpg', 'jpeg', 'png', 'gif', 'webp'],
-                        transformation=[
-                            {'width': 1200, 'height': 800, 'crop': 'limit'},
-                            {'quality': 'auto', 'fetch_format': 'auto'}
-                        ]
-                    )
-                    
-                    # Create a proper mutable copy of the request data
-                    data = {}
-                    if hasattr(request.data, 'dict'):
-                        data.update(request.data.dict())
-                    else:
-                        data.update(request.data)
-                    
-                    # Add the image URL
-                    data['image'] = result['secure_url']
-                    
-                    # Create serializer with the modified data
-                    serializer = self.get_serializer(data=data)
-                    serializer.is_valid(raise_exception=True)
-                    self.perform_create(serializer)
-                    headers = self.get_success_headers(serializer.data)
-                    return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-                    
-                except ImportError:
-                    logger.error("Cloudinary not available - image upload skipped")
-                    # Continue with normal creation without image
-                    pass
-                except Exception as upload_error:
-                    logger.error(f"Cloudinary upload failed: {upload_error}")
-                    # Continue with normal creation without image
-                    pass
-            
-            # No image upload needed or upload failed, use default create
+                # Create a proper mutable copy of the request data
+                data = {}
+                if hasattr(request.data, 'dict'):
+                    data.update(request.data.dict())
+                else:
+                    data.update(request.data)
+                
+                # Add the image URL
+                data['image'] = result['secure_url']
+                
+                # Create serializer with the modified data - let DRF handle validation errors
+                serializer = self.get_serializer(data=data)
+                serializer.is_valid(raise_exception=True)  # This will raise ValidationError for field errors
+                self.perform_create(serializer)
+                headers = self.get_success_headers(serializer.data)
+                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+                
+            except (ImportError, Exception) as upload_error:
+                # Log upload failure but continue with normal creation
+                if isinstance(upload_error, ImportError):
+                    logger.warning("Cloudinary not available - creating blog post without image")
+                else:
+                    logger.warning(f"Cloudinary upload failed - creating blog post without image: {upload_error}")
+                # Fall through to normal creation without image
+        
+        # No image upload needed or upload failed, use default create
+        # This will properly handle ValidationError and return 400 responses
+        try:
             return super().create(request, *args, **kwargs)
-            
+        except (serializers.ValidationError, drf_exceptions.ValidationError) as e:
+            # DRF validation errors should return 400, not 500
+            # These are already handled by DRF, but we log them for debugging
+            logger.info(f"Blog post validation failed: {e}")
+            raise  # Re-raise to let DRF handle the 400 response
         except Exception as e:
-            logger.error(f"Error creating blog post: {e}")
+            # Only unexpected errors should return 500
+            logger.error(f"Unexpected error creating blog post: {e}")
             import traceback
             logger.error(f"Full traceback: {traceback.format_exc()}")
             return Response({
-                'error': 'Failed to create blog post',
-                'detail': str(e)
+                'error': 'Internal server error',
+                'detail': 'An unexpected error occurred while creating the blog post'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     def perform_create(self, serializer):
