@@ -4311,3 +4311,11 @@ WARNING 2025-08-03 17:11:34,818 log 22320 25044 Bad Request: /api/blog/
 WARNING 2025-08-03 19:07:47,385 log 25488 13380 Forbidden: /api/blog/test-blog-for-editdelete/
 INFO 2025-08-03 19:07:47,397 api_views 25488 13380 Blog post 'Updated Test Blog' deleted by user testuser1
 INFO 2025-08-04 14:24:16,677 autoreload 8460 23876 Watching for file changes with StatReloader
+INFO 2025-08-04 14:25:21,128 basehttp 8460 11552 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-08-04 14:25:21,162 basehttp 8460 15180 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-08-04 14:31:57,542 autoreload 8460 23876 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\share_urls.py changed, reloading.
+INFO 2025-08-04 14:32:01,509 autoreload 26808 3452 Watching for file changes with StatReloader
+INFO 2025-08-04 14:36:35,897 basehttp 26808 26916 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-08-04 14:36:35,939 basehttp 26808 12372 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-08-04 14:36:51,527 basehttp 26808 6748 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-08-04 14:36:51,553 basehttp 26808 24664 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
