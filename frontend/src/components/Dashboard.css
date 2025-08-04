@@ -1557,3 +1557,77 @@
     width: 100%;
   }
 }
+
+/* Enhanced responsive styles for social and content management sections */
+@media (max-width: 768px) {
+  /* Social posts in content overview */
+  .content-overview-card.social-posts {
+    order: 2; /* Show social posts earlier on mobile */
+  }
+  
+  /* Better spacing for stats on mobile */
+  .content-overview-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  
+  /* Social section improvements */
+  .social-section .activity-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Message section improvements */
+  .messages-tab {
+    padding: 1rem;
+  }
+  
+  .message-list {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Ultra mobile responsive adjustments */
+  .profile-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0 0.5rem;
+  }
+  
+  .tab-button {
+    min-width: auto;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+  
+  .tab-icon {
+    margin-right: 0.25rem;
+  }
+  
+  /* Compact content overview stats */
+  .content-overview-stats {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+  
+  .overview-stat {
+    justify-content: space-between;
+    padding: 0.25rem;
+  }
+  
+  /* Social posts mobile layout */
+  .social-posts-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  /* Messages mobile layout */
+  .conversation-item {
+    padding: 0.75rem;
+  }
+  
+  .conversation-preview {
+    font-size: 0.9rem;
+  }
+}

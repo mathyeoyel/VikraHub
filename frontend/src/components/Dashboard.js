@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './Auth/AuthContext';
-import { userAPI, notificationAPI, blogAPI, portfolioAPI, assetAPI, getMyFollowStats } from '../api';
+import { userAPI, notificationAPI, blogAPI, portfolioAPI, assetAPI, postsAPI, messagesAPI, getMyFollowStats } from '../api';
 import EditProfile from './EditProfile';
 import AssetUpload from './Marketplace/AssetUpload';
 import SocialDashboard from './SocialDashboard';
@@ -31,8 +31,10 @@ const Dashboard = () => {
     following: 0
   });
   const [blogPosts, setBlogPosts] = useState([]);
+  const [socialPosts, setSocialPosts] = useState([]);
   const [portfolioItems, setPortfolioItems] = useState([]);
   const [assets, setAssets] = useState([]);
+  const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [apiErrors, setApiErrors] = useState([]);
@@ -58,7 +60,7 @@ const Dashboard = () => {
       const errors = [];
       
       // Fetch comprehensive user data including follow stats
-      const [profileRes, notificationsRes, blogRes, portfolioRes, assetsRes, followStatsRes] = await Promise.all([
+      const [profileRes, notificationsRes, blogRes, postsRes, portfolioRes, assetsRes, conversationsRes, followStatsRes] = await Promise.all([
         userAPI.getMyProfile(),
         notificationAPI.getAll().catch(err => {
           console.warn('Failed to fetch notifications:', err);
@@ -80,6 +82,18 @@ const Dashboard = () => {
             errors.push('blog posts (authentication required)');
           } else {
             errors.push('blog posts');
+          }
+          
+          return { data: [], results: [] };
+        }),
+        postsAPI.getByUser(user.username).catch(err => {
+          console.warn('Failed to fetch social posts:', err);
+          
+          if (err.response?.status === 401) {
+            console.warn('Posts API returned 401 - authentication issue');
+            errors.push('social posts (authentication required)');
+          } else {
+            errors.push('social posts');
           }
           
           return { data: [], results: [] };
@@ -108,6 +122,18 @@ const Dashboard = () => {
           }
           
           // Return consistent structure for assets
+          return { data: [], results: [] };
+        }),
+        messagesAPI.getConversations().catch(err => {
+          console.warn('Failed to fetch conversations:', err);
+          
+          if (err.response?.status === 401) {
+            console.warn('Messages API returned 401 - authentication issue');
+            errors.push('conversations (authentication required)');
+          } else {
+            errors.push('conversations');
+          }
+          
           return { data: [], results: [] };
         }),
         getMyFollowStats().catch(err => {
@@ -152,8 +178,10 @@ const Dashboard = () => {
         console.log('Raw API responses:', {
           notificationsRes: notificationsRes?.data,
           blogRes,
+          postsRes,
           portfolioRes: portfolioRes?.data,
           assetsRes,
+          conversationsRes,
           followStatsRes: followStatsRes?.data
         });
         
@@ -165,6 +193,10 @@ const Dashboard = () => {
           ? blogRes 
           : blogRes?.results || blogRes?.data || [];
         
+        const normalizedPostsRes = Array.isArray(postsRes) 
+          ? postsRes 
+          : postsRes?.results || postsRes?.data || [];
+        
         const normalizedPortfolioData = Array.isArray(portfolioRes.data) 
           ? portfolioRes.data 
           : portfolioRes.data?.results || [];
@@ -173,40 +205,54 @@ const Dashboard = () => {
           ? assetsRes 
           : assetsRes?.results || assetsRes?.data || [];
 
+        const normalizedConversations = Array.isArray(conversationsRes) 
+          ? conversationsRes 
+          : conversationsRes?.results || conversationsRes?.data || [];
+
         console.log('Normalized responses:', {
           normalizedNotifications,
           normalizedBlogRes,
+          normalizedPostsRes,
           normalizedPortfolioData,
-          normalizedAssetsRes
+          normalizedAssetsRes,
+          normalizedConversations
         });
 
         setNotifications(normalizedNotifications.slice(0, 5));
         setRecentActivity([
-          ...normalizedBlogRes.slice(0, 3).map(post => ({
+          ...normalizedBlogRes.slice(0, 2).map(post => ({
             type: 'blog',
-            title: `Published: ${post.title}`,
+            title: `Published blog: ${post.title}`,
             date: post.created_at,
-            icon: '📝'
+            icon: <i className="fas fa-blog"></i>
           })),
-          ...normalizedPortfolioData.slice(0, 3).map(item => ({
+          ...normalizedPostsRes.slice(0, 2).map(post => ({
+            type: 'post',
+            title: `Shared post: ${post.title || post.content?.substring(0, 50) + '...'}`,
+            date: post.created_at,
+            icon: <i className="fas fa-share-alt"></i>
+          })),
+          ...normalizedPortfolioData.slice(0, 2).map(item => ({
             type: 'portfolio',
             title: `Added to portfolio: ${item.title}`,
             date: item.created_at,
-            icon: '🎨'
+            icon: <i className="fas fa-palette"></i>
           })),
-          ...normalizedAssetsRes.slice(0, 3).map(asset => ({
-            type: 'portfolio', // Changed from 'asset' to 'portfolio' to show as portfolio item
-            title: `Added to portfolio: ${asset.title}`, // Changed to show as portfolio addition
+          ...normalizedAssetsRes.slice(0, 2).map(asset => ({
+            type: 'asset',
+            title: `Uploaded asset: ${asset.title}`,
             date: asset.created_at,
-            icon: '🎨' // Keep the same icon as portfolio items
+            icon: <i className="fas fa-gem"></i>
           }))
-        ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5));
+        ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 8));
 
         // Calculate comprehensive stats from normalized data
         const followStats = followStatsRes.data || {};
         const blogPosts = normalizedBlogRes; // Use normalized blog data
+        const socialPosts = normalizedPostsRes; // Use normalized posts data
         const portfolioItems = normalizedPortfolioData; // Use normalized portfolio data
         const assets = normalizedAssetsRes; // Use normalized assets data
+        const conversations = normalizedConversations; // Use normalized conversations data
         
         // Combine portfolio items with uploaded assets for total portfolio count
         const totalPortfolioItems = portfolioItems.length + assets.length;
@@ -214,12 +260,14 @@ const Dashboard = () => {
         // Calculate total views and likes from all content
         const totalViews = [
           ...blogPosts.map(post => post.views || 0),
+          ...socialPosts.map(post => post.views || 0),
           ...portfolioItems.map(item => item.views || 0),
           ...assets.map(asset => asset.views || 0)
         ].reduce((sum, views) => sum + views, 0);
         
         const totalLikes = [
           ...blogPosts.map(post => post.likes || 0),
+          ...socialPosts.map(post => post.likes || 0),
           ...portfolioItems.map(item => item.likes || 0),
           ...assets.map(asset => asset.likes || 0)
         ].reduce((sum, likes) => sum + likes, 0);
@@ -231,17 +279,21 @@ const Dashboard = () => {
           totalPurchases: profileData?.total_purchases || 0,
           portfolioItems: totalPortfolioItems, // Now includes both portfolio items and uploaded assets
           blogPosts: blogPosts.length,
+          socialPosts: socialPosts.length, // Add social posts count
           uploadedAssets: assets.length,
           totalViews: totalViews,
           totalLikes: totalLikes,
           followers: followStats.followers || 0,
-          following: followStats.following || 0
+          following: followStats.following || 0,
+          conversations: conversations.length // Add conversations count
         });
 
         // Store normalized data in state for ContentManager
         setBlogPosts(blogPosts);
+        setSocialPosts(socialPosts);
         setPortfolioItems(portfolioItems);
         setAssets(assets);
+        setConversations(conversations);
 
         setLastUpdated(new Date());
         setError(null); // Clear any previous errors
@@ -538,13 +590,13 @@ const Dashboard = () => {
   };
 
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: '📊' },
-    { id: 'content', label: 'Content Manager', icon: '📝' },
-    { id: 'social', label: 'Social', icon: '👥' },
-    { id: 'messages', label: 'Messages', icon: <i className="fas fa-comment icon"></i> },
-    { id: 'upload', label: 'Upload Asset', icon: <i className="fas fa-upload icon"></i> },
-    { id: 'profile', label: 'Edit Profile', icon: '⚙️' },
-    { id: 'notifications', label: 'Notifications', icon: '🔔' }
+    { id: 'overview', label: 'Overview', icon: <i className="fas fa-chart-bar"></i> },
+    { id: 'content', label: 'Content Manager', icon: <i className="fas fa-edit"></i> },
+    { id: 'social', label: 'Social', icon: <i className="fas fa-users"></i> },
+    { id: 'messages', label: 'Messages', icon: <i className="fas fa-comment"></i> },
+    { id: 'upload', label: 'Upload Asset', icon: <i className="fas fa-upload"></i> },
+    { id: 'profile', label: 'Edit Profile', icon: <i className="fas fa-user-cog"></i> },
+    { id: 'notifications', label: 'Notifications', icon: <i className="fas fa-bell"></i> }
   ];
 
   if (loading) {
@@ -708,7 +760,7 @@ const Dashboard = () => {
                   opacity: 0.7
                 }}
               >
-                👤
+                <i className="fas fa-user"></i>
               </button>
             </div>
           </div>
@@ -750,14 +802,14 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-icon">📝</div>
+                  <div className="stat-icon"><i className="fas fa-blog"></i></div>
                   <div className="stat-info">
                     <h3>{stats.blogPosts}</h3>
                     <p>Blog Posts</p>
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-icon">🏪</div>
+                  <div className="stat-icon"><i className="fas fa-store"></i></div>
                   <div className="stat-info">
                     <h3>{stats.uploadedAssets}</h3>
                     <p>Creative Assets</p>
@@ -774,7 +826,7 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-icon">�️</div>
+                  <div className="stat-icon"><i className="fas fa-eye"></i></div>
                   <div className="stat-info">
                     <h3>{stats.totalViews}</h3>
                     <p>Total Views</p>
@@ -795,7 +847,14 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-icon">�📈</div>
+                  <div className="stat-icon"><i className="fas fa-share-alt"></i></div>
+                  <div className="stat-info">
+                    <h3>{stats.socialPosts}</h3>
+                    <p>Social Posts</p>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon"><i className="fas fa-chart-line"></i></div>
                   <div className="stat-info">
                     <h3>{getProfileCompletionPercentage()}%</h3>
                     <p>Profile Complete</p>
@@ -819,7 +878,7 @@ const Dashboard = () => {
                 <div className="content-overview-grid">
                   <div className="content-overview-card">
                     <div className="content-overview-header">
-                      <span className="content-icon">📝</span>
+                      <i className="fas fa-blog content-icon"></i>
                       <h4>Blog Posts</h4>
                       <span className="content-count">{blogPosts.length}</span>
                     </div>
@@ -855,7 +914,7 @@ const Dashboard = () => {
 
                   <div className="content-overview-card">
                     <div className="content-overview-header">
-                      <span className="content-icon">🎨</span>
+                      <i className="fas fa-palette content-icon"></i>
                       <h4>Portfolio</h4>
                       <span className="content-count">{portfolioItems.length}</span>
                     </div>
@@ -887,7 +946,43 @@ const Dashboard = () => {
 
                   <div className="content-overview-card">
                     <div className="content-overview-header">
-                      <span className="content-icon">💎</span>
+                      <i className="fas fa-share-alt content-icon"></i>
+                      <h4>Social Posts</h4>
+                      <span className="content-count">{socialPosts.length}</span>
+                    </div>
+                    <div className="content-overview-stats">
+                      <div className="overview-stat">
+                        <span>Published:</span>
+                        <span>{socialPosts.filter(post => post.published).length}</span>
+                      </div>
+                      <div className="overview-stat">
+                        <span>Total Likes:</span>
+                        <span>{socialPosts.reduce((sum, post) => sum + (post.likes || 0), 0)}</span>
+                      </div>
+                      <div className="overview-stat">
+                        <span>Total Views:</span>
+                        <span>{socialPosts.reduce((sum, post) => sum + (post.views || 0), 0)}</span>
+                      </div>
+                    </div>
+                    <div className="content-actions">
+                      <button 
+                        className="btn btn-sm btn-primary"
+                        onClick={() => navigate('/create/social-post')}
+                      >
+                        <i className="fas fa-plus"></i> New Post
+                      </button>
+                      <button 
+                        className="btn btn-sm btn-secondary"
+                        onClick={() => setActiveTab('social')}
+                      >
+                        <i className="fas fa-edit"></i> Manage
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="content-overview-card">
+                    <div className="content-overview-header">
+                      <i className="fas fa-gem content-icon"></i>
                       <h4>Assets</h4>
                       <span className="content-count">{assets.length}</span>
                     </div>
@@ -998,6 +1093,7 @@ const Dashboard = () => {
           {activeTab === 'content' && (
             <ContentManager 
               blogPosts={blogPosts}
+              socialPosts={socialPosts}
               portfolioItems={portfolioItems}
               assets={assets}
               onRefresh={fetchDashboardData}

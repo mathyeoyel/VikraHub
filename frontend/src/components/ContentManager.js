@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { blogAPI, portfolioAPI, assetAPI } from '../api';
+import { blogAPI, portfolioAPI, assetAPI, postsAPI } from '../api';
 import { createPortfolioImageUrl } from '../utils/portfolioImageUtils';
 import './ContentManager.css';
 
-const ContentManager = ({ blogPosts, portfolioItems, assets, onRefresh }) => {
+const ContentManager = ({ blogPosts, socialPosts, portfolioItems, assets, onRefresh }) => {
   const navigate = useNavigate();
   const [activeContentType, setActiveContentType] = useState('blogs');
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,6 +28,8 @@ const ContentManager = ({ blogPosts, portfolioItems, assets, onRefresh }) => {
     switch (activeContentType) {
       case 'blogs':
         return blogPosts || [];
+      case 'social':
+        return socialPosts || [];
       case 'portfolio':
         return portfolioItems || [];
       case 'assets':
@@ -117,6 +119,9 @@ const ContentManager = ({ blogPosts, portfolioItems, assets, onRefresh }) => {
       case 'blogs':
         navigate('/create/blog');
         break;
+      case 'social':
+        navigate('/create/social-post');
+        break;
       case 'portfolio':
         navigate('/create/upload-work');
         break;
@@ -132,6 +137,9 @@ const ContentManager = ({ blogPosts, portfolioItems, assets, onRefresh }) => {
     switch (activeContentType) {
       case 'blogs':
         navigate(`/create/blog/${item.id}`);
+        break;
+      case 'social':
+        navigate(`/create/social-post/${item.id}`);
         break;
       case 'portfolio':
         navigate(`/upload-work/${item.id}`);
@@ -200,6 +208,9 @@ const ContentManager = ({ blogPosts, portfolioItems, assets, onRefresh }) => {
         case 'blogs':
           await blogAPI.delete(itemToDelete.id);
           break;
+        case 'social':
+          await postsAPI.delete(itemToDelete.id);
+          break;
         case 'portfolio':
           await portfolioAPI.delete(itemToDelete.id);
           break;
@@ -245,6 +256,9 @@ const ContentManager = ({ blogPosts, portfolioItems, assets, onRefresh }) => {
               switch (activeContentType) {
                 case 'blogs':
                   await blogAPI.delete(itemId);
+                  break;
+                case 'social':
+                  await postsAPI.delete(itemId);
                   break;
                 case 'portfolio':
                   await portfolioAPI.delete(itemId);
@@ -416,21 +430,28 @@ const ContentManager = ({ blogPosts, portfolioItems, assets, onRefresh }) => {
           className={`tab-btn ${activeContentType === 'blogs' ? 'active' : ''}`}
           onClick={() => setActiveContentType('blogs')}
         >
-          <span className="tab-icon">📝</span>
+          <span className="tab-icon"><i className="fas fa-blog"></i></span>
           Blog Posts ({blogPosts?.length || 0})
+        </button>
+        <button
+          className={`tab-btn ${activeContentType === 'social' ? 'active' : ''}`}
+          onClick={() => setActiveContentType('social')}
+        >
+          <span className="tab-icon"><i className="fas fa-share-alt"></i></span>
+          Social Posts ({socialPosts?.length || 0})
         </button>
         <button
           className={`tab-btn ${activeContentType === 'portfolio' ? 'active' : ''}`}
           onClick={() => setActiveContentType('portfolio')}
         >
-          <span className="tab-icon">🎨</span>
+          <span className="tab-icon"><i className="fas fa-palette"></i></span>
           Portfolio ({portfolioItems?.length || 0})
         </button>
         <button
           className={`tab-btn ${activeContentType === 'assets' ? 'active' : ''}`}
           onClick={() => setActiveContentType('assets')}
         >
-          <span className="tab-icon">💎</span>
+          <span className="tab-icon"><i className="fas fa-gem"></i></span>
           Assets ({assets?.length || 0})
         </button>
       </div>
@@ -519,7 +540,7 @@ const ContentManager = ({ blogPosts, portfolioItems, assets, onRefresh }) => {
             onClick={handleCreate}
           >
             <i className="fas fa-plus"></i>
-            New {activeContentType === 'blogs' ? 'Post' : activeContentType === 'portfolio' ? 'Portfolio Item' : 'Asset'}
+            New {activeContentType === 'blogs' ? 'Post' : activeContentType === 'social' ? 'Social Post' : activeContentType === 'portfolio' ? 'Portfolio Item' : 'Asset'}
           </button>
         </div>
       </div>
@@ -583,7 +604,7 @@ const ContentManager = ({ blogPosts, portfolioItems, assets, onRefresh }) => {
             <p>
               {searchTerm || filterStatus !== 'all'
                 ? 'Try adjusting your search or filters'
-                : `Create your first ${activeContentType === 'blogs' ? 'blog post' : activeContentType === 'portfolio' ? 'portfolio item' : 'asset'}`
+                : `Create your first ${activeContentType === 'blogs' ? 'blog post' : activeContentType === 'social' ? 'social post' : activeContentType === 'portfolio' ? 'portfolio item' : 'asset'}`
               }
             </p>
             {!searchTerm && filterStatus === 'all' && (
