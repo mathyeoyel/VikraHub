@@ -57,7 +57,7 @@ const ContentManager = ({ blogPosts, portfolioItems, assets, onRefresh }) => {
           case 'published':
             return item.published || item.is_published || item.status === 'published';
           case 'draft':
-            return !item.published && !item.is_published || item.status === 'draft';
+            return (!item.published && !item.is_published) || item.status === 'draft';
           case 'featured':
             return item.featured || item.is_featured;
           default:
