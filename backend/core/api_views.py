@@ -3,7 +3,7 @@ import logging
 from rest_framework import viewsets, status, serializers
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser, AllowAny
 from django.contrib.auth.models import User
 from django.db.models import Q, Avg
 from django.utils import timezone
@@ -1354,3 +1354,48 @@ def blog_comment_like(request, comment_id):
             'like_count': comment.like_count,
             'message': 'Comment unliked successfully'
         })
+
+# Blog meta tags endpoint for social media sharing
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def blog_meta_tags(request, slug):
+    """
+    Get meta tags for a blog post for social media sharing
+    """
+    try:
+        blog = get_object_or_404(BlogPost, slug=slug, published=True)
+        
+        # Generate clean excerpt for description
+        description = blog.excerpt or (blog.content[:160] + '...' if blog.content else '')
+        description = description.replace('\n', ' ').replace('\r', '').strip()
+        
+        # Construct full URLs
+        blog_url = request.build_absolute_uri(f'/blog/{blog.slug}')
+        image_url = blog.image or request.build_absolute_uri('/vikrahub-hero.jpg')
+        
+        # Author name with fallback
+        author_name = (blog.author.first_name and blog.author.last_name and 
+                      f"{blog.author.first_name} {blog.author.last_name}") or blog.author.username or 'Vikra Hub'
+        
+        meta_data = {
+            'title': f"{blog.title} | Vikra Hub",
+            'description': description,
+            'image': image_url,
+            'url': blog_url,
+            'type': 'article',
+            'site_name': 'Vikra Hub',
+            'author': author_name,
+            'published_time': blog.created_at.isoformat(),
+            'modified_time': blog.updated_at.isoformat(),
+            'section': blog.category or 'Blog',
+            'tags': blog.get_tags_list()
+        }
+        
+        return Response(meta_data)
+        
+    except Exception as e:
+        logger.error(f"Error fetching blog meta tags: {e}")
+        return Response({
+            'error': 'Failed to fetch meta tags',
+            'detail': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

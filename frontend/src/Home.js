@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from './components/Auth/AuthContext';
 import AuthModal from './components/Auth/AuthModal';
+import SEO from './components/common/SEO';
 import { assetAPI } from './api';
 import './Home.css';
 
@@ -106,6 +107,12 @@ function Home() {
   };
   return (
     <div className="home">
+      <SEO
+        title="Vikra Hub - Connect, Create, and Inspire"
+        description="Vikra Hub is a platform for creatives, brands, and businesses in South Sudan to connect, share, and grow. Join a thriving hub of talent and innovation."
+        url={`${window.location.origin}/`}
+      />
+      
         {/* Hero Section */}
         <section className="hero">
           <div className="container">

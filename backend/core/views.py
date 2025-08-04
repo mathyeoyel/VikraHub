@@ -12,10 +12,17 @@ from rest_framework.views import APIView
 from .models import TeamMember
 from .serializers import TeamMemberSerializer
 import calendar
+import logging
+import re
 from .forms import (
     CustomUserCreationForm, UserProfileForm,
     TeamMemberForm, ServiceForm, PortfolioItemForm, BlogPostForm
 )
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+
+logger = logging.getLogger(__name__)
+import re
 
 class TeamMemberViewSet(viewsets.ModelViewSet):
     queryset = TeamMember.objects.all()
@@ -241,5 +248,94 @@ def add_blog(request):
     else:
         form = BlogPostForm()
     return render(request, 'add_blog.html', {'form': form})
+
+def blog_share_page(request, slug):
+    """
+    Serve blog post with proper meta tags for social media sharing.
+    Detects social media crawlers and serves pre-rendered HTML with meta tags.
+    Regular users get redirected to the React app.
+    """
+    try:
+        blog = get_object_or_404(BlogPost, slug=slug, published=True)
+        
+        # Check if request is from a social media crawler
+        user_agent = request.META.get('HTTP_USER_AGENT', '').lower()
+        is_crawler = any(bot in user_agent for bot in [
+            'facebookexternalhit', 'twitterbot', 'linkedinbot', 'whatsapp',
+            'telegrambot', 'slackbot', 'discordbot', 'google', 'bing'
+        ])
+        
+        # Generate clean description
+        description = blog.excerpt or (blog.content[:160] + '...' if blog.content else '')
+        description = re.sub(r'<[^>]+>', '', description)  # Remove HTML tags
+        description = description.replace('\n', ' ').replace('\r', '').strip()
+        
+        # Build absolute URLs
+        blog_url = request.build_absolute_uri(f'/blog/{blog.slug}')
+        image_url = blog.image or request.build_absolute_uri('/vikrahub-hero.jpg')
+        
+        # Author name with fallback
+        author_name = (blog.author.first_name and blog.author.last_name and 
+                      f"{blog.author.first_name} {blog.author.last_name}") or blog.author.username or 'Vikra Hub'
+        
+        context = {
+            'blog': blog,
+            'title': f"{blog.title} | Vikra Hub",
+            'description': description,
+            'image': image_url,
+            'url': blog_url,
+            'og_type': 'article',
+            'structured_data_type': 'Article',
+            'article': {
+                'author': author_name,
+                'published_time': blog.created_at.isoformat(),
+                'modified_time': blog.updated_at.isoformat(),
+                'section': blog.category or 'Blog',
+                'tags': blog.get_tags_list()
+            }
+        }
+        
+        if is_crawler:
+            # Serve pre-rendered HTML for crawlers
+            return render(request, 'blog_share.html', context)
+        else:
+            # For regular users, serve minimal HTML that redirects to React app
+            redirect_html = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8">
+                <title>{context['title']}</title>
+                <meta name="description" content="{description}">
+                <meta property="og:title" content="{context['title']}">
+                <meta property="og:description" content="{description}">
+                <meta property="og:image" content="{image_url}">
+                <meta property="og:url" content="{blog_url}">
+                <meta property="og:type" content="article">
+                <script>window.location.href = '/#/blog/{blog.slug}';</script>
+            </head>
+            <body>
+                <p>Redirecting to <a href="/#/blog/{blog.slug}">{blog.title}</a>...</p>
+            </body>
+            </html>
+            """
+            return HttpResponse(redirect_html)
+            
+    except Exception as e:
+        logger.error(f"Error serving blog share page: {e}")
+        # Fallback to home page redirect
+        return HttpResponse(f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <script>window.location.href = '/';</script>
+            </head>
+            <body>
+                <p>Redirecting to <a href="/">Vikra Hub</a>...</p>
+            </body>
+            </html>
+        """)
+
+
 # --- End of Views ---
 # vikrahub/core/views.py

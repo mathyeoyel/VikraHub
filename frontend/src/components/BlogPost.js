@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { blogAPI } from '../api';
 import LikeButton from './Social/LikeButton';
 import CommentSection from './Social/CommentSection';
+import SEO from './common/SEO';
 import './BlogPost.css';
 
 const BlogPost = () => {
   const { slug } = useParams();
-  const navigate = useNavigate();
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -223,6 +223,24 @@ const BlogPost = () => {
 
   return (
     <div className="blog-post">
+      {/* Dynamic SEO meta tags for social sharing */}
+      {blog && (
+        <SEO
+          title={blog.title}
+          description={blog.excerpt || blog.content?.substring(0, 160)}
+          image={blog.image}
+          url={`${window.location.origin}/blog/${blog.slug}`}
+          type="article"
+          article={{
+            author: blog.author?.username || blog.author?.first_name || 'Vikra Hub',
+            publishedTime: blog.created_at,
+            modifiedTime: blog.updated_at,
+            section: blog.category || 'Blog',
+            tags: blog.tags_list || []
+          }}
+        />
+      )}
+      
       <div className="container">
         <div className="row">
           <div className="col-lg-8 mx-auto">

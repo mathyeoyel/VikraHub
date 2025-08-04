@@ -8,7 +8,8 @@ from .api_views import (
     FreelancerProfileViewSet, CreatorProfileViewSet, ClientProfileViewSet,
     ProjectCategoryViewSet, ProjectViewSet, ProjectApplicationViewSet, 
     ProjectContractViewSet, ProjectReviewViewSet, unread_notifications_count,
-    PostViewSet, CommentViewSet, blog_like, blog_comments, blog_comment_like
+    PostViewSet, CommentViewSet, blog_like, blog_comments, blog_comment_like,
+    blog_meta_tags
 )
 from .google_auth import google_auth, google_auth_config
 
@@ -58,6 +59,9 @@ urlpatterns = [
     path('blog/<int:blog_id>/like/', blog_like, name='blog_like'),
     path('blog/<int:blog_id>/comments/', blog_comments, name='blog_comments'),
     path('blog/comments/<int:comment_id>/like/', blog_comment_like, name='blog_comment_like'),
+    
+    # Blog meta tags for social sharing
+    path('blog/<slug:slug>/meta/', blog_meta_tags, name='blog_meta_tags'),
     
     # Follow system endpoints
     path('follow/', include('core.follow_urls')),

@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './components/Auth/AuthContext';
 import { NotificationProvider } from './components/common/NotificationContext';
 import { WebSocketProvider } from './contexts/WebSocketContext';
@@ -46,13 +47,14 @@ const Signup = React.lazy(() => import("./components/Signup"));
 function App() {
   return (
     <ErrorBoundary>
-      <NotificationProvider>
-        <AuthProvider>
-          <WebSocketProvider>
-            <FollowProvider>
-              <BrowserRouter>
-                <Layout>
-                  <Suspense fallback={<LoadingSpinner message="Loading page..." />}>
+      <HelmetProvider>
+        <NotificationProvider>
+          <AuthProvider>
+            <WebSocketProvider>
+              <FollowProvider>
+                <BrowserRouter>
+                  <Layout>
+                    <Suspense fallback={<LoadingSpinner message="Loading page..." />}>
                       <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
@@ -195,6 +197,7 @@ function App() {
           </WebSocketProvider>
         </AuthProvider>
       </NotificationProvider>
+      </HelmetProvider>
     </ErrorBoundary>
   );
 }

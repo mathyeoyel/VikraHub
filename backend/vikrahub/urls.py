@@ -99,6 +99,9 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', robots_txt, name='robots_txt'),
     
+    # Blog sharing for social media (must come before API routes)
+    path('blog/<slug:slug>/', include('core.share_urls')),
+    
     # API endpoints
     path('api/', include('core.urls')),
     path('api/messaging/', include('messaging.urls')),

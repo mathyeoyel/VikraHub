@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { blogAPI } from '../api';
 import LikeButton from './Social/LikeButton';
+import SEO from './common/SEO';
 import './Blog.css';
 
 const Blog = () => {
@@ -57,6 +58,12 @@ const Blog = () => {
 
   return (
     <section id="blog" className="blog">
+      <SEO
+        title="Blog"
+        description="Latest insights and updates from our creative community at Vikra Hub"
+        url={`${window.location.origin}/blog`}
+      />
+      
       <div className="container">
         <div className="section-title">
           <h2>Blog</h2>
