@@ -19,43 +19,53 @@ const SEO = ({
     const seoImage = image || defaultImage;
     const seoUrl = url || defaultUrl;
 
-    // Update page title
+    // Update document title
     document.title = seoTitle;
 
-    // Helper function to update meta tag
+    // Helper function to update or create meta tag
     const updateMetaTag = (property, content, isProperty = false) => {
-      const attribute = isProperty ? 'property' : 'name';
-      let meta = document.querySelector(`meta[${attribute}="${property}"]`);
+      if (!content) return;
       
-      if (!meta) {
-        meta = document.createElement('meta');
-        meta.setAttribute(attribute, property);
-        document.head.appendChild(meta);
+      const selector = isProperty ? `meta[property="${property}"]` : `meta[name="${property}"]`;
+      let metaTag = document.querySelector(selector);
+      
+      if (metaTag) {
+        metaTag.setAttribute('content', content);
+      } else {
+        metaTag = document.createElement('meta');
+        if (isProperty) {
+          metaTag.setAttribute('property', property);
+        } else {
+          metaTag.setAttribute('name', property);
+        }
+        metaTag.setAttribute('content', content);
+        document.head.appendChild(metaTag);
       }
-      
-      meta.setAttribute('content', content);
     };
 
-    // Helper function to update link tag
+    // Helper function to update or create link tag
     const updateLinkTag = (rel, href) => {
-      let link = document.querySelector(`link[rel="${rel}"]`);
+      if (!href) return;
       
-      if (!link) {
-        link = document.createElement('link');
-        link.setAttribute('rel', rel);
-        document.head.appendChild(link);
+      let linkTag = document.querySelector(`link[rel="${rel}"]`);
+      
+      if (linkTag) {
+        linkTag.setAttribute('href', href);
+      } else {
+        linkTag = document.createElement('link');
+        linkTag.setAttribute('rel', rel);
+        linkTag.setAttribute('href', href);
+        document.head.appendChild(linkTag);
       }
-      
-      link.setAttribute('href', href);
     };
 
-    // Basic meta tags
+    // Update basic meta tags
     updateMetaTag('description', seoDescription);
     
-    // Canonical URL
+    // Update canonical URL
     updateLinkTag('canonical', seoUrl);
     
-    // Open Graph meta tags
+    // Update Open Graph meta tags
     updateMetaTag('og:title', seoTitle, true);
     updateMetaTag('og:description', seoDescription, true);
     updateMetaTag('og:image', seoImage, true);
@@ -65,28 +75,7 @@ const SEO = ({
     updateMetaTag('og:site_name', 'Vikra Hub', true);
     updateMetaTag('og:locale', 'en_US', true);
     
-    // Article specific meta tags
-    if (article) {
-      updateMetaTag('article:author', article.author, true);
-      updateMetaTag('article:published_time', article.publishedTime, true);
-      updateMetaTag('article:modified_time', article.modifiedTime, true);
-      updateMetaTag('article:section', article.section, true);
-      
-      // Remove existing article:tag meta tags
-      document.querySelectorAll('meta[property="article:tag"]').forEach(tag => tag.remove());
-      
-      // Add new article:tag meta tags
-      if (article.tags && article.tags.length > 0) {
-        article.tags.forEach(tag => {
-          const meta = document.createElement('meta');
-          meta.setAttribute('property', 'article:tag');
-          meta.setAttribute('content', tag);
-          document.head.appendChild(meta);
-        });
-      }
-    }
-    
-    // Twitter Card meta tags
+    // Update Twitter Card meta tags
     updateMetaTag('twitter:card', 'summary_large_image');
     updateMetaTag('twitter:title', seoTitle);
     updateMetaTag('twitter:description', seoDescription);
@@ -95,24 +84,41 @@ const SEO = ({
     updateMetaTag('twitter:site', '@vikrahub');
     updateMetaTag('twitter:creator', '@vikrahub');
     
-    // Additional meta tags
+    // Update article specific meta tags
+    if (article) {
+      updateMetaTag('article:author', article.author, true);
+      updateMetaTag('article:published_time', article.publishedTime, true);
+      updateMetaTag('article:modified_time', article.modifiedTime, true);
+      updateMetaTag('article:section', article.section, true);
+      
+      // Add article tags
+      if (article.tags && article.tags.length > 0) {
+        // Remove existing article:tag meta tags
+        const existingTags = document.querySelectorAll('meta[property="article:tag"]');
+        existingTags.forEach(tag => tag.remove());
+        
+        // Add new article:tag meta tags
+        article.tags.forEach(tag => {
+          updateMetaTag('article:tag', tag, true);
+        });
+      }
+    }
+    
+    // Update additional meta tags
     updateMetaTag('author', 'Vikra Hub');
     updateMetaTag('robots', 'index, follow');
     updateMetaTag('theme-color', '#ffa000');
     
-    // JSON-LD structured data
-    const removeExistingJsonLd = () => {
-      const existingScript = document.querySelector('script[type="application/ld+json"]#seo-json-ld');
+    // Update or create JSON-LD structured data
+    const updateJsonLd = () => {
+      // Remove existing JSON-LD script
+      const existingScript = document.querySelector('script[type="application/ld+json"]');
       if (existingScript) {
         existingScript.remove();
       }
-    };
-    
-    const addJsonLd = () => {
-      const script = document.createElement('script');
-      script.type = 'application/ld+json';
-      script.id = 'seo-json-ld';
-      script.innerHTML = JSON.stringify({
+      
+      // Create new JSON-LD script
+      const jsonLdData = {
         "@context": "https://schema.org",
         "@type": type === 'article' ? 'Article' : 'WebPage',
         "headline": title,
@@ -126,47 +132,53 @@ const SEO = ({
             "@type": "ImageObject",
             "url": `${window.location.origin}/vikrahub-logo.svg`
           }
-        },
-        ...(article && {
-          "author": {
-            "@type": "Person",
-            "name": article.author
-          },
-          "datePublished": article.publishedTime,
-          "dateModified": article.modifiedTime || article.publishedTime,
-          "mainEntityOfPage": {
-            "@type": "WebPage",
-            "@id": seoUrl
-          }
-        })
-      });
+        }
+      };
+      
+      if (article) {
+        jsonLdData.author = {
+          "@type": "Person",
+          "name": article.author
+        };
+        jsonLdData.datePublished = article.publishedTime;
+        jsonLdData.dateModified = article.modifiedTime || article.publishedTime;
+        jsonLdData.mainEntityOfPage = {
+          "@type": "WebPage",
+          "@id": seoUrl
+        };
+      }
+      
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.textContent = JSON.stringify(jsonLdData);
       document.head.appendChild(script);
     };
     
-    removeExistingJsonLd();
-    addJsonLd();
-
-    // Cleanup function to reset meta tags when component unmounts
+    updateJsonLd();
+    
+    // Cleanup function to restore defaults when component unmounts
     return () => {
-      // Reset to default values when component unmounts
+      // Restore default title
       document.title = defaultTitle;
+      
+      // Restore default meta tags
       updateMetaTag('description', defaultDescription);
       updateMetaTag('og:title', defaultTitle, true);
       updateMetaTag('og:description', defaultDescription, true);
       updateMetaTag('og:image', defaultImage, true);
-      updateMetaTag('og:url', window.location.href, true);
+      updateMetaTag('og:url', window.location.origin, true);
       updateMetaTag('og:type', 'website', true);
-      
       updateMetaTag('twitter:title', defaultTitle);
       updateMetaTag('twitter:description', defaultDescription);
       updateMetaTag('twitter:image', defaultImage);
       
-      updateLinkTag('canonical', window.location.href);
-      removeExistingJsonLd();
+      // Remove article-specific meta tags
+      const articleTags = document.querySelectorAll('meta[property^="article:"]');
+      articleTags.forEach(tag => tag.remove());
     };
   }, [title, description, image, url, type, article]);
 
-  // This component doesn't render anything
+  // This component doesn't render anything - it only manages document head
   return null;
 };
 

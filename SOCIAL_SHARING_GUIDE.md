@@ -5,18 +5,19 @@ This implementation provides dynamic Open Graph meta tags for blog posts so that
 
 ## How It Works
 
-### 1. Client-Side Meta Tags (Native React)
-For users browsing the site, we use native React and the document API to dynamically update meta tags in the browser:
+### 1. Client-Side Meta Tags (Native React 19)
+For users browsing the site, we use native React `useEffect` with direct DOM manipulation to dynamically update meta tags in the browser:
 
 - **File**: `frontend/src/components/common/SEO.js`
+- **Technology**: Native React 19 with DOM manipulation (React Helmet Async compatible alternative)
 - **Usage**: Automatically included in `BlogPost.js`, `Blog.js`, and `Home.js`
 - **Features**: 
-  - Dynamic title, description, and image using document API
+  - Dynamic title, description, and image
   - Open Graph meta tags for social platforms
   - Twitter Card meta tags
   - JSON-LD structured data for SEO
   - Canonical URLs
-  - React 19 compatible (no external dependencies)
+  - Cleanup on component unmount
 
 ### 2. Server-Side Meta Tags (Django Templates)
 For social media crawlers that don't execute JavaScript, we serve pre-rendered HTML with meta tags:
@@ -49,10 +50,10 @@ Additional API endpoint for programmatic access to blog meta data:
 ## Implementation Details
 
 ### Frontend Changes
-1. **Native React SEO Solution**: Dynamic meta tag management using document API (React 19 compatible)
-2. **Created SEO Component**: Reusable component for meta tags without external dependencies
-3. **Updated App.js**: Removed HelmetProvider (no longer needed)
-4. **Enhanced Blog Components**: Added SEO meta tags to BlogPost, Blog, and Home
+1. **Native React 19 SEO Management**: Direct DOM manipulation for meta tags (React Helmet Async alternative)
+2. **Created SEO Component**: Reusable component for meta tags with cleanup
+3. **Updated Blog Components**: Added SEO meta tags to BlogPost, Blog, and Home
+4. **React 19 Compatibility**: Removed react-helmet-async dependency for better compatibility
 
 ### Backend Changes
 1. **Added blog_share_page view**: Serves pre-rendered HTML for crawlers
