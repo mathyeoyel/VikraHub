@@ -719,6 +719,117 @@
   margin-bottom: 1.5rem;
 }
 
+/* Quick Content Management */
+.quick-content-management {
+  margin: 2rem 0;
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f8f9fa;
+}
+
+.section-header h3 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.content-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.content-overview-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.content-overview-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: #ffa000;
+}
+
+.content-overview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.content-icon {
+  font-size: 1.5rem;
+}
+
+.content-overview-header h4 {
+  color: #2c3e50;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  flex: 1;
+  margin-left: 0.75rem;
+}
+
+.content-count {
+  background: #ffa000;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.content-overview-stats {
+  margin-bottom: 1.5rem;
+}
+
+.overview-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+  color: #6c757d;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.overview-stat:last-child {
+  border-bottom: none;
+}
+
+.overview-stat span:last-child {
+  font-weight: 600;
+  color: #495057;
+}
+
+.content-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.btn-sm i {
+  margin-right: 0.5rem;
+}
+
 .activity-list {
   display: flex;
   flex-direction: column;
@@ -1408,5 +1519,41 @@
   .btn:active {
     transform: scale(0.98);
     background-color: rgba(255, 160, 0, 0.1);
+  }
+}
+
+/* Additional responsive adjustments for content management */
+@media (max-width: 768px) {
+  .quick-content-management {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+
+  .section-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .content-overview-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .content-overview-card {
+    padding: 1rem;
+  }
+
+  .content-overview-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .content-actions {
+    flex-direction: column;
+  }
+
+  .content-actions .btn {
+    width: 100%;
   }
 }

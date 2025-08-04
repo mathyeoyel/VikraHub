@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './Auth/AuthContext';
 import { userAPI, notificationAPI, blogAPI, portfolioAPI, assetAPI, getMyFollowStats } from '../api';
 import EditProfile from './EditProfile';
 import AssetUpload from './Marketplace/AssetUpload';
 import SocialDashboard from './SocialDashboard';
 import MessagesDashboard from './MessagesDashboard';
+import ContentManager from './ContentManager';
 import './Dashboard.css';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [profile, setProfile] = useState(null);
   const [notifications, setNotifications] = useState([]);
@@ -28,6 +30,9 @@ const Dashboard = () => {
     followers: 0,
     following: 0
   });
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [portfolioItems, setPortfolioItems] = useState([]);
+  const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [apiErrors, setApiErrors] = useState([]);
@@ -232,6 +237,11 @@ const Dashboard = () => {
           followers: followStats.followers || 0,
           following: followStats.following || 0
         });
+
+        // Store normalized data in state for ContentManager
+        setBlogPosts(blogPosts);
+        setPortfolioItems(portfolioItems);
+        setAssets(assets);
 
         setLastUpdated(new Date());
         setError(null); // Clear any previous errors
@@ -529,6 +539,7 @@ const Dashboard = () => {
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: '📊' },
+    { id: 'content', label: 'Content Manager', icon: '📝' },
     { id: 'social', label: 'Social', icon: '👥' },
     { id: 'messages', label: 'Messages', icon: <i className="fas fa-comment icon"></i> },
     { id: 'upload', label: 'Upload Asset', icon: <i className="fas fa-upload icon"></i> },
@@ -792,6 +803,122 @@ const Dashboard = () => {
                 </div>
               </div>
 
+              {/* Quick Content Management */}
+              <div className="quick-content-management">
+                <div className="section-header">
+                  <h3>Content Management</h3>
+                  <button 
+                    className="btn btn-primary"
+                    onClick={() => setActiveTab('content')}
+                  >
+                    <i className="fas fa-cog"></i>
+                    Manage All Content
+                  </button>
+                </div>
+                
+                <div className="content-overview-grid">
+                  <div className="content-overview-card">
+                    <div className="content-overview-header">
+                      <span className="content-icon">📝</span>
+                      <h4>Blog Posts</h4>
+                      <span className="content-count">{blogPosts.length}</span>
+                    </div>
+                    <div className="content-overview-stats">
+                      <div className="overview-stat">
+                        <span>Published:</span>
+                        <span>{blogPosts.filter(post => post.published).length}</span>
+                      </div>
+                      <div className="overview-stat">
+                        <span>Drafts:</span>
+                        <span>{blogPosts.filter(post => !post.published).length}</span>
+                      </div>
+                      <div className="overview-stat">
+                        <span>Featured:</span>
+                        <span>{blogPosts.filter(post => post.featured).length}</span>
+                      </div>
+                    </div>
+                    <div className="content-actions">
+                      <button 
+                        className="btn btn-sm btn-primary"
+                        onClick={() => navigate('/create/blog')}
+                      >
+                        <i className="fas fa-plus"></i> New Post
+                      </button>
+                      <button 
+                        className="btn btn-sm btn-secondary"
+                        onClick={() => setActiveTab('content')}
+                      >
+                        <i className="fas fa-edit"></i> Manage
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="content-overview-card">
+                    <div className="content-overview-header">
+                      <span className="content-icon">🎨</span>
+                      <h4>Portfolio</h4>
+                      <span className="content-count">{portfolioItems.length}</span>
+                    </div>
+                    <div className="content-overview-stats">
+                      <div className="overview-stat">
+                        <span>Total Views:</span>
+                        <span>{portfolioItems.reduce((sum, item) => sum + (item.views || 0), 0)}</span>
+                      </div>
+                      <div className="overview-stat">
+                        <span>Total Likes:</span>
+                        <span>{portfolioItems.reduce((sum, item) => sum + (item.likes || 0), 0)}</span>
+                      </div>
+                    </div>
+                    <div className="content-actions">
+                      <button 
+                        className="btn btn-sm btn-primary"
+                        onClick={() => navigate('/create/upload-work')}
+                      >
+                        <i className="fas fa-plus"></i> New Item
+                      </button>
+                      <button 
+                        className="btn btn-sm btn-secondary"
+                        onClick={() => setActiveTab('content')}
+                      >
+                        <i className="fas fa-edit"></i> Manage
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="content-overview-card">
+                    <div className="content-overview-header">
+                      <span className="content-icon">💎</span>
+                      <h4>Assets</h4>
+                      <span className="content-count">{assets.length}</span>
+                    </div>
+                    <div className="content-overview-stats">
+                      <div className="overview-stat">
+                        <span>Published:</span>
+                        <span>{assets.filter(asset => asset.is_published).length}</span>
+                      </div>
+                      <div className="overview-stat">
+                        <span>Featured:</span>
+                        <span>{assets.filter(asset => asset.is_featured).length}</span>
+                      </div>
+                    </div>
+                    <div className="content-actions">
+                      <button 
+                        className="btn btn-sm btn-primary"
+                        onClick={() => setActiveTab('upload')}
+                      >
+                        <i className="fas fa-plus"></i> New Asset
+                      </button>
+                      <button 
+                        className="btn btn-sm btn-secondary"
+                        onClick={() => setActiveTab('content')}
+                      >
+                        <i className="fas fa-edit"></i> Manage
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Recent Activity */}
               <div className="recent-activity">
                 <h3>Recent Activity</h3>
@@ -836,6 +963,127 @@ const Dashboard = () => {
             </div>
           )}
 
+          {activeTab === 'content' && (
+            <div className="content-tab">
+              <h3>Content Manager</h3>
+              <p>Manage your blog posts, portfolio items, and uploaded assets.</p>
+              
+              {/* Content management sections */}
+              <div className="content-sections">
+                {/* Blog Posts Section */}
+                <div className="content-section">
+                  <h4>Blog Posts</h4>
+                  <div className="content-actions">
+                    <button className="btn btn-primary" onClick={() => setActiveTab('upload')}>
+                      <i className="fas fa-plus"></i> New Post
+                    </button>
+                  </div>
+                  <div className="content-list">
+                    {recentActivity.filter(item => item.type === 'blog').length > 0 ? (
+                      recentActivity.filter(item => item.type === 'blog').map((post, index) => (
+                        <div key={index} className="content-item">
+                          <div className="item-info">
+                            <span className="item-icon">📝</span>
+                            <div className="item-details">
+                              <h5>{post.title}</h5>
+                              <p className="item-date">
+                                {new Date(post.date).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="item-actions">
+                            <button className="btn btn-edit" onClick={() => handleEditPost(post)}>
+                              <i className="fas fa-edit"></i> Edit
+                            </button>
+                            <button className="btn btn-delete" onClick={() => handleDeletePost(post.id)}>
+                              <i className="fas fa-trash"></i> Delete
+                            </button>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="no-content">No blog posts found. Create your first post!</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Portfolio Items Section */}
+                <div className="content-section">
+                  <h4>Portfolio Items</h4>
+                  <div className="content-actions">
+                    <button className="btn btn-primary" onClick={() => setActiveTab('upload')}>
+                      <i className="fas fa-plus"></i> New Item
+                    </button>
+                  </div>
+                  <div className="content-list">
+                    {recentActivity.filter(item => item.type === 'portfolio').length > 0 ? (
+                      recentActivity.filter(item => item.type === 'portfolio').map((item, index) => (
+                        <div key={index} className="content-item">
+                          <div className="item-info">
+                            <span className="item-icon">🎨</span>
+                            <div className="item-details">
+                              <h5>{item.title}</h5>
+                              <p className="item-date">
+                                {new Date(item.date).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="item-actions">
+                            <button className="btn btn-edit" onClick={() => handleEditPortfolio(item)}>
+                              <i className="fas fa-edit"></i> Edit
+                            </button>
+                            <button className="btn btn-delete" onClick={() => handleDeletePortfolio(item.id)}>
+                              <i className="fas fa-trash"></i> Delete
+                            </button>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="no-content">No portfolio items found. Add your first item!</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Uploaded Assets Section */}
+                <div className="content-section">
+                  <h4>Uploaded Assets</h4>
+                  <div className="content-actions">
+                    <button className="btn btn-primary" onClick={() => setActiveTab('upload')}>
+                      <i className="fas fa-plus"></i> Upload Asset
+                    </button>
+                  </div>
+                  <div className="content-list">
+                    {recentActivity.filter(item => item.type === 'asset').length > 0 ? (
+                      recentActivity.filter(item => item.type === 'asset').map((asset, index) => (
+                        <div key={index} className="content-item">
+                          <div className="item-info">
+                            <span className="item-icon">📁</span>
+                            <div className="item-details">
+                              <h5>{asset.title}</h5>
+                              <p className="item-date">
+                                {new Date(asset.date).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="item-actions">
+                            <button className="btn btn-edit" onClick={() => handleEditAsset(asset)}>
+                              <i className="fas fa-edit"></i> Edit
+                            </button>
+                            <button className="btn btn-delete" onClick={() => handleDeleteAsset(asset.id)}>
+                              <i className="fas fa-trash"></i> Delete
+                            </button>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="no-content">No uploaded assets found. Upload your first asset!</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {activeTab === 'social' && (
             <div className="social-tab">
               <SocialDashboard />
@@ -864,6 +1112,15 @@ const Dashboard = () => {
                 onClose={() => setActiveTab('overview')}
               />
             </div>
+          )}
+
+          {activeTab === 'content' && (
+            <ContentManager 
+              blogPosts={blogPosts}
+              portfolioItems={portfolioItems}
+              assets={assets}
+              onRefresh={fetchDashboardData}
+            />
           )}
 
           {activeTab === 'notifications' && (
