@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './Auth/AuthContext';
-import { userAPI, notificationAPI, blogAPI, portfolioAPI, assetAPI, postsAPI, messagesAPI, getMyFollowStats } from '../api';
+import { userAPI, notificationAPI, blogAPI, portfolioAPI, assetAPI, postsAPI, messagingAPI, getMyFollowStats } from '../api';
 import EditProfile from './EditProfile';
 import AssetUpload from './Marketplace/AssetUpload';
 import SocialDashboard from './SocialDashboard';
@@ -57,6 +57,14 @@ const Dashboard = () => {
       
       console.log('Fetching dashboard data for user:', user.username);
       
+      // Debug: Check if we have a valid token
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        console.warn('⚠️ No access token found - user may need to re-authenticate');
+      } else {
+        console.log('✅ Access token found, length:', token.length);
+      }
+      
       const errors = [];
       
       // Fetch comprehensive user data including follow stats
@@ -76,6 +84,12 @@ const Dashboard = () => {
         }),
         blogAPI.getMyPosts().catch(err => {
           console.warn('Failed to fetch blog posts:', err);
+          console.warn('Blog API error details:', {
+            status: err.response?.status,
+            statusText: err.response?.statusText,
+            data: err.response?.data,
+            url: err.config?.url
+          });
           
           if (err.response?.status === 401) {
             console.warn('Blog API returned 401 - authentication issue');
@@ -124,7 +138,7 @@ const Dashboard = () => {
           // Return consistent structure for assets
           return { data: [], results: [] };
         }),
-        messagesAPI.getConversations().catch(err => {
+        messagingAPI.getConversations().catch(err => {
           console.warn('Failed to fetch conversations:', err);
           
           if (err.response?.status === 401) {
