@@ -2,36 +2,74 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.utils import timezone
-from .models import Conversation, Message, ConversationParticipant, MessageRead
+from django.db.models import Count
+from .models import (
+    Conversation, Message, ConversationParticipant, MessageRead, 
+    MessageDelivered, MessageReaction, UserStatus
+)
 
 
 class UserSerializer(serializers.ModelSerializer):
     """Basic user serializer for messaging"""
     full_name = serializers.SerializerMethodField()
+    is_online = serializers.SerializerMethodField()
     
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'full_name']
+        fields = ['id', 'username', 'first_name', 'last_name', 'full_name', 'is_online']
     
     def get_full_name(self, obj):
         return f"{obj.first_name} {obj.last_name}".strip() or obj.username
+    
+    def get_is_online(self, obj):
+        """Get user's online status"""
+        try:
+            return obj.status.is_online
+        except AttributeError:
+            return False
+
+
+class ReactionSerializer(serializers.ModelSerializer):
+    """Serializer for message reactions"""
+    user = UserSerializer(read_only=True)
+    
+    class Meta:
+        model = MessageReaction
+        fields = ['id', 'user', 'reaction', 'reacted_at']
 
 
 class MessageSerializer(serializers.ModelSerializer):
     """Serializer for messages"""
     sender = UserSerializer(read_only=True)
     recipient = UserSerializer(read_only=True)
+    reply_to = serializers.SerializerMethodField()
     is_read = serializers.SerializerMethodField()
+    is_delivered = serializers.SerializerMethodField()
     read_by_users = serializers.SerializerMethodField()
+    delivered_by_users = serializers.SerializerMethodField()
+    reactions = serializers.SerializerMethodField()
     
     class Meta:
         model = Message
         fields = [
             'id', 'conversation', 'sender', 'recipient', 'content', 'created_at', 
-            'updated_at', 'is_edited', 'edited_at', 'is_deleted', 
-            'is_read', 'read_by_users'
+            'updated_at', 'is_edited', 'edited_at', 'is_deleted', 'reply_to',
+            'is_read', 'is_delivered', 'read_by_users', 'delivered_by_users', 'reactions'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at', 'sender', 'recipient']
+    
+    def get_reply_to(self, obj):
+        """Get replied-to message snippet"""
+        if obj.reply_to:
+            return {
+                'id': str(obj.reply_to.id),
+                'content': obj.reply_to.content[:100] + ('...' if len(obj.reply_to.content) > 100 else ''),
+                'sender': {
+                    'id': obj.reply_to.sender.id,
+                    'username': obj.reply_to.sender.username
+                }
+            }
+        return None
     
     def get_is_read(self, obj):
         """Check if current user has read this message"""
@@ -40,18 +78,36 @@ class MessageSerializer(serializers.ModelSerializer):
             return obj.is_read_by(request.user)
         return False
     
+    def get_is_delivered(self, obj):
+        """Check if message is delivered to current user"""
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.is_delivered_to(request.user)
+        return False
+    
     def get_read_by_users(self, obj):
         """Get list of users who have read this message"""
         read_users = obj.read_by.all()
         return UserSerializer(read_users, many=True).data
+    
+    def get_delivered_by_users(self, obj):
+        """Get list of users who have received this message"""
+        delivered_users = obj.delivered_to.all()
+        return UserSerializer(delivered_users, many=True).data
+    
+    def get_reactions(self, obj):
+        """Get reaction counts for this message"""
+        reactions = obj.reactions.values('reaction').annotate(count=Count('reaction'))
+        return {reaction['reaction']: reaction['count'] for reaction in reactions}
 
 
 class MessageCreateSerializer(serializers.ModelSerializer):
     """Serializer for creating messages with enhanced validation"""
+    reply_to_id = serializers.UUIDField(required=False, allow_null=True)
     
     class Meta:
         model = Message
-        fields = ['conversation', 'content']
+        fields = ['conversation', 'content', 'reply_to_id']
     
     def validate_content(self, value):
         """Validate message content"""
@@ -73,10 +129,30 @@ class MessageCreateSerializer(serializers.ModelSerializer):
                 )
         return value
     
+    def validate_reply_to_id(self, value):
+        """Validate reply_to message exists and is in same conversation"""
+        if value:
+            try:
+                message = Message.objects.get(id=value)
+                conversation = self.initial_data.get('conversation')
+                if conversation and str(message.conversation.id) != str(conversation):
+                    raise serializers.ValidationError(
+                        "Can only reply to messages in the same conversation."
+                    )
+                return message
+            except Message.DoesNotExist:
+                raise serializers.ValidationError("Reply message does not exist.")
+        return None
+    
     def create(self, validated_data):
         """Create message with sender set to current user"""
         request = self.context.get('request')
         validated_data['sender'] = request.user
+        
+        # Handle reply_to
+        reply_to_message = validated_data.pop('reply_to_id', None)
+        if reply_to_message:
+            validated_data['reply_to'] = reply_to_message
         
         # Set recipient as the other participant
         conversation = validated_data['conversation']

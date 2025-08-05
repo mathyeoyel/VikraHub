@@ -4,6 +4,25 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 import uuid
 
+class UserStatus(models.Model):
+    """
+    Track user online status and last activity
+    """
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='status'
+    )
+    is_online = models.BooleanField(default=False)
+    last_active = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'messaging_user_status'
+    
+    def __str__(self):
+        status = "online" if self.is_online else "offline"
+        return f"{self.user.username} - {status}"
+
 class Conversation(models.Model):
     """
     Represents a conversation between two users
@@ -108,6 +127,15 @@ class Message(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+    # Reply functionality
+    reply_to = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        related_name='replies',
+        null=True,
+        blank=True
+    )
+    
     # Message status
     is_edited = models.BooleanField(default=False)
     edited_at = models.DateTimeField(null=True, blank=True)
@@ -129,6 +157,14 @@ class Message(models.Model):
         blank=True
     )
     
+    # Delivery receipts
+    delivered_to = models.ManyToManyField(
+        User,
+        through='MessageDelivered',
+        related_name='delivered_messages',
+        blank=True
+    )
+    
     class Meta:
         db_table = 'messaging_messages'
         ordering = ['-created_at']
@@ -145,9 +181,46 @@ class Message(models.Model):
                 defaults={'read_at': timezone.now()}
             )
     
+    def mark_as_delivered(self, user):
+        """Mark message as delivered to a specific user"""
+        if user != self.sender:  # Don't mark own messages as delivered
+            MessageDelivered.objects.get_or_create(
+                message=self,
+                user=user,
+                defaults={'delivered_at': timezone.now()}
+            )
+    
     def is_read_by(self, user):
         """Check if message has been read by a specific user"""
         return self.read_by.filter(id=user.id).exists()
+    
+    def is_delivered_to(self, user):
+        """Check if message has been delivered to a specific user"""
+        return self.delivered_to.filter(id=user.id).exists()
+
+
+class MessageDelivered(models.Model):
+    """
+    Through model for message delivery receipts
+    """
+    message = models.ForeignKey(
+        Message,
+        on_delete=models.CASCADE,
+        related_name='delivery_receipts'
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='message_deliveries'
+    )
+    delivered_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = 'messaging_message_delivered'
+        unique_together = ['message', 'user']
+    
+    def __str__(self):
+        return f"{self.user.username} received message {self.message.id}"
 
 
 class MessageRead(models.Model):
@@ -196,3 +269,37 @@ class TypingStatus(models.Model):
     
     def __str__(self):
         return f"{self.user.username} typing in {self.conversation.id}"
+
+
+class MessageReaction(models.Model):
+    """
+    Model for message reactions (like, love, laugh, etc.)
+    """
+    REACTION_CHOICES = [
+        ('like', '👍'),
+        ('love', '❤️'),
+        ('laugh', '😂'),
+        ('wow', '😮'),
+        ('sad', '😢'),
+        ('angry', '😡'),
+    ]
+    
+    message = models.ForeignKey(
+        Message,
+        on_delete=models.CASCADE,
+        related_name='reactions'
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='message_reactions'
+    )
+    reaction = models.CharField(max_length=10, choices=REACTION_CHOICES)
+    reacted_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = 'messaging_message_reactions'
+        unique_together = ['message', 'user', 'reaction']
+    
+    def __str__(self):
+        return f"{self.user.username} reacted {self.reaction} to message {self.message.id}"
