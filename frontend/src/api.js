@@ -694,8 +694,8 @@ export const messagingAPI = {
     }
   },
   
-  // Send message with enhanced validation
-  sendMessage: async (conversation_id, content, message_type = 'text') => {
+  // Send message with enhanced validation and reply support
+  sendMessage: async (conversation_id, content, reply_to_id = null, message_type = 'text') => {
     try {
       if (!conversation_id) {
         throw new Error('Conversation ID is required');
@@ -704,14 +704,94 @@ export const messagingAPI = {
         throw new Error('Message content cannot be empty');
       }
       
-      const response = await api.post(`messaging/conversations/${conversation_id}/messages/`, { 
+      const payload = { 
         content: content.trim(), 
         message_type 
-      });
+      };
+      
+      // Add reply_to_id if provided
+      if (reply_to_id) {
+        payload.reply_to_id = reply_to_id;
+      }
+      
+      const response = await api.post(`messaging/conversations/${conversation_id}/messages/`, payload);
       console.log('✅ Message sent successfully');
       return response;
     } catch (error) {
       console.error('❌ Failed to send message:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  // Add message reaction
+  addReaction: async (message_id, reaction_type) => {
+    try {
+      if (!message_id) {
+        throw new Error('Message ID is required');
+      }
+      if (!reaction_type) {
+        throw new Error('Reaction type is required');
+      }
+      
+      const response = await api.post(`messaging/messages/${message_id}/react/`, { 
+        reaction_type 
+      });
+      console.log('✅ Reaction added successfully');
+      return response;
+    } catch (error) {
+      console.error('❌ Failed to add reaction:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  // Remove message reaction
+  removeReaction: async (message_id) => {
+    try {
+      if (!message_id) {
+        throw new Error('Message ID is required');
+      }
+      
+      const response = await api.delete(`messaging/messages/${message_id}/react/`);
+      console.log('✅ Reaction removed successfully');
+      return response;
+    } catch (error) {
+      console.error('❌ Failed to remove reaction:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  // Get user status/presence
+  getUserStatus: async (user_id) => {
+    try {
+      if (!user_id) {
+        throw new Error('User ID is required');
+      }
+      
+      const response = await api.get(`messaging/users/${user_id}/status/`);
+      return response;
+    } catch (error) {
+      console.error('❌ Failed to get user status:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  // Mark specific messages as read
+  markMessagesRead: async (conversation_id, message_ids) => {
+    try {
+      if (!conversation_id) {
+        throw new Error('Conversation ID is required');
+      }
+      if (!message_ids || !Array.isArray(message_ids)) {
+        throw new Error('Message IDs array is required');
+      }
+      
+      const response = await api.post(`messaging/conversations/${conversation_id}/mark-messages-read/`, { 
+        message_ids 
+      });
+      console.log('✅ Messages marked as read successfully');
+      return response;
+    } catch (error) {
+      console.error('❌ Failed to mark messages as read:', error.response?.data || error.message);
       throw error;
     }
   },

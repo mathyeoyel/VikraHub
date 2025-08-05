@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../Auth/AuthContext';
 import { messagingAPI } from '../../api';
@@ -16,6 +16,20 @@ const Messages = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isMobile, setIsMobile] = useState(false);
+  
+  // New state for enhanced features
+  const [ws, setWs] = useState(null);
+  const [userStatuses, setUserStatuses] = useState({});
+  const [replyToMessage, setReplyToMessage] = useState(null);
+  const [showReactionsMenu, setShowReactionsMenu] = useState(null);
+  const [longPressTimer, setLongPressTimer] = useState(null);
+  
+  // Refs for enhanced functionality
+  const messagesEndRef = useRef(null);
+  const messageInputRef = useRef(null);
+  
+  // Available reactions
+  const reactions = ['👍', '❤️', '😂', '😮', '😢', '😡'];
 
   // Check if screen is mobile size
   useEffect(() => {
@@ -38,6 +52,157 @@ const Messages = () => {
       messages 
     });
   }, [messages]);
+
+  // WebSocket connection management
+  useEffect(() => {
+    if (user && selectedConversation) {
+      connectWebSocket();
+    }
+    
+    return () => {
+      if (ws) {
+        ws.close();
+      }
+    };
+  }, [user, selectedConversation]);
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const connectWebSocket = useCallback(() => {
+    if (!user || !selectedConversation) return;
+    
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}/ws/chat/${selectedConversation.id}/`;
+    
+    console.log('🔌 Connecting to WebSocket:', wsUrl);
+    
+    const websocket = new WebSocket(wsUrl);
+    
+    websocket.onopen = () => {
+      console.log('✅ WebSocket connected');
+      setWs(websocket);
+    };
+    
+    websocket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log('📨 WebSocket message received:', data);
+      
+      switch (data.type) {
+        case 'message':
+          handleNewMessage(data.message);
+          break;
+        case 'message_read':
+          handleMessageRead(data);
+          break;
+        case 'reaction':
+          handleReactionUpdate(data);
+          break;
+        case 'delivery_receipt':
+          handleDeliveryReceipt(data);
+          break;
+        case 'user_status':
+          handleUserStatusUpdate(data);
+          break;
+        default:
+          console.log('🤷 Unknown message type:', data.type);
+      }
+    };
+    
+    websocket.onclose = (event) => {
+      console.log('🔌 WebSocket disconnected:', event.code, event.reason);
+      setWs(null);
+      
+      // Attempt to reconnect after a delay
+      if (!event.wasClean) {
+        setTimeout(() => {
+          if (user && selectedConversation) {
+            connectWebSocket();
+          }
+        }, 3000);
+      }
+    };
+    
+    websocket.onerror = (error) => {
+      console.error('❌ WebSocket error:', error);
+    };
+  }, [user, selectedConversation]);
+
+  const handleNewMessage = (message) => {
+    setMessages(prevMessages => {
+      const exists = prevMessages.find(msg => msg.id === message.id);
+      if (exists) return prevMessages;
+      
+      return [...prevMessages, message];
+    });
+    
+    // Update conversation last message
+    setConversations(prev => 
+      prev.map(conv => 
+        conv.id === selectedConversation?.id 
+          ? { 
+              ...conv, 
+              latest_message: { 
+                content: message.content, 
+                created_at: message.created_at 
+              } 
+            }
+          : conv
+      )
+    );
+  };
+
+  const handleMessageRead = (data) => {
+    setMessages(prevMessages => 
+      prevMessages.map(msg => 
+        data.message_ids.includes(msg.id) 
+          ? { ...msg, is_read: true }
+          : msg
+      )
+    );
+  };
+
+  const handleReactionUpdate = (data) => {
+    setMessages(prevMessages => 
+      prevMessages.map(msg => 
+        msg.id === data.message_id 
+          ? { 
+              ...msg, 
+              reactions: data.reactions || []
+            }
+          : msg
+      )
+    );
+  };
+
+  const handleDeliveryReceipt = (data) => {
+    setMessages(prevMessages => 
+      prevMessages.map(msg => 
+        msg.id === data.message_id 
+          ? { 
+              ...msg, 
+              delivered_to: data.delivered_to || []
+            }
+          : msg
+      )
+    );
+  };
+
+  const handleUserStatusUpdate = (data) => {
+    setUserStatuses(prev => ({
+      ...prev,
+      [data.user_id]: {
+        status: data.status,
+        last_seen: data.last_seen
+      }
+    }));
+  };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   useEffect(() => {
     fetchConversations();
@@ -211,10 +376,17 @@ const Messages = () => {
     try {
       console.log('📤 Sending message to conversation:', selectedConversation.id);
       console.log('📤 Message content:', newMessage.trim());
+      console.log('📤 Reply to:', replyToMessage?.id);
       console.log('📤 User info:', user);
       
+      // Prepare message data with reply support
+      const messageData = {
+        content: newMessage.trim(),
+        reply_to_id: replyToMessage?.id || null
+      };
+      
       // Use the correct messaging API endpoint
-      const response = await messagingAPI.sendMessage(selectedConversation.id, newMessage.trim());
+      const response = await messagingAPI.sendMessage(selectedConversation.id, messageData.content, messageData.reply_to_id);
       console.log('✅ Message sent successfully:', response);
       
       // Add message to local state - ensure messages is an array first
@@ -226,7 +398,10 @@ const Messages = () => {
         },
         content: newMessage.trim(),
         created_at: new Date().toISOString(),
-        is_read: true
+        is_read: true,
+        reply_to: replyToMessage,
+        reactions: [],
+        delivered_to: []
       };
       
       // If the API response contains the created message, use that instead
@@ -236,6 +411,9 @@ const Messages = () => {
         const apiMessage = response.data;
         newMsg.id = apiMessage.id || newMsg.id;
         newMsg.created_at = apiMessage.created_at || newMsg.created_at;
+        newMsg.reply_to = apiMessage.reply_to || newMsg.reply_to;
+        newMsg.reactions = apiMessage.reactions || [];
+        newMsg.delivered_to = apiMessage.delivered_to || [];
       }
       
       // Safely update messages state
@@ -246,6 +424,15 @@ const Messages = () => {
       });
       
       setNewMessage('');
+      setReplyToMessage(null);
+      
+      // Send via WebSocket for real-time updates
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({
+          type: 'message',
+          message: messageData
+        }));
+      }
       
       // Update conversation's last message
       setConversations(prev => 
@@ -314,6 +501,15 @@ const Messages = () => {
     try {
       // Use the correct messaging API endpoint
       await messagingAPI.markConversationRead(conversationId);
+      
+      // Send via WebSocket for real-time updates
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({
+          type: 'mark_read',
+          conversation_id: conversationId
+        }));
+      }
+      
       setConversations(prev =>
         prev.map(conv =>
           conv.id === conversationId ? { ...conv, unread_count: 0 } : conv
@@ -322,6 +518,131 @@ const Messages = () => {
     } catch (error) {
       console.error('Failed to mark as read:', error);
     }
+  };
+
+  // Enhanced message interaction functions
+  const handleReaction = async (messageId, reactionType) => {
+    try {
+      // Send reaction via WebSocket
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({
+          type: 'reaction',
+          message_id: messageId,
+          reaction_type: reactionType
+        }));
+      }
+      
+      // Update local state optimistically
+      setMessages(prevMessages => 
+        prevMessages.map(msg => {
+          if (msg.id === messageId) {
+            const reactions = msg.reactions || [];
+            const existingReaction = reactions.find(r => r.user.id === user.id);
+            
+            if (existingReaction) {
+              // Update existing reaction
+              return {
+                ...msg,
+                reactions: reactions.map(r => 
+                  r.user.id === user.id 
+                    ? { ...r, reaction_type: reactionType }
+                    : r
+                )
+              };
+            } else {
+              // Add new reaction
+              return {
+                ...msg,
+                reactions: [...reactions, {
+                  user: { id: user.id, username: user.username },
+                  reaction_type: reactionType,
+                  created_at: new Date().toISOString()
+                }]
+              };
+            }
+          }
+          return msg;
+        })
+      );
+      
+      setShowReactionsMenu(null);
+    } catch (error) {
+      console.error('Failed to add reaction:', error);
+    }
+  };
+
+  const handleReplyToMessage = (message) => {
+    setReplyToMessage(message);
+    messageInputRef.current?.focus();
+  };
+
+  const cancelReply = () => {
+    setReplyToMessage(null);
+  };
+
+  // Long press handlers for mobile interactions
+  const handleMessageLongPress = (message) => {
+    if (isMobile) {
+      setShowReactionsMenu(message.id);
+    }
+  };
+
+  const handleTouchStart = (message) => {
+    const timer = setTimeout(() => {
+      handleMessageLongPress(message);
+    }, 500);
+    setLongPressTimer(timer);
+  };
+
+  const handleTouchEnd = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+  };
+
+  // Swipe to reply functionality (simplified)
+  const handleSwipeToReply = (message) => {
+    if (isMobile) {
+      handleReplyToMessage(message);
+    }
+  };
+
+  // Get user presence status
+  const getUserStatus = (userId) => {
+    const status = userStatuses[userId];
+    if (!status) return 'offline';
+    
+    const lastSeen = new Date(status.last_seen);
+    const now = new Date();
+    const diffInMinutes = (now - lastSeen) / (1000 * 60);
+    
+    if (diffInMinutes < 5) return 'online';
+    return 'offline';
+  };
+
+  // Format delivery status
+  const getDeliveryStatus = (message) => {
+    if (!message.delivered_to) return '';
+    
+    const deliveredCount = message.delivered_to.length;
+    if (deliveredCount === 0) return '✓';
+    return '✓✓';
+  };
+
+  // Get reactions summary
+  const getReactionsSummary = (reactions) => {
+    if (!reactions || reactions.length === 0) return null;
+    
+    const reactionCounts = {};
+    reactions.forEach(reaction => {
+      reactionCounts[reaction.reaction_type] = (reactionCounts[reaction.reaction_type] || 0) + 1;
+    });
+    
+    return Object.entries(reactionCounts)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 3)
+      .map(([emoji, count]) => `${emoji}${count > 1 ? count : ''}`);
   };
 
   const formatTime = (timestamp) => {
@@ -398,34 +719,40 @@ const Messages = () => {
                   <small>Start messaging other creators to see conversations here!</small>
                 </div>
               ) : (
-                filteredConversations.map(conversation => (
-                  <div
-                    key={conversation.id}
-                    className={`conversation-item ${selectedConversation?.id === conversation.id ? 'active' : ''} ${conversation.unread_count > 0 ? 'unread' : ''}`}
-                    onClick={() => selectConversation(conversation)}
-                  >
-                    <img
-                      src={getAvatarUrl(conversation.other_participant)}
-                      alt={conversation.other_participant.full_name || conversation.other_participant.username}
-                      className="conversation-avatar"
-                      onError={(e) => handleImageError(e, 'avatar')}
-                    />
-                    <div className="conversation-info">
-                      <div className="conversation-header">
-                        <h4>{conversation.other_participant.full_name || conversation.other_participant.username}</h4>
-                        <span className="conversation-time">
-                          {conversation.latest_message ? formatTime(conversation.latest_message.created_at) : ''}
-                        </span>
+                filteredConversations.map(conversation => {
+                  const userStatus = getUserStatus(conversation.other_participant.id);
+                  return (
+                    <div
+                      key={conversation.id}
+                      className={`conversation-item ${selectedConversation?.id === conversation.id ? 'active' : ''} ${conversation.unread_count > 0 ? 'unread' : ''}`}
+                      onClick={() => selectConversation(conversation)}
+                    >
+                      <div className="conversation-avatar-container">
+                        <img
+                          src={getAvatarUrl(conversation.other_participant)}
+                          alt={conversation.other_participant.full_name || conversation.other_participant.username}
+                          className="conversation-avatar"
+                          onError={(e) => handleImageError(e, 'avatar')}
+                        />
+                        <div className={`presence-indicator ${userStatus}`}></div>
                       </div>
-                      <p className="last-message">
-                        {conversation.latest_message?.content || 'No messages yet'}
-                      </p>
-                      {conversation.unread_count > 0 && (
-                        <span className="unread-count">{conversation.unread_count}</span>
-                      )}
+                      <div className="conversation-info">
+                        <div className="conversation-header">
+                          <h4>{conversation.other_participant.full_name || conversation.other_participant.username}</h4>
+                          <span className="conversation-time">
+                            {conversation.latest_message ? formatTime(conversation.latest_message.created_at) : ''}
+                          </span>
+                        </div>
+                        <p className="last-message">
+                          {conversation.latest_message?.content || 'No messages yet'}
+                        </p>
+                        {conversation.unread_count > 0 && (
+                          <span className="unread-count">{conversation.unread_count}</span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           </div>
@@ -444,33 +771,119 @@ const Messages = () => {
                       ←
                     </button>
                   )}
-                  <img
-                    src={getAvatarUrl(selectedConversation.other_participant)}
-                    alt={selectedConversation.other_participant.full_name || selectedConversation.other_participant.username}
-                    className="participant-avatar"
-                    onError={(e) => handleImageError(e, 'avatar')}
-                  />
+                  <div className="participant-avatar-container">
+                    <img
+                      src={getAvatarUrl(selectedConversation.other_participant)}
+                      alt={selectedConversation.other_participant.full_name || selectedConversation.other_participant.username}
+                      className="participant-avatar"
+                      onError={(e) => handleImageError(e, 'avatar')}
+                    />
+                    <div className={`presence-indicator ${getUserStatus(selectedConversation.other_participant.id)}`}></div>
+                  </div>
                   <div className="participant-info">
                     <h3>{selectedConversation.other_participant.full_name || selectedConversation.other_participant.username}</h3>
-                    <span className="participant-username">@{selectedConversation.other_participant.username}</span>
+                    <span className="participant-status">
+                      @{selectedConversation.other_participant.username} • 
+                      {getUserStatus(selectedConversation.other_participant.id) === 'online' ? ' Online' : ' Offline'}
+                    </span>
                   </div>
                 </div>
 
                 <div className="messages-list">
                   {Array.isArray(messages) && messages.length > 0 ? (
-                    messages.map(message => (
-                      <div
-                        key={message.id}
-                        className={`message ${message.sender.username === user?.username ? 'sent' : 'received'}`}
-                      >
-                        <div className="message-content">
-                          <p>{message.content}</p>
-                          <span className="message-time">
-                            {formatTime(message.created_at)}
-                          </span>
+                    <>
+                      {messages.map(message => (
+                        <div
+                          key={message.id}
+                          className={`message-wrapper ${message.sender.username === user?.username ? 'sent' : 'received'}`}
+                          onTouchStart={() => handleTouchStart(message)}
+                          onTouchEnd={handleTouchEnd}
+                          onDoubleClick={() => !isMobile && setShowReactionsMenu(message.id)}
+                        >
+                          {/* Reply indicator */}
+                          {message.reply_to && (
+                            <div className="reply-indicator">
+                              <div className="reply-line"></div>
+                              <div className="reply-content">
+                                <span className="reply-author">
+                                  {message.reply_to.sender.full_name || message.reply_to.sender.username}
+                                </span>
+                                <span className="reply-text">
+                                  {message.reply_to.content.length > 50 
+                                    ? `${message.reply_to.content.substring(0, 50)}...`
+                                    : message.reply_to.content
+                                  }
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                          
+                          <div className={`message ${message.sender.username === user?.username ? 'sent' : 'received'}`}>
+                            <div className="message-content">
+                              <p>{message.content}</p>
+                              
+                              {/* Message reactions */}
+                              {message.reactions && message.reactions.length > 0 && (
+                                <div className="message-reactions">
+                                  {getReactionsSummary(message.reactions)?.map((reaction, index) => (
+                                    <span key={index} className="reaction-bubble">
+                                      {reaction}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                              
+                              <div className="message-meta">
+                                <span className="message-time">
+                                  {formatTime(message.created_at)}
+                                </span>
+                                {message.sender.username === user?.username && (
+                                  <span className="delivery-status">
+                                    {getDeliveryStatus(message)}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            
+                            {/* Message actions */}
+                            <div className="message-actions">
+                              <button 
+                                className="action-btn reply-btn"
+                                onClick={() => handleReplyToMessage(message)}
+                                title="Reply"
+                              >
+                                ↩️
+                              </button>
+                              <button 
+                                className="action-btn react-btn"
+                                onClick={() => setShowReactionsMenu(
+                                  showReactionsMenu === message.id ? null : message.id
+                                )}
+                                title="Add reaction"
+                              >
+                                😊
+                              </button>
+                            </div>
+                            
+                            {/* Reactions menu */}
+                            {showReactionsMenu === message.id && (
+                              <div className="reactions-menu">
+                                {reactions.map(reaction => (
+                                  <button
+                                    key={reaction}
+                                    className="reaction-option"
+                                    onClick={() => handleReaction(message.id, reaction)}
+                                  >
+                                    {reaction}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      ))}
+                      <div ref={messagesEndRef} />
+                    </>
                   ) : (
                     <div className="empty-messages">
                       <p>No messages in this conversation yet</p>
@@ -480,16 +893,41 @@ const Messages = () => {
                 </div>
 
                 <form onSubmit={sendMessage} className="message-input-form">
+                  {/* Reply preview */}
+                  {replyToMessage && (
+                    <div className="reply-preview">
+                      <div className="reply-preview-content">
+                        <div className="reply-preview-header">
+                          <span>Replying to {replyToMessage.sender.full_name || replyToMessage.sender.username}</span>
+                          <button 
+                            type="button" 
+                            className="cancel-reply"
+                            onClick={cancelReply}
+                          >
+                            ×
+                          </button>
+                        </div>
+                        <div className="reply-preview-text">
+                          {replyToMessage.content.length > 100 
+                            ? `${replyToMessage.content.substring(0, 100)}...`
+                            : replyToMessage.content
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
                   <div className="message-input-container">
                     <input
+                      ref={messageInputRef}
                       type="text"
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
-                      placeholder="Type your message..."
+                      placeholder={replyToMessage ? "Reply to message..." : "Type your message..."}
                       className="message-input"
                     />
                     <button type="submit" className="send-button" disabled={!newMessage.trim()}>
-                      Send
+                      <span className="send-icon">➤</span>
                     </button>
                   </div>
                 </form>
