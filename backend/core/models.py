@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField  # for Postgres
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.urls import reverse # for URL reversing in templates
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -13,24 +15,113 @@ from .follow_models import Follow, FollowNotification
 # This file defines the models for the Vikra Hub project, including user profiles, services, portfolio items, blog posts, team members, and notifications.
 
 class Notification(models.Model):
+    """
+    Enhanced notification model with support for generic foreign keys and structured events
+    """
+    # Recipient of the notification
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
-    message = models.CharField(max_length=200)
-    is_read = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    # This model represents a notification for a user, with fields for the message, read status, and timestamps.
     
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.is_read = False
+    # Actor who triggered the notification (optional for system notifications)
+    actor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications_sent', null=True, blank=True)
+    
+    # Action/event type (message, follow, like, comment, reaction, reply, etc.)
+    verb = models.CharField(max_length=50, db_index=True)
+    
+    # Generic foreign key to any model (message, post, comment, etc.)
+    target_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
+    target_object_id = models.PositiveIntegerField(null=True, blank=True)
+    target = GenericForeignKey('target_content_type', 'target_object_id')
+    
+    # Additional data as JSON (message preview, reaction type, etc.)
+    payload = models.JSONField(default=dict, blank=True)
+    
+    # Legacy message field for backward compatibility
+    message = models.CharField(max_length=200, blank=True)
+    
+    # Status
+    is_read = models.BooleanField(default=False, db_index=True)
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['user', '-created_at']),
+            models.Index(fields=['user', 'is_read']),
+            models.Index(fields=['verb', '-created_at']),
+        ]
+    
+    def __str__(self):
+        actor_name = self.actor.username if self.actor else "System"
+        return f"{actor_name} {self.verb} → {self.user.username}"
+    
     def get_absolute_url(self):
         return reverse('notification-detail', kwargs={'pk': self.pk})
+    
     def mark_as_read(self):
-        self.is_read = True
-        self.save()
+        if not self.is_read:
+            self.is_read = True
+            self.save(update_fields=['is_read', 'updated_at'])
+    
+    @property
+    def title(self):
+        """Generate a human-readable title based on verb and actor"""
+        if not self.actor:
+            return self.message or "System notification"
+            
+        actor_name = self.actor.get_full_name() or self.actor.username
+        
+        verb_templates = {
+            'message': f"{actor_name} sent you a message",
+            'follow': f"{actor_name} started following you", 
+            'like': f"{actor_name} liked your post",
+            'comment': f"{actor_name} commented on your post",
+            'reaction': f"{actor_name} reacted to your message",
+            'reply': f"{actor_name} replied to your message",
+            'mention': f"{actor_name} mentioned you",
+        }
+        
+        return verb_templates.get(self.verb, f"{actor_name} {self.verb}")
 
+
+class Device(models.Model):
+    """
+    Store push notification tokens for users across different platforms
+    """
+    PLATFORM_CHOICES = [
+        ('web', 'Web'),
+        ('ios', 'iOS'),
+        ('android', 'Android'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='devices')
+    token = models.TextField(unique=True)  # FCM token or web push endpoint
+    platform = models.CharField(max_length=10, choices=PLATFORM_CHOICES)
+    
+    # Additional data for web push (keys, endpoint)
+    auth_key = models.CharField(max_length=255, blank=True)
+    p256dh_key = models.CharField(max_length=255, blank=True)
+    endpoint = models.TextField(blank=True)
+    
+    # Status
+    is_active = models.BooleanField(default=True)
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    last_used = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        unique_together = ['user', 'token']
+        indexes = [
+            models.Index(fields=['user', 'is_active']),
+            models.Index(fields=['platform', 'is_active']),
+        ]
+    
     def __str__(self):
-        return f"Notification for {self.user.username}: {self.message}"
+        return f"{self.user.username} - {self.platform} device"
 class UserProfile(models.Model):
     USER_TYPE_CHOICES = [
         ('client', 'Client'),

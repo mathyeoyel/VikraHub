@@ -18,10 +18,15 @@ const ChatModal = ({ isOpen, onClose, recipientUser }) => {
 
   // WebSocket URL configuration
   const getWebSocketURL = () => {
-    const baseURL = process.env.REACT_APP_API_URL || "https://api.vikrahub.com/api/";
-    const wsProtocol = baseURL.startsWith('https') ? 'wss' : 'ws';
-    const domain = baseURL.replace(/^https?:\/\//, '').replace('/api/', '');
-    return `${wsProtocol}://${domain}/ws/chat/`;
+    const baseURL = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000/api/";
+    const isProduction = baseURL.includes('api.vikrahub.com');
+    
+    if (isProduction) {
+      return 'wss://api.vikrahub.com/ws/chat/';
+    } else {
+      // Development environment - use local backend
+      return 'ws://127.0.0.1:8000/ws/chat/';
+    }
   };
 
   // Load existing messages with the user

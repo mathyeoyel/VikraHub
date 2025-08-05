@@ -8,7 +8,8 @@ const ToastNotifications = () => {
   useEffect(() => {
     const unsubscribe = notificationService.subscribe((notifications) => {
       // Only show the latest unread notification as a toast
-      const latestNotification = notifications.find(n => !n.read && !n.toastShown);
+      const notificationsArray = Array.isArray(notifications) ? notifications : [];
+      const latestNotification = notificationsArray.find(n => !n.read && !n.toastShown);
       
       if (latestNotification) {
         // Mark as shown to prevent duplicate toasts

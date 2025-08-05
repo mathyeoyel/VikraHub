@@ -477,7 +477,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     
     @database_sync_to_async
     def toggle_message_reaction(self, message, user, reaction):
-        """Add or remove message reaction"""
+        """Add or remove message reaction and send notification"""
         try:
             existing_reaction = MessageReaction.objects.filter(
                 message=message,
@@ -494,6 +494,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     user=user,
                     reaction=reaction
                 )
+                
+                # Create notification for the message sender
+                try:
+                    from core.notification_utils import create_reaction_notification
+                    create_reaction_notification(user, message.sender, reaction)
+                except Exception as e:
+                    logger.warning(f"Failed to create reaction notification: {e}")
+                
                 return True  # Reaction added
         except Exception as e:
             logger.exception(f"Error toggling message reaction: {e}")
@@ -591,7 +599,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     
     @database_sync_to_async
     def create_message(self, conversation, sender, recipient, content, reply_to=None):
-        """Create a new message"""
+        """Create a new message and send notification"""
         try:
             message = Message.objects.create(
                 conversation=conversation,
@@ -603,6 +611,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
             
             # Update conversation timestamp
             conversation.save()
+            
+            # Create notification for the recipient
+            try:
+                from core.notification_utils import create_message_notification, create_reply_notification
+                
+                if reply_to:
+                    # If this is a reply, notify the original sender
+                    create_reply_notification(sender, reply_to.sender, content)
+                else:
+                    # Regular message notification
+                    create_message_notification(sender, recipient, content)
+                    
+            except Exception as e:
+                logger.warning(f"Failed to create message notification: {e}")
             
             return message
             

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import (
-    TeamMember, Service, PortfolioItem, BlogPost, UserProfile, Notification,
+    TeamMember, Service, PortfolioItem, BlogPost, UserProfile, Notification, Device,
     AssetCategory, CreativeAsset, AssetPurchase, AssetReview,
     FreelancerProfile, CreatorProfile, ClientProfile, ProjectCategory, Project, 
     ProjectApplication, ProjectContract, ProjectReview,
@@ -529,12 +529,51 @@ class BlogPostSerializer(serializers.ModelSerializer):
             return obj.created_at.strftime("%b %d, %Y")
 
 class NotificationSerializer(serializers.ModelSerializer):
+    """
+    Enhanced notification serializer with actor, verb, and payload support
+    """
+    actor = UserSerializer(read_only=True)
     user = UserSerializer(read_only=True)
+    title = serializers.ReadOnlyField()
+    target_name = serializers.SerializerMethodField()
     
     class Meta:
         model = Notification
-        fields = '__all__'
-        read_only_fields = ['id', 'created_at', 'user']
+        fields = [
+            'id', 'user', 'actor', 'verb', 'title', 'message', 'payload',
+            'target_name', 'is_read', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at', 'user', 'actor']
+    
+    def get_target_name(self, obj):
+        """Get a string representation of the target object"""
+        if obj.target:
+            return str(obj.target)
+        return None
+
+
+class DeviceSerializer(serializers.ModelSerializer):
+    """
+    Serializer for push notification device tokens
+    """
+    class Meta:
+        model = Device
+        fields = [
+            'id', 'token', 'platform', 'auth_key', 'p256dh_key', 
+            'endpoint', 'is_active', 'created_at', 'last_used'
+        ]
+        read_only_fields = ['id', 'created_at', 'last_used']
+    
+    def create(self, validated_data):
+        # Set the user to the authenticated user
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
+    
+    def update(self, instance, validated_data):
+        # Update last_used timestamp when token is updated
+        from django.utils import timezone
+        instance.last_used = timezone.now()
+        return super().update(instance, validated_data)
 
 
 # Creative Assets Marketplace Serializers

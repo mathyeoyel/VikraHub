@@ -74,10 +74,20 @@ const Messages = () => {
   const connectWebSocket = useCallback(() => {
     if (!user || !token || !selectedConversation) return;
     
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//${window.location.host}/ws/chat/?token=${token}`;
+    // Use the same base URL as the API but convert to WebSocket protocol
+    const apiUrl = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000/api/";
+    const isProduction = apiUrl.includes('api.vikrahub.com');
     
-    console.log('🔌 Connecting to WebSocket:', wsUrl);
+    let wsUrl;
+    if (isProduction) {
+      // Production environment
+      wsUrl = `wss://api.vikrahub.com/ws/chat/?token=${token}`;
+    } else {
+      // Development environment - use local backend
+      wsUrl = `ws://127.0.0.1:8000/ws/chat/?token=${token}`;
+    }
+    
+    console.log('🔌 Connecting to WebSocket:', wsUrl.replace(/token=[^&]*/, 'token=***'));
     
     const websocket = new WebSocket(wsUrl);
     
@@ -171,7 +181,7 @@ const Messages = () => {
         msg.id === data.message_id 
           ? { 
               ...msg, 
-              reactions: data.reactions || []
+              reactions: Array.isArray(data.reactions) ? data.reactions : []
             }
           : msg
       )
@@ -540,7 +550,7 @@ const Messages = () => {
       setMessages(prevMessages => 
         prevMessages.map(msg => {
           if (msg.id === messageId) {
-            const reactions = msg.reactions || [];
+            const reactions = Array.isArray(msg.reactions) ? msg.reactions : [];
             const existingReaction = reactions.find(r => r.user.id === user.id);
             
             if (existingReaction) {

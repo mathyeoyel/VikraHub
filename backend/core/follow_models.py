@@ -128,7 +128,7 @@ def is_followed_by(self, user):
     ).exists()
 
 def follow(self, user):
-    """Follow another user"""
+    """Follow another user and create notification"""
     if self == user:
         raise ValidationError("Users cannot follow themselves.")
     
@@ -142,6 +142,16 @@ def follow(self, user):
         follow_obj.is_active = True
         follow_obj.save(update_fields=['is_active'])
         created = True
+    
+    # Create notification if this is a new follow
+    if created:
+        try:
+            from .notification_utils import create_follow_notification
+            create_follow_notification(self, user)
+        except Exception as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning(f"Failed to create follow notification: {e}")
     
     return follow_obj, created
 

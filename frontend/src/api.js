@@ -2,7 +2,7 @@ import axios from "axios";
 import { getAccessToken, getRefreshToken, removeTokens, saveToken } from "./auth";
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "https://api.vikrahub.com/api/", // Use production API for deployment
+  baseURL: process.env.REACT_APP_API_URL || "http://127.0.0.1:8000/api/", // Use local development API by default
   headers: {
     "Content-Type": "application/json",
   },   

@@ -3,7 +3,7 @@ from rest_framework import routers
 from .api_views import (
     UserViewSet, UserProfileViewSet, PublicUserProfileViewSet,
     TeamMemberViewSet, ServiceViewSet, PortfolioItemViewSet, 
-    BlogPostViewSet, NotificationViewSet, AssetCategoryViewSet, 
+    BlogPostViewSet, NotificationViewSet, DeviceViewSet, AssetCategoryViewSet, 
     CreativeAssetViewSet, AssetPurchaseViewSet, AssetReviewViewSet, 
     FreelancerProfileViewSet, CreatorProfileViewSet, ClientProfileViewSet,
     ProjectCategoryViewSet, ProjectViewSet, ProjectApplicationViewSet, 
@@ -23,6 +23,7 @@ router.register(r'services', ServiceViewSet)
 router.register(r'portfolio', PortfolioItemViewSet)
 router.register(r'blog', BlogPostViewSet, basename='blogpost')
 router.register(r'notifications', NotificationViewSet)
+router.register(r'devices', DeviceViewSet)  # Push notification device tokens
 
 # Creative Assets Marketplace
 router.register(r'asset-categories', AssetCategoryViewSet)

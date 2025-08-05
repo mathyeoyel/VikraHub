@@ -4319,3 +4319,98 @@ INFO 2025-08-04 14:36:35,897 basehttp 26808 26916 "GET /api/creator-profiles/fea
 INFO 2025-08-04 14:36:35,939 basehttp 26808 12372 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
 INFO 2025-08-04 14:36:51,527 basehttp 26808 6748 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
 INFO 2025-08-04 14:36:51,553 basehttp 26808 24664 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-08-05 17:53:02,913 autoreload 14908 14564 Watching for file changes with StatReloader
+INFO 2025-08-05 18:34:43,604 autoreload 9224 19484 Watching for file changes with StatReloader
+INFO 2025-08-05 19:00:54,478 autoreload 9224 19484 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\models.py changed, reloading.
+INFO 2025-08-05 19:00:56,155 autoreload 11520 1572 Watching for file changes with StatReloader
+INFO 2025-08-05 19:01:06,011 autoreload 11520 1572 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-08-05 19:01:06,959 autoreload 21848 5048 Watching for file changes with StatReloader
+INFO 2025-08-05 19:01:18,936 autoreload 21848 5048 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-08-05 19:01:19,968 autoreload 12532 13828 Watching for file changes with StatReloader
+INFO 2025-08-05 19:01:53,640 autoreload 12532 13828 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\api_views.py changed, reloading.
+INFO 2025-08-05 19:01:54,649 autoreload 7580 11416 Watching for file changes with StatReloader
+INFO 2025-08-05 19:02:11,277 autoreload 7580 11416 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\api_views.py changed, reloading.
+INFO 2025-08-05 19:02:12,125 autoreload 6916 21624 Watching for file changes with StatReloader
+INFO 2025-08-05 19:03:25,716 autoreload 6916 21624 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\api_views.py changed, reloading.
+INFO 2025-08-05 19:03:27,292 autoreload 7892 8332 Watching for file changes with StatReloader
+INFO 2025-08-05 19:09:16,592 autoreload 7892 8332 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\urls.py changed, reloading.
+INFO 2025-08-05 19:09:17,892 autoreload 20848 20944 Watching for file changes with StatReloader
+INFO 2025-08-05 19:12:03,121 autoreload 20848 20944 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\follow_models.py changed, reloading.
+INFO 2025-08-05 19:12:04,848 autoreload 5116 9480 Watching for file changes with StatReloader
+INFO 2025-08-05 19:38:44,866 basehttp 1344 16700 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-08-05 19:38:44,910 basehttp 1344 16700 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-08-05 19:38:47,400 basehttp 1344 13900 "GET /api/auth/google/config/ HTTP/1.1" 200 148
+INFO 2025-08-05 19:38:47,402 basehttp 1344 13900 "GET /api/auth/google/config/ HTTP/1.1" 200 148
+INFO 2025-08-05 19:38:48,581 basehttp 1344 13900 "OPTIONS /api/auth/token/ HTTP/1.1" 200 0
+INFO 2025-08-05 19:38:49,138 basehttp 1344 13900 "POST /api/auth/token/ HTTP/1.1" 200 486
+INFO 2025-08-05 19:38:49,147 basehttp 1344 13900 "OPTIONS /api/users/me/ HTTP/1.1" 200 0
+INFO 2025-08-05 19:38:49,193 basehttp 1344 13900 "GET /api/users/me/ HTTP/1.1" 200 259
+INFO 2025-08-05 19:38:49,266 basehttp 1344 13900 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-08-05 19:38:49,279 basehttp 1344 16180 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-08-05 19:38:49,290 basehttp 1344 16180 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-08-05 19:38:49,291 basehttp 1344 9276 "OPTIONS /api/follow/suggestions/ HTTP/1.1" 200 0
+INFO 2025-08-05 19:38:49,291 basehttp 1344 17912 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-08-05 19:38:49,292 basehttp 1344 20692 "OPTIONS /api/follow/my-stats/ HTTP/1.1" 200 0
+INFO 2025-08-05 19:38:49,292 basehttp 1344 19268 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-08-05 19:38:49,293 basehttp 1344 13900 "OPTIONS /api/follow/notifications/ HTTP/1.1" 200 0
+INFO 2025-08-05 19:38:49,302 basehttp 1344 17912 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-08-05 19:38:49,309 basehttp 1344 9276 "OPTIONS /api/messaging/unread-count/ HTTP/1.1" 200 0
+INFO 2025-08-05 19:38:49,310 basehttp 1344 20692 "OPTIONS /api/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2025-08-05 19:38:49,378 basehttp 1344 9276 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-08-05 19:38:49,378 basehttp 1344 19268 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-08-05 19:38:49,388 basehttp 1344 17912 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-08-05 19:38:49,392 basehttp 1344 16180 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-08-05 19:38:49,401 basehttp 1344 13900 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+INFO 2025-08-05 19:38:49,405 basehttp 1344 16180 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-08-05 19:38:49,418 basehttp 1344 16180 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-08-05 19:38:49,419 basehttp 1344 19268 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-08-05 19:38:49,436 basehttp 1344 16180 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-08-05 19:38:49,437 basehttp 1344 19268 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-08-05 19:38:49,450 basehttp 1344 19268 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+WARNING 2025-08-05 19:38:49,726 log 1344 10424 Not Found: /ws/messaging/messaging/
+WARNING 2025-08-05 19:38:49,727 basehttp 1344 10424 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDE1ODI5LCJpYXQiOjE3NTQ0MTU1MjksImp0aSI6IjU1NGExYTMyZjk3ZTRhMGM4YmY4ZGNiOGIzNTU2NWM1IiwidXNlcl9pZCI6Mjh9.asC2u63olGsOar6l1uD9U7hXTz5K_5ty1Gprkti0r8k HTTP/1.1" 404 4343
+WARNING 2025-08-05 19:38:52,740 log 1344 20116 Not Found: /ws/messaging/messaging/
+WARNING 2025-08-05 19:38:52,741 basehttp 1344 20116 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDE1ODI5LCJpYXQiOjE3NTQ0MTU1MjksImp0aSI6IjU1NGExYTMyZjk3ZTRhMGM4YmY4ZGNiOGIzNTU2NWM1IiwidXNlcl9pZCI6Mjh9.asC2u63olGsOar6l1uD9U7hXTz5K_5ty1Gprkti0r8k HTTP/1.1" 404 4343
+WARNING 2025-08-05 19:38:55,753 log 1344 6908 Not Found: /ws/messaging/messaging/
+WARNING 2025-08-05 19:38:55,754 basehttp 1344 6908 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDE1ODI5LCJpYXQiOjE3NTQ0MTU1MjksImp0aSI6IjU1NGExYTMyZjk3ZTRhMGM4YmY4ZGNiOGIzNTU2NWM1IiwidXNlcl9pZCI6Mjh9.asC2u63olGsOar6l1uD9U7hXTz5K_5ty1Gprkti0r8k HTTP/1.1" 404 4343
+WARNING 2025-08-05 19:38:58,805 log 1344 20392 Not Found: /ws/messaging/messaging/
+WARNING 2025-08-05 19:38:58,805 basehttp 1344 20392 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDE1ODI5LCJpYXQiOjE3NTQ0MTU1MjksImp0aSI6IjU1NGExYTMyZjk3ZTRhMGM4YmY4ZGNiOGIzNTU2NWM1IiwidXNlcl9pZCI6Mjh9.asC2u63olGsOar6l1uD9U7hXTz5K_5ty1Gprkti0r8k HTTP/1.1" 404 4343
+WARNING 2025-08-05 19:39:01,826 log 1344 17360 Not Found: /ws/messaging/messaging/
+WARNING 2025-08-05 19:39:01,826 basehttp 1344 17360 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDE1ODI5LCJpYXQiOjE3NTQ0MTU1MjksImp0aSI6IjU1NGExYTMyZjk3ZTRhMGM4YmY4ZGNiOGIzNTU2NWM1IiwidXNlcl9pZCI6Mjh9.asC2u63olGsOar6l1uD9U7hXTz5K_5ty1Gprkti0r8k HTTP/1.1" 404 4343
+INFO 2025-08-05 19:39:02,603 basehttp 1344 11712 "OPTIONS /api/messaging/conversations/ HTTP/1.1" 200 0
+INFO 2025-08-05 19:39:02,603 basehttp 1344 22592 "OPTIONS /api/messaging/conversations/ HTTP/1.1" 200 0
+INFO 2025-08-05 19:39:02,610 views 1344 22592 Fetching conversations for user: obote
+INFO 2025-08-05 19:39:02,616 views 1344 22592 Successfully fetched 0 conversations for obote
+INFO 2025-08-05 19:39:02,618 basehttp 1344 22592 "GET /api/messaging/conversations/ HTTP/1.1" 200 2
+INFO 2025-08-05 19:39:02,625 views 1344 22592 Fetching conversations for user: obote
+INFO 2025-08-05 19:39:02,628 views 1344 22592 Successfully fetched 0 conversations for obote
+INFO 2025-08-05 19:39:02,630 basehttp 1344 22592 "GET /api/messaging/conversations/ HTTP/1.1" 200 2
+WARNING 2025-08-05 19:39:04,839 log 1344 20516 Not Found: /ws/messaging/messaging/
+WARNING 2025-08-05 19:39:04,841 basehttp 1344 20516 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDE1ODI5LCJpYXQiOjE3NTQ0MTU1MjksImp0aSI6IjU1NGExYTMyZjk3ZTRhMGM4YmY4ZGNiOGIzNTU2NWM1IiwidXNlcl9pZCI6Mjh9.asC2u63olGsOar6l1uD9U7hXTz5K_5ty1Gprkti0r8k HTTP/1.1" 404 4343
+INFO 2025-08-05 19:39:11,702 basehttp 1344 15992 "GET /api/users/me/ HTTP/1.1" 200 259
+INFO 2025-08-05 19:39:11,746 basehttp 1344 17348 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+INFO 2025-08-05 19:39:11,746 basehttp 1344 15992 "GET /api/users/me/ HTTP/1.1" 200 259
+INFO 2025-08-05 19:39:11,793 basehttp 1344 17348 "GET /api/creator-profiles/featured/ HTTP/1.1" 200 7545
+WARNING 2025-08-05 19:39:11,821 log 1344 4512 Not Found: /ws/messaging/messaging/
+WARNING 2025-08-05 19:39:11,831 basehttp 1344 4512 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDE1ODI5LCJpYXQiOjE3NTQ0MTU1MjksImp0aSI6IjU1NGExYTMyZjk3ZTRhMGM4YmY4ZGNiOGIzNTU2NWM1IiwidXNlcl9pZCI6Mjh9.asC2u63olGsOar6l1uD9U7hXTz5K_5ty1Gprkti0r8k HTTP/1.1" 404 4343
+INFO 2025-08-05 19:39:11,844 basehttp 1344 17348 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-08-05 19:39:11,847 basehttp 1344 15992 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-08-05 19:39:11,880 basehttp 1344 14148 "GET /api/follow/my-stats/ HTTP/1.1" 200 85
+INFO 2025-08-05 19:39:11,887 basehttp 1344 14028 "GET /api/follow/notifications/ HTTP/1.1" 200 52
+INFO 2025-08-05 19:39:11,897 basehttp 1344 15992 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-08-05 19:39:11,905 basehttp 1344 23100 "GET /api/follow/suggestions/ HTTP/1.1" 200 319
+INFO 2025-08-05 19:39:11,906 basehttp 1344 21200 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-08-05 19:39:11,913 basehttp 1344 15992 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+INFO 2025-08-05 19:39:11,923 basehttp 1344 21200 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-08-05 19:39:11,938 basehttp 1344 21200 "GET /api/messaging/unread-count/ HTTP/1.1" 200 18
+INFO 2025-08-05 19:39:11,938 basehttp 1344 15992 "GET /api/notifications/unread_count/ HTTP/1.1" 200 84
+WARNING 2025-08-05 19:39:15,794 log 1344 13816 Not Found: /ws/messaging/messaging/
+WARNING 2025-08-05 19:39:15,795 basehttp 1344 13816 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDE1ODI5LCJpYXQiOjE3NTQ0MTU1MjksImp0aSI6IjU1NGExYTMyZjk3ZTRhMGM4YmY4ZGNiOGIzNTU2NWM1IiwidXNlcl9pZCI6Mjh9.asC2u63olGsOar6l1uD9U7hXTz5K_5ty1Gprkti0r8k HTTP/1.1" 404 4343
+WARNING 2025-08-05 19:39:19,782 log 1344 11352 Not Found: /ws/messaging/messaging/
+WARNING 2025-08-05 19:39:19,783 basehttp 1344 11352 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDE1ODI5LCJpYXQiOjE3NTQ0MTU1MjksImp0aSI6IjU1NGExYTMyZjk3ZTRhMGM4YmY4ZGNiOGIzNTU2NWM1IiwidXNlcl9pZCI6Mjh9.asC2u63olGsOar6l1uD9U7hXTz5K_5ty1Gprkti0r8k HTTP/1.1" 404 4343
+WARNING 2025-08-05 19:39:23,791 log 1344 17828 Not Found: /ws/messaging/messaging/
+WARNING 2025-08-05 19:39:23,792 basehttp 1344 17828 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDE1ODI5LCJpYXQiOjE3NTQ0MTU1MjksImp0aSI6IjU1NGExYTMyZjk3ZTRhMGM4YmY4ZGNiOGIzNTU2NWM1IiwidXNlcl9pZCI6Mjh9.asC2u63olGsOar6l1uD9U7hXTz5K_5ty1Gprkti0r8k HTTP/1.1" 404 4343
+WARNING 2025-08-05 19:39:27,787 log 1344 17080 Not Found: /ws/messaging/messaging/
+WARNING 2025-08-05 19:39:27,788 basehttp 1344 17080 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDE1ODI5LCJpYXQiOjE3NTQ0MTU1MjksImp0aSI6IjU1NGExYTMyZjk3ZTRhMGM4YmY4ZGNiOGIzNTU2NWM1IiwidXNlcl9pZCI6Mjh9.asC2u63olGsOar6l1uD9U7hXTz5K_5ty1Gprkti0r8k HTTP/1.1" 404 4343
+WARNING 2025-08-05 19:39:31,787 log 1344 15608 Not Found: /ws/messaging/messaging/
+WARNING 2025-08-05 19:39:31,788 basehttp 1344 15608 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDE1ODI5LCJpYXQiOjE3NTQ0MTU1MjksImp0aSI6IjU1NGExYTMyZjk3ZTRhMGM4YmY4ZGNiOGIzNTU2NWM1IiwidXNlcl9pZCI6Mjh9.asC2u63olGsOar6l1uD9U7hXTz5K_5ty1Gprkti0r8k HTTP/1.1" 404 4343

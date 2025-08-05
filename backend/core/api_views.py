@@ -13,7 +13,7 @@ from .asset_utils import (
     process_asset_purchase, get_seller_stats, get_trending_assets, calculate_asset_rating
 )
 from .models import (
-    TeamMember, Service, PortfolioItem, BlogPost, UserProfile, Notification,
+    TeamMember, Service, PortfolioItem, BlogPost, UserProfile, Notification, Device,
     AssetCategory, CreativeAsset, AssetPurchase, AssetReview,
     FreelancerProfile, CreatorProfile, ClientProfile, ProjectCategory, Project, 
     ProjectApplication, ProjectContract, ProjectReview,
@@ -22,7 +22,7 @@ from .models import (
 from .serializers import (
     UserSerializer, UserProfileSerializer, PublicUserProfileSerializer,
     TeamMemberSerializer, ServiceSerializer, PortfolioItemSerializer, 
-    BlogPostSerializer, NotificationSerializer, AssetCategorySerializer, 
+    BlogPostSerializer, NotificationSerializer, DeviceSerializer, AssetCategorySerializer, 
     CreativeAssetSerializer, AssetPurchaseSerializer, AssetReviewSerializer, 
     FreelancerProfileSerializer, CreatorProfileSerializer, ClientProfileSerializer,
     ProjectCategorySerializer, ProjectSerializer, ProjectApplicationSerializer, 
@@ -444,27 +444,72 @@ class BlogPostViewSet(viewsets.ModelViewSet):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class NotificationViewSet(viewsets.ModelViewSet):
+    """
+    Enhanced notification viewset with real-time capabilities and pagination
+    """
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
-        return Notification.objects.filter(user=self.request.user)
+        """Filter notifications for the authenticated user"""
+        queryset = Notification.objects.filter(user=self.request.user).select_related('actor')
+        
+        # Filter by read status if specified
+        is_read = self.request.query_params.get('is_read')
+        if is_read is not None:
+            queryset = queryset.filter(is_read=is_read.lower() == 'true')
+        
+        # Filter by verb/type if specified
+        verb = self.request.query_params.get('verb')
+        if verb:
+            queryset = queryset.filter(verb=verb)
+        
+        return queryset.order_by('-created_at')
     
     def perform_create(self, serializer):
+        """Create notification (usually done internally)"""
         serializer.save(user=self.request.user)
     
     @action(detail=True, methods=['post'])
     def mark_read(self, request, pk=None):
-        """Mark notification as read"""
+        """Mark a single notification as read"""
         notification = self.get_object()
-        notification.is_read = True
-        notification.save()
+        notification.mark_as_read()
         
         # Send real-time unread count update
         self.send_unread_count_update(request.user)
         
-        return Response({'status': 'notification marked as read'})
+        return Response({
+            'status': 'notification marked as read',
+            'notification_id': notification.id
+        })
+    
+    @action(detail=False, methods=['post'])
+    def mark_all_read(self, request):
+        """Mark all notifications as read for the user"""
+        updated_count = Notification.objects.filter(
+            user=request.user,
+            is_read=False
+        ).update(is_read=True)
+        
+        # Send real-time unread count update
+        self.send_unread_count_update(request.user)
+        
+        return Response({
+            'status': 'all notifications marked as read',
+            'updated_count': updated_count
+        })
+    
+    @action(detail=False, methods=['get'])
+    def unread_count(self, request):
+        """Get count of unread notifications"""
+        count = Notification.objects.filter(
+            user=request.user,
+            is_read=False
+        ).count()
+        
+        return Response({'unread_count': count})
     
     def send_unread_count_update(self, user):
         """Send real-time unread count update to user"""
@@ -474,27 +519,32 @@ class NotificationViewSet(viewsets.ModelViewSet):
             from django.utils import timezone
             
             # Calculate current unread counts
-            from messaging.models import Message
-            message_count = Message.objects.filter(
-                conversation__participants=user,
-                conversation__is_deleted=False,
-                is_deleted=False
-            ).exclude(
-                conversation__deleted_by=user
-            ).exclude(
-                sender=user
-            ).exclude(
-                read_by=user
-            ).count()
-            
             notification_count = Notification.objects.filter(
                 user=user,
                 is_read=False
             ).count()
             
+            # Try to get message count if messaging app exists
+            message_count = 0
+            try:
+                from messaging.models import Message
+                message_count = Message.objects.filter(
+                    conversation__participants=user,
+                    conversation__is_deleted=False,
+                    is_deleted=False
+                ).exclude(
+                    conversation__deleted_by=user
+                ).exclude(
+                    sender=user
+                ).exclude(
+                    read_by=user
+                ).count()
+            except ImportError:
+                pass
+            
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
-                f"user_{user.id}",
+                f"notifications_{user.id}",
                 {
                     'type': 'unread_count_update',
                     'message_count': message_count,
@@ -503,9 +553,77 @@ class NotificationViewSet(viewsets.ModelViewSet):
                 }
             )
         except Exception as e:
-            import logging
-            logger = logging.getLogger(__name__)
             logger.warning(f"Failed to send unread count update: {e}")
+
+
+class DeviceViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for managing push notification device tokens
+    """
+    queryset = Device.objects.all()
+    serializer_class = DeviceSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        """Filter devices for the authenticated user"""
+        return Device.objects.filter(user=self.request.user)
+    
+    def perform_create(self, serializer):
+        """Create or update device token"""
+        token = serializer.validated_data['token']
+        platform = serializer.validated_data['platform']
+        
+        # Check if device already exists and update it
+        existing_device = Device.objects.filter(
+            user=self.request.user,
+            token=token
+        ).first()
+        
+        if existing_device:
+            # Update existing device
+            for key, value in serializer.validated_data.items():
+                setattr(existing_device, key, value)
+            existing_device.is_active = True
+            existing_device.save()
+            return existing_device
+        else:
+            # Create new device
+            return serializer.save(user=self.request.user)
+    
+    @action(detail=True, methods=['post'])
+    def deactivate(self, request, pk=None):
+        """Deactivate a device token"""
+        device = self.get_object()
+        device.is_active = False
+        device.save()
+        
+        return Response({'status': 'device deactivated'})
+    
+    @action(detail=False, methods=['post'])
+    def test_push(self, request):
+        """Test push notification to all user devices"""
+        from .notification_utils import send_push_notification
+        
+        devices = self.get_queryset().filter(is_active=True)
+        sent_count = 0
+        
+        for device in devices:
+            try:
+                send_push_notification(
+                    device,
+                    title="Test Notification",
+                    body="This is a test push notification from VikraHub",
+                    data={'test': True}
+                )
+                sent_count += 1
+            except Exception as e:
+                logger.warning(f"Failed to send test push to device {device.id}: {e}")
+        
+        return Response({
+            'status': 'test notifications sent',
+            'sent_count': sent_count,
+            'total_devices': devices.count()
+        })
 
 
 @api_view(['GET'])
