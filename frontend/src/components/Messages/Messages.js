@@ -6,7 +6,7 @@ import { handleImageError, getAvatarUrl } from '../../utils/imageUtils';
 import './Messages.css';
 
 const Messages = () => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const location = useLocation();
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
@@ -55,7 +55,7 @@ const Messages = () => {
 
   // WebSocket connection management
   useEffect(() => {
-    if (user && selectedConversation) {
+    if (user && token && selectedConversation) {
       connectWebSocket();
     }
     
@@ -64,7 +64,7 @@ const Messages = () => {
         ws.close();
       }
     };
-  }, [user, selectedConversation]);
+  }, [user, token, selectedConversation]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -72,10 +72,10 @@ const Messages = () => {
   }, [messages]);
 
   const connectWebSocket = useCallback(() => {
-    if (!user || !selectedConversation) return;
+    if (!user || !token || !selectedConversation) return;
     
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//${window.location.host}/ws/chat/${selectedConversation.id}/`;
+    const wsUrl = `${protocol}//${window.location.host}/ws/chat/?token=${token}`;
     
     console.log('🔌 Connecting to WebSocket:', wsUrl);
     
@@ -115,10 +115,11 @@ const Messages = () => {
       console.log('🔌 WebSocket disconnected:', event.code, event.reason);
       setWs(null);
       
-      // Attempt to reconnect after a delay
-      if (!event.wasClean) {
+      // Attempt to reconnect after a delay for abnormal closures
+      if (!event.wasClean && event.code !== 1000) {
+        console.log('🔄 Attempting WebSocket reconnection in 3 seconds...');
         setTimeout(() => {
-          if (user && selectedConversation) {
+          if (user && token && selectedConversation) {
             connectWebSocket();
           }
         }, 3000);
@@ -128,7 +129,7 @@ const Messages = () => {
     websocket.onerror = (error) => {
       console.error('❌ WebSocket error:', error);
     };
-  }, [user, selectedConversation]);
+  }, [user, token, selectedConversation]);
 
   const handleNewMessage = (message) => {
     setMessages(prevMessages => {
@@ -430,7 +431,9 @@ const Messages = () => {
       if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({
           type: 'message',
-          message: messageData
+          recipient_id: selectedConversation.other_participant.id,
+          text: messageData.content,
+          reply_to_id: messageData.reply_to_id
         }));
       }
       
@@ -506,6 +509,7 @@ const Messages = () => {
       if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({
           type: 'mark_read',
+          recipient_id: selectedConversation?.other_participant.id,
           conversation_id: conversationId
         }));
       }

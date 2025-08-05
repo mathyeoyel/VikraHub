@@ -5,7 +5,7 @@ import { getAccessToken } from '../../auth';
 import './ChatModal.css';
 
 const ChatModal = ({ isOpen, onClose, recipientUser }) => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
@@ -82,13 +82,12 @@ const ChatModal = ({ isOpen, onClose, recipientUser }) => {
 
   // Connect to WebSocket
   useEffect(() => {
-    if (!isOpen || !recipientUser) return;
+    if (!isOpen || !recipientUser || !token) return;
 
     const connectWebSocket = () => {
       try {
         const baseWsURL = getWebSocketURL();
-        const jwtToken = getAccessToken();
-        const wsURL = `${baseWsURL}?token=${jwtToken}`;
+        const wsURL = `${baseWsURL}?token=${token}`;
         
         console.log('Connecting to chat WebSocket:', wsURL.replace(/token=[^&]*/, 'token=***'));
         
@@ -162,7 +161,7 @@ const ChatModal = ({ isOpen, onClose, recipientUser }) => {
         ws.close();
       }
     };
-  }, [isOpen, recipientUser, loadExistingMessages]);
+  }, [isOpen, recipientUser, token, loadExistingMessages]);
 
   // Send message via WebSocket
   const sendMessage = (e) => {
