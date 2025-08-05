@@ -23,13 +23,13 @@ django_asgi_app = get_asgi_application()
 
 # Import routing and JWT middleware after Django is initialized
 import messaging.routing
-from core.jwt_auth_middleware import JWTAuthMiddleware
+from vikrahub.middleware import JWTAuthMiddlewareStack
 
 logger.info("ASGI: Configuring WebSocket routing with JWTAuthMiddleware")
 
 application = ProtocolTypeRouter({
     "http": django_asgi_app,
-    "websocket": JWTAuthMiddleware(
+    "websocket": JWTAuthMiddlewareStack(
         URLRouter(
             messaging.routing.websocket_urlpatterns
         )

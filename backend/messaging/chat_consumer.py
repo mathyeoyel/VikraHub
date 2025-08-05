@@ -25,56 +25,27 @@ class ChatConsumer(AsyncWebsocketConsumer):
     """
     WebSocket consumer for real-time direct messaging
     Handles: {type: "message", recipient_id: X, text: "..."}
+    
+    Authentication is handled by JWTAuthMiddleware in ASGI.
+    User is available via self.scope['user']
     """
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user_group_name = None
         self.user = None
-    
-    @database_sync_to_async
-    def authenticate_token(self, token):
-        """Authenticate user by JWT token"""
-        try:
-            # Validate the token
-            UntypedToken(token)
-            
-            # Decode the token to get user info
-            decoded_token = jwt_decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-            user_id = decoded_token.get('user_id')
-            
-            if user_id:
-                user = User.objects.get(id=user_id)
-                return user
-        except (InvalidToken, TokenError, User.DoesNotExist) as e:
-            logger.warning(f"Token authentication failed: {e}")
-            return None
-        except Exception as e:
-            logger.error(f"Unexpected error during token authentication: {e}")
-            return None
-        
-        return None
         
     async def connect(self):
         """Accept WebSocket connection for authenticated users only"""
         try:
             logger.info("=== ChatConsumer.connect() called ===")
             
-            # Check for JWT token in query parameters
-            query_string = self.scope.get('query_string', b'').decode()
-            token = None
-            if 'token=' in query_string:
-                token = query_string.split('token=')[1].split('&')[0]
+            # Get authenticated user from middleware
+            self.user = self.scope.get('user')
             
-            if not token:
-                logger.warning("ChatConsumer: No JWT token provided, rejecting connection")
-                await self.close(code=4001)
-                return
-            
-            # Authenticate user
-            self.user = await self.authenticate_token(token)
-            if not self.user:
-                logger.warning("ChatConsumer: Authentication failed, rejecting connection")
+            # Check if user is authenticated
+            if not self.user or self.user.is_anonymous:
+                logger.warning("ChatConsumer: No authenticated user, rejecting connection")
                 await self.close(code=4001)
                 return
             
