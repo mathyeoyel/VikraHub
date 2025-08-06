@@ -114,6 +114,8 @@ const Messages = () => {
           handleMessageRead(data);
           break;
         case 'reaction':
+        case 'add_reaction':
+        case 'reaction_added':
           applyReactionToMessage(data.message_id, data.reaction);
           break;
         case 'delivery_receipt':
@@ -124,6 +126,8 @@ const Messages = () => {
           break;
         case 'error':
           console.error('❌ WebSocket error received:', data.message);
+          // Show user-friendly error message
+          showToast(`WebSocket error: ${data.message}`);
           break;
         default:
           console.log('🤷 Unknown message type:', data.type);
@@ -643,10 +647,10 @@ const Messages = () => {
   // Enhanced message interaction functions
   const handleReaction = async (messageId, reactionType) => {
     try {
-      // Send reaction via WebSocket
+      // Send reaction via WebSocket - use the format the backend expects
       if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({
-          type: 'reaction',
+          type: 'add_reaction',  // Changed from 'reaction' to 'add_reaction'
           message_id: messageId,
           reaction_type: reactionType
         }));
