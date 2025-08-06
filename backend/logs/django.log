@@ -4414,3 +4414,13 @@ WARNING 2025-08-05 19:39:27,787 log 1344 17080 Not Found: /ws/messaging/messagin
 WARNING 2025-08-05 19:39:27,788 basehttp 1344 17080 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDE1ODI5LCJpYXQiOjE3NTQ0MTU1MjksImp0aSI6IjU1NGExYTMyZjk3ZTRhMGM4YmY4ZGNiOGIzNTU2NWM1IiwidXNlcl9pZCI6Mjh9.asC2u63olGsOar6l1uD9U7hXTz5K_5ty1Gprkti0r8k HTTP/1.1" 404 4343
 WARNING 2025-08-05 19:39:31,787 log 1344 15608 Not Found: /ws/messaging/messaging/
 WARNING 2025-08-05 19:39:31,788 basehttp 1344 15608 "GET /ws/messaging/messaging/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDE1ODI5LCJpYXQiOjE3NTQ0MTU1MjksImp0aSI6IjU1NGExYTMyZjk3ZTRhMGM4YmY4ZGNiOGIzNTU2NWM1IiwidXNlcl9pZCI6Mjh9.asC2u63olGsOar6l1uD9U7hXTz5K_5ty1Gprkti0r8k HTTP/1.1" 404 4343
+INFO 2025-08-06 11:51:04,467 notification_utils 3708 140393871046336 Created notification: testuser1 reaction → testuser2
+INFO 2025-08-06 11:51:04,475 notification_utils 3708 140393871046336 Created notification: testuser1 message → testuser2
+INFO 2025-08-06 11:51:44,401 notification_utils 3743 140044998276800 Created notification: reactor_user reaction → message_owner
+ERROR 2025-08-06 11:51:44,403 chat_consumer 3743 140044998276800 Error getting message reactions: 'MessageReaction' object has no attribute 'created_at'
+Traceback (most recent call last):
+  File "/home/runner/work/VikraHub/VikraHub/backend/messaging/chat_consumer.py", line 565, in get_message_reactions
+    'created_at': reaction.created_at.isoformat()
+                  ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MessageReaction' object has no attribute 'created_at'. Did you mean: 'reacted_at'?
+INFO 2025-08-06 11:52:59,546 notification_utils 3762 140202590860992 Created notification: reactor_user reaction → message_owner

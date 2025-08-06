@@ -562,7 +562,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         'username': reaction.user.username
                     },
                     'reaction_type': reaction.reaction,
-                    'created_at': reaction.created_at.isoformat()
+                    'created_at': reaction.reacted_at.isoformat()
                 }
                 for reaction in reactions
             ]
@@ -689,19 +689,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def create_reaction_notification_sync(self, reactor, message_owner, reaction_type):
         """Create reaction notification synchronously"""
         try:
-            from core.models import Notification
+            from core.notification_utils import create_reaction_notification
             
-            # Create notification
-            notification = Notification.objects.create(
-                user=message_owner,
-                verb="reaction",
-                actor=reactor,
-                payload={
-                    "reaction_type": reaction_type,
-                    "reactor_username": reactor.username
-                },
-                message=f"{reactor.get_full_name() or reactor.username} reacted {reaction_type} to your message"
-            )
+            # Use the notification utility function which handles WebSocket broadcasting
+            notification = create_reaction_notification(reactor, message_owner, reaction_type)
             
             logger.debug(f"Created reaction notification for {message_owner.username}")
             return notification
