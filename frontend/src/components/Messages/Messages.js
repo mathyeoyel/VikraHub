@@ -51,6 +51,12 @@ const Messages = () => {
       length: messages?.length,
       messages 
     });
+    
+    // Safety check: ensure messages is always an array
+    if (!Array.isArray(messages)) {
+      console.warn('⚠️ Messages is not an array, resetting to empty array');
+      setMessages([]);
+    }
   }, [messages]);
 
   // WebSocket connection management
@@ -272,8 +278,14 @@ const Messages = () => {
   const applyReactionToMessage = (messageId, reaction) => {
     console.log('😊 Applying reaction to message:', { messageId, reaction });
     
-    setMessages(prevMessages => 
-      prevMessages.map(msg => {
+    setMessages(prevMessages => {
+      // Ensure prevMessages is an array
+      if (!Array.isArray(prevMessages)) {
+        console.warn('⚠️ Previous messages is not an array in applyReactionToMessage:', typeof prevMessages, prevMessages);
+        return prevMessages;
+      }
+      
+      return prevMessages.map(msg => {
         if (msg.id === messageId) {
           const reactions = Array.isArray(msg.reactions) ? msg.reactions : [];
           
@@ -281,26 +293,26 @@ const Messages = () => {
           let updatedReactions;
           if (typeof reaction === 'string') {
             // Simple reaction type (like "like")
-            const existingReaction = reactions.find(r => r.user.id === user.id);
+            const existingReaction = reactions.find(r => r.user?.id === user?.id);
             
             if (existingReaction) {
               // Update existing reaction
               updatedReactions = reactions.map(r => 
-                r.user.id === user.id 
+                r.user?.id === user?.id 
                   ? { ...r, reaction_type: reaction }
                   : r
               );
             } else {
               // Add new reaction
               updatedReactions = [...reactions, {
-                user: { id: user.id, username: user.username },
+                user: { id: user?.id, username: user?.username },
                 reaction_type: reaction,
                 created_at: new Date().toISOString()
               }];
             }
           } else if (reaction && typeof reaction === 'object') {
             // Full reaction object
-            const existingIndex = reactions.findIndex(r => r.user.id === reaction.user?.id);
+            const existingIndex = reactions.findIndex(r => r.user?.id === reaction.user?.id);
             
             if (existingIndex >= 0) {
               // Update existing reaction
@@ -322,8 +334,8 @@ const Messages = () => {
           };
         }
         return msg;
-      })
-    );
+      });
+    });
   };
 
   const scrollToBottom = () => {
@@ -652,9 +664,22 @@ const Messages = () => {
   // Enhanced message interaction functions
   const handleReaction = async (messageId, reactionType) => {
     try {
+      // Ensure messages is an array before using find
+      if (!Array.isArray(messages)) {
+        console.warn('⚠️ Messages is not an array:', typeof messages, messages);
+        showToast('Unable to add reaction. Please refresh the page.');
+        return;
+      }
+      
       // Check if user already has this reaction to toggle it
       const currentMessage = messages.find(msg => msg.id === messageId);
-      const existingReaction = currentMessage?.reactions?.find(r => r.user.id === user.id);
+      if (!currentMessage) {
+        console.warn('⚠️ Message not found:', messageId);
+        showToast('Message not found. Please refresh the page.');
+        return;
+      }
+      
+      const existingReaction = currentMessage?.reactions?.find(r => r.user?.id === user?.id);
       const isRemovingReaction = existingReaction && existingReaction.reaction_type === reactionType;
       
       // Send reaction to backend API for persistence
@@ -682,24 +707,30 @@ const Messages = () => {
       }
       
       // Update local state optimistically
-      setMessages(prevMessages => 
-        prevMessages.map(msg => {
+      setMessages(prevMessages => {
+        // Ensure prevMessages is an array
+        if (!Array.isArray(prevMessages)) {
+          console.warn('⚠️ Previous messages is not an array:', typeof prevMessages, prevMessages);
+          return prevMessages;
+        }
+        
+        return prevMessages.map(msg => {
           if (msg.id === messageId) {
             const reactions = Array.isArray(msg.reactions) ? msg.reactions : [];
-            const existingReactionIndex = reactions.findIndex(r => r.user.id === user.id);
+            const existingReactionIndex = reactions.findIndex(r => r.user?.id === user?.id);
             
             if (isRemovingReaction) {
               // Remove the reaction
               return {
                 ...msg,
-                reactions: reactions.filter(r => r.user.id !== user.id)
+                reactions: reactions.filter(r => r.user?.id !== user?.id)
               };
             } else if (existingReactionIndex >= 0) {
               // Update existing reaction to new type
               return {
                 ...msg,
                 reactions: reactions.map(r => 
-                  r.user.id === user.id 
+                  r.user?.id === user?.id 
                     ? { ...r, reaction_type: reactionType }
                     : r
                 )
@@ -709,7 +740,7 @@ const Messages = () => {
               return {
                 ...msg,
                 reactions: [...reactions, {
-                  user: { id: user.id, username: user.username },
+                  user: { id: user?.id, username: user?.username },
                   reaction_type: reactionType,
                   created_at: new Date().toISOString()
                 }]
@@ -717,8 +748,8 @@ const Messages = () => {
             }
           }
           return msg;
-        })
-      );
+        });
+      });
       
       setShowReactionsMenu(null);
     } catch (error) {
