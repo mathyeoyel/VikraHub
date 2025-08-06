@@ -4,6 +4,7 @@ import logging
 from uuid import UUID
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
+from asgiref.sync import sync_to_async
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.conf import settings
@@ -182,6 +183,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
             # Create message
             message = await self.create_message(conversation, self.user, recipient, text, reply_to_message)
             
+            # Create notification for the recipient (separate from message creation to avoid async issues)
+            try:
+                if reply_to_message:
+                    # If this is a reply, notify the original sender
+                    await self.create_message_notification_sync(self.user, reply_to_message.sender, text, is_reply=True, original_sender=reply_to_message.sender)
+                else:
+                    # Regular message notification
+                    await self.create_message_notification_sync(self.user, recipient, text)
+            except Exception as e:
+                logger.warning(f"Failed to create message notification: {e}")
+            
             # Mark as delivered to recipient
             await self.mark_message_delivered(message, recipient)
             
@@ -325,7 +337,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 # Create notification for reaction if it was added (not removed)
                 if reaction_added and self.user != message.sender:
                     try:
-                        await self.create_reaction_notification_async(self.user, message.sender, reaction)
+                        await self.create_reaction_notification_sync(self.user, message.sender, reaction)
                     except Exception as e:
                         logger.warning(f"Failed to create reaction notification: {e}")
             else:
@@ -335,7 +347,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 # Create notification for reaction if it was added (not removed)
                 if reaction_added and self.user != message.sender:
                     try:
-                        await self.create_reaction_notification_async(self.user, message.sender, reaction)
+                        await self.create_reaction_notification_sync(self.user, message.sender, reaction)
                     except Exception as e:
                         logger.warning(f"Failed to create reaction notification: {e}")
             
@@ -540,15 +552,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
     
     @database_sync_to_async
     def get_message_reactions(self, message):
-        """Get message reaction counts"""
+        """Get message reactions in the format expected by frontend"""
         try:
-            reactions = MessageReaction.objects.filter(message=message).values('reaction').annotate(
-                count=Count('reaction')
-            )
-            return {reaction['reaction']: reaction['count'] for reaction in reactions}
+            reactions = MessageReaction.objects.filter(message=message).select_related('user')
+            return [
+                {
+                    'user': {
+                        'id': reaction.user.id,
+                        'username': reaction.user.username
+                    },
+                    'reaction_type': reaction.reaction,
+                    'created_at': reaction.created_at.isoformat()
+                }
+                for reaction in reactions
+            ]
         except Exception as e:
             logger.exception(f"Error getting message reactions: {e}")
-            return {}
+            return []
     
     @database_sync_to_async
     def get_reply_to_data(self, reply_message):
@@ -630,7 +650,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     
     @database_sync_to_async
     def create_message(self, conversation, sender, recipient, content, reply_to=None):
-        """Create a new message and send notification"""
+        """Create a new message"""
         try:
             message = Message.objects.create(
                 conversation=conversation,
@@ -643,34 +663,36 @@ class ChatConsumer(AsyncWebsocketConsumer):
             # Update conversation timestamp
             conversation.save()
             
-            # Create notification for the recipient
-            try:
-                from core.notification_utils import create_message_notification, create_reply_notification
-                
-                if reply_to:
-                    # If this is a reply, notify the original sender
-                    create_reply_notification(sender, reply_to.sender, content)
-                else:
-                    # Regular message notification
-                    create_message_notification(sender, recipient, content)
-                    
-            except Exception as e:
-                logger.warning(f"Failed to create message notification: {e}")
-            
             return message
             
         except Exception as e:
             logger.exception(f"Error creating message: {e}")
             raise
     
-    async def create_reaction_notification_async(self, reactor, message_owner, reaction_type):
-        """Create reaction notification in async context"""
+    @database_sync_to_async
+    def create_message_notification_sync(self, sender, recipient, content, is_reply=False, original_sender=None):
+        """Create message notification synchronously"""
+        try:
+            from core.notification_utils import create_message_notification, create_reply_notification
+            
+            if is_reply and original_sender:
+                # If this is a reply, notify the original sender
+                create_reply_notification(sender, original_sender, content)
+            else:
+                # Regular message notification
+                create_message_notification(sender, recipient, content)
+                
+        except Exception as e:
+            logger.warning(f"Failed to create message notification: {e}")
+    
+    @database_sync_to_async
+    def create_reaction_notification_sync(self, reactor, message_owner, reaction_type):
+        """Create reaction notification synchronously"""
         try:
             from core.models import Notification
-            from asgiref.sync import sync_to_async
             
-            # Create notification asynchronously
-            await sync_to_async(Notification.objects.create)(
+            # Create notification
+            notification = Notification.objects.create(
                 user=message_owner,
                 verb="reaction",
                 actor=reactor,
@@ -682,6 +704,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
             
             logger.debug(f"Created reaction notification for {message_owner.username}")
+            return notification
             
         except Exception as e:
             logger.exception(f"Error creating reaction notification: {e}")
+            return None
