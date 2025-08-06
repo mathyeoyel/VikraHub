@@ -648,15 +648,24 @@ def add_message_reaction(request, message_id):
         channel_layer = get_channel_layer()
         conversation_group_name = f"conversation_{message.conversation.id}"
         
+        # Get all reactions for this message to send complete data
+        from .models import MessageReaction
+        reactions = list(MessageReaction.objects.filter(message=message).values(
+            'id', 'user__id', 'user__username', 'reaction', 'reacted_at'
+        ))
+        
         async_to_sync(channel_layer.group_send)(
             conversation_group_name,
             {
                 'type': 'reaction_update',
                 'message_id': str(message.id),
-                'user_id': request.user.id,
-                'username': request.user.username,
-                'reaction_type': reaction_type,
-                'action': 'added'
+                'reactions': reactions,
+                'user': {
+                    'id': request.user.id,
+                    'username': request.user.username
+                },
+                'reaction': reaction_type,
+                'added': True
             }
         )
         
@@ -714,15 +723,24 @@ def remove_message_reaction(request, message_id):
             channel_layer = get_channel_layer()
             conversation_group_name = f"conversation_{message.conversation.id}"
             
+            # Get remaining reactions for this message
+            from .models import MessageReaction
+            reactions = list(MessageReaction.objects.filter(message=message).values(
+                'id', 'user__id', 'user__username', 'reaction', 'reacted_at'
+            ))
+            
             async_to_sync(channel_layer.group_send)(
                 conversation_group_name,
                 {
                     'type': 'reaction_update',
                     'message_id': str(message.id),
-                    'user_id': request.user.id,
-                    'username': request.user.username,
-                    'reaction_type': reaction_type,
-                    'action': 'removed'
+                    'reactions': reactions,
+                    'user': {
+                        'id': request.user.id,
+                        'username': request.user.username
+                    },
+                    'reaction': reaction_type,
+                    'added': False
                 }
             )
             
