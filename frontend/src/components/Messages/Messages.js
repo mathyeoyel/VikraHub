@@ -282,29 +282,37 @@ const Messages = () => {
       // Ensure prevMessages is an array
       if (!Array.isArray(prevMessages)) {
         console.warn('⚠️ Previous messages is not an array in applyReactionToMessage:', typeof prevMessages, prevMessages);
-        return prevMessages;
+        // Try to recover - if it's an object with messages property, use that
+        if (prevMessages && typeof prevMessages === 'object' && Array.isArray(prevMessages.messages)) {
+          console.log('🔧 Recovering messages from object property in applyReactionToMessage');
+          return prevMessages.messages;
+        }
+        // Otherwise return empty array to prevent crashes
+        return [];
       }
       
       return prevMessages.map(msg => {
         if (msg.id === messageId) {
+          // Safely handle reactions array with validation
           const reactions = Array.isArray(msg.reactions) ? msg.reactions : [];
+          const validReactions = reactions.filter(r => r && typeof r === 'object' && r.user);
           
           // Handle different reaction formats
           let updatedReactions;
           if (typeof reaction === 'string') {
             // Simple reaction type (like "like")
-            const existingReaction = reactions.find(r => r.user?.id === user?.id);
+            const existingReaction = validReactions.find(r => r.user?.id === user?.id);
             
             if (existingReaction) {
               // Update existing reaction
-              updatedReactions = reactions.map(r => 
+              updatedReactions = validReactions.map(r => 
                 r.user?.id === user?.id 
                   ? { ...r, reaction_type: reaction }
                   : r
               );
             } else {
               // Add new reaction
-              updatedReactions = [...reactions, {
+              updatedReactions = [...validReactions, {
                 user: { id: user?.id, username: user?.username },
                 reaction_type: reaction,
                 created_at: new Date().toISOString()
@@ -312,15 +320,15 @@ const Messages = () => {
             }
           } else if (reaction && typeof reaction === 'object') {
             // Full reaction object
-            const existingIndex = reactions.findIndex(r => r.user?.id === reaction.user?.id);
+            const existingIndex = validReactions.findIndex(r => r.user?.id === reaction.user?.id);
             
             if (existingIndex >= 0) {
               // Update existing reaction
-              updatedReactions = [...reactions];
+              updatedReactions = [...validReactions];
               updatedReactions[existingIndex] = reaction;
             } else {
               // Add new reaction
-              updatedReactions = [...reactions, reaction];
+              updatedReactions = [...validReactions, reaction];
             }
           } else {
             // Invalid reaction format
@@ -668,6 +676,8 @@ const Messages = () => {
       if (!Array.isArray(messages)) {
         console.warn('⚠️ Messages is not an array:', typeof messages, messages);
         showToast('Unable to add reaction. Please refresh the page.');
+        // Try to recover by resetting messages to empty array
+        setMessages([]);
         return;
       }
       
@@ -679,7 +689,9 @@ const Messages = () => {
         return;
       }
       
-      const existingReaction = currentMessage?.reactions?.find(r => r.user?.id === user?.id);
+      // Safely check reactions array - ensure it's an array before using find
+      const messageReactions = Array.isArray(currentMessage.reactions) ? currentMessage.reactions : [];
+      const existingReaction = messageReactions.find(r => r && r.user && r.user.id === user?.id);
       const isRemovingReaction = existingReaction && existingReaction.reaction_type === reactionType;
       
       // Send reaction to backend API for persistence
@@ -710,26 +722,36 @@ const Messages = () => {
       setMessages(prevMessages => {
         // Ensure prevMessages is an array
         if (!Array.isArray(prevMessages)) {
-          console.warn('⚠️ Previous messages is not an array:', typeof prevMessages, prevMessages);
-          return prevMessages;
+          console.warn('⚠️ Previous messages is not an array in state update:', typeof prevMessages, prevMessages);
+          // Try to recover - if it's an object with messages property, use that
+          if (prevMessages && typeof prevMessages === 'object' && Array.isArray(prevMessages.messages)) {
+            console.log('🔧 Recovering messages from object property');
+            return prevMessages.messages;
+          }
+          // Otherwise return empty array to prevent crashes
+          return [];
         }
         
         return prevMessages.map(msg => {
           if (msg.id === messageId) {
+            // Safely handle reactions array
             const reactions = Array.isArray(msg.reactions) ? msg.reactions : [];
-            const existingReactionIndex = reactions.findIndex(r => r.user?.id === user?.id);
+            
+            // Double-check each reaction object before using find
+            const validReactions = reactions.filter(r => r && typeof r === 'object' && r.user);
+            const existingReactionIndex = validReactions.findIndex(r => r.user?.id === user?.id);
             
             if (isRemovingReaction) {
               // Remove the reaction
               return {
                 ...msg,
-                reactions: reactions.filter(r => r.user?.id !== user?.id)
+                reactions: validReactions.filter(r => r.user?.id !== user?.id)
               };
             } else if (existingReactionIndex >= 0) {
               // Update existing reaction to new type
               return {
                 ...msg,
-                reactions: reactions.map(r => 
+                reactions: validReactions.map(r => 
                   r.user?.id === user?.id 
                     ? { ...r, reaction_type: reactionType }
                     : r
@@ -739,7 +761,7 @@ const Messages = () => {
               // Add new reaction
               return {
                 ...msg,
-                reactions: [...reactions, {
+                reactions: [...validReactions, {
                   user: { id: user?.id, username: user?.username },
                   reaction_type: reactionType,
                   created_at: new Date().toISOString()
