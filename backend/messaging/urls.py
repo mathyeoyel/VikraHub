@@ -19,6 +19,10 @@ urlpatterns = [
     path('messages/', views.get_messages_between_users, name='messages-list'), # GET /api/messages/?user_id=X
     path('messages/user/<int:user_id>/unread/', views.get_unread_messages_count, name='unread-messages-count'),
     
+    # Message reaction endpoints
+    path('messages/<uuid:message_id>/reactions/', views.add_message_reaction, name='add-message-reaction'),
+    path('messages/<uuid:message_id>/reactions/remove/', views.remove_message_reaction, name='remove-message-reaction'),
+    
     # Utility endpoints
     path('unread-count/', views.get_unread_count, name='unread-count'),
 ]

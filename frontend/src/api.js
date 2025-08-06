@@ -733,7 +733,7 @@ export const messagingAPI = {
         throw new Error('Reaction type is required');
       }
       
-      const response = await api.post(`messaging/messages/${message_id}/react/`, { 
+      const response = await api.post(`messaging/messages/${message_id}/reactions/`, { 
         reaction_type 
       });
       console.log('✅ Reaction added successfully');
@@ -751,7 +751,7 @@ export const messagingAPI = {
         throw new Error('Message ID is required');
       }
       
-      const response = await api.delete(`messaging/messages/${message_id}/react/`);
+      const response = await api.delete(`messaging/messages/${message_id}/reactions/remove/`);
       console.log('✅ Reaction removed successfully');
       return response;
     } catch (error) {

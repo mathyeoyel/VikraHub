@@ -610,3 +610,138 @@ def get_unread_messages_count(request, user_id):
             {'error': 'Failed to get unread count'}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+
+# Reaction endpoints
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def add_message_reaction(request, message_id):
+    """Add a reaction to a message"""
+    try:
+        message = get_object_or_404(Message, id=message_id, is_deleted=False)
+        reaction_type = request.data.get('reaction_type')
+        
+        if not reaction_type:
+            return Response(
+                {'error': 'reaction_type is required'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Check if user is participant in the conversation
+        if not message.conversation.participants.filter(id=request.user.id).exists():
+            return Response(
+                {'error': 'You are not a participant in this conversation'}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Import here to avoid circular imports
+        from .models import MessageReaction
+        
+        # Create or update reaction
+        reaction, created = MessageReaction.objects.update_or_create(
+            message=message,
+            user=request.user,
+            defaults={'reaction': reaction_type}
+        )
+        
+        # Send WebSocket update to conversation participants
+        channel_layer = get_channel_layer()
+        conversation_group_name = f"conversation_{message.conversation.id}"
+        
+        async_to_sync(channel_layer.group_send)(
+            conversation_group_name,
+            {
+                'type': 'reaction_update',
+                'message_id': str(message.id),
+                'user_id': request.user.id,
+                'username': request.user.username,
+                'reaction_type': reaction_type,
+                'action': 'added'
+            }
+        )
+        
+        logger.info(f"Reaction {reaction_type} {'updated' if not created else 'added'} to message {message_id} by {request.user.username}")
+        
+        return Response({
+            'status': 'success',
+            'message': f'Reaction {"updated" if not created else "added"} successfully',
+            'reaction': {
+                'id': reaction.id,
+                'reaction_type': reaction.reaction,
+                'user': {
+                    'id': request.user.id,
+                    'username': request.user.username
+                },
+                'created_at': reaction.reacted_at.isoformat()
+            }
+        }, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        logger.exception(f"Error adding reaction to message {message_id}: {e}")
+        return Response(
+            {'error': 'Failed to add reaction'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['DELETE'])
+@permission_classes([permissions.IsAuthenticated])
+def remove_message_reaction(request, message_id):
+    """Remove user's reaction from a message"""
+    try:
+        message = get_object_or_404(Message, id=message_id, is_deleted=False)
+        
+        # Check if user is participant in the conversation
+        if not message.conversation.participants.filter(id=request.user.id).exists():
+            return Response(
+                {'error': 'You are not a participant in this conversation'}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Import here to avoid circular imports
+        from .models import MessageReaction
+        
+        # Find and delete user's reaction
+        try:
+            reaction = MessageReaction.objects.get(
+                message=message,
+                user=request.user
+            )
+            reaction_type = reaction.reaction
+            reaction.delete()
+            
+            # Send WebSocket update to conversation participants
+            channel_layer = get_channel_layer()
+            conversation_group_name = f"conversation_{message.conversation.id}"
+            
+            async_to_sync(channel_layer.group_send)(
+                conversation_group_name,
+                {
+                    'type': 'reaction_update',
+                    'message_id': str(message.id),
+                    'user_id': request.user.id,
+                    'username': request.user.username,
+                    'reaction_type': reaction_type,
+                    'action': 'removed'
+                }
+            )
+            
+            logger.info(f"Reaction removed from message {message_id} by {request.user.username}")
+            
+            return Response({
+                'status': 'success',
+                'message': 'Reaction removed successfully'
+            }, status=status.HTTP_200_OK)
+            
+        except MessageReaction.DoesNotExist:
+            return Response(
+                {'error': 'No reaction found to remove'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+    except Exception as e:
+        logger.exception(f"Error removing reaction from message {message_id}: {e}")
+        return Response(
+            {'error': 'Failed to remove reaction'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
