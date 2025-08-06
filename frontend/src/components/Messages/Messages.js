@@ -104,17 +104,26 @@ const Messages = () => {
         case 'message':
           handleNewMessage(data.message);
           break;
+        case 'message_sent':
+          handleMessageSent(data.message);
+          break;
+        case 'message_delivered':
+          updateDeliveryStatus(data.message_id, data.delivered_to, data.delivered_at);
+          break;
         case 'message_read':
           handleMessageRead(data);
           break;
         case 'reaction':
-          handleReactionUpdate(data);
+          applyReactionToMessage(data.message_id, data.reaction);
           break;
         case 'delivery_receipt':
           handleDeliveryReceipt(data);
           break;
         case 'user_status':
           handleUserStatusUpdate(data);
+          break;
+        case 'error':
+          console.error('❌ WebSocket error received:', data.message);
           break;
         default:
           console.log('🤷 Unknown message type:', data.type);
@@ -209,6 +218,103 @@ const Messages = () => {
         last_seen: data.last_seen
       }
     }));
+  };
+
+  // New handler functions for enhanced WebSocket message types
+  const handleMessageSent = (message) => {
+    console.log('✅ Message sent confirmation received:', message);
+    
+    // Update the message in state to confirm it was sent successfully
+    setMessages(prevMessages => 
+      prevMessages.map(msg => {
+        // Match by temporary ID or content if the message was just sent
+        if (msg.id === message.id || 
+            (typeof msg.id === 'number' && msg.content === message.content && msg.sender.username === user?.username)) {
+          return {
+            ...msg,
+            id: message.id, // Update with actual server ID
+            created_at: message.created_at,
+            is_sent: true,
+            ...message // Merge any other server data
+          };
+        }
+        return msg;
+      })
+    );
+  };
+
+  const updateDeliveryStatus = (messageId, deliveredTo, deliveredAt) => {
+    console.log('📬 Message delivery update:', { messageId, deliveredTo, deliveredAt });
+    
+    setMessages(prevMessages => 
+      prevMessages.map(msg => 
+        msg.id === messageId 
+          ? { 
+              ...msg, 
+              is_delivered: true,
+              delivered_to: deliveredTo,
+              delivered_at: deliveredAt
+            }
+          : msg
+      )
+    );
+  };
+
+  const applyReactionToMessage = (messageId, reaction) => {
+    console.log('😊 Applying reaction to message:', { messageId, reaction });
+    
+    setMessages(prevMessages => 
+      prevMessages.map(msg => {
+        if (msg.id === messageId) {
+          const reactions = Array.isArray(msg.reactions) ? msg.reactions : [];
+          
+          // Handle different reaction formats
+          let updatedReactions;
+          if (typeof reaction === 'string') {
+            // Simple reaction type (like "like")
+            const existingReaction = reactions.find(r => r.user.id === user.id);
+            
+            if (existingReaction) {
+              // Update existing reaction
+              updatedReactions = reactions.map(r => 
+                r.user.id === user.id 
+                  ? { ...r, reaction_type: reaction }
+                  : r
+              );
+            } else {
+              // Add new reaction
+              updatedReactions = [...reactions, {
+                user: { id: user.id, username: user.username },
+                reaction_type: reaction,
+                created_at: new Date().toISOString()
+              }];
+            }
+          } else if (reaction && typeof reaction === 'object') {
+            // Full reaction object
+            const existingIndex = reactions.findIndex(r => r.user.id === reaction.user?.id);
+            
+            if (existingIndex >= 0) {
+              // Update existing reaction
+              updatedReactions = [...reactions];
+              updatedReactions[existingIndex] = reaction;
+            } else {
+              // Add new reaction
+              updatedReactions = [...reactions, reaction];
+            }
+          } else {
+            // Invalid reaction format
+            console.warn('⚠️ Invalid reaction format:', reaction);
+            return msg;
+          }
+          
+          return {
+            ...msg,
+            reactions: updatedReactions
+          };
+        }
+        return msg;
+      })
+    );
   };
 
   const scrollToBottom = () => {
