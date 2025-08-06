@@ -321,9 +321,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
             elif message_type in ['add_reaction', 'react']:
                 # Add or toggle reaction
                 reaction_added = await self.toggle_message_reaction(message, self.user, reaction)
+                
+                # Create notification for reaction if it was added (not removed)
+                if reaction_added and self.user != message.sender:
+                    try:
+                        await self.create_reaction_notification_async(self.user, message.sender, reaction)
+                    except Exception as e:
+                        logger.warning(f"Failed to create reaction notification: {e}")
             else:
                 # Default to toggle for backward compatibility
                 reaction_added = await self.toggle_message_reaction(message, self.user, reaction)
+                
+                # Create notification for reaction if it was added (not removed)
+                if reaction_added and self.user != message.sender:
+                    try:
+                        await self.create_reaction_notification_async(self.user, message.sender, reaction)
+                    except Exception as e:
+                        logger.warning(f"Failed to create reaction notification: {e}")
             
             # Get updated reactions
             reactions = await self.get_message_reactions(message)
@@ -505,13 +519,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     reaction=reaction
                 )
                 
-                # Create notification for the message sender
-                try:
-                    from core.notification_utils import create_reaction_notification
-                    create_reaction_notification(user, message.sender, reaction)
-                except Exception as e:
-                    logger.warning(f"Failed to create reaction notification: {e}")
-                
                 return True  # Reaction added
         except Exception as e:
             logger.exception(f"Error toggling message reaction: {e}")
@@ -655,3 +662,26 @@ class ChatConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             logger.exception(f"Error creating message: {e}")
             raise
+    
+    async def create_reaction_notification_async(self, reactor, message_owner, reaction_type):
+        """Create reaction notification in async context"""
+        try:
+            from core.models import Notification
+            from asgiref.sync import sync_to_async
+            
+            # Create notification asynchronously
+            await sync_to_async(Notification.objects.create)(
+                user=message_owner,
+                verb="reaction",
+                actor=reactor,
+                payload={
+                    "reaction_type": reaction_type,
+                    "reactor_username": reactor.username
+                },
+                message=f"{reactor.get_full_name() or reactor.username} reacted {reaction_type} to your message"
+            )
+            
+            logger.debug(f"Created reaction notification for {message_owner.username}")
+            
+        except Exception as e:
+            logger.exception(f"Error creating reaction notification: {e}")
