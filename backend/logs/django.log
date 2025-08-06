@@ -4424,3 +4424,7 @@ Traceback (most recent call last):
                   ^^^^^^^^^^^^^^^^^^^
 AttributeError: 'MessageReaction' object has no attribute 'created_at'. Did you mean: 'reacted_at'?
 INFO 2025-08-06 11:52:59,546 notification_utils 3762 140202590860992 Created notification: reactor_user reaction → message_owner
+INFO 2025-08-06 11:55:18,723 notification_utils 3812 139645370234560 Created notification: test_user_1 reaction → test_user_2
+INFO 2025-08-06 11:55:18,730 notification_utils 3812 139645370234560 Created notification: test_user_1 message → test_user_2
+WARNING 2025-08-06 11:55:18,737 consumers 3812 139645370234560 Conversation access check failed: Conversation matching query does not exist.
+INFO 2025-08-06 11:55:53,771 asgi 3824 140581459927168 ASGI: Configuring WebSocket routing with JWTAuthMiddleware
