@@ -101,6 +101,9 @@ const Messages = () => {
       console.log('📨 WebSocket message received:', data);
       
       switch (data.type) {
+        case 'connection_established':
+          console.log('🔗 WebSocket connection established:', data);
+          break;
         case 'message':
           handleNewMessage(data.message);
           break;
@@ -116,6 +119,8 @@ const Messages = () => {
         case 'reaction':
         case 'add_reaction':
         case 'reaction_added':
+        case 'remove_reaction':
+        case 'reaction_removed':
           applyReactionToMessage(data.message_id, data.reaction);
           break;
         case 'delivery_receipt':
@@ -647,10 +652,30 @@ const Messages = () => {
   // Enhanced message interaction functions
   const handleReaction = async (messageId, reactionType) => {
     try {
+      // Check if user already has this reaction to toggle it
+      const currentMessage = messages.find(msg => msg.id === messageId);
+      const existingReaction = currentMessage?.reactions?.find(r => r.user.id === user.id);
+      const isRemovingReaction = existingReaction && existingReaction.reaction_type === reactionType;
+      
+      // Send reaction to backend API for persistence
+      try {
+        if (isRemovingReaction) {
+          await messagingAPI.removeReaction(messageId);
+          console.log('✅ Reaction removed from backend:', { messageId, reactionType });
+        } else {
+          await messagingAPI.addReaction(messageId, reactionType);
+          console.log('✅ Reaction saved to backend:', { messageId, reactionType });
+        }
+      } catch (apiError) {
+        console.error('❌ Failed to save reaction to backend:', apiError);
+        showToast(`Failed to ${isRemovingReaction ? 'remove' : 'add'} reaction. Please try again.`);
+        return; // Don't continue if backend fails
+      }
+      
       // Send reaction via WebSocket - use the format the backend expects
       if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({
-          type: 'add_reaction',  // Changed from 'reaction' to 'add_reaction'
+          type: isRemovingReaction ? 'remove_reaction' : 'add_reaction',
           message_id: messageId,
           reaction_type: reactionType
         }));
@@ -661,10 +686,16 @@ const Messages = () => {
         prevMessages.map(msg => {
           if (msg.id === messageId) {
             const reactions = Array.isArray(msg.reactions) ? msg.reactions : [];
-            const existingReaction = reactions.find(r => r.user.id === user.id);
+            const existingReactionIndex = reactions.findIndex(r => r.user.id === user.id);
             
-            if (existingReaction) {
-              // Update existing reaction
+            if (isRemovingReaction) {
+              // Remove the reaction
+              return {
+                ...msg,
+                reactions: reactions.filter(r => r.user.id !== user.id)
+              };
+            } else if (existingReactionIndex >= 0) {
+              // Update existing reaction to new type
               return {
                 ...msg,
                 reactions: reactions.map(r => 
@@ -691,7 +722,8 @@ const Messages = () => {
       
       setShowReactionsMenu(null);
     } catch (error) {
-      console.error('Failed to add reaction:', error);
+      console.error('Failed to handle reaction:', error);
+      showToast('Failed to handle reaction. Please try again.');
     }
   };
 
