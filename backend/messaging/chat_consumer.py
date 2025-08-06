@@ -112,7 +112,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 await self.handle_direct_message(data)
             elif message_type == 'mark_read':
                 await self.handle_mark_read(data)
-            elif message_type == 'react':
+            elif message_type in ['react', 'add_reaction', 'remove_reaction']:
                 await self.handle_reaction(data)
             elif message_type == 'ping':
                 await self.send(text_data=json.dumps({'type': 'pong'}))
@@ -291,15 +291,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }))
     
     async def handle_reaction(self, data):
-        """Handle reaction: {type: "react", message_id: X, reaction: Y}"""
+        """Handle reaction: {type: "add_reaction/remove_reaction/react", message_id: X, reaction_type: Y}"""
         try:
             message_id = data.get('message_id')
-            reaction = data.get('reaction')
+            # Support both 'reaction' and 'reaction_type' for backward compatibility
+            reaction = data.get('reaction') or data.get('reaction_type')
+            message_type = data.get('type', 'react')
             
             if not message_id or not reaction:
                 await self.send(text_data=json.dumps({
                     'type': 'error',
-                    'message': 'message_id and reaction are required'
+                    'message': 'message_id and reaction/reaction_type are required'
                 }))
                 return
             
@@ -312,8 +314,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 }))
                 return
             
-            # Add or remove reaction
-            reaction_added = await self.toggle_message_reaction(message, self.user, reaction)
+            # Handle different message types
+            if message_type == 'remove_reaction':
+                # Remove reaction
+                reaction_added = await self.remove_message_reaction(message, self.user)
+            elif message_type in ['add_reaction', 'react']:
+                # Add or toggle reaction
+                reaction_added = await self.toggle_message_reaction(message, self.user, reaction)
+            else:
+                # Default to toggle for backward compatibility
+                reaction_added = await self.toggle_message_reaction(message, self.user, reaction)
             
             # Get updated reactions
             reactions = await self.get_message_reactions(message)
@@ -505,6 +515,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 return True  # Reaction added
         except Exception as e:
             logger.exception(f"Error toggling message reaction: {e}")
+            return False
+    
+    @database_sync_to_async
+    def remove_message_reaction(self, message, user):
+        """Remove user's reaction from message"""
+        try:
+            deleted_count, _ = MessageReaction.objects.filter(
+                message=message,
+                user=user
+            ).delete()
+            
+            return deleted_count > 0  # True if reaction was removed
+        except Exception as e:
+            logger.exception(f"Error removing message reaction: {e}")
             return False
     
     @database_sync_to_async

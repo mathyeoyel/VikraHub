@@ -127,7 +127,14 @@ const Messages = () => {
         case 'reaction_added':
         case 'remove_reaction':
         case 'reaction_removed':
-          applyReactionToMessage(data.message_id, data.reaction);
+        case 'reaction_update':
+          if (data.reactions) {
+            // New format from API endpoints with complete reactions array
+            handleReactionUpdate(data);
+          } else {
+            // Legacy format from WebSocket messages
+            applyReactionToMessage(data.message_id, data.reaction || data.reaction_type);
+          }
           break;
         case 'delivery_receipt':
           handleDeliveryReceipt(data);
