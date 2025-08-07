@@ -774,9 +774,9 @@ def create_specialized_profile(user, user_type):
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         # Ensure new users are inactive until email verification
+        # Use update to avoid triggering signals again
         if instance.is_active:
-            instance.is_active = False
-            instance.save(update_fields=['is_active'])
+            User.objects.filter(id=instance.id).update(is_active=False)
         
         profile = UserProfile.objects.create(user=instance, user_type='client')
         # Create specialized profile based on user_type
@@ -918,9 +918,9 @@ if ALLAUTH_AVAILABLE:
         Handle Django Allauth user signup to ensure email verification
         """
         # Ensure user is inactive until email verification
+        # Use update to avoid triggering post_save signal
         if user.is_active:
-            user.is_active = False
-            user.save(update_fields=['is_active'])
+            User.objects.filter(id=user.id).update(is_active=False)
         
         # Create email verification for Django Allauth users
         try:
