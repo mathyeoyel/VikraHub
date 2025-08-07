@@ -924,7 +924,7 @@ class BlogCommentSerializer(serializers.ModelSerializer):
             'id', 'user', 'blog_post', 'content', 'parent', 'like_count',
             'created_at', 'updated_at', 'replies', 'is_liked', 'time_since_posted'
         ]
-        read_only_fields = ['id', 'user', 'like_count', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'user', 'blog_post', 'like_count', 'created_at', 'updated_at']
     
     def get_replies(self, obj):
         if obj.replies.exists():
