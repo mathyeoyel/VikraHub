@@ -6,6 +6,13 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.urls import reverse # for URL reversing in templates
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
+# Add Django Allauth signal import
+try:
+    from allauth.account.signals import user_signed_up
+    ALLAUTH_AVAILABLE = True
+except ImportError:
+    ALLAUTH_AVAILABLE = False
 from django.utils.text import slugify
 from django.utils import timezone
 from django.utils.crypto import get_random_string
@@ -766,6 +773,11 @@ def create_specialized_profile(user, user_type):
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
+        # Ensure new users are inactive until email verification
+        if instance.is_active:
+            instance.is_active = False
+            instance.save(update_fields=['is_active'])
+        
         profile = UserProfile.objects.create(user=instance, user_type='client')
         # Create specialized profile based on user_type
         create_specialized_profile(instance, profile.user_type)
@@ -897,3 +909,25 @@ def create_specialized_profile_on_userprofile_save(sender, instance, created, **
     """Signal to create specialized profiles when UserProfile is saved"""
     if instance.user and instance.user_type:
         create_specialized_profile(instance.user, instance.user_type)
+
+# Django Allauth signal handler (if available)
+if ALLAUTH_AVAILABLE:
+    @receiver(user_signed_up)
+    def handle_allauth_signup(sender, request, user, **kwargs):
+        """
+        Handle Django Allauth user signup to ensure email verification
+        """
+        # Ensure user is inactive until email verification
+        if user.is_active:
+            user.is_active = False
+            user.save(update_fields=['is_active'])
+        
+        # Create email verification for Django Allauth users
+        try:
+            verification = EmailVerification.create_for_user(user)
+            from .email_utils import send_verification_email
+            send_verification_email(user, verification.token)
+        except Exception as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Failed to create email verification for Django Allauth user: {e}")

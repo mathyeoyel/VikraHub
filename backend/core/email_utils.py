@@ -20,7 +20,7 @@ def send_verification_email(user, verification_token):
         domain = current_site.domain
         
         # Create verification URL
-        verification_url = f"http://{domain}/api/auth/verify-email/{verification_token}/"
+        verification_url = f"http://{domain}/api/users/verify-email/{verification_token}/"
         
         # Email context
         context = {
