@@ -65,7 +65,7 @@ const RegisterForm = ({ onClose, switchToLogin }) => {
   const handleResendVerification = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000/api/'}/api/users/resend_verification/`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000/api/'}users/resend_verification/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
