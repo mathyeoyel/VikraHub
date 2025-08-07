@@ -99,6 +99,121 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         except User.DoesNotExist:
             return Response({'error': 'User not found'}, status=404)
+    
+    @action(detail=False, methods=['post'], permission_classes=[])
+    def verify_email(self, request):
+        """Verify user email with token"""
+        from .models import EmailVerification
+        from .email_utils import send_welcome_email
+        
+        token = request.data.get('token')
+        if not token:
+            return Response({'error': 'Token is required'}, status=400)
+        
+        try:
+            verification = EmailVerification.objects.get(token=token)
+            
+            if verification.is_verified:
+                return Response({'message': 'Email already verified'}, status=200)
+            
+            if verification.is_expired():
+                return Response({'error': 'Verification token has expired'}, status=400)
+            
+            # Verify the email
+            success = verification.verify()
+            if success:
+                # Send welcome email
+                send_welcome_email(verification.user)
+                return Response({
+                    'message': 'Email verified successfully',
+                    'user_id': verification.user.id,
+                    'username': verification.user.username
+                }, status=200)
+            else:
+                return Response({'error': 'Verification failed'}, status=400)
+                
+        except EmailVerification.DoesNotExist:
+            return Response({'error': 'Invalid verification token'}, status=400)
+    
+    @action(detail=False, methods=['post'], permission_classes=[])
+    def resend_verification(self, request):
+        """Resend verification email"""
+        from .email_utils import resend_verification_email
+        
+        email = request.data.get('email')
+        if not email:
+            return Response({'error': 'Email is required'}, status=400)
+        
+        try:
+            user = User.objects.get(email=email)
+            
+            if user.is_active:
+                return Response({'message': 'User is already verified'}, status=200)
+            
+            success = resend_verification_email(user)
+            if success:
+                return Response({'message': 'Verification email sent successfully'}, status=200)
+            else:
+                return Response({'error': 'Failed to send verification email'}, status=500)
+                
+        except User.DoesNotExist:
+            return Response({'error': 'User with this email does not exist'}, status=404)
+    
+    @action(detail=False, methods=['get'], url_path='verify-email/(?P<token>[^/.]+)')
+    def verify_email_get(self, request, token=None):
+        """Verify email via GET request (for email links)"""
+        from .models import EmailVerification
+        from .email_utils import send_welcome_email
+        from django.shortcuts import redirect
+        from django.http import HttpResponse
+        
+        try:
+            verification = EmailVerification.objects.get(token=token)
+            
+            if verification.is_verified:
+                return HttpResponse("""
+                    <html><body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+                        <h2>✅ Email Already Verified</h2>
+                        <p>Your email has already been verified. You can close this window.</p>
+                        <script>setTimeout(() => window.close(), 3000);</script>
+                    </body></html>
+                """)
+            
+            if verification.is_expired():
+                return HttpResponse("""
+                    <html><body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+                        <h2>❌ Verification Token Expired</h2>
+                        <p>This verification link has expired. Please request a new verification email.</p>
+                    </body></html>
+                """)
+            
+            # Verify the email
+            success = verification.verify()
+            if success:
+                # Send welcome email
+                send_welcome_email(verification.user)
+                return HttpResponse("""
+                    <html><body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+                        <h2>🎉 Email Verified Successfully!</h2>
+                        <p>Your account has been activated. You can now log in and use all features.</p>
+                        <script>setTimeout(() => window.close(), 5000);</script>
+                    </body></html>
+                """)
+            else:
+                return HttpResponse("""
+                    <html><body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+                        <h2>❌ Verification Failed</h2>
+                        <p>There was an error verifying your email. Please try again.</p>
+                    </body></html>
+                """)
+                
+        except EmailVerification.DoesNotExist:
+            return HttpResponse("""
+                <html><body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+                    <h2>❌ Invalid Verification Link</h2>
+                    <p>This verification link is invalid or has been used already.</p>
+                </body></html>
+            """)
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()

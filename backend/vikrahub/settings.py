@@ -183,6 +183,27 @@ else:
     }
     print("Using SQLite database")
 
+# Email Configuration
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+
+# SMTP settings (for production)
+if EMAIL_BACKEND == 'django.core.mail.backends.smtp.EmailBackend':
+    EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.zoho.com')
+    EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
+    EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() == 'true'
+    EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+    DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)
+    SERVER_EMAIL = DEFAULT_FROM_EMAIL
+    
+    if not EMAIL_HOST_USER or not EMAIL_HOST_PASSWORD:
+        print("⚠️  Email credentials not configured. Email verification will not work in production.")
+        print("   Set EMAIL_HOST_USER and EMAIL_HOST_PASSWORD environment variables.")
+    else:
+        print(f"✅ Email configured: {EMAIL_HOST_USER}")
+else:
+    print("🔧 Development mode: Using console email backend (emails will print to console)")
+
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
@@ -407,10 +428,15 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Django-allauth configuration (updated to newer format)
-ACCOUNT_EMAIL_VERIFICATION = 'none'  # Disable email verification for now
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Enable email verification
 ACCOUNT_LOGIN_METHODS = {'email'}  # Use email for login instead of username
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']  # Email and password required
 ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 

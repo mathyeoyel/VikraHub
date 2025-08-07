@@ -40,12 +40,22 @@ class UserSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password')
         user = User.objects.create_user(**validated_data)
         user.set_password(password)
+        
+        # Set user as inactive until email verification
+        user.is_active = False
         user.save()
         
         # Update the user's profile with the user_type (profile created by signal)
         profile = user.userprofile
         profile.user_type = user_type
         profile.save()
+        
+        # Create email verification token and send email
+        from .models import EmailVerification
+        from .email_utils import send_verification_email
+        
+        verification = EmailVerification.create_for_user(user)
+        send_verification_email(user, verification.token)
         
         return user
 

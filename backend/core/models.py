@@ -7,6 +7,9 @@ from django.urls import reverse # for URL reversing in templates
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
+from django.utils import timezone
+from django.utils.crypto import get_random_string
+import uuid
 from .cloudinary_utils import validate_cloudinary_url
 
 # Import follow system models
@@ -122,6 +125,63 @@ class Device(models.Model):
     
     def __str__(self):
         return f"{self.user.username} - {self.platform} device"
+
+
+class EmailVerification(models.Model):
+    """
+    Email verification tokens for user account activation
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='email_verifications')
+    email = models.EmailField()
+    token = models.UUIDField(default=uuid.uuid4, unique=True)
+    is_verified = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    verified_at = models.DateTimeField(null=True, blank=True)
+    expires_at = models.DateTimeField()
+    
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['token']),
+            models.Index(fields=['user', '-created_at']),
+            models.Index(fields=['email', 'is_verified']),
+        ]
+    
+    def __str__(self):
+        return f"Email verification for {self.email}"
+    
+    def is_expired(self):
+        return timezone.now() > self.expires_at
+    
+    def verify(self):
+        """Mark the email as verified"""
+        if not self.is_expired():
+            self.is_verified = True
+            self.verified_at = timezone.now()
+            self.save()
+            
+            # Activate the user account
+            self.user.is_active = True
+            self.user.save()
+            
+            return True
+        return False
+    
+    @classmethod
+    def create_for_user(cls, user, email=None):
+        """Create a new verification token for a user"""
+        from datetime import timedelta
+        
+        email = email or user.email
+        expires_at = timezone.now() + timedelta(days=3)  # 3 days expiry
+        
+        return cls.objects.create(
+            user=user,
+            email=email,
+            expires_at=expires_at
+        )
+
+
 class UserProfile(models.Model):
     USER_TYPE_CHOICES = [
         ('client', 'Client'),
