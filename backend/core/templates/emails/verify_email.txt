@@ -1,0 +1,16 @@
+VikraHub - Email Verification Required
+
+Hi {{ user_name|default:"there" }},
+
+Welcome to VikraHub! We're excited to have you as part of our community of innovators and creators.
+
+To get started and secure your account, please verify your email address by clicking the link below:
+
+{{ verification_url }}
+
+This verification link will expire in 3 days for your security. If you didn't create an account with VikraHub, you can safely ignore this email.
+
+Questions? Contact us at support@vikrahub.com
+Visit us at https://vikrahub.com
+
+© {{ current_year|default:"2024" }} VikraHub. All rights reserved.
