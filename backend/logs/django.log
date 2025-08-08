@@ -4422,3 +4422,15 @@ WARNING 2025-08-06 18:57:34,208 log 3648 13488 Not Found: /admin
 WARNING 2025-08-06 18:57:34,212 basehttp 3648 13488 "GET /admin?id=aad7482e-3902-465d-b103-fd2a8d69a874&vscodeBrowserReqId=1754499453514 HTTP/1.1" 404 4130
 INFO 2025-08-07 14:50:18,516 email_utils 23424 23916 Verification email sent to test@example.com
 WARNING 2025-08-07 14:50:18,537 log 23424 23916 Unauthorized: /api/users/verify-email/
+INFO 2025-08-08 12:40:24,781 autoreload 19236 736 Watching for file changes with StatReloader
+INFO 2025-08-08 13:46:39,185 email_utils 19236 17880 Welcome email sent to test@example.com
+INFO 2025-08-08 13:46:39,246 basehttp 19236 17880 "GET /api/users/verify-email/2a818d59-45bb-4028-bb20-cb54bf7cd011/?id=1f96cba2-79af-4716-812a-ad939318e772&vscodeBrowserReqId=1754653598853 HTTP/1.1" 302 0
+INFO 2025-08-08 13:50:44,450 autoreload 19236 736 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-08-08 13:50:45,597 autoreload 27476 20676 Watching for file changes with StatReloader
+INFO 2025-08-08 13:51:19,377 autoreload 27476 20676 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\api_views.py changed, reloading.
+INFO 2025-08-08 13:51:20,383 autoreload 22828 27340 Watching for file changes with StatReloader
+INFO 2025-08-08 13:54:14,900 api_views 22828 6248 Processing verification for token: b403ad93-93a2-49d2-84bb-be864e441eaa, user: test@example.com
+INFO 2025-08-08 13:54:14,944 email_utils 22828 6248 Welcome email sent to test@example.com
+INFO 2025-08-08 13:54:14,945 api_views 22828 6248 Welcome email sent to test@example.com
+INFO 2025-08-08 13:54:14,945 api_views 22828 6248 Verification successful, redirecting to: http://localhost:3000/email-verified?status=success&message=Welcome+to+VikraHub%2C+testuser%21+Your+email+has+been+verified+successfully.
+INFO 2025-08-08 13:54:15,046 basehttp 22828 6248 "GET /api/users/verify-email/b403ad93-93a2-49d2-84bb-be864e441eaa/?id=1f96cba2-79af-4716-812a-ad939318e772&vscodeBrowserReqId=1754654054748 HTTP/1.1" 302 0

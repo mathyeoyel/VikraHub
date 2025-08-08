@@ -166,50 +166,79 @@ class UserViewSet(viewsets.ModelViewSet):
         from .email_utils import send_welcome_email
         from django.shortcuts import redirect
         from django.conf import settings
+        from django.http import HttpResponse
         from urllib.parse import urlencode
+        import logging
         
+        logger = logging.getLogger(__name__)
         frontend_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:3000')
         
         try:
             verification = EmailVerification.objects.get(token=token)
+            logger.info(f"Processing verification for token: {token}, user: {verification.user.email}")
             
             if verification.is_verified:
                 params = urlencode({
                     'status': 'already_verified',
                     'message': 'Your email has already been verified. You can log in to your account.'
                 })
-                return redirect(f'{frontend_url}/email-verified?{params}')
+                redirect_url = f'{frontend_url}/email-verified?{params}'
+                logger.info(f"User already verified, redirecting to: {redirect_url}")
+                return redirect(redirect_url)
             
             if verification.is_expired():
                 params = urlencode({
                     'status': 'expired',
                     'message': 'This verification link has expired. Please request a new verification email.'
                 })
-                return redirect(f'{frontend_url}/email-verified?{params}')
+                redirect_url = f'{frontend_url}/email-verified?{params}'
+                logger.info(f"Verification expired, redirecting to: {redirect_url}")
+                return redirect(redirect_url)
             
             # Verify the email
             success = verification.verify()
             if success:
                 # Send welcome email
-                send_welcome_email(verification.user)
+                try:
+                    send_welcome_email(verification.user)
+                    logger.info(f"Welcome email sent to {verification.user.email}")
+                except Exception as e:
+                    logger.error(f"Failed to send welcome email: {e}")
+                
                 params = urlencode({
                     'status': 'success',
                     'message': f'Welcome to VikraHub, {verification.user.first_name or verification.user.username}! Your email has been verified successfully.'
                 })
-                return redirect(f'{frontend_url}/email-verified?{params}')
+                redirect_url = f'{frontend_url}/email-verified?{params}'
+                logger.info(f"Verification successful, redirecting to: {redirect_url}")
+                return redirect(redirect_url)
             else:
                 params = urlencode({
                     'status': 'error',
                     'message': 'There was an error verifying your email. Please try again.'
                 })
-                return redirect(f'{frontend_url}/email-verified?{params}')
+                redirect_url = f'{frontend_url}/email-verified?{params}'
+                logger.error(f"Verification failed, redirecting to: {redirect_url}")
+                return redirect(redirect_url)
                 
         except EmailVerification.DoesNotExist:
+            logger.error(f"Verification token not found: {token}")
             params = urlencode({
                 'status': 'error',
                 'message': 'This verification link is invalid or has been used already.'
             })
-            return redirect(f'{frontend_url}/email-verified?{params}')
+            redirect_url = f'{frontend_url}/email-verified?{params}'
+            return redirect(redirect_url)
+        except Exception as e:
+            logger.error(f"Unexpected error during verification: {e}")
+            # Fallback to simple HTML response if redirect fails
+            return HttpResponse(f"""
+                <html><body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+                    <h2>❌ Verification Error</h2>
+                    <p>There was an unexpected error processing your verification.</p>
+                    <p><a href="{frontend_url}">Continue to VikraHub</a></p>
+                </body></html>
+            """, status=500)
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
