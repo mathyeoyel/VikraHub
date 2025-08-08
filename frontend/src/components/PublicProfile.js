@@ -474,37 +474,44 @@ const PublicProfile = () => {
         </div>
 
         {/* Social Links */}
-        {(profile.facebook || profile.instagram || profile.twitter || profile.linkedin || profile.github || profile.website) && (
+        {(profile.facebook?.trim() || profile.instagram?.trim() || profile.twitter?.trim() || 
+          profile.linkedin?.trim() || profile.github?.trim() || profile.website?.trim()) && (
           <div className="profile-section social-links">
             <h3>Connect With Me</h3>
             <div className="social-buttons">
-              {profile.website && (
-                <a href={profile.website} target="_blank" rel="noopener noreferrer" className="social-link">
+              {profile.website?.trim() && (
+                <a href={profile.website.startsWith('http') ? profile.website : `https://${profile.website}`} 
+                   target="_blank" rel="noopener noreferrer" className="social-link">
                   🌐 Website
                 </a>
               )}
-              {profile.linkedin && (
-                <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="social-link">
+              {profile.linkedin?.trim() && (
+                <a href={profile.linkedin.startsWith('http') ? profile.linkedin : `https://linkedin.com/in/${profile.linkedin}`} 
+                   target="_blank" rel="noopener noreferrer" className="social-link">
                   <i className={`${getSocialIcon('linkedin')} icon`}></i> LinkedIn
                 </a>
               )}
-              {profile.github && (
-                <a href={profile.github} target="_blank" rel="noopener noreferrer" className="social-link">
+              {profile.github?.trim() && (
+                <a href={profile.github.startsWith('http') ? profile.github : `https://github.com/${profile.github}`} 
+                   target="_blank" rel="noopener noreferrer" className="social-link">
                   <i className={`${getSocialIcon('github')} icon`}></i> GitHub
                 </a>
               )}
-              {profile.twitter && (
-                <a href={profile.twitter} target="_blank" rel="noopener noreferrer" className="social-link">
+              {profile.twitter?.trim() && (
+                <a href={profile.twitter.startsWith('http') ? profile.twitter : `https://twitter.com/${profile.twitter}`} 
+                   target="_blank" rel="noopener noreferrer" className="social-link">
                   <i className={`${getSocialIcon('twitter')} icon`}></i> Twitter
                 </a>
               )}
-              {profile.instagram && (
-                <a href={profile.instagram} target="_blank" rel="noopener noreferrer" className="social-link">
+              {profile.instagram?.trim() && (
+                <a href={profile.instagram.startsWith('http') ? profile.instagram : `https://instagram.com/${profile.instagram}`} 
+                   target="_blank" rel="noopener noreferrer" className="social-link">
                   <i className={`${getSocialIcon('instagram')} icon`}></i> Instagram
                 </a>
               )}
-              {profile.facebook && (
-                <a href={profile.facebook} target="_blank" rel="noopener noreferrer" className="social-link">
+              {profile.facebook?.trim() && (
+                <a href={profile.facebook.startsWith('http') ? profile.facebook : `https://facebook.com/${profile.facebook}`} 
+                   target="_blank" rel="noopener noreferrer" className="social-link">
                   <i className={`${getSocialIcon('facebook')} icon`}></i> Facebook
                 </a>
               )}
@@ -516,7 +523,7 @@ const PublicProfile = () => {
           {/* About/Bio Section */}
           <div className="profile-section">
             <h3>About</h3>
-            {profile.bio ? (
+            {profile.bio?.trim() ? (
               <p className="bio">
                 {typeof profile.bio === 'string' ? profile.bio : 
                  typeof profile.bio === 'object' && profile.bio ? (profile.bio.name || profile.bio.description || 'Bio available') : 
@@ -527,8 +534,10 @@ const PublicProfile = () => {
             )}
           </div>
 
-          {/* Skills & Expertise - Show for Creator and Freelancer, Maybe for Client */}
-          {profile.skills && (profile.user_type === 'creator' || profile.user_type === 'freelancer' || profile.user_type === 'client') && (
+          {/* Skills & Expertise - Show only when user has real skills */}
+          {((Array.isArray(profile.skills) && profile.skills.length > 0) || 
+            (typeof profile.skills === 'string' && profile.skills.trim())) && 
+           (profile.user_type === 'creator' || profile.user_type === 'freelancer' || profile.user_type === 'client') && (
             <div className="profile-section">
               <h3>
                 {profile.user_type === 'creator' ? 'Skills & Expertise' : 
@@ -545,8 +554,8 @@ const PublicProfile = () => {
             </div>
           )}
 
-          {/* Achievements - Show only for Creator, Maybe for Freelancer */}
-          {profile.achievements && (profile.user_type === 'creator' || profile.user_type === 'freelancer') && (
+          {/* Achievements - Show only when user has real achievements */}
+          {profile.achievements?.trim() && (profile.user_type === 'creator' || profile.user_type === 'freelancer') && (
             <div className="profile-section">
               <h3>Achievements & Recognition</h3>
               <div className="achievements-content">
@@ -573,8 +582,8 @@ const PublicProfile = () => {
             </div>
           )}
 
-          {/* Services Offered - Show for Creator, Maybe for Freelancer, No for Client */}
-          {profile.services_offered && (profile.user_type === 'creator' || profile.user_type === 'freelancer') && (
+          {/* Services Offered - Show only when user has real services */}
+          {profile.services_offered?.trim() && (profile.user_type === 'creator' || profile.user_type === 'freelancer') && (
             <div className="profile-section">
               <h3>
                 {profile.user_type === 'creator' ? 'Services & Commissions' : 'Services Offered'}
@@ -907,39 +916,26 @@ const PublicProfile = () => {
             )}
           </div>
 
-          {/* Client Reviews/Testimonials Section - Yes for Freelancer, Optional for Creator and Client */}
-          {(profile.user_type === 'freelancer' || profile.user_type === 'creator' || profile.user_type === 'client') && (
+          {/* Client Reviews/Testimonials Section - Only show when there are real reviews */}
+          {/* Note: Review system not yet implemented - this section will be hidden until real reviews are available */}
+          {false && (profile.user_type === 'freelancer' || profile.user_type === 'creator' || profile.user_type === 'client') && (
             <div className="profile-section">
               <h3>
                 {profile.user_type === 'freelancer' ? 'Client Reviews' : 
                  profile.user_type === 'creator' ? 'Customer Reviews' : 
                  'Project Feedback'}
               </h3>
-              <div className="reviews-placeholder">
-                <div className="review-item">
-                  <div className="review-header">
-                    <div className="reviewer-avatar">👤</div>
-                    <div className="reviewer-info">
-                      <h4>Sample Review</h4>
-                      <div className="review-rating">⭐⭐⭐⭐⭐</div>
-                    </div>
-                  </div>
-                  <p>
-                    {profile.user_type === 'freelancer' 
-                      ? "This is a placeholder for client reviews and testimonials. The review system will be implemented to show real feedback from clients."
-                      : profile.user_type === 'creator'
-                      ? "This is a placeholder for customer reviews and testimonials. The review system will be implemented to show real feedback from customers."
-                      : "This is a placeholder for project feedback and testimonials from team members and collaborators."}
-                  </p>
-                </div>
+              <div className="no-content-state">
+                <div className="no-content-icon"><i className="fas fa-star icon"></i></div>
+                <h4>No Reviews Yet</h4>
+                <p>
+                  {profile.user_type === 'freelancer' 
+                    ? "No client reviews available yet."
+                    : profile.user_type === 'creator'
+                    ? "No customer reviews available yet."
+                    : "No project feedback available yet."}
+                </p>
               </div>
-              <p className="no-content">
-                {profile.user_type === 'freelancer' 
-                  ? "Client reviews and testimonials will be displayed here once the review system is implemented."
-                  : profile.user_type === 'creator'
-                  ? "Customer reviews and feedback will be displayed here once the review system is implemented."
-                  : "Project feedback and team reviews will be displayed here once the review system is implemented."}
-              </p>
             </div>
           )}
 

@@ -76,17 +76,17 @@ const Profile = () => {
   // Combine portfolio items and assets
   const portfolioWorks = [...portfolioItems, ...assetPortfolioItems];
 
-  // Get real social links from profile
+  // Get real social links from profile - only show if they exist
   const socialLinks = [
-    ...(profile?.instagram ? [{ platform: 'Instagram', url: profile.instagram.startsWith('http') ? profile.instagram : `https://instagram.com/${profile.instagram}`, icon: '📷' }] : []),
-    ...(profile?.facebook ? [{ platform: 'Facebook', url: profile.facebook.startsWith('http') ? profile.facebook : `https://facebook.com/${profile.facebook}`, icon: '📘' }] : []),
-    ...(profile?.twitter ? [{ platform: 'Twitter', url: profile.twitter.startsWith('http') ? profile.twitter : `https://twitter.com/${profile.twitter}`, icon: '🐦' }] : []),
-    ...(profile?.linkedin ? [{ platform: 'LinkedIn', url: profile.linkedin.startsWith('http') ? profile.linkedin : `https://linkedin.com/in/${profile.linkedin}`, icon: '💼' }] : []),
-    ...(profile?.github ? [{ platform: 'GitHub', url: profile.github.startsWith('http') ? profile.github : `https://github.com/${profile.github}`, icon: '🐙' }] : []),
-    ...(profile?.website ? [{ platform: 'Website', url: profile.website.startsWith('http') ? profile.website : `https://${profile.website}`, icon: '🌐' }] : [])
+    ...(profile?.instagram && profile.instagram.trim() ? [{ platform: 'Instagram', url: profile.instagram.startsWith('http') ? profile.instagram : `https://instagram.com/${profile.instagram}`, icon: '📷' }] : []),
+    ...(profile?.facebook && profile.facebook.trim() ? [{ platform: 'Facebook', url: profile.facebook.startsWith('http') ? profile.facebook : `https://facebook.com/${profile.facebook}`, icon: '📘' }] : []),
+    ...(profile?.twitter && profile.twitter.trim() ? [{ platform: 'Twitter', url: profile.twitter.startsWith('http') ? profile.twitter : `https://twitter.com/${profile.twitter}`, icon: '🐦' }] : []),
+    ...(profile?.linkedin && profile.linkedin.trim() ? [{ platform: 'LinkedIn', url: profile.linkedin.startsWith('http') ? profile.linkedin : `https://linkedin.com/in/${profile.linkedin}`, icon: '💼' }] : []),
+    ...(profile?.github && profile.github.trim() ? [{ platform: 'GitHub', url: profile.github.startsWith('http') ? profile.github : `https://github.com/${profile.github}`, icon: '🐙' }] : []),
+    ...(profile?.website && profile.website.trim() ? [{ platform: 'Website', url: profile.website.startsWith('http') ? profile.website : `https://${profile.website}`, icon: '🌐' }] : [])
   ];
 
-  // Services data - Only for Creator and Freelancer
+  // Services data - Only show if user has actually added services
   const services = (profile?.user_type === 'creator' || profile?.user_type === 'freelancer') && profile?.services_offered && profile.services_offered.trim() 
     ? profile.services_offered.split('\n').filter(line => line.trim()).map((service, index) => {
         // Try to parse if it contains price information
@@ -94,61 +94,25 @@ const Profile = () => {
         return {
           name: parts[0] || service,
           description: parts[1] || '',
-          price: "Contact for pricing"
+          price: parts[2] || "Contact for pricing"
         };
       })
-    : (profile?.user_type === 'creator' || profile?.user_type === 'freelancer') ? [
-        ...(profile?.user_type === 'creator' ? [
-          { name: "Portrait Photography", price: "From $50", description: "Professional portrait sessions" },
-          { name: "Brand Design", price: "From $100", description: "Logo and brand identity creation" },
-          { name: "Digital Art Commission", price: "From $75", description: "Custom digital artwork" },
-          { name: "Event Photography", price: "From $150", description: "Weddings, celebrations, corporate events" }
-        ] : []),
-        ...(profile?.user_type === 'freelancer' ? [
-          { name: "Web Development", price: "From $500", description: "Custom website development" },
-          { name: "Consulting", price: "From $100/hr", description: "Professional consulting services" },
-          { name: "Project Management", price: "Contact for rates", description: "End-to-end project management" },
-          { name: "Technical Writing", price: "From $50/hr", description: "Documentation and technical content" }
-        ] : [])
-      ] : [];
+    : [];
 
-  // Use real achievements from profile - Only for Creator and Freelancer
+  // Use real achievements from profile - Only show if user has actually added achievements
   const achievements = (profile?.user_type === 'creator' || profile?.user_type === 'freelancer') && profile?.achievements && profile.achievements.trim()
     ? profile.achievements.split('\n').filter(line => line.trim()).map((achievement, index) => {
         const parts = achievement.split(' - ');
         return {
           title: parts[0] || achievement,
           description: parts[1] || '',
-          year: new Date().getFullYear().toString()
+          year: parts[2] || new Date().getFullYear().toString()
         };
       })
-    : (profile?.user_type === 'creator' || profile?.user_type === 'freelancer') ? [
-        ...(profile?.user_type === 'creator' ? [
-          { title: "Featured Creator", year: "2024", description: "VikraHub Creator of the Month" },
-          { title: "Cultural Heritage Award", year: "2023", description: "South Sudan Arts Council" },
-          { title: "Photography Exhibition", year: "2023", description: "Juba Contemporary Arts Center" }
-        ] : []),
-        ...(profile?.user_type === 'freelancer' ? [
-          { title: "Top Freelancer", year: "2024", description: "VikraHub Top Rated Freelancer" },
-          { title: "Project Excellence Award", year: "2023", description: "Outstanding project delivery" },
-          { title: "Client Satisfaction Award", year: "2023", description: "98% client satisfaction rate" }
-        ] : [])
-      ] : [];
+    : [];
 
-  const testimonials = [
-    {
-      name: "Sarah Akech",
-      role: "Business Owner",
-      text: "Amazing work! They captured the essence of our brand perfectly.",
-      avatar: "https://ui-avatars.com/api/?name=Sarah+Akech&background=4a90e2&color=fff&size=60"
-    },
-    {
-      name: "John Marial",
-      role: "Event Coordinator", 
-      text: "Professional, creative, and delivered beyond our expectations.",
-      avatar: "https://ui-avatars.com/api/?name=John+Marial&background=50c878&color=fff&size=60"
-    }
-  ];
+  // Remove hardcoded testimonials - will be fetched from database later
+  const testimonials = [];
 
   if (!user) {
     return (
@@ -250,11 +214,13 @@ const Profile = () => {
                   )}
                 </p>
               )}
-              <p className="profile-location">📍 {profile?.location || 'Location not specified'}</p>
+              <p className="profile-location">
+                {profile?.location ? `📍 ${profile.location}` : ''}
+              </p>
               <p className="profile-tagline">
                 {profile?.bio ? 
                   (profile.bio.length > 100 ? profile.bio.substring(0, 100) + '...' : profile.bio) :
-                  "Welcome to my profile"
+                  ""
                 }
               </p>
             </div>
@@ -295,11 +261,11 @@ const Profile = () => {
                     <span key={index} className="skill-badge">{skill.trim()}</span>
                   ))
                 }
-                {(!profile?.skills || (Array.isArray(profile.skills) && profile.skills.length === 0)) && (
+                {(!profile?.skills || 
+                  (Array.isArray(profile.skills) && profile.skills.length === 0) ||
+                  (typeof profile.skills === 'string' && !profile.skills.trim())) && (
                   <div className="skills-placeholder">
-                    <span className="skill-badge">Photography</span>
-                    <span className="skill-badge">Digital Art</span>
-                    <span className="skill-badge">Creative Direction</span>
+                    <p>No skills added yet. Edit your profile to add your skills and expertise!</p>
                   </div>
                 )}
               </div>
@@ -382,8 +348,8 @@ const Profile = () => {
             )}
           </div>
 
-          {/* Achievements & Highlights - Show only for Creator and Freelancer */}
-          {(profile?.user_type === 'creator' || profile?.user_type === 'freelancer') && (
+          {/* Achievements & Highlights - Show only when user has real achievements */}
+          {(profile?.user_type === 'creator' || profile?.user_type === 'freelancer') && achievements.length > 0 && (
             <div className="achievements-section">
               <h2>Achievements & Recognition</h2>
               <div className="achievements-grid">
@@ -398,8 +364,8 @@ const Profile = () => {
             </div>
           )}
 
-          {/* Services Offered - Show for Creator and Freelancer, No for Client */}
-          {(profile?.user_type === 'creator' || profile?.user_type === 'freelancer') && (
+          {/* Services Offered - Show only when user has real services */}
+          {(profile?.user_type === 'creator' || profile?.user_type === 'freelancer') && services.length > 0 && (
             <div className="services-section">
               <h2>
                 {profile?.user_type === 'creator' ? 'Services & Commissions' : 'Services Offered'}
@@ -419,29 +385,39 @@ const Profile = () => {
             </div>
           )}
 
-          {/* Rates & Pricing - Show for Freelancer */}
+          {/* Rates & Pricing - Show for Freelancer only when they have rates info */}
           {profile?.user_type === 'freelancer' && (
+            profile?.freelancer_profile?.hourly_rate || 
+            profile?.freelancer_profile?.project_rate || 
+            profile?.typical_budget_range
+          ) && (
             <div className="rates-section">
               <h2>Rates & Pricing</h2>
               <div className="rates-grid">
-                <div className="rate-card">
-                  <div className="rate-icon"><i className="fas fa-dollar-sign icon"></i></div>
-                  <h4>Hourly Rate</h4>
-                  <p className="rate-price">Contact for rates</p>
-                  <p>Perfect for ongoing projects and consultations</p>
-                </div>
-                <div className="rate-card">
-                  <div className="rate-icon"><i className="fas fa-clipboard icon"></i></div>
-                  <h4>Project Rate</h4>
-                  <p className="rate-price">Varies by scope</p>
-                  <p>Fixed pricing based on project requirements</p>
-                </div>
-                <div className="rate-card">
-                  <div className="rate-icon"><i className="fas fa-bolt icon"></i></div>
-                  <h4>Rush Jobs</h4>
-                  <p className="rate-price">+50% surcharge</p>
-                  <p>Priority delivery for urgent projects</p>
-                </div>
+                {profile?.freelancer_profile?.hourly_rate && (
+                  <div className="rate-card">
+                    <div className="rate-icon"><i className="fas fa-dollar-sign icon"></i></div>
+                    <h4>Hourly Rate</h4>
+                    <p className="rate-price">${profile.freelancer_profile.hourly_rate}/hr</p>
+                    <p>Perfect for ongoing projects and consultations</p>
+                  </div>
+                )}
+                {profile?.freelancer_profile?.project_rate && (
+                  <div className="rate-card">
+                    <div className="rate-icon"><i className="fas fa-clipboard icon"></i></div>
+                    <h4>Project Rate</h4>
+                    <p className="rate-price">{profile.freelancer_profile.project_rate}</p>
+                    <p>Fixed pricing based on project requirements</p>
+                  </div>
+                )}
+                {profile?.typical_budget_range && (
+                  <div className="rate-card">
+                    <div className="rate-icon"><i className="fas fa-chart-line icon"></i></div>
+                    <h4>Typical Budget</h4>
+                    <p className="rate-price">{profile.typical_budget_range}</p>
+                    <p>Typical project budget range</p>
+                  </div>
+                )}
               </div>
               <p className="rates-disclaimer">
                 <em>All rates are subject to project complexity and timeline. Contact me for a detailed quote tailored to your specific needs.</em>
@@ -449,26 +425,28 @@ const Profile = () => {
             </div>
           )}
 
-          {/* Testimonials */}
-          <div className="testimonials-section">
-            <h2>What People Say</h2>
-            <div className="testimonials-grid">
-              {testimonials.map((testimonial, index) => (
-                <div key={index} className="testimonial-card">
-                  <div className="testimonial-content">
-                    <p>"{testimonial.text}"</p>
-                  </div>
-                  <div className="testimonial-author">
-                    <img src={testimonial.avatar} alt={testimonial.name} />
-                    <div>
-                      <strong>{testimonial.name}</strong>
-                      <span>{testimonial.role}</span>
+          {/* Testimonials - Show only when there are real testimonials */}
+          {testimonials.length > 0 && (
+            <div className="testimonials-section">
+              <h2>What People Say</h2>
+              <div className="testimonials-grid">
+                {testimonials.map((testimonial, index) => (
+                  <div key={index} className="testimonial-card">
+                    <div className="testimonial-content">
+                      <p>"{testimonial.text}"</p>
+                    </div>
+                    <div className="testimonial-author">
+                      <img src={testimonial.avatar} alt={testimonial.name} />
+                      <div>
+                        <strong>{testimonial.name}</strong>
+                        <span>{testimonial.role}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Contact/CTA Section */}
           <div className="cta-section">
