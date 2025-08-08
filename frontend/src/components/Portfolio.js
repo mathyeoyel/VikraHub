@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { portfolioAPI } from '../api';
 import { handleImageError, createPortfolioImageUrl } from '../utils/portfolioImageUtils';
 import { useAuth } from './Auth/AuthContext';
+import SEO from './common/SEO';
 import './Portfolio.css';
 
 const Portfolio = () => {
@@ -133,6 +134,13 @@ const Portfolio = () => {
 
   return (
     <section className="portfolio-section">
+      <SEO
+        title="Creative Portfolio - Showcase Your Work"
+        description="Discover amazing work from talented South Sudanese creatives and showcase your own masterpieces. Browse portfolios, connect with artists, and find inspiration."
+        url={`${window.location.origin}/portfolio`}
+        image={`${window.location.origin}/vikrahub-hero.jpg`}
+      />
+      
       <div className="portfolio-container">
         {/* Header Section */}
         <div className="portfolio-header">

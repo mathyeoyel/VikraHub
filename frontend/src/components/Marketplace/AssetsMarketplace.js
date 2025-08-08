@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { assetAPI } from '../../api';
 import { useAuth } from '../Auth/AuthContext';
+import SEO from '../common/SEO';
 import './AssetsMarketplace.css';
 
 const AssetsMarketplace = () => {
@@ -256,6 +257,13 @@ const AssetsMarketplace = () => {
 
   return (
     <div className="marketplace-container">
+      <SEO
+        title="Creative Assets Marketplace"
+        description="Discover and purchase high-quality creative assets from talented South Sudanese creators. Find graphics, templates, photos, and more on VikraHub."
+        url={`${window.location.origin}/marketplace`}
+        image={`${window.location.origin}/vikrahub-hero.jpg`}
+      />
+      
       <header className="marketplace-header">
         <h1>🎨 Creative Assets Marketplace</h1>
         <p>Discover and purchase high-quality creative assets from talented creators</p>

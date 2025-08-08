@@ -1,9 +1,17 @@
 import React from 'react';
+import SEO from './common/SEO';
 import './About.css';
 
 const About = () => {
   return (
     <div className="about-page">
+      <SEO
+        title="About VikraHub"
+        description="Learn about VikraHub - a platform empowering South Sudanese creatives to shine on a global stage. Discover our mission, vision, and commitment to supporting the creative community."
+        url={`${window.location.origin}/about`}
+        image={`${window.location.origin}/vikrahub-hero.jpg`}
+      />
+      
       <div className="container">
         {/* Hero Section */}
         <section className="about-hero">

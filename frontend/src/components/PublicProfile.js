@@ -6,6 +6,7 @@ import notificationService from '../services/notificationService';
 import PublicClientProfile from './PublicClientProfile';
 import ErrorBoundary from './ErrorBoundary';
 import { handleImageError, createPortfolioImageUrl } from '../utils/portfolioImageUtils';
+import SEO from './common/SEO';
 import './PublicProfile.css';
 
 const PublicProfile = () => {
@@ -368,6 +369,17 @@ const PublicProfile = () => {
 
   return (
     <ErrorBoundary>
+      {/* Dynamic SEO meta tags for social sharing */}
+      {profile && (
+        <SEO
+          title={`${profile.full_name} (@${profile.user?.username})`}
+          description={profile.bio || `${profile.full_name} is a ${profile.user_type} on VikraHub. ${profile.headline || 'Connect and collaborate on creative projects.'}`}
+          image={profile.avatar || profile.cover_photo || `${window.location.origin}/vikrahub-hero.jpg`}
+          url={`${window.location.origin}/profile/${username}`}
+          type="profile"
+        />
+      )}
+      
       <div className="public-profile">
         <div className="container">
         {/* Cover Photo Section */}

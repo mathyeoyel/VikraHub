@@ -1,9 +1,17 @@
 import React from 'react';
+import SEO from './common/SEO';
 import './Services.css';
 
 const Services = () => {
   return (
     <div className="services">
+      <SEO
+        title="Services - Your Creative Home in South Sudan"
+        description="Discover VikraHub's services for creators and organizations. Join as a creator to share your work or find the best local talent in South Sudan."
+        url={`${window.location.origin}/services`}
+        image={`${window.location.origin}/vikrahub-hero.jpg`}
+      />
+      
       {/* Hero Section */}
       <section className="services-hero">
         <div className="container">

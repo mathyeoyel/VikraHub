@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { postsAPI } from '../api';
 import PostCard from './Social/PostCard';
+import SEO from './common/SEO';
 import './PostDetail.css';
 
 const PostDetail = () => {
@@ -82,6 +83,23 @@ const PostDetail = () => {
 
   return (
     <div className="post-detail">
+      {/* Dynamic SEO meta tags for social sharing */}
+      {post && (
+        <SEO
+          title={post.content ? post.content.substring(0, 60) + '...' : 'Post'}
+          description={post.content ? post.content.substring(0, 160) : 'A post shared on VikraHub'}
+          image={post.image || `${window.location.origin}/vikrahub-hero.jpg`}
+          url={`${window.location.origin}/posts/${post.id}`}
+          type="article"
+          article={{
+            author: post.author?.username || post.author?.first_name || 'VikraHub User',
+            publishedTime: post.created_at,
+            modifiedTime: post.updated_at || post.created_at,
+            section: 'Community Posts'
+          }}
+        />
+      )}
+      
       <div className="container">
         <div className="row">
           <div className="col-lg-8 mx-auto">
