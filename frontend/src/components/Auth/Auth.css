@@ -408,6 +408,167 @@
   margin-bottom: 30px;
 }
 
+/* Email Verification Styles */
+.verification-message {
+  padding: 30px;
+  text-align: center;
+}
+
+.verification-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+}
+
+.verification-message h3 {
+  color: var(--text-primary);
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.verification-message p {
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.verification-notes {
+  background: rgba(255, 160, 0, 0.1);
+  border: 1px solid rgba(255, 160, 0, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 24px 0;
+  text-align: left;
+}
+
+.verification-notes p {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.verification-notes ul {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.verification-notes li {
+  margin-bottom: 8px;
+}
+
+.verification-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.auth-btn.secondary {
+  background: transparent;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.auth-btn.secondary:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.auth-btn.secondary:disabled {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
+/* Email Verification Status Page Styles */
+.button-group {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.button-group .auth-button {
+  flex: 1;
+  min-width: 140px;
+}
+
+/* Enhanced verification message for status page */
+.verification-message h2 {
+  color: var(--primary-color);
+  margin-bottom: 16px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* Status-specific icon colors */
+.verification-message .verification-icon {
+  margin-bottom: 20px;
+  font-size: 64px;
+  animation: bounceIn 0.6s ease-out;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Improved verification actions */
+.verification-actions {
+  margin: 32px 0 24px 0;
+}
+
+.verification-actions .auth-button {
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.verification-actions .auth-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Better spacing for verification notes */
+.verification-notes {
+  margin-top: 24px;
+  text-align: left;
+}
+
+.verification-notes p {
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 12px;
+}
+
+.verification-notes ul {
+  margin: 0;
+  color: #666;
+}
+
+.verification-notes li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .auth-modal {
@@ -517,85 +678,6 @@
   }
 }
 
-/* Email Verification Styles */
-.verification-message {
-  padding: 30px;
-  text-align: center;
-}
-
-.verification-icon {
-  font-size: 64px;
-  margin-bottom: 20px;
-  color: var(--primary-color);
-}
-
-.verification-message h3 {
-  color: var(--text-primary);
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 16px;
-}
-
-.verification-message p {
-  color: var(--text-secondary);
-  font-size: 16px;
-  line-height: 1.6;
-  margin-bottom: 24px;
-}
-
-.verification-notes {
-  background: rgba(255, 160, 0, 0.1);
-  border: 1px solid rgba(255, 160, 0, 0.2);
-  border-radius: 12px;
-  padding: 20px;
-  margin: 24px 0;
-  text-align: left;
-}
-
-.verification-notes p {
-  color: var(--text-primary);
-  font-weight: 600;
-  margin-bottom: 12px;
-  font-size: 14px;
-}
-
-.verification-notes ul {
-  margin: 0;
-  padding-left: 20px;
-  color: var(--text-secondary);
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.verification-notes li {
-  margin-bottom: 8px;
-}
-
-.verification-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.auth-btn.secondary {
-  background: transparent;
-  color: var(--primary-color);
-  border: 2px solid var(--primary-color);
-}
-
-.auth-btn.secondary:hover {
-  background: var(--primary-color);
-  color: white;
-}
-
-.auth-btn.secondary:disabled {
-  background: transparent;
-  color: var(--text-secondary);
-  border-color: var(--text-secondary);
-  cursor: not-allowed;
-}
-
 /* Responsive for verification message */
 @media (max-width: 768px) {
   .verification-message {
@@ -609,4 +691,86 @@
   .verification-message h3 {
     font-size: 20px;
   }
+}
+
+/* Email Verification Status Page Styles */
+.button-group {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.button-group .auth-button {
+  flex: 1;
+  min-width: 140px;
+}
+
+/* Enhanced verification message for status page */
+.verification-message h2 {
+  color: var(--primary-color);
+  margin-bottom: 16px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* Status-specific icon colors */
+.verification-message .verification-icon {
+  margin-bottom: 20px;
+  font-size: 64px;
+  animation: bounceIn 0.6s ease-out;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Improved verification actions */
+.verification-actions {
+  margin: 32px 0 24px 0;
+}
+
+.verification-actions .auth-button {
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.verification-actions .auth-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Better spacing for verification notes */
+.verification-notes {
+  margin-top: 24px;
+  text-align: left;
+}
+
+.verification-notes p {
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 12px;
+}
+
+.verification-notes ul {
+  margin: 0;
+  color: #666;
+}
+
+.verification-notes li {
+  margin-bottom: 8px;
+  line-height: 1.5;
 }

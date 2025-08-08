@@ -421,6 +421,10 @@ print("Django settings loaded successfully!")
 # Site ID for django-allauth
 SITE_ID = 1
 
+# Frontend URL for redirects
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:3000' if DEBUG else 'https://vikrahub.com')
+print(f"🌐 Frontend URL configured: {FRONTEND_URL}")
+
 # Authentication backends
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',

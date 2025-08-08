@@ -42,6 +42,7 @@ const PostFeed = React.lazy(() => import("./components/Social/PostFeed"));
 const Explore = React.lazy(() => import("./components/Explore"));
 const Inspiration = React.lazy(() => import("./components/Inspiration"));
 const Signup = React.lazy(() => import("./components/Signup"));
+const EmailVerified = React.lazy(() => import("./components/Auth/EmailVerified"));
 
 function App() {
   return (
@@ -73,7 +74,8 @@ function App() {
             <Route path="/explore" element={<Explore />} />
             <Route path="/posts" element={<PostFeed />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/login" element={<Login />} />            {/* Protected Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/email-verified" element={<EmailVerified />} />            {/* Protected Routes */}
             <Route
               path="/profile"
               element={

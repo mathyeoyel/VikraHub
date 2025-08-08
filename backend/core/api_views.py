@@ -43,8 +43,8 @@ class UserViewSet(viewsets.ModelViewSet):
         """
         Instantiates and returns the list of permissions that this view requires.
         """
-        if self.action == 'create':
-            # Allow unauthenticated users to register
+        if self.action in ['create', 'resend_verification', 'verify_email', 'verify_email_get']:
+            # Allow unauthenticated users to register and verify emails
             permission_classes = []
         elif self.action in ['list', 'retrieve', 'update', 'partial_update', 'destroy']:
             permission_classes = [IsAdminUser]
@@ -165,55 +165,51 @@ class UserViewSet(viewsets.ModelViewSet):
         from .models import EmailVerification
         from .email_utils import send_welcome_email
         from django.shortcuts import redirect
-        from django.http import HttpResponse
+        from django.conf import settings
+        from urllib.parse import urlencode
+        
+        frontend_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:3000')
         
         try:
             verification = EmailVerification.objects.get(token=token)
             
             if verification.is_verified:
-                return HttpResponse("""
-                    <html><body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-                        <h2>✅ Email Already Verified</h2>
-                        <p>Your email has already been verified. You can close this window.</p>
-                        <script>setTimeout(() => window.close(), 3000);</script>
-                    </body></html>
-                """)
+                params = urlencode({
+                    'status': 'already_verified',
+                    'message': 'Your email has already been verified. You can log in to your account.'
+                })
+                return redirect(f'{frontend_url}/email-verified?{params}')
             
             if verification.is_expired():
-                return HttpResponse("""
-                    <html><body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-                        <h2>❌ Verification Token Expired</h2>
-                        <p>This verification link has expired. Please request a new verification email.</p>
-                    </body></html>
-                """)
+                params = urlencode({
+                    'status': 'expired',
+                    'message': 'This verification link has expired. Please request a new verification email.'
+                })
+                return redirect(f'{frontend_url}/email-verified?{params}')
             
             # Verify the email
             success = verification.verify()
             if success:
                 # Send welcome email
                 send_welcome_email(verification.user)
-                return HttpResponse("""
-                    <html><body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-                        <h2>🎉 Email Verified Successfully!</h2>
-                        <p>Your account has been activated. You can now log in and use all features.</p>
-                        <script>setTimeout(() => window.close(), 5000);</script>
-                    </body></html>
-                """)
+                params = urlencode({
+                    'status': 'success',
+                    'message': f'Welcome to VikraHub, {verification.user.first_name or verification.user.username}! Your email has been verified successfully.'
+                })
+                return redirect(f'{frontend_url}/email-verified?{params}')
             else:
-                return HttpResponse("""
-                    <html><body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-                        <h2>❌ Verification Failed</h2>
-                        <p>There was an error verifying your email. Please try again.</p>
-                    </body></html>
-                """)
+                params = urlencode({
+                    'status': 'error',
+                    'message': 'There was an error verifying your email. Please try again.'
+                })
+                return redirect(f'{frontend_url}/email-verified?{params}')
                 
         except EmailVerification.DoesNotExist:
-            return HttpResponse("""
-                <html><body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-                    <h2>❌ Invalid Verification Link</h2>
-                    <p>This verification link is invalid or has been used already.</p>
-                </body></html>
-            """)
+            params = urlencode({
+                'status': 'error',
+                'message': 'This verification link is invalid or has been used already.'
+            })
+            return redirect(f'{frontend_url}/email-verified?{params}')
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()

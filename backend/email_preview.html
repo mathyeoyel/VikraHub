@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Welcome to VikraHub - Email Verification</title>
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
+    <style>
+        /* Reset styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Base styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #1a1a1a !important;
+                color: #ffffff !important;
+            }
+            .email-container {
+                background-color: #2d2d2d !important;
+            }
+            .content-section {
+                background-color: #2d2d2d !important;
+            }
+            .footer {
+                background-color: #1a1a1a !important;
+                color: #cccccc !important;
+            }
+        }
+
+        /* Container styles */
+        .email-wrapper {
+            width: 100%;
+            background-color: #f8f9fa;
+            padding: 20px 0;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header styles */
+        .header {
+            background: linear-gradient(135deg, #000223 0%, #1a1a4a 100%);
+            padding: 40px 30px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .header-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-subtitle {
+            font-size: 16px;
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+
+        /* Content styles */
+        .content-section {
+            padding: 40px 30px;
+            background-color: #ffffff;
+        }
+
+        .greeting {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #000223;
+        }
+
+        .message {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            color: #555555;
+        }
+
+        /* Button styles */
+        .button-container {
+            text-align: center;
+            margin: 35px 0;
+        }
+
+        .verify-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffa000 0%, #ff8f00 100%);
+            color: #ffffff !important;
+            text-decoration: none !important;
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(255, 160, 0, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .verify-button:hover {
+            background: linear-gradient(135deg, #ff8f00 0%, #ff6f00 100%);
+            box-shadow: 0 6px 16px rgba(255, 160, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Fallback link styles */
+        .fallback-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #ffa000;
+        }
+
+        .fallback-text {
+            font-size: 14px;
+            color: #666666;
+            margin-bottom: 10px;
+        }
+
+        .fallback-link {
+            word-break: break-all;
+            color: #ffa000;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .fallback-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Security notice */
+        .security-notice {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #e8f4fd;
+            border-radius: 6px;
+            border-left: 3px solid #2196f3;
+        }
+
+        .security-notice p {
+            font-size: 13px;
+            color: #1976d2;
+            margin: 0;
+        }
+
+        /* Footer styles */
+        .footer {
+            background-color: #000223;
+            color: #ffffff;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .footer-content {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .footer-link {
+            color: #ffa000;
+            text-decoration: none;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+
+        .copyright {
+            margin-top: 15px;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* Responsive design */
+        @media only screen and (max-width: 600px) {
+            .email-wrapper {
+                padding: 10px;
+            }
+
+            .email-container {
+                border-radius: 8px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .content-section {
+                padding: 30px 20px;
+            }
+
+            .header-title {
+                font-size: 24px;
+            }
+
+            .greeting {
+                font-size: 18px;
+            }
+
+            .message {
+                font-size: 15px;
+            }
+
+            .verify-button {
+                padding: 14px 30px;
+                font-size: 16px;
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .footer {
+                padding: 25px 20px;
+            }
+        }
+
+        /* Outlook specific fixes */
+        .mso-hide {
+            mso-hide: all;
+            display: none;
+        }
+
+        /* High DPI display support */
+        @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+            .logo {
+                width: 120px;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <div class="email-container">
+            <!-- Header -->
+            <div class="header">
+                <!-- Logo placeholder - replace with actual VikraHub logo -->
+                <img src="https://via.placeholder.com/120x60/ffa000/ffffff?text=VikraHub" 
+                     alt="VikraHub Logo" 
+                     class="logo"
+                     style="display: block; margin: 0 auto 20px auto; max-width: 120px; height: auto;">
+                
+                <h1 class="header-title">Welcome to VikraHub!</h1>
+                <p class="header-subtitle">Your journey to innovation starts here</p>
+            </div>
+
+            <!-- Main Content -->
+            <div class="content-section">
+                <h2 class="greeting">Hi John Doe,</h2>
+                
+                <p class="message">
+                    Thank you for joining VikraHub! We're excited to have you as part of our community of innovators and creators.
+                </p>
+                
+                <p class="message">
+                    To get started and secure your account, please verify your email address by clicking the button below:
+                </p>
+
+                <!-- Verification Button -->
+                <div class="button-container">
+                    <a href="https://vikrahub.com/api/users/verify-email/test-token-12345/" class="verify-button" style="color: #ffffff; text-decoration: none;">
+                        Verify Email Address
+                    </a>
+                </div>
+
+                <!-- Fallback Link -->
+                <div class="fallback-section">
+                    <p class="fallback-text">
+                        <strong>Having trouble with the button?</strong> Copy and paste this link into your browser:
+                    </p>
+                    <a href="https://vikrahub.com/api/users/verify-email/test-token-12345/" class="fallback-link">https://vikrahub.com/api/users/verify-email/test-token-12345/</a>
+                </div>
+
+                <!-- Security Notice -->
+                <div class="security-notice">
+                    <p>
+                        🔒 <strong>Security Note:</strong> This verification link will expire in 3 days for your security. 
+                        If you didn't create an account with VikraHub, you can safely ignore this email.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <div class="footer-content">
+                    <p>
+                        Questions? Contact us at 
+                        <a href="mailto:support@vikrahub.com" class="footer-link">support@vikrahub.com</a>
+                    </p>
+                    <p>
+                        Visit us at 
+                        <a href="https://vikrahub.com" class="footer-link">vikrahub.com</a>
+                    </p>
+                    <div class="copyright">
+                        <p>&copy; 2025 VikraHub. All rights reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Outlook-specific spacer -->
+    <!--[if mso]>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td style="padding: 20px 0;"></td>
+        </tr>
+    </table>
+    <![endif]-->
+</body>
+</html>
