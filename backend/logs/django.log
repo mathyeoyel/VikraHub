@@ -4434,3 +4434,11 @@ INFO 2025-08-08 13:54:14,944 email_utils 22828 6248 Welcome email sent to test@e
 INFO 2025-08-08 13:54:14,945 api_views 22828 6248 Welcome email sent to test@example.com
 INFO 2025-08-08 13:54:14,945 api_views 22828 6248 Verification successful, redirecting to: http://localhost:3000/email-verified?status=success&message=Welcome+to+VikraHub%2C+testuser%21+Your+email+has+been+verified+successfully.
 INFO 2025-08-08 13:54:15,046 basehttp 22828 6248 "GET /api/users/verify-email/b403ad93-93a2-49d2-84bb-be864e441eaa/?id=1f96cba2-79af-4716-812a-ad939318e772&vscodeBrowserReqId=1754654054748 HTTP/1.1" 302 0
+INFO 2025-08-08 14:12:18,990 autoreload 22828 27340 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-08-08 14:12:20,536 autoreload 25880 23044 Watching for file changes with StatReloader
+INFO 2025-08-08 14:27:21,845 autoreload 25880 23044 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-08-08 14:27:23,496 autoreload 14136 19724 Watching for file changes with StatReloader
+INFO 2025-08-08 14:28:02,761 autoreload 14136 19724 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-08-08 14:28:04,295 autoreload 21728 16888 Watching for file changes with StatReloader
+ERROR 2025-08-08 14:30:16,702 api_views 22980 24544 Unexpected error during verification: ['“test-token-123” is not a valid UUID.']
+ERROR 2025-08-08 14:30:16,706 log 22980 24544 Internal Server Error: /api/users/verify-email/test-token-123/

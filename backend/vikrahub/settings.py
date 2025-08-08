@@ -425,6 +425,10 @@ SITE_ID = 1
 FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:3000' if DEBUG else 'https://vikrahub.com')
 print(f"🌐 Frontend URL configured: {FRONTEND_URL}")
 
+# Configure Django Allauth redirects after FRONTEND_URL is defined
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = f"{FRONTEND_URL}/email-verified?status=success&message=Your email has been verified successfully!"
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = f"{FRONTEND_URL}/email-verified?status=success&message=Your email has been verified successfully!"
+
 # Authentication backends
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -442,8 +446,6 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'  # Use HTTPS for email links
-ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = f"{FRONTEND_URL}/email-verified?status=success&message=Your email has been verified successfully!"
-ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = f"{FRONTEND_URL}/email-verified?status=success&message=Your email has been verified successfully!"
 # Disable automatic signup to use custom registration
 ACCOUNT_ADAPTER = 'core.adapters.NoSignupAccountAdapter'
 LOGIN_REDIRECT_URL = '/'
