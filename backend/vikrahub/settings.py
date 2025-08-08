@@ -436,7 +436,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Django-allauth configuration (updated to newer format)
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Enable email verification
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # Disable email verification for now
 ACCOUNT_LOGIN_METHODS = {'email'}  # Use email for login instead of username
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']  # Email and password required
 ACCOUNT_UNIQUE_EMAIL = True
@@ -444,7 +444,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
-ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False  # Don't auto-login after email confirmation
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'  # Use HTTPS for email links
 # Disable automatic signup to use custom registration
 ACCOUNT_ADAPTER = 'core.adapters.NoSignupAccountAdapter'
