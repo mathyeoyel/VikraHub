@@ -491,52 +491,6 @@ const PublicProfile = () => {
           </div>
         </div>
 
-        {/* Social Links */}
-        {(profile.facebook?.trim() || profile.instagram?.trim() || profile.twitter?.trim() || 
-          profile.linkedin?.trim() || profile.github?.trim() || profile.website?.trim()) && (
-          <div className="profile-section social-links">
-            <h3>Connect With Me</h3>
-            <div className="social-buttons">
-              {profile.website?.trim() && (
-                <a href={profile.website.startsWith('http') ? profile.website : `https://${profile.website}`} 
-                   target="_blank" rel="noopener noreferrer" className="social-link">
-                  🌐 Website
-                </a>
-              )}
-              {profile.linkedin?.trim() && (
-                <a href={profile.linkedin.startsWith('http') ? profile.linkedin : `https://linkedin.com/in/${profile.linkedin}`} 
-                   target="_blank" rel="noopener noreferrer" className="social-link">
-                  <i className={`${getSocialIcon('linkedin')} icon`}></i> LinkedIn
-                </a>
-              )}
-              {profile.github?.trim() && (
-                <a href={profile.github.startsWith('http') ? profile.github : `https://github.com/${profile.github}`} 
-                   target="_blank" rel="noopener noreferrer" className="social-link">
-                  <i className={`${getSocialIcon('github')} icon`}></i> GitHub
-                </a>
-              )}
-              {profile.twitter?.trim() && (
-                <a href={profile.twitter.startsWith('http') ? profile.twitter : `https://twitter.com/${profile.twitter}`} 
-                   target="_blank" rel="noopener noreferrer" className="social-link">
-                  <i className={`${getSocialIcon('twitter')} icon`}></i> Twitter
-                </a>
-              )}
-              {profile.instagram?.trim() && (
-                <a href={profile.instagram.startsWith('http') ? profile.instagram : `https://instagram.com/${profile.instagram}`} 
-                   target="_blank" rel="noopener noreferrer" className="social-link">
-                  <i className={`${getSocialIcon('instagram')} icon`}></i> Instagram
-                </a>
-              )}
-              {profile.facebook?.trim() && (
-                <a href={profile.facebook.startsWith('http') ? profile.facebook : `https://facebook.com/${profile.facebook}`} 
-                   target="_blank" rel="noopener noreferrer" className="social-link">
-                  <i className={`${getSocialIcon('facebook')} icon`}></i> Facebook
-                </a>
-              )}
-            </div>
-          </div>
-        )}
-
         <div className="profile-content">
           {/* Navigation Tabs */}
           <div className="profile-tabs">
@@ -583,82 +537,11 @@ const PublicProfile = () => {
                 </div>
               ) : (
                 <>
-                  {/* Featured Work Section */}
-                  {(profile.portfolio_items?.length > 0 || assets.length > 0) && (
-                    <div className="featured-work-section">
-                      <h4 className="featured-work-title">
-                        ✨ {profile.user_type === 'client' ? 'Featured Projects' : 'Featured Work'}
-                      </h4>
-                      <div className="featured-work-grid">
-                        {/* Show first portfolio item if exists */}
-                        {profile.portfolio_items?.[0] && (
-                          <div className="featured-work-item">
-                            {profile.portfolio_items[0].image && (
-                              <div className="featured-work-image">
-                                <img 
-                                  src={createPortfolioImageUrl(profile.portfolio_items[0].image)} 
-                                  alt={profile.portfolio_items[0].title}
-                                  onError={handleImageError}
-                                  data-original-src={profile.portfolio_items[0].image}
-                                />
-                                <div className="featured-work-overlay">
-                                  <span className="featured-badge">Featured</span>
-                                </div>
-                              </div>
-                            )}
-                            <div className="featured-work-content">
-                              <h5>
-                                {typeof profile.portfolio_items[0].title === 'string' ? profile.portfolio_items[0].title : 
-                                 typeof profile.portfolio_items[0].title === 'object' && profile.portfolio_items[0].title ? (profile.portfolio_items[0].title.name || 'Featured Work') : 
-                                 'Featured Work'}
-                              </h5>
-                              <p>
-                                {typeof profile.portfolio_items[0].description === 'string' ? profile.portfolio_items[0].description : 
-                                 typeof profile.portfolio_items[0].description === 'object' && profile.portfolio_items[0].description ? (profile.portfolio_items[0].description.name || 'Description available') : 
-                                 'Description available'}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                        
-                        {/* Show first asset if exists and no portfolio item */}
-                        {!profile.portfolio_items?.[0] && assets[0] && (
-                          <div className="featured-work-item">
-                            <div className="featured-work-image">
-                              {assets[0].preview_image ? (
-                                <img src={assets[0].preview_image} alt={assets[0].title} />
-                              ) : (
-                                <div className="asset-placeholder">
-                                  <i className="fas fa-cube"></i>
-                                </div>
-                              )}
-                              <div className="featured-work-overlay">
-                                <span className="featured-badge">Latest</span>
-                              </div>
-                            </div>
-                            <div className="featured-work-content">
-                              <h5>
-                                {typeof assets[0].title === 'string' ? assets[0].title : 
-                                 typeof assets[0].title === 'object' && assets[0].title ? (assets[0].title.name || 'Latest Asset') : 
-                                 'Latest Asset'}
-                              </h5>
-                              <p>
-                                {typeof assets[0].description === 'string' ? assets[0].description : 
-                                 typeof assets[0].description === 'object' && assets[0].description ? (assets[0].description.name || 'Asset description') : 
-                                 'Asset description'}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
                   {/* Manual Portfolio Items */}
                   {profile.portfolio_items && profile.portfolio_items.length > 0 && (
                     <div className="portfolio-subsection">
                       <h4 className="portfolio-subsection-title">
-                        {profile.user_type === 'client' ? 'Project History' : 'Projects'}
+                        {profile.user_type === 'client' ? 'Project History' : 'Portfolio'}
                       </h4>
                       <div className="portfolio-grid">
                         {profile.portfolio_items.map((item) => (
@@ -938,6 +821,52 @@ const PublicProfile = () => {
                 </div>
               </div>
             </div>
+
+            {/* Connect With Me - Social Links */}
+            {(profile.facebook?.trim() || profile.instagram?.trim() || profile.twitter?.trim() || 
+              profile.linkedin?.trim() || profile.github?.trim() || profile.website?.trim()) && (
+              <div className="about-subsection">
+                <h4>Connect With Me</h4>
+                <div className="social-buttons">
+                  {profile.website?.trim() && (
+                    <a href={profile.website.startsWith('http') ? profile.website : `https://${profile.website}`} 
+                       target="_blank" rel="noopener noreferrer" className="social-link">
+                      🌐 Website
+                    </a>
+                  )}
+                  {profile.linkedin?.trim() && (
+                    <a href={profile.linkedin.startsWith('http') ? profile.linkedin : `https://linkedin.com/in/${profile.linkedin}`} 
+                       target="_blank" rel="noopener noreferrer" className="social-link">
+                      <i className={`${getSocialIcon('linkedin')} icon`}></i> LinkedIn
+                    </a>
+                  )}
+                  {profile.github?.trim() && (
+                    <a href={profile.github.startsWith('http') ? profile.github : `https://github.com/${profile.github}`} 
+                       target="_blank" rel="noopener noreferrer" className="social-link">
+                      <i className={`${getSocialIcon('github')} icon`}></i> GitHub
+                    </a>
+                  )}
+                  {profile.twitter?.trim() && (
+                    <a href={profile.twitter.startsWith('http') ? profile.twitter : `https://twitter.com/${profile.twitter}`} 
+                       target="_blank" rel="noopener noreferrer" className="social-link">
+                      <i className={`${getSocialIcon('twitter')} icon`}></i> Twitter
+                    </a>
+                  )}
+                  {profile.instagram?.trim() && (
+                    <a href={profile.instagram.startsWith('http') ? profile.instagram : `https://instagram.com/${profile.instagram}`} 
+                       target="_blank" rel="noopener noreferrer" className="social-link">
+                      <i className={`${getSocialIcon('instagram')} icon`}></i> Instagram
+                    </a>
+                  )}
+                  {profile.facebook?.trim() && (
+                    <a href={profile.facebook.startsWith('http') ? profile.facebook : `https://facebook.com/${profile.facebook}`} 
+                       target="_blank" rel="noopener noreferrer" className="social-link">
+                      <i className={`${getSocialIcon('facebook')} icon`}></i> Facebook
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Skills Section */}
