@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { publicProfileAPI, assetAPI, userAPI, followAPI } from '../api';
+import { publicProfileAPI, assetAPI, userAPI, followAPI, portfolioAPI } from '../api';
 import { useAuth } from './Auth/AuthContext';
 import notificationService from '../services/notificationService';
 import PublicClientProfile from './PublicClientProfile';
@@ -36,6 +36,11 @@ const PublicProfile = () => {
         const response = await publicProfileAPI.getByUsername(username);
         setProfile(response.data);
         
+        // Debug: Log the complete profile data to see what we're getting
+        console.log('🔍 Complete profile data received:', response.data);
+        console.log('📁 Portfolio items:', response.data.portfolio_items);
+        console.log('📊 Portfolio items length:', response.data.portfolio_items?.length || 0);
+        
         // Check if the profile response already contains follow information
         if (response.data.followers_count !== undefined && 
             response.data.following_count !== undefined && 
@@ -65,6 +70,9 @@ const PublicProfile = () => {
         
         if (response.data.user?.id) {
           await fetchUserAssets(response.data.user.id);
+          console.log('🚀 About to call fetchUserPortfolioItems with user ID:', response.data.user.id);
+          await fetchUserPortfolioItems(response.data.user.id);
+          console.log('✅ Completed fetchUserPortfolioItems call');
         } else {
           console.warn('⚠️ No user ID found in profile response');
           setAssets([]);
@@ -73,6 +81,72 @@ const PublicProfile = () => {
         setError(err.response?.data?.detail || 'Profile not found');
       } finally {
         setLoading(false);
+      }
+    };
+
+    const fetchUserPortfolioItems = async (userId) => {
+      try {
+        console.log(`🎨 Fetching portfolio items for user ID: ${userId}`);
+        
+        // Check if portfolioAPI is available
+        if (!portfolioAPI || !portfolioAPI.getAll) {
+          console.error('❌ portfolioAPI.getAll is not available');
+          return;
+        }
+        
+        // Fetch all portfolio items and filter by user
+        const response = await portfolioAPI.getAll();
+        console.log(`📥 Portfolio API response:`, response);
+        
+        // Extract portfolio items from response
+        const allPortfolioItems = response.results || response.data || response || [];
+        console.log(`📋 Total portfolio items received: ${allPortfolioItems.length}`);
+        
+        // Debug: Log first few items to see structure
+        if (allPortfolioItems.length > 0) {
+          console.log(`🔬 Sample portfolio item structure:`, allPortfolioItems[0]);
+        }
+        
+        // Filter portfolio items to only show those created by this specific user
+        const userPortfolioItems = allPortfolioItems.filter(item => {
+          const isUserItem = 
+            (item.user && item.user.id === userId) ||
+            (item.user_id === userId) ||
+            (item.created_by && item.created_by.id === userId);
+          
+          if (isUserItem) {
+            console.log(`✅ Portfolio item belongs to user ${userId}:`, {
+              itemId: item.id,
+              title: item.title,
+              user: item.user,
+              user_id: item.user_id,
+              created_by: item.created_by
+            });
+          }
+          
+          return isUserItem;
+        });
+        
+        console.log(`🎯 Filtered ${userPortfolioItems.length} portfolio items for user ${userId}`);
+        
+        // Update the profile state with the fetched portfolio items
+        if (userPortfolioItems.length > 0) {
+          setProfile(prevProfile => ({
+            ...prevProfile,
+            portfolio_items: userPortfolioItems
+          }));
+          console.log('✅ Updated profile with portfolio items');
+        } else {
+          console.log('ℹ️ No portfolio items found for this user');
+        }
+        
+      } catch (err) {
+        console.error('❌ Failed to fetch user portfolio items:', err);
+        console.error('❌ Error details:', {
+          message: err.message,
+          response: err.response,
+          status: err.response?.status
+        });
       }
     };
 
@@ -482,7 +556,9 @@ const PublicProfile = () => {
                     <span className="stat-label">Following</span>
                   </div>
                   <div className="stat-item">
-                    <span className="stat-number">{assets.length}</span>
+                    <span className="stat-number">
+                      {(profile?.portfolio_items?.length || 0) + (assets?.length || 0)}
+                    </span>
                     <span className="stat-label">Projects</span>
                   </div>
                 </div>
@@ -534,8 +610,13 @@ const PublicProfile = () => {
                 </div>
               ) : (
                 <>
+                  {/* Debug portfolio items */}
+                  {console.log('🎨 Rendering works section with profile:', profile)}
+                  {console.log('📁 Portfolio items in render:', profile?.portfolio_items)}
+                  {console.log('📊 Portfolio items length in render:', profile?.portfolio_items?.length || 0)}
+                  
                   {/* Portfolio Projects Section */}
-                  {profile.portfolio_items && profile.portfolio_items.length > 0 && (
+                  {profile?.portfolio_items && profile.portfolio_items.length > 0 ? (
                     <div className="portfolio-subsection">
                       <h3 className="portfolio-subsection-title">
                         {profile.user_type === 'client' ? '📁 Client Projects' : '🎨 Portfolio Projects'}
@@ -588,9 +669,19 @@ const PublicProfile = () => {
                         ))}
                       </div>
                     </div>
+                  ) : (
+                    <div className="debug-info" style={{padding: '20px', background: '#f9f9f9', margin: '20px 0', borderRadius: '8px'}}>
+                      <h4>🐛 Portfolio Debug Info:</h4>
+                      <p><strong>Profile has portfolio_items:</strong> {profile?.portfolio_items ? 'Yes' : 'No'}</p>
+                      <p><strong>Portfolio items length:</strong> {profile?.portfolio_items?.length || 0}</p>
+                      <p><strong>Portfolio items data:</strong></p>
+                      <pre style={{background: '#eee', padding: '10px', borderRadius: '4px', fontSize: '12px'}}>
+                        {JSON.stringify(profile?.portfolio_items, null, 2)}
+                      </pre>
+                    </div>
                   )}
 
-                  {/* Marketplace Assets Section */}
+                  {/* Marketplace Assets Section - Only show if assets exist */}
                   {assets && assets.length > 0 && (
                     <div className="portfolio-subsection">
                       <h3 className="portfolio-subsection-title">
