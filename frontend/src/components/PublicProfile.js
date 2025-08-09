@@ -534,118 +534,128 @@ const PublicProfile = () => {
                 </div>
               ) : (
                 <>
-                  {/* Manual Portfolio Items */}
+                  {/* Portfolio Projects Section */}
                   {profile.portfolio_items && profile.portfolio_items.length > 0 && (
-                    <div className="portfolio-grid">
-                      {profile.portfolio_items.map((item) => (
-                        <div key={`portfolio-${item.id}`} className="portfolio-item">
-                          {item.image && (
-                            <div className="portfolio-image">
-                              <img 
-                                src={createPortfolioImageUrl(item.image)} 
-                                alt={item.title}
-                                onError={handleImageError}
-                                data-original-src={item.image}
-                              />
-                            </div>
-                          )}
-                          <div className="portfolio-content">
-                            <h4>
-                              {typeof item.title === 'string' ? item.title : 
-                               typeof item.title === 'object' && item.title ? (item.title.name || 'Project') : 
-                               'Project'}
-                            </h4>
-                            <p>
-                              {typeof item.description === 'string' ? item.description : 
-                               typeof item.description === 'object' && item.description ? (item.description.name || 'Project description') : 
-                               'Project description'}
-                            </p>
-                            {item.tags_list && item.tags_list.length > 0 && (
-                              <div className="portfolio-tags">
-                                {item.tags_list.map((tag, index) => (
-                                  <span key={index} className="portfolio-tag">
-                                    {typeof tag === 'string' ? tag : (tag?.name || tag?.title || String(tag))}
-                                  </span>
-                                ))}
+                    <div className="portfolio-subsection">
+                      <h3 className="portfolio-subsection-title">
+                        {profile.user_type === 'client' ? '📁 Client Projects' : '🎨 Portfolio Projects'}
+                      </h3>
+                      <div className="portfolio-grid">
+                        {profile.portfolio_items.map((item) => (
+                          <div key={`portfolio-${item.id}`} className="portfolio-item portfolio-project">
+                            {item.image && (
+                              <div className="portfolio-image">
+                                <img 
+                                  src={createPortfolioImageUrl(item.image)} 
+                                  alt={item.title}
+                                  onError={handleImageError}
+                                  data-original-src={item.image}
+                                />
                               </div>
                             )}
-                            {item.url && (
-                              <a 
-                                href={item.url} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="portfolio-link"
-                              >
-                                View Project →
-                              </a>
-                            )}
+                            <div className="portfolio-content">
+                              <h4>
+                                {typeof item.title === 'string' ? item.title : 
+                                 typeof item.title === 'object' && item.title ? (item.title.name || 'Project') : 
+                                 'Project'}
+                              </h4>
+                              <p>
+                                {typeof item.description === 'string' ? item.description : 
+                                 typeof item.description === 'object' && item.description ? (item.description.name || 'Project description') : 
+                                 'Project description'}
+                              </p>
+                              {item.tags_list && item.tags_list.length > 0 && (
+                                <div className="portfolio-tags">
+                                  {item.tags_list.map((tag, index) => (
+                                    <span key={index} className="portfolio-tag">
+                                      {typeof tag === 'string' ? tag : (tag?.name || tag?.title || String(tag))}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                              {item.url && (
+                                <a 
+                                  href={item.url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="portfolio-link"
+                                >
+                                  View Project →
+                                </a>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                   )}
 
-                  {/* Marketplace Assets */}
+                  {/* Marketplace Assets Section */}
                   {assets && assets.length > 0 && (
-                    <div className="portfolio-grid" style={{ marginTop: profile.portfolio_items && profile.portfolio_items.length > 0 ? '20px' : '0' }}>
-                      {assets.map((asset) => (
-                        <div key={`asset-${asset.id}`} className="portfolio-item asset-item">
-                          <div className="portfolio-image">
-                            {asset.preview_image ? (
-                              <img 
-                                src={asset.preview_image} 
-                                alt={asset.title}
-                                onError={(e) => {
-                                  e.target.style.display = 'none';
-                                  e.target.nextSibling.style.display = 'flex';
-                                }}
-                              />
-                            ) : null}
-                            <div 
-                              className="asset-placeholder"
-                              style={{display: asset.preview_image ? 'none' : 'flex'}}
-                            >
-                              <i className="fas fa-cube"></i>
+                    <div className="portfolio-subsection">
+                      <h3 className="portfolio-subsection-title">
+                        🛒 Marketplace Assets
+                      </h3>
+                      <div className="portfolio-grid">
+                        {assets.map((asset) => (
+                          <div key={`asset-${asset.id}`} className="portfolio-item asset-item">
+                            <div className="portfolio-image">
+                              {asset.preview_image ? (
+                                <img 
+                                  src={asset.preview_image} 
+                                  alt={asset.title}
+                                  onError={(e) => {
+                                    e.target.style.display = 'none';
+                                    e.target.nextSibling.style.display = 'flex';
+                                  }}
+                                />
+                              ) : null}
+                              <div 
+                                className="asset-placeholder"
+                                style={{display: asset.preview_image ? 'none' : 'flex'}}
+                              >
+                                <i className="fas fa-cube"></i>
+                              </div>
                             </div>
-                          </div>
-                          <div className="portfolio-content">
-                            <h4>{typeof asset.title === 'string' ? asset.title : 
-                                 typeof asset.title === 'object' && asset.title ? (asset.title.name || 'Untitled Asset') : 
-                                 'Untitled Asset'}</h4>
-                            <p>{typeof asset.description === 'string' ? asset.description : 
-                               typeof asset.description === 'object' && asset.description ? (asset.description.name || 'No description available') : 
-                               'No description available'}</p>
-                            <div className="asset-meta">
-                              <span className="asset-type-badge">
-                                {typeof asset.category === 'object' && asset.category ? asset.category.name :
-                                 typeof asset.category === 'string' ? asset.category :
-                                 typeof asset.asset_type === 'string' ? asset.asset_type : 
-                                 typeof asset.asset_type === 'object' ? (asset.asset_type.name || 'Unknown') : 
-                                 'Unknown'}
-                              </span>
-                              {asset.price && (
-                                <span className="asset-price">${asset.price}</span>
-                              )}
-                            </div>
-                            <div className="asset-stats">
-                              {asset.download_count > 0 && (
-                                <span className="stat">
-                                  <i className="fas fa-download"></i>
-                                  {asset.download_count}
+                            <div className="portfolio-content">
+                              <h4>{typeof asset.title === 'string' ? asset.title : 
+                                   typeof asset.title === 'object' && asset.title ? (asset.title.name || 'Untitled Asset') : 
+                                   'Untitled Asset'}</h4>
+                              <p>{typeof asset.description === 'string' ? asset.description : 
+                                 typeof asset.description === 'object' && asset.description ? (asset.description.name || 'No description available') : 
+                                 'No description available'}</p>
+                              <div className="asset-meta">
+                                <span className="asset-type-badge">
+                                  {typeof asset.category === 'object' && asset.category ? asset.category.name :
+                                   typeof asset.category === 'string' ? asset.category :
+                                   typeof asset.asset_type === 'string' ? asset.asset_type : 
+                                   typeof asset.asset_type === 'object' ? (asset.asset_type.name || 'Unknown') : 
+                                   'Unknown'}
                                 </span>
-                              )}
-                              <span className="stat">
-                                <i className="fas fa-calendar"></i>
-                                {new Date(asset.created_at).toLocaleDateString()}
-                              </span>
+                                {asset.price && (
+                                  <span className="asset-price">${asset.price}</span>
+                                )}
+                              </div>
+                              <div className="asset-stats">
+                                {asset.download_count > 0 && (
+                                  <span className="stat">
+                                    <i className="fas fa-download"></i>
+                                    {asset.download_count}
+                                  </span>
+                                )}
+                                <span className="stat">
+                                  <i className="fas fa-calendar"></i>
+                                  {new Date(asset.created_at).toLocaleDateString()}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                   )}
 
-                  {/* No Portfolio Content */}
+                  {/* No Content State */}
                   {(!profile.portfolio_items || profile.portfolio_items.length === 0) && 
                    (!assets || assets.length === 0) && (
                     <div className="no-content-state">

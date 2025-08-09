@@ -207,33 +207,33 @@
 }
 
 .follow-btn {
-  background: #4299e1;
+  background: #ffa000;
   color: white;
 }
 
 .follow-btn:hover {
-  background: #3182ce;
+  background: #e3a127;
   transform: translateY(-1px);
 }
 
 .message-btn {
-  background: #48bb78;
+  background: #000223;
   color: white;
 }
 
 .message-btn:hover {
-  background: #38a169;
+  background: #1a1a3a;
   transform: translateY(-1px);
 }
 
 .share-btn {
-  background: #ed8936;
+  background: #7c521b;
   color: white;
   width: 100%;
 }
 
 .share-btn:hover {
-  background: #dd6b20;
+  background: #654213;
   transform: translateY(-1px);
 }
 
@@ -786,7 +786,7 @@
 
 /* Portfolio Subsections */
 .portfolio-subsection {
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
 }
 
 .portfolio-subsection:last-child {
@@ -794,21 +794,66 @@
 }
 
 .portfolio-subsection-title {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: #2c3e50;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #e9ecef;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 3px solid #ffa000;
+  position: relative;
+}
+
+.portfolio-subsection-title::before {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: #000223;
+}
+
+/* Portfolio Project Items - Enhanced styling for prominence */
+.portfolio-item.portfolio-project {
+  border: 2px solid #ffa000;
+  background: linear-gradient(135deg, #fffbf0, #ffffff);
+  position: relative;
+}
+
+.portfolio-item.portfolio-project::before {
+  content: '⭐';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #ffa000;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  z-index: 1;
+}
+
+.portfolio-item.portfolio-project:hover {
+  border-color: #e3a127;
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(255, 160, 0, 0.2);
+}
+
+.portfolio-project .portfolio-content h4 {
+  color: #000223;
+  font-weight: 700;
 }
 
 /* Asset-specific styles within portfolio */
 .portfolio-item.asset-item {
   border: 1px solid #e3f2fd;
+  background: #ffffff;
 }
 
 .portfolio-item.asset-item:hover {
   border-color: #1976d2;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(25, 118, 210, 0.15);
 }
 
 .asset-placeholder {
