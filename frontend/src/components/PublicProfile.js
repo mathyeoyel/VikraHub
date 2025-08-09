@@ -396,7 +396,7 @@ const PublicProfile = () => {
           
           {/* Profile Header with Avatar */}
           <div className="profile-header">
-            <div className="profile-avatar-section">
+            <div className="profile-layout">
               <div className="profile-avatar">
                 {profile.avatar ? (
                   <img src={profile.avatar} alt={profile.full_name} />
@@ -407,84 +407,84 @@ const PublicProfile = () => {
                 )}
               </div>
               
-              {/* Action Buttons */}
-              <div className="profile-actions">
-                {isAuthenticated && user?.username !== username && (
-                  <button className="action-btn follow-btn" onClick={handleFollow}>
-                    {isFollowing ? (
-                      <>
-                        <span className="btn-icon">✓</span>
-                        Following
-                      </>
-                    ) : (
-                      <>
-                        <span className="btn-icon">+</span>
-                        Follow
-                      </>
-                    )}
-                  </button>
+              <div className="profile-info">
+                {/* User's Name */}
+                <h1 className="profile-name">
+                  {typeof profile.full_name === 'string' ? profile.full_name : 
+                   typeof profile.full_name === 'object' && profile.full_name ? (profile.full_name.name || 'Unknown User') : 
+                   'Unknown User'}
+                </h1>
+                
+                {/* Bio */}
+                {profile.bio?.trim() && (
+                  <p className="profile-bio">
+                    {typeof profile.bio === 'string' ? profile.bio : 
+                     typeof profile.bio === 'object' && profile.bio ? (profile.bio.name || profile.bio.description || '') : 
+                     ''}
+                  </p>
                 )}
-                {isAuthenticated && user?.username !== username && (
-                  <button 
-                    className="action-btn message-btn"
-                    onClick={handleMessage}
-                    title={`Send a message to ${profile.full_name || username}`}
-                  >
-                    <span className="btn-icon"><i className="fas fa-comment icon"></i></span>
-                    Message
-                  </button>
-                )}
-                <button className="action-btn share-btn" onClick={handleShare}>
-                  <span className="btn-icon"><i className="fas fa-share icon"></i></span>
-                  Share
-                </button>
-              </div>
-            </div>
-            
-            <div className="profile-info">
-              <h1 className="profile-name">
-                {typeof profile.full_name === 'string' ? profile.full_name : 
-                 typeof profile.full_name === 'object' && profile.full_name ? (profile.full_name.name || 'Unknown User') : 
-                 'Unknown User'}
-              </h1>
-              <p className="username">@{profile.user?.username || 'unknown'}</p>
-              
-              {/* Headline/Tagline */}
-              {profile.headline && (
-                <p className="profile-headline">
-                  {typeof profile.headline === 'string' ? profile.headline : 
-                   typeof profile.headline === 'object' && profile.headline ? (profile.headline.name || 'Professional') : 
-                   'Professional'}
-                </p>
-              )}
-              
-              <div className="profile-meta">
+                
+                {/* Creator Type */}
                 <div className="user-type">
                   <span className="user-type-icon"><i className={`${getUserTypeIcon(profile.user_type)} icon`}></i></span>
                   <span className="user-type-label">{getUserTypeLabel(profile.user_type)}</span>
                 </div>
-                <p className="member-since">
-                  Member since {formatDate(profile.member_since)}
-                </p>
-              </div>
-              
-              {/* Stats Row */}
-              <div className="profile-stats">
-                <div className="stat-item">
-                  <span className="stat-number">
-                    {followStatsLoading ? '...' : followerCount}
-                  </span>
-                  <span className="stat-label">Followers</span>
+                
+                {/* Action Buttons */}
+                <div className="profile-actions">
+                  <div className="action-buttons-row">
+                    {isAuthenticated && user?.username !== username && (
+                      <button className="action-btn follow-btn" onClick={handleFollow}>
+                        {isFollowing ? (
+                          <>
+                            <span className="btn-icon">✓</span>
+                            Following
+                          </>
+                        ) : (
+                          <>
+                            <span className="btn-icon">+</span>
+                            Follow
+                          </>
+                        )}
+                      </button>
+                    )}
+                    {isAuthenticated && user?.username !== username && (
+                      <button 
+                        className="action-btn message-btn"
+                        onClick={handleMessage}
+                        title={`Send a message to ${profile.full_name || username}`}
+                      >
+                        <span className="btn-icon"><i className="fas fa-comment icon"></i></span>
+                        Message
+                      </button>
+                    )}
+                  </div>
+                  <div className="action-buttons-full">
+                    <button className="action-btn share-btn" onClick={handleShare}>
+                      <span className="btn-icon"><i className="fas fa-share icon"></i></span>
+                      Share
+                    </button>
+                  </div>
                 </div>
-                <div className="stat-item">
-                  <span className="stat-number">
-                    {followStatsLoading ? '...' : followingCount}
-                  </span>
-                  <span className="stat-label">Following</span>
-                </div>
-                <div className="stat-item">
-                  <span className="stat-number">{assets.length}</span>
-                  <span className="stat-label">Projects</span>
+                
+                {/* Stats Row */}
+                <div className="profile-stats">
+                  <div className="stat-item">
+                    <span className="stat-number">
+                      {followStatsLoading ? '...' : followerCount}
+                    </span>
+                    <span className="stat-label">Followers</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-number">
+                      {followStatsLoading ? '...' : followingCount}
+                    </span>
+                    <span className="stat-label">Following</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-number">{assets.length}</span>
+                    <span className="stat-label">Projects</span>
+                  </div>
                 </div>
               </div>
             </div>

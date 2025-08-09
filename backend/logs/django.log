@@ -4442,3 +4442,13 @@ INFO 2025-08-08 14:28:02,761 autoreload 14136 19724 C:\Users\hp\Downloads\Projec
 INFO 2025-08-08 14:28:04,295 autoreload 21728 16888 Watching for file changes with StatReloader
 ERROR 2025-08-08 14:30:16,702 api_views 22980 24544 Unexpected error during verification: ['“test-token-123” is not a valid UUID.']
 ERROR 2025-08-08 14:30:16,706 log 22980 24544 Internal Server Error: /api/users/verify-email/test-token-123/
+INFO 2025-08-08 14:36:04,739 autoreload 21728 16888 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-08-08 14:36:06,198 autoreload 23800 19644 Watching for file changes with StatReloader
+INFO 2025-08-08 16:02:11,855 autoreload 23800 19644 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-08-08 16:02:13,739 autoreload 29380 24632 Watching for file changes with StatReloader
+INFO 2025-08-08 16:04:27,790 autoreload 29380 24632 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-08-08 16:04:28,933 autoreload 6908 15248 Watching for file changes with StatReloader
+INFO 2025-08-08 16:05:17,342 autoreload 6908 15248 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\core\serializers.py changed, reloading.
+INFO 2025-08-08 16:05:18,482 autoreload 15532 8724 Watching for file changes with StatReloader
+INFO 2025-08-08 16:26:42,850 autoreload 15532 8724 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
+INFO 2025-08-08 16:26:44,629 autoreload 8996 22204 Watching for file changes with StatReloader
