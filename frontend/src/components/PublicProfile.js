@@ -109,19 +109,36 @@ const PublicProfile = () => {
         
         // Filter portfolio items to only show those created by this specific user
         const userPortfolioItems = allPortfolioItems.filter(item => {
+          // Debug: Log each item's user identification fields
+          console.log(`🔍 Checking portfolio item ${item.id}:`, {
+            itemId: item.id,
+            title: item.title,
+            user: item.user,
+            user_id: item.user_id,
+            created_by: item.created_by,
+            author: item.author,
+            owner: item.owner,
+            creator: item.creator,
+            // Show all keys to see what fields are available
+            allKeys: Object.keys(item)
+          });
+          
           const isUserItem = 
             (item.user && item.user.id === userId) ||
             (item.user_id === userId) ||
-            (item.created_by && item.created_by.id === userId);
+            (item.created_by && item.created_by.id === userId) ||
+            (item.author && item.author.id === userId) ||
+            (item.owner && item.owner.id === userId) ||
+            (item.creator && item.creator.id === userId);
           
           if (isUserItem) {
             console.log(`✅ Portfolio item belongs to user ${userId}:`, {
               itemId: item.id,
               title: item.title,
-              user: item.user,
-              user_id: item.user_id,
-              created_by: item.created_by
+              matchingField: 'Found match!'
             });
+          } else {
+            console.log(`❌ Portfolio item ${item.id} does NOT belong to user ${userId}`);
           }
           
           return isUserItem;
@@ -129,8 +146,18 @@ const PublicProfile = () => {
         
         console.log(`🎯 Filtered ${userPortfolioItems.length} portfolio items for user ${userId}`);
         
+        // TEMPORARY: Show all portfolio items for debugging (remove this later)
+        console.log('🚧 TEMPORARY DEBUG: Showing all portfolio items regardless of ownership');
+        const tempAllItems = allPortfolioItems; // Show all items temporarily
+        
         // Update the profile state with the fetched portfolio items
-        if (userPortfolioItems.length > 0) {
+        if (tempAllItems.length > 0) {
+          setProfile(prevProfile => ({
+            ...prevProfile,
+            portfolio_items: tempAllItems // Using all items temporarily for debugging
+          }));
+          console.log('✅ Updated profile with portfolio items (showing all for debug)');
+        } else if (userPortfolioItems.length > 0) {
           setProfile(prevProfile => ({
             ...prevProfile,
             portfolio_items: userPortfolioItems
