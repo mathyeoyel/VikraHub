@@ -651,14 +651,63 @@ const PublicProfile = () => {
                       <div className="portfolio-grid">
                         {profile.portfolio_items.map((item) => (
                           <div key={`portfolio-${item.id}`} className="portfolio-item portfolio-project">
-                            {item.image && (
+                            {/* Debug image field */}
+                            {console.log(`🖼️ Portfolio item ${item.id} image debug:`, {
+                              image: item.image,
+                              preview_image: item.preview_image,
+                              thumbnail: item.thumbnail,
+                              photo: item.photo,
+                              picture: item.picture,
+                              imageUrl: item.imageUrl,
+                              media: item.media,
+                              allKeys: Object.keys(item)
+                            })}
+                            
+                            {/* Try multiple possible image field names */}
+                            {(item.image || item.preview_image || item.thumbnail || item.photo || item.picture) && (
                               <div className="portfolio-image">
                                 <img 
-                                  src={createPortfolioImageUrl(item.image)} 
+                                  src={(() => {
+                                    const imageField = item.image || item.preview_image || item.thumbnail || item.photo || item.picture;
+                                    const imageUrl = createPortfolioImageUrl(imageField);
+                                    console.log(`🖼️ Creating image URL for portfolio item ${item.id}:`, {
+                                      originalField: imageField,
+                                      processedUrl: imageUrl
+                                    });
+                                    return imageUrl;
+                                  })()} 
                                   alt={item.title}
-                                  onError={handleImageError}
-                                  data-original-src={item.image}
+                                  onError={(e) => {
+                                    console.error(`❌ Failed to load portfolio image:`, {
+                                      src: e.target.src,
+                                      originalSrc: e.target.getAttribute('data-original-src'),
+                                      item: item
+                                    });
+                                    handleImageError(e);
+                                  }}
+                                  data-original-src={item.image || item.preview_image || item.thumbnail}
                                 />
+                              </div>
+                            )}
+                            
+                            {/* Show placeholder if no image */}
+                            {!(item.image || item.preview_image || item.thumbnail || item.photo || item.picture) && (
+                              <div className="portfolio-image">
+                                <div className="portfolio-placeholder" style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  height: '200px',
+                                  background: '#f5f5f5',
+                                  border: '2px dashed #ddd',
+                                  borderRadius: '8px',
+                                  color: '#999'
+                                }}>
+                                  <div style={{textAlign: 'center'}}>
+                                    <i className="fas fa-image" style={{fontSize: '2rem', marginBottom: '8px'}}></i>
+                                    <p style={{margin: 0, fontSize: '14px'}}>No image uploaded</p>
+                                  </div>
+                                </div>
                               </div>
                             )}
                             <div className="portfolio-content">
