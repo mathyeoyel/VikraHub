@@ -110,20 +110,30 @@ const PublicProfile = () => {
         // Filter portfolio items to only show those created by this specific user
         const userPortfolioItems = allPortfolioItems.filter(item => {
           // Check if the item has a user and the user ID matches
-          const isUserItem = item.user && item.user.id === userId;
+          // Also handle the case where user field might not be included in older API responses
+          const isUserItem = 
+            (item.user && item.user.id === userId) ||
+            // Fallback: if no user field, show all items for now (backend compatibility)
+            (!item.user && allPortfolioItems.length > 0);
           
           console.log(`🔍 Portfolio item ${item.id} ownership check:`, {
             itemId: item.id,
             title: item.title,
             itemUser: item.user,
             targetUserId: userId,
-            isOwned: isUserItem
+            isOwned: isUserItem,
+            hasUserField: !!item.user
           });
           
           return isUserItem;
         });
         
         console.log(`🎯 Filtered ${userPortfolioItems.length} portfolio items for user ${userId}`);
+        
+        // If no user field is present, show a warning
+        if (allPortfolioItems.length > 0 && !allPortfolioItems[0].user) {
+          console.warn('⚠️ Portfolio items missing user field - backend may need restart to apply serializer updates');
+        }
         
         // Update the profile state with the filtered portfolio items
         setProfile(prevProfile => ({

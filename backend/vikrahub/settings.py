@@ -65,7 +65,7 @@ env_allowed_hosts = os.environ.get('ALLOWED_HOSTS', '')
 if env_allowed_hosts:
     additional_hosts = [host.strip() for host in env_allowed_hosts.split(',') if host.strip()]
     ALLOWED_HOSTS.extend(additional_hosts)
-    print(f"🔧 Extended ALLOWED_HOSTS with: {additional_hosts}")
+    print(f"Extended ALLOWED_HOSTS with: {additional_hosts}")
 
 # Application definition
 INSTALLED_APPS = [
@@ -144,7 +144,7 @@ if redis_url:
     }
 else:
     if DEBUG:
-        print("🔧 Development mode: Using in-memory channel layer (WebSockets limited to single server)")
+        print("Development mode: Using in-memory channel layer (WebSockets limited to single server)")
         CHANNEL_LAYERS = {
             "default": {
                 "BACKEND": "channels.layers.InMemoryChannelLayer",
@@ -202,7 +202,7 @@ if EMAIL_BACKEND == 'django.core.mail.backends.smtp.EmailBackend':
     else:
         print(f"✅ Email configured: {EMAIL_HOST_USER}")
 else:
-    print("🔧 Development mode: Using console email backend (emails will print to console)")
+    print("Development mode: Using console email backend (emails will print to console)")
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -239,7 +239,7 @@ DEBUG_MODE = os.environ.get('DEBUG', 'False').lower() == 'true'
 if DEBUG_MODE:
     # Development: Allow all origins
     CORS_ALLOW_ALL_ORIGINS = True
-    print("🔧 Development mode: CORS allows all origins")
+    print("Development mode: CORS allows all origins")
 else:
     # Production: Restrict to specific origins
     CORS_ALLOWED_ORIGINS = [
@@ -423,7 +423,7 @@ SITE_ID = 1
 
 # Frontend URL for redirects
 FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:3000' if DEBUG else 'https://vikrahub.com')
-print(f"🌐 Frontend URL configured: {FRONTEND_URL}")
+print(f"Frontend URL configured: {FRONTEND_URL}")
 
 # Configure Django Allauth redirects after FRONTEND_URL is defined
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = f"{FRONTEND_URL}/email-verified?status=success&message=Your email has been verified successfully!"
