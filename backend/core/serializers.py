@@ -364,11 +364,23 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class PortfolioItemSerializer(serializers.ModelSerializer):
     tags_list = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
+    user = serializers.SerializerMethodField()
     
     class Meta:
         model = PortfolioItem
-        fields = ['id', 'title', 'description', 'image', 'url', 'tags', 'tags_list', 'date']
+        fields = ['id', 'user', 'title', 'description', 'image', 'url', 'tags', 'tags_list', 'date']
         read_only_fields = ['id', 'date']
+    
+    def get_user(self, obj):
+        """Include user information for ownership detection"""
+        if obj.user:
+            return {
+                'id': obj.user.id,
+                'username': obj.user.username,
+                'first_name': obj.user.first_name,
+                'last_name': obj.user.last_name,
+            }
+        return None
     
     def get_tags_list(self, obj):
         return obj.get_tags_list()

@@ -109,60 +109,30 @@ const PublicProfile = () => {
         
         // Filter portfolio items to only show those created by this specific user
         const userPortfolioItems = allPortfolioItems.filter(item => {
-          // Debug: Log each item's user identification fields
-          console.log(`🔍 Checking portfolio item ${item.id}:`, {
+          // Check if the item has a user and the user ID matches
+          const isUserItem = item.user && item.user.id === userId;
+          
+          console.log(`🔍 Portfolio item ${item.id} ownership check:`, {
             itemId: item.id,
             title: item.title,
-            user: item.user,
-            user_id: item.user_id,
-            created_by: item.created_by,
-            author: item.author,
-            owner: item.owner,
-            creator: item.creator,
-            // Show all keys to see what fields are available
-            allKeys: Object.keys(item)
+            itemUser: item.user,
+            targetUserId: userId,
+            isOwned: isUserItem
           });
-          
-          const isUserItem = 
-            (item.user && item.user.id === userId) ||
-            (item.user_id === userId) ||
-            (item.created_by && item.created_by.id === userId) ||
-            (item.author && item.author.id === userId) ||
-            (item.owner && item.owner.id === userId) ||
-            (item.creator && item.creator.id === userId);
-          
-          if (isUserItem) {
-            console.log(`✅ Portfolio item belongs to user ${userId}:`, {
-              itemId: item.id,
-              title: item.title,
-              matchingField: 'Found match!'
-            });
-          } else {
-            console.log(`❌ Portfolio item ${item.id} does NOT belong to user ${userId}`);
-          }
           
           return isUserItem;
         });
         
         console.log(`🎯 Filtered ${userPortfolioItems.length} portfolio items for user ${userId}`);
         
-        // TEMPORARY: Show all portfolio items for debugging (remove this later)
-        console.log('🚧 TEMPORARY DEBUG: Showing all portfolio items regardless of ownership');
-        const tempAllItems = allPortfolioItems; // Show all items temporarily
+        // Update the profile state with the filtered portfolio items
+        setProfile(prevProfile => ({
+          ...prevProfile,
+          portfolio_items: userPortfolioItems
+        }));
         
-        // Update the profile state with the fetched portfolio items
-        if (tempAllItems.length > 0) {
-          setProfile(prevProfile => ({
-            ...prevProfile,
-            portfolio_items: tempAllItems // Using all items temporarily for debugging
-          }));
-          console.log('✅ Updated profile with portfolio items (showing all for debug)');
-        } else if (userPortfolioItems.length > 0) {
-          setProfile(prevProfile => ({
-            ...prevProfile,
-            portfolio_items: userPortfolioItems
-          }));
-          console.log('✅ Updated profile with portfolio items');
+        if (userPortfolioItems.length > 0) {
+          console.log('✅ Updated profile with user-specific portfolio items');
         } else {
           console.log('ℹ️ No portfolio items found for this user');
         }
@@ -653,6 +623,8 @@ const PublicProfile = () => {
                           <div key={`portfolio-${item.id}`} className="portfolio-item portfolio-project">
                             {/* Debug image field */}
                             {console.log(`🖼️ Portfolio item ${item.id} image debug:`, {
+                              id: item.id,
+                              title: item.title,
                               image: item.image,
                               preview_image: item.preview_image,
                               thumbnail: item.thumbnail,
@@ -663,53 +635,42 @@ const PublicProfile = () => {
                               allKeys: Object.keys(item)
                             })}
                             
-                            {/* Try multiple possible image field names */}
-                            {(item.image || item.preview_image || item.thumbnail || item.photo || item.picture) && (
-                              <div className="portfolio-image">
+                            {/* Image section - show either image or placeholder */}
+                            <div className="portfolio-image">
+                              {item.image ? (
                                 <img 
-                                  src={(() => {
-                                    const imageField = item.image || item.preview_image || item.thumbnail || item.photo || item.picture;
-                                    const imageUrl = createPortfolioImageUrl(imageField);
-                                    console.log(`🖼️ Creating image URL for portfolio item ${item.id}:`, {
-                                      originalField: imageField,
-                                      processedUrl: imageUrl
-                                    });
-                                    return imageUrl;
-                                  })()} 
+                                  src={createPortfolioImageUrl(item.image)} 
                                   alt={item.title}
                                   onError={(e) => {
-                                    console.error(`❌ Failed to load portfolio image:`, {
+                                    console.error(`❌ Failed to load portfolio image for item ${item.id}:`, {
                                       src: e.target.src,
-                                      originalSrc: e.target.getAttribute('data-original-src'),
+                                      originalImage: item.image,
                                       item: item
                                     });
                                     handleImageError(e);
                                   }}
-                                  data-original-src={item.image || item.preview_image || item.thumbnail}
+                                  data-original-src={item.image}
                                 />
-                              </div>
-                            )}
-                            
-                            {/* Show placeholder if no image */}
-                            {!(item.image || item.preview_image || item.thumbnail || item.photo || item.picture) && (
-                              <div className="portfolio-image">
+                              ) : (
                                 <div className="portfolio-placeholder" style={{
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
                                   height: '200px',
-                                  background: '#f5f5f5',
+                                  background: 'linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%)',
                                   border: '2px dashed #ddd',
                                   borderRadius: '8px',
                                   color: '#999'
                                 }}>
                                   <div style={{textAlign: 'center'}}>
-                                    <i className="fas fa-image" style={{fontSize: '2rem', marginBottom: '8px'}}></i>
-                                    <p style={{margin: 0, fontSize: '14px'}}>No image uploaded</p>
+                                    <i className="fas fa-image" style={{fontSize: '2.5rem', marginBottom: '12px', color: '#ccc'}}></i>
+                                    <p style={{margin: 0, fontSize: '14px', fontWeight: '500'}}>No preview image</p>
+                                    <p style={{margin: '4px 0 0 0', fontSize: '12px', color: '#bbb'}}>Portfolio item</p>
                                   </div>
                                 </div>
-                              </div>
-                            )}
+                              )}
+                            </div>
+                            
                             <div className="portfolio-content">
                               <h4>
                                 {typeof item.title === 'string' ? item.title : 
@@ -746,14 +707,20 @@ const PublicProfile = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="debug-info" style={{padding: '20px', background: '#f9f9f9', margin: '20px 0', borderRadius: '8px'}}>
-                      <h4>🐛 Portfolio Debug Info:</h4>
-                      <p><strong>Profile has portfolio_items:</strong> {profile?.portfolio_items ? 'Yes' : 'No'}</p>
-                      <p><strong>Portfolio items length:</strong> {profile?.portfolio_items?.length || 0}</p>
-                      <p><strong>Portfolio items data:</strong></p>
-                      <pre style={{background: '#eee', padding: '10px', borderRadius: '4px', fontSize: '12px'}}>
-                        {JSON.stringify(profile?.portfolio_items, null, 2)}
-                      </pre>
+                    <div className="no-content-message" style={{
+                      padding: '40px 20px',
+                      textAlign: 'center',
+                      background: '#f9f9f9',
+                      borderRadius: '12px',
+                      border: '2px dashed #ddd'
+                    }}>
+                      <div style={{marginBottom: '16px'}}>
+                        <i className="fas fa-folder-open" style={{fontSize: '3rem', color: '#ccc'}}></i>
+                      </div>
+                      <h4 style={{margin: '0 0 8px 0', color: '#666'}}>No Portfolio Items</h4>
+                      <p style={{margin: 0, color: '#999', fontSize: '14px'}}>
+                        This user hasn't uploaded any portfolio projects yet.
+                      </p>
                     </div>
                   )}
 

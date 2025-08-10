@@ -353,6 +353,10 @@ class PortfolioItemViewSet(viewsets.ModelViewSet):
     queryset = PortfolioItem.objects.all()
     serializer_class = PortfolioItemSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    def perform_create(self, serializer):
+        """Set the user when creating a portfolio item"""
+        serializer.save(user=self.request.user)
 
 class BlogPostViewSet(viewsets.ModelViewSet):
     serializer_class = BlogPostSerializer
