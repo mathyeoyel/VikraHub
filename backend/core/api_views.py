@@ -357,6 +357,15 @@ class PortfolioItemViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Set the user when creating a portfolio item"""
         serializer.save(user=self.request.user)
+    
+    def perform_update(self, serializer):
+        """Ensure user is preserved when updating a portfolio item"""
+        # If the item doesn't have a user, set it to the current user
+        instance = serializer.instance
+        if not instance.user:
+            serializer.save(user=self.request.user)
+        else:
+            serializer.save()
 
 class BlogPostViewSet(viewsets.ModelViewSet):
     serializer_class = BlogPostSerializer

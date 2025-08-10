@@ -119,3 +119,33 @@ def get_responsive_image_urls(url, sizes=[400, 800, 1200]):
         responsive_urls[size] = get_cloudinary_transformation_url(url, transformations)
     
     return responsive_urls
+
+
+def upload_to_cloudinary(file, folder='uploads'):
+    """
+    Upload a file to Cloudinary and return the URL
+    
+    Args:
+        file: Django UploadedFile or similar file object
+        folder (str): Cloudinary folder to upload to
+    
+    Returns:
+        str: Cloudinary URL of uploaded file
+    """
+    try:
+        import cloudinary.uploader
+        
+        # Upload to Cloudinary
+        result = cloudinary.uploader.upload(
+            file,
+            folder=folder,
+            quality='auto',
+            format='auto'
+        )
+        
+        return result.get('secure_url', result.get('url'))
+        
+    except ImportError:
+        raise Exception("Cloudinary library not installed. Install with: pip install cloudinary")
+    except Exception as e:
+        raise Exception(f"Failed to upload to Cloudinary: {str(e)}")

@@ -363,12 +363,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 class PortfolioItemSerializer(serializers.ModelSerializer):
     tags_list = serializers.SerializerMethodField()
-    image = serializers.SerializerMethodField()
+    image = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    image_file = serializers.ImageField(write_only=True, required=False)
     user = serializers.SerializerMethodField()
     
     class Meta:
         model = PortfolioItem
-        fields = ['id', 'user', 'title', 'description', 'image', 'url', 'tags', 'tags_list', 'date']
+        fields = ['id', 'user', 'title', 'description', 'image', 'image_file', 'url', 'tags', 'tags_list', 'date']
         read_only_fields = ['id', 'date']
     
     def get_user(self, obj):
@@ -385,24 +386,39 @@ class PortfolioItemSerializer(serializers.ModelSerializer):
     def get_tags_list(self, obj):
         return obj.get_tags_list()
     
-    def get_image(self, obj):
-        """Ensure image URL is properly formatted"""
-        if not obj.image:
-            return None
+    def create(self, validated_data):
+        """Handle image upload during creation"""
+        image_file = validated_data.pop('image_file', None)
+        instance = super().create(validated_data)
         
-        # If it's already a full URL (starts with http/https), return as is
-        if obj.image.startswith(('http://', 'https://')):
-            return obj.image
+        if image_file:
+            # Upload to Cloudinary and save URL
+            from .cloudinary_utils import upload_to_cloudinary
+            try:
+                cloudinary_url = upload_to_cloudinary(image_file, folder='portfolio')
+                instance.image = cloudinary_url
+                instance.save()
+            except Exception as e:
+                print(f"Failed to upload portfolio image: {e}")
         
-        # If it's a Cloudinary URL path, construct the full URL
-        if obj.image.startswith('/'):
-            return f"https://res.cloudinary.com/your-cloud-name{obj.image}"
+        return instance
+    
+    def update(self, instance, validated_data):
+        """Handle image upload during update"""
+        image_file = validated_data.pop('image_file', None)
+        instance = super().update(instance, validated_data)
         
-        # If it's just a filename, return None to use fallback
-        if '/' not in obj.image and '.' in obj.image:
-            return None
+        if image_file:
+            # Upload to Cloudinary and save URL
+            from .cloudinary_utils import upload_to_cloudinary
+            try:
+                cloudinary_url = upload_to_cloudinary(image_file, folder='portfolio')
+                instance.image = cloudinary_url
+                instance.save()
+            except Exception as e:
+                print(f"Failed to upload portfolio image: {e}")
         
-        return obj.image
+        return instance
 
 class PublicUserProfileSerializer(serializers.ModelSerializer):
     """Serializer for public user profiles (only public information)"""

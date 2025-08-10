@@ -157,7 +157,7 @@ const UploadWork = () => {
       
       // Add preview image if present (only if it's a new file, not a URL)
       if (workData.previewImage && workData.previewImage instanceof File) {
-        formData.append('image', workData.previewImage);
+        formData.append('image_file', workData.previewImage);
       }
       
       // For editing: only include image if user uploaded a new one
