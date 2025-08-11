@@ -4457,3 +4457,5 @@ WARNING 2025-08-11 16:28:16,404 log 12612 4724 Forbidden: /api/portfolio/10/
 WARNING 2025-08-11 16:28:16,407 log 12612 4724 Forbidden: /api/portfolio/10/
 WARNING 2025-08-11 16:28:16,409 log 12612 4724 Unauthorized: /api/portfolio/10/
 WARNING 2025-08-11 16:28:16,410 log 12612 4724 Unauthorized: /api/portfolio/10/
+INFO 2025-08-11 16:38:31,772 autoreload 25472 23812 Watching for file changes with StatReloader
+INFO 2025-08-11 18:22:08,808 autoreload 16088 22556 Watching for file changes with StatReloader

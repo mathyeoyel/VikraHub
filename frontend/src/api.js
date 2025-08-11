@@ -249,8 +249,19 @@ export const serviceAPI = {
 };
 
 export const portfolioAPI = {
+  // Get all portfolios (defaults to current user's if authenticated, or requires username param)
   getAll: () => api.get("portfolio/"),
+  
+  // Get current user's portfolio items (authenticated endpoint)
+  getMine: () => api.get("portfolio/mine/"),
+  
+  // Get portfolio items by username (public profile view)
+  getByUsername: (username) => api.get(`portfolio/?username=${username}`),
+  
+  // Get specific portfolio item
   getById: (id) => api.get(`portfolio/${id}/`),
+  
+  // Create new portfolio item (auto-assigned to current user)
   create: (data) => {
     // For FormData uploads, let axios set Content-Type automatically
     const config = data instanceof FormData ? {
@@ -258,6 +269,8 @@ export const portfolioAPI = {
     } : {};
     return api.post("portfolio/", data, config);
   },
+  
+  // Update portfolio item (only owner can update)
   update: (id, data) => {
     // For FormData uploads, let axios set Content-Type automatically
     const config = data instanceof FormData ? {
@@ -265,7 +278,40 @@ export const portfolioAPI = {
     } : {};
     return api.patch(`portfolio/${id}/`, data, config);
   },
+  
+  // Delete portfolio item (only owner can delete)
   delete: (id) => api.delete(`portfolio/${id}/`),
+};
+
+// Works API - alias for portfolio with cleaner naming
+export const worksAPI = {
+  // Get current user's works (authenticated endpoint)
+  getMine: () => api.get("works/mine/"),
+  
+  // Get works by username (public profile view)
+  getByUsername: (username) => api.get(`works/?username=${username}`),
+  
+  // Get specific work item
+  getById: (id) => api.get(`works/${id}/`),
+  
+  // Create new work item (auto-assigned to current user)
+  create: (data) => {
+    const config = data instanceof FormData ? {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    } : {};
+    return api.post("works/", data, config);
+  },
+  
+  // Update work item (only owner can update)
+  update: (id, data) => {
+    const config = data instanceof FormData ? {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    } : {};
+    return api.patch(`works/${id}/`, data, config);
+  },
+  
+  // Delete work item (only owner can delete)
+  delete: (id) => api.delete(`works/${id}/`),
 };
 
 export const blogAPI = {

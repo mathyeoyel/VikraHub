@@ -138,56 +138,30 @@ const PublicProfile = () => {
 
     const fetchUserPortfolioItems = async (userId) => {
       try {
-        console.log(`🎨 Fetching portfolio items for user ID: ${userId}`);
+        console.log(`🎨 Fetching portfolio items for user: ${username}`);
         
         // Check if portfolioAPI is available
-        if (!portfolioAPI || !portfolioAPI.getAll) {
-          console.error('❌ portfolioAPI.getAll is not available');
+        if (!portfolioAPI || !portfolioAPI.getByUsername) {
+          console.error('❌ portfolioAPI.getByUsername is not available');
           return;
         }
         
-        // Fetch all portfolio items and filter by user
-        const response = await portfolioAPI.getAll();
+        // Fetch portfolio items specifically for this user
+        const response = await portfolioAPI.getByUsername(username);
         console.log(`📥 Portfolio API response:`, response);
         
         // Extract portfolio items from response
-        const allPortfolioItems = response.results || response.data || response || [];
-        console.log(`📋 Total portfolio items received: ${allPortfolioItems.length}`);
+        const userPortfolioItems = response.results || response.data || response || [];
+        console.log(`📋 Portfolio items for ${username}: ${userPortfolioItems.length}`);
         
         // Debug: Log first few items to see structure
-        if (allPortfolioItems.length > 0) {
-          console.log(`🔬 Sample portfolio item structure:`, allPortfolioItems[0]);
+        if (userPortfolioItems.length > 0) {
+          console.log(`🔬 Sample portfolio item structure:`, userPortfolioItems[0]);
         }
         
-        // Filter portfolio items to only show those created by this specific user
-        const userPortfolioItems = allPortfolioItems.filter(item => {
-          // Check if the item has a user and the user ID matches
-          // Also handle the case where user field might not be included in older API responses
-          const isUserItem = 
-            (item.user && item.user.id === userId) ||
-            // Fallback: if no user field, show all items for now (backend compatibility)
-            (!item.user && allPortfolioItems.length > 0);
-          
-          console.log(`🔍 Portfolio item ${item.id} ownership check:`, {
-            itemId: item.id,
-            title: item.title,
-            itemUser: item.user,
-            targetUserId: userId,
-            isOwned: isUserItem,
-            hasUserField: !!item.user
-          });
-          
-          return isUserItem;
-        });
+        console.log(`🎯 Retrieved ${userPortfolioItems.length} portfolio items for user ${username}`);
         
-        console.log(`🎯 Filtered ${userPortfolioItems.length} portfolio items for user ${userId}`);
-        
-        // If no user field is present, show a warning
-        if (allPortfolioItems.length > 0 && !allPortfolioItems[0].user) {
-          console.warn('⚠️ Portfolio items missing user field - backend may need restart to apply serializer updates');
-        }
-        
-        // Update the profile state with the filtered portfolio items
+        // Update the profile state with the portfolio items
         setProfile(prevProfile => ({
           ...prevProfile,
           portfolio_items: userPortfolioItems

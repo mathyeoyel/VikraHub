@@ -247,7 +247,8 @@ class Service(models.Model):
         return self.title
 
 class PortfolioItem(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='portfolio_items', null=True, blank=True)
+    # User is now required (after backfill migration)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='works')
     title = models.CharField(max_length=100)
     description = models.TextField()
     image = models.URLField(blank=True, null=True, help_text="Cloudinary URL for portfolio image")

@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q, Avg
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from .permissions import IsOwnerOrReadOnly, IsPortfolioOwnerOrReadOnly
 from .asset_utils import (
     get_recommended_assets, get_asset_search_results, validate_asset_purchase,
     process_asset_purchase, get_seller_stats, get_trending_assets, calculate_asset_rating
@@ -351,43 +352,50 @@ class ServiceViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 class PortfolioItemViewSet(viewsets.ModelViewSet):
-    queryset = PortfolioItem.objects.all()
+    queryset = PortfolioItem.objects.all()  # Default queryset (filtered in get_queryset)
     serializer_class = PortfolioItemSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsPortfolioOwnerOrReadOnly]
     
-    def get_permissions(self):
+    def get_queryset(self):
         """
-        Custom permissions for portfolio items
+        Scope portfolio items based on user and context:
+        - Admin can see all with optional username filter
+        - Public requests with username show that user's works
+        - Authenticated requests without username show requester's works
+        - Anonymous requests without username show no works
         """
-        if self.action in ['update', 'partial_update', 'destroy']:
-            # Only the owner can update/delete their portfolio items
-            permission_classes = [IsAuthenticated]
-        else:
-            permission_classes = [IsAuthenticatedOrReadOnly]
-        return [permission() for permission in permission_classes]
-    
-    def get_object(self):
-        """
-        Override to ensure users can only update their own portfolio items
-        """
-        obj = super().get_object()
-        if self.action in ['update', 'partial_update', 'destroy']:
-            if obj.user != self.request.user:
-                raise PermissionDenied("You can only modify your own portfolio items.")
-        return obj
+        qs = PortfolioItem.objects.select_related("user").order_by('-date')
+        
+        # Admin can see all with optional username filter
+        if self.request.user.is_staff:
+            username = self.request.query_params.get("username")
+            if username:
+                return qs.filter(user__username=username)
+            return qs
+        
+        # Check for username parameter (public profile view)
+        username = self.request.query_params.get("username")
+        if username:
+            # Public profile view - show specific user's works
+            return qs.filter(user__username=username)
+        
+        # No username provided - show current user's works if authenticated
+        if self.request.user.is_authenticated:
+            return qs.filter(user=self.request.user)
+        
+        # Anonymous user with no username - show no works
+        return qs.none()
     
     def perform_create(self, serializer):
-        """Set the user when creating a portfolio item"""
+        """Auto-assign the current user as owner"""
         serializer.save(user=self.request.user)
     
-    def perform_update(self, serializer):
-        """Ensure user is preserved when updating a portfolio item"""
-        # If the item doesn't have a user, set it to the current user
-        instance = serializer.instance
-        if not instance.user:
-            serializer.save(user=self.request.user)
-        else:
-            serializer.save()
+    @action(detail=False, methods=["get"], url_path="mine", permission_classes=[IsAuthenticated])
+    def mine(self, request):
+        """Dedicated endpoint for user's own portfolio items"""
+        queryset = PortfolioItem.objects.filter(user=request.user).select_related("user").order_by('-date')
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 class BlogPostViewSet(viewsets.ModelViewSet):
     serializer_class = BlogPostSerializer

@@ -118,7 +118,22 @@ const Portfolio = () => {
   useEffect(() => {
     const fetchPortfolio = async () => {
       try {
-        const response = await portfolioAPI.getAll();
+        // For public portfolio showcase, we need to handle the new scoped API
+        // Since we want to show all public portfolios, but our API now requires authentication
+        // or username parameter, we'll need to adjust this logic
+        let response;
+        
+        if (user) {
+          // If user is authenticated, get all portfolios (will return user's own by default)
+          // TODO: We may need a dedicated public endpoint for viewing all portfolios
+          response = await portfolioAPI.getAll();
+        } else {
+          // For non-authenticated users, we'll need a different approach
+          // For now, return empty array since the API requires authentication
+          response = { data: [] };
+          console.warn('Portfolio API now requires authentication. Consider implementing a public showcase endpoint.');
+        }
+        
         console.log('📊 Portfolio API Response:', response);
         console.log('📊 Portfolio Data:', response.data);
         console.log('📊 First Item Structure:', response.data?.[0]);
@@ -126,28 +141,15 @@ const Portfolio = () => {
         setPortfolios(response.data || []);
       } catch (error) {
         console.error('Error fetching portfolio:', error);
+        // If authentication fails, show empty portfolio
+        setPortfolios([]);
       } finally {
         setLoading(false);
       }
     };
 
     fetchPortfolio();
-  }, []);
-
-  useEffect(() => {
-    const fetchPortfolios = async () => {
-      try {
-        const response = await portfolioAPI.getAll();
-        setPortfolios(response.data || []);
-      } catch (error) {
-        console.error('Error fetching portfolios:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPortfolios();
-  }, []);
+  }, [user]);
 
   if (loading) {
     return (

@@ -13,7 +13,8 @@ const Projects = () => {
     const fetchProjects = async () => {
       try {
         setLoading(true);
-        const response = await portfolioAPI.getAll();
+        // Fetch user's own portfolio items/projects
+        const response = await portfolioAPI.getMine();
         console.log('Projects API response:', response);
         
         // Handle different response structures

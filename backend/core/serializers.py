@@ -364,12 +364,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class PortfolioItemSerializer(serializers.ModelSerializer):
     tags_list = serializers.SerializerMethodField()
     image = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    user = serializers.SerializerMethodField()
+    # Use read-only field for user info (prevents client from setting it)
+    user = serializers.SerializerMethodField(read_only=True)
     
     class Meta:
         model = PortfolioItem
         fields = ['id', 'user', 'title', 'description', 'image', 'url', 'tags', 'tags_list', 'date']
-        read_only_fields = ['id', 'date']
+        read_only_fields = ['id', 'date', 'user']
     
     def get_user(self, obj):
         """Include user information for ownership detection"""
@@ -387,7 +388,7 @@ class PortfolioItemSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         """Create portfolio item with user set to current user"""
-        # Ensure user is set to the current user
+        # Auto-assign owner to current user (user cannot set this)
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
     

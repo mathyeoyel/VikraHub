@@ -112,7 +112,7 @@ const Dashboard = () => {
           
           return { data: [], results: [] };
         }),
-        portfolioAPI.getAll().catch(err => {
+        portfolioAPI.getMine().catch(err => {
           console.warn('Failed to fetch portfolio:', err);
           
           if (err.response?.status === 401) {

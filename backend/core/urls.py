@@ -21,6 +21,7 @@ router.register(r'public-profiles', PublicUserProfileViewSet, basename='publicus
 router.register(r'team', TeamMemberViewSet)
 router.register(r'services', ServiceViewSet)
 router.register(r'portfolio', PortfolioItemViewSet)
+router.register(r'works', PortfolioItemViewSet, basename='works')  # Alias for portfolio
 router.register(r'blog', BlogPostViewSet, basename='blogpost')
 router.register(r'notifications', NotificationViewSet)
 router.register(r'devices', DeviceViewSet)  # Push notification device tokens
