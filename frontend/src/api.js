@@ -18,10 +18,9 @@ api.interceptors.request.use(
       'creator-profiles/', // Creator profiles should be publicly viewable
     ];
     
-    // Special handling for portfolio: only GET requests for viewing are public
-    const isPortfolioPublic = config.method === 'get' && 
-      config.url.includes('portfolio/') && 
-      !config.url.includes('my-portfolio/'); // My portfolio requires authentication
+    // Special handling for portfolio: GET requests require auth to include user data for ownership checks
+    // Only allow public access for specific public portfolio endpoints if needed
+    const isPortfolioPublic = false; // Always require authentication for portfolio to get user data
     
     // Special handling for creative-assets: only GET requests to marketplace listings are public
     const isCreativeAssetsPublic = config.method === 'get' && 

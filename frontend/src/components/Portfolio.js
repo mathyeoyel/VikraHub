@@ -119,6 +119,10 @@ const Portfolio = () => {
     const fetchPortfolio = async () => {
       try {
         const response = await portfolioAPI.getAll();
+        console.log('📊 Portfolio API Response:', response);
+        console.log('📊 Portfolio Data:', response.data);
+        console.log('📊 First Item Structure:', response.data?.[0]);
+        console.log('📊 First Item User:', response.data?.[0]?.user);
         setPortfolios(response.data || []);
       } catch (error) {
         console.error('Error fetching portfolio:', error);
