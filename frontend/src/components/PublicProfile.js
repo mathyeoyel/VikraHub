@@ -808,7 +808,7 @@ const PublicProfile = () => {
                     <div className="experience-icon"><i className="fas fa-palette icon"></i></div>
                     <div className="experience-content">
                       <h5>Creator Type</h5>
-                      <p>{getUserTypeLabel(profile.user_type)}</p>
+                      <p>{userTypeInfo.label}</p>
                     </div>
                   </div>
                 )}
