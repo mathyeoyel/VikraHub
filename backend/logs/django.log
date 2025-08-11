@@ -4453,3 +4453,7 @@ INFO 2025-08-08 16:05:18,482 autoreload 15532 8724 Watching for file changes wit
 INFO 2025-08-08 16:26:42,850 autoreload 15532 8724 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
 INFO 2025-08-08 16:26:44,629 autoreload 8996 22204 Watching for file changes with StatReloader
 INFO 2025-08-11 15:22:30,640 autoreload 23124 24248 Watching for file changes with StatReloader
+WARNING 2025-08-11 16:28:16,404 log 12612 4724 Forbidden: /api/portfolio/10/
+WARNING 2025-08-11 16:28:16,407 log 12612 4724 Forbidden: /api/portfolio/10/
+WARNING 2025-08-11 16:28:16,409 log 12612 4724 Unauthorized: /api/portfolio/10/
+WARNING 2025-08-11 16:28:16,410 log 12612 4724 Unauthorized: /api/portfolio/10/

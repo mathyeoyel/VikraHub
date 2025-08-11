@@ -3,6 +3,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../Auth/AuthContext';
 import { portfolioAPI } from '../../api';
 import { createPortfolioImageUrl } from '../../utils/portfolioImageUtils';
+import { validatePortfolioOwnership, logOwnershipCheck } from '../../utils/portfolioOwnership';
 import { uploadToCloudinary } from '../../utils/cloudinary';
 import { getAccessToken } from '../../auth';
 import './UploadWork.css';
@@ -233,11 +234,27 @@ const UploadWork = () => {
   // Load existing portfolio item when editing
   useEffect(() => {
     const loadPortfolioItem = async () => {
+      // 🔒 Early authentication check for editing
+      if (isEditing && !user) {
+        alert('You must be logged in to edit portfolio items.');
+        navigate('/login');
+        return;
+      }
+      
       if (isEditing && id) {
         setIsLoading(true);
         try {
           const response = await portfolioAPI.getById(id);
           const item = response.data;
+          
+          // 🔒 SECURITY CHECK: Verify user ownership
+          if (!validatePortfolioOwnership(item, user, 'edit')) {
+            logOwnershipCheck(item, user, 'edit', false);
+            navigate('/portfolio');
+            return;
+          }
+          
+          logOwnershipCheck(item, user, 'edit', true);
           
           setWorkData({
             title: item.title || '',
@@ -267,7 +284,13 @@ const UploadWork = () => {
           }
         } catch (error) {
           console.error('Error loading portfolio item:', error);
-          alert('Failed to load portfolio item for editing.');
+          if (error.response?.status === 403) {
+            alert('You do not have permission to edit this portfolio item.');
+          } else if (error.response?.status === 404) {
+            alert('Portfolio item not found.');
+          } else {
+            alert('Failed to load portfolio item for editing.');
+          }
           navigate('/portfolio');
         } finally {
           setIsLoading(false);
@@ -276,7 +299,7 @@ const UploadWork = () => {
     };
 
     loadPortfolioItem();
-  }, [isEditing, id, navigate]);
+  }, [isEditing, id, navigate, user]);
 
   if (isLoading) {
     return (

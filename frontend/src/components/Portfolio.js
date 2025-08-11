@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { portfolioAPI } from '../api';
 import { handleImageError, createPortfolioImageUrl } from '../utils/portfolioImageUtils';
+import { validatePortfolioOwnership, logOwnershipCheck } from '../utils/portfolioOwnership';
 import { useAuth } from './Auth/AuthContext';
 import SEO from './common/SEO';
 import './Portfolio.css';
@@ -27,18 +28,41 @@ const Portfolio = () => {
   }, [location, navigate]);
 
   const handleEdit = (portfolioId) => {
+    // 🔒 Double-check ownership before navigation
+    const portfolioItem = portfolios.find(item => item.id === portfolioId);
+    
+    if (!validatePortfolioOwnership(portfolioItem, user, 'edit')) {
+      logOwnershipCheck(portfolioItem, user, 'edit', false);
+      return;
+    }
+    
+    logOwnershipCheck(portfolioItem, user, 'edit', true);
     navigate(`/upload-work/${portfolioId}`);
   };
 
   const handleDelete = async (portfolioId) => {
+    // 🔒 Verify ownership before deletion
+    const portfolioItem = portfolios.find(item => item.id === portfolioId);
+    
+    if (!validatePortfolioOwnership(portfolioItem, user, 'delete')) {
+      logOwnershipCheck(portfolioItem, user, 'delete', false);
+      return;
+    }
+    
     if (window.confirm('Are you sure you want to delete this portfolio item?')) {
       try {
         await portfolioAPI.delete(portfolioId);
         setPortfolios(portfolios.filter(item => item.id !== portfolioId));
+        logOwnershipCheck(portfolioItem, user, 'delete', true);
         alert('Portfolio item deleted successfully!');
       } catch (error) {
         console.error('Error deleting portfolio item:', error);
-        alert('Failed to delete portfolio item. Please try again.');
+        logOwnershipCheck(portfolioItem, user, 'delete', false);
+        if (error.response?.status === 403) {
+          alert('You do not have permission to delete this portfolio item.');
+        } else {
+          alert('Failed to delete portfolio item. Please try again.');
+        }
       }
     }
   };
@@ -242,7 +266,8 @@ const Portfolio = () => {
                           <i className="fas fa-external-link-alt"></i>
                         </a>
                       )}
-                      {user && (
+                      {/* 🔒 Only show edit/delete buttons for the owner */}
+                      {user && item.user && item.user.id === user.id && (
                         <>
                           <button 
                             onClick={() => handleEdit(item.id)}
