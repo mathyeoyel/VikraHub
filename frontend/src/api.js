@@ -54,7 +54,21 @@ api.interceptors.request.use(
     
     if (!isPublicRoute) {
       const token = getAccessToken();
-      if (token) config.headers.Authorization = `Bearer ${token}`;
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+        // Debug portfolio requests
+        if (config.url.includes('portfolio')) {
+          console.log('🎯 Portfolio request authentication:', {
+            method: config.method,
+            url: config.url,
+            hasToken: !!token,
+            tokenLength: token ? token.length : 0,
+            headers: config.headers
+          });
+        }
+      } else {
+        console.warn('⚠️ No token available for authenticated route:', config.url);
+      }
     }
     
     // For FormData uploads, let the browser set the Content-Type automatically

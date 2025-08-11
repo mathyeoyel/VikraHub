@@ -4,6 +4,7 @@ from rest_framework import viewsets, status, serializers
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser, AllowAny
+from rest_framework.exceptions import PermissionDenied
 from django.contrib.auth.models import User
 from django.db.models import Q, Avg
 from django.utils import timezone
@@ -353,6 +354,27 @@ class PortfolioItemViewSet(viewsets.ModelViewSet):
     queryset = PortfolioItem.objects.all()
     serializer_class = PortfolioItemSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    def get_permissions(self):
+        """
+        Custom permissions for portfolio items
+        """
+        if self.action in ['update', 'partial_update', 'destroy']:
+            # Only the owner can update/delete their portfolio items
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsAuthenticatedOrReadOnly]
+        return [permission() for permission in permission_classes]
+    
+    def get_object(self):
+        """
+        Override to ensure users can only update their own portfolio items
+        """
+        obj = super().get_object()
+        if self.action in ['update', 'partial_update', 'destroy']:
+            if obj.user != self.request.user:
+                raise PermissionDenied("You can only modify your own portfolio items.")
+        return obj
     
     def perform_create(self, serializer):
         """Set the user when creating a portfolio item"""

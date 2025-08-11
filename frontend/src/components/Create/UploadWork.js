@@ -3,6 +3,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../Auth/AuthContext';
 import { portfolioAPI } from '../../api';
 import { createPortfolioImageUrl } from '../../utils/portfolioImageUtils';
+import { uploadToCloudinary } from '../../utils/cloudinary';
 import { getAccessToken } from '../../auth';
 import './UploadWork.css';
 
@@ -155,15 +156,26 @@ const UploadWork = () => {
       formData.append('tags', workData.tags.trim());
       formData.append('url', workData.url.trim());
       
-      // Add preview image if present (only if it's a new file, not a URL)
+      // Handle preview image upload to Cloudinary
       if (workData.previewImage && workData.previewImage instanceof File) {
-        formData.append('image_file', workData.previewImage);
-      }
-      
-      // For editing: only include image if user uploaded a new one
-      if (isEditing && !workData.previewImage) {
-        // Don't send image field if user didn't upload a new image
-        // This preserves the existing image
+        console.log('📤 Uploading preview image to Cloudinary...');
+        
+        try {
+          const uploadResult = await uploadToCloudinary(workData.previewImage, {
+            folder: 'portfolio',
+            tags: ['portfolio', 'preview'],
+          });
+          
+          const imageUrl = uploadResult.secure_url;
+          console.log('✅ Image uploaded to Cloudinary:', imageUrl);
+          
+          // Send the Cloudinary URL to the backend
+          formData.append('image', imageUrl);
+        } catch (uploadError) {
+          console.error('❌ Failed to upload image to Cloudinary:', uploadError);
+          alert('Failed to upload image. Please try again.');
+          return;
+        }
       }
       
       // Add additional files if present

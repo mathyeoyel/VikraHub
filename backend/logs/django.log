@@ -4452,3 +4452,4 @@ INFO 2025-08-08 16:05:17,342 autoreload 6908 15248 C:\Users\hp\Downloads\Project
 INFO 2025-08-08 16:05:18,482 autoreload 15532 8724 Watching for file changes with StatReloader
 INFO 2025-08-08 16:26:42,850 autoreload 15532 8724 C:\Users\hp\Downloads\Projects\Vikra Hub\Vikra Hub project\backend\vikrahub\settings.py changed, reloading.
 INFO 2025-08-08 16:26:44,629 autoreload 8996 22204 Watching for file changes with StatReloader
+INFO 2025-08-11 15:22:30,640 autoreload 23124 24248 Watching for file changes with StatReloader

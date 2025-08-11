@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { publicProfileAPI, assetAPI, userAPI, followAPI, portfolioAPI } from '../api';
 import { useAuth } from './Auth/AuthContext';
@@ -25,9 +25,61 @@ const PublicProfile = () => {
   const [activeTab, setActiveTab] = useState('works');
 
   // Tab switching function
-  const handleTabSwitch = (tabName) => {
+  const handleTabSwitch = useCallback((tabName) => {
     setActiveTab(tabName);
-  };
+  }, []);
+
+  // Memoize follow handlers
+  const handleFollow = useCallback(async () => {
+    if (!isAuthenticated || !profile?.user?.username) return;
+
+    try {
+      if (isFollowing) {
+        await followAPI.unfollow(profile.user.username);
+        setIsFollowing(false);
+        setFollowerCount(prev => prev - 1);
+        notificationService.showSuccess('Unfollowed successfully');
+      } else {
+        await followAPI.follow(profile.user.username);
+        setIsFollowing(true);
+        setFollowerCount(prev => prev + 1);
+        notificationService.showSuccess('Following successfully');
+      }
+    } catch (error) {
+      notificationService.showError(error.response?.data?.detail || 'Failed to update follow status');
+    }
+  }, [isAuthenticated, profile?.user?.username, isFollowing]);
+
+  const handleMessage = useCallback(() => {
+    if (!isAuthenticated || !profile?.user?.username) return;
+    navigate(`/chat?user=${profile.user.username}`);
+  }, [isAuthenticated, profile?.user?.username, navigate]);
+
+  // Memoize computed values
+  const userTypeInfo = useMemo(() => {
+    const getUserTypeIcon = (type) => {
+      switch (type) {
+        case 'freelancer': return 'fas fa-briefcase';
+        case 'creator': return 'fas fa-paintbrush';
+        case 'client': return 'fas fa-user-tie';
+        default: return 'fas fa-user';
+      }
+    };
+
+    const getUserTypeLabel = (type) => {
+      switch (type) {
+        case 'freelancer': return 'Freelancer';
+        case 'creator': return 'Creator';
+        case 'client': return 'Client';
+        default: return 'User';
+      }
+    };
+
+    return {
+      icon: getUserTypeIcon(profile?.user_type),
+      label: getUserTypeLabel(profile?.user_type)
+    };
+  }, [profile?.user_type]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -266,23 +318,6 @@ const PublicProfile = () => {
     });
   };
 
-  const getUserTypeIcon = (userType) => {
-    switch (userType) {
-      case 'freelancer':
-        return 'fas fa-briefcase';
-      case 'creator':
-        return 'fas fa-shopping-bag';
-      case 'client':
-        return 'fas fa-user';
-      default:
-        return 'fas fa-user';
-    }
-  };
-
-  const getUserTypeLabel = (userType) => {
-    return userType.charAt(0).toUpperCase() + userType.slice(1);
-  };
-
   const getSocialIcon = (platform) => {
     const icons = {
       facebook: 'fab fa-facebook',
@@ -297,102 +332,6 @@ const PublicProfile = () => {
   const handleContact = () => {
     // TODO: Implement contact/message functionality
     alert('Contact functionality will be implemented soon!');
-  };
-
-  const handleFollow = async () => {
-    if (!isAuthenticated) {
-      alert('Please log in to follow users.');
-      return;
-    }
-
-    if (!username) {
-      console.error('No username provided for follow action');
-      return;
-    }
-
-    // Don't allow users to follow themselves
-    if (user && user.username === username) {
-      alert("You can't follow yourself!");
-      return;
-    }
-
-    try {
-      console.log(`Attempting to ${isFollowing ? 'unfollow' : 'follow'} user: ${username}`);
-      
-      if (isFollowing) {
-        // Use enhanced unfollow with profile refresh
-        const { unfollowResult, updatedProfile } = await followAPI.unfollowWithRefresh(profile.user.id, username);
-        console.log('Unfollow response:', unfollowResult);
-        
-        // Update state from refreshed profile data if available
-        if (updatedProfile) {
-          setIsFollowing(updatedProfile.is_following || false);
-          setFollowerCount(updatedProfile.followers_count || 0);
-          setFollowingCount(updatedProfile.following_count || 0);
-        } else {
-          // Fallback to manual state update
-          setIsFollowing(false);
-          setFollowerCount(prev => Math.max(0, prev - 1));
-        }
-      } else {
-        // Use enhanced follow with profile refresh
-        const { followResult, updatedProfile } = await followAPI.followWithRefresh(profile.user.id, username);
-        console.log('Follow response:', followResult);
-        
-        // Update state from refreshed profile data if available
-        if (updatedProfile) {
-          setIsFollowing(updatedProfile.is_following || false);
-          setFollowerCount(updatedProfile.followers_count || 0);
-          setFollowingCount(updatedProfile.following_count || 0);
-        } else {
-          // Fallback to manual state update
-          setIsFollowing(true);
-          setFollowerCount(prev => prev + 1);
-        }
-        
-        // Send notification to the followed user
-        notificationService.followNotification(
-          profile.full_name || username,
-          user.first_name && user.last_name ? 
-            `${user.first_name} ${user.last_name}` : 
-            user.username || 'Someone'
-        );
-      }
-    } catch (error) {
-      console.error('Failed to follow/unfollow user:', error);
-      console.error('Error details:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status
-      });
-      
-      // Show a user-friendly error message
-      alert(`Failed to ${isFollowing ? 'unfollow' : 'follow'} user. Please try again.`);
-    }
-  };
-
-  const handleMessage = async () => {
-    if (!isAuthenticated) {
-      alert('Please log in to send messages.');
-      return;
-    }
-    
-    try {
-      // First, try to find if there's an existing conversation
-      console.log(`🔍 Looking for existing conversation with ${username}`);
-      
-      // Navigate to messages page and let it handle finding or creating conversation
-      navigate('/messages', { 
-        state: { 
-          recipientUsername: username,
-          autoCreateConversation: true, // Flag to auto-create if not found
-          recipientName: profile.full_name || username
-        } 
-      });
-    } catch (error) {
-      console.error('❌ Error handling message action:', error);
-      alert('Failed to open messages. Please try again.');
-    }
   };
 
   const handleShare = () => {
@@ -507,8 +446,8 @@ const PublicProfile = () => {
                 
                 {/* Creator Type */}
                 <div className="user-type">
-                  <span className="user-type-icon"><i className={`${getUserTypeIcon(profile.user_type)} icon`}></i></span>
-                  <span className="user-type-label">{getUserTypeLabel(profile.user_type)}</span>
+                  <span className="user-type-icon"><i className={`${userTypeInfo.icon} icon`}></i></span>
+                  <span className="user-type-label">{userTypeInfo.label}</span>
                 </div>
                 
                 {/* Action Buttons */}
@@ -649,7 +588,7 @@ const PublicProfile = () => {
                             <div className="portfolio-image">
                               {item.image ? (
                                 <img 
-                                  src={createPortfolioImageUrl(item.image)} 
+                                  src={createPortfolioImageUrl(item.image, { title: item.title, tags: item.tags })} 
                                   alt={item.title}
                                   onError={(e) => {
                                     console.error(`❌ Failed to load portfolio image for item ${item.id}:`, {
@@ -662,21 +601,18 @@ const PublicProfile = () => {
                                   data-original-src={item.image}
                                 />
                               ) : (
-                                <div className="portfolio-placeholder" style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  height: '200px',
-                                  background: 'linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%)',
-                                  border: '2px dashed #ddd',
-                                  borderRadius: '8px',
-                                  color: '#999'
-                                }}>
-                                  <div style={{textAlign: 'center'}}>
-                                    <i className="fas fa-image" style={{fontSize: '2.5rem', marginBottom: '12px', color: '#ccc'}}></i>
-                                    <p style={{margin: 0, fontSize: '14px', fontWeight: '500'}}>No preview image</p>
-                                    <p style={{margin: '4px 0 0 0', fontSize: '12px', color: '#bbb'}}>Portfolio item</p>
-                                  </div>
+                                <div className="portfolio-placeholder">
+                                  <img 
+                                    src={`https://via.placeholder.com/400x300/6b7280/ffffff?text=${encodeURIComponent(item.title || 'Portfolio Item')}`}
+                                    alt={item.title}
+                                    className="placeholder-image"
+                                    style={{
+                                      width: '100%',
+                                      height: '200px',
+                                      objectFit: 'cover',
+                                      borderRadius: '8px'
+                                    }}
+                                  />
                                 </div>
                               )}
                             </div>
@@ -1149,4 +1085,4 @@ const PublicProfile = () => {
   );
 };
 
-export default PublicProfile;
+export default React.memo(PublicProfile);

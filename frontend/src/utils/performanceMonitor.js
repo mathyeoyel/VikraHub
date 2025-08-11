@@ -2,7 +2,8 @@
 class PerformanceMonitor {
   constructor() {
     this.metrics = new Map();
-    this.isEnabled = process.env.NODE_ENV === 'production';
+    // Enable monitoring in both development and production for debugging
+    this.isEnabled = true;
   }
 
   // Measure page load time
@@ -11,10 +12,19 @@ class PerformanceMonitor {
 
     window.addEventListener('load', () => {
       const timing = window.performance.timing;
-      const loadTime = timing.loadEventEnd - timing.navigationStart;
       
-      this.recordMetric('page_load_time', loadTime);
-      console.log(`Page load time: ${loadTime}ms`);
+      // Ensure timing values are valid before calculating
+      if (timing.loadEventEnd && timing.navigationStart && 
+          timing.loadEventEnd > timing.navigationStart) {
+        const loadTime = timing.loadEventEnd - timing.navigationStart;
+        this.recordMetric('page_load_time', loadTime);
+        console.log(`Page load time: ${loadTime}ms`);
+      } else {
+        // Use performance.now() as fallback
+        const loadTime = performance.now();
+        this.recordMetric('page_load_time', loadTime);
+        console.log(`Page load time (fallback): ${loadTime}ms`);
+      }
     });
   }
 

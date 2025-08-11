@@ -43,10 +43,10 @@ export const handleImageError = (event, fallbackSrc = '/assets/default-asset-pla
   console.warn(`Failed to load portfolio image, trying fallback: ${img.dataset.originalSrc || img.src}`);
 };
 
-export const createPortfolioImageUrl = (imagePath) => {
+export const createPortfolioImageUrl = (imagePath, fallbackData = {}) => {
   if (!imagePath || imagePath === 'W.png') {
     console.warn('Invalid or problematic image path detected, using fallback');
-    return '/assets/default-asset-placeholder.svg';
+    return getSmartFallback(fallbackData.title, fallbackData.tags);
   }
   
   // If already a full URL (including Cloudinary), return as is
@@ -85,6 +85,30 @@ export const createPortfolioImageUrl = (imagePath) => {
   const portfolioUrl = `/portfolio/${imagePath}`;
   console.log('📂 Using relative portfolio path:', portfolioUrl);
   return portfolioUrl;
+};
+
+// Get smart fallback based on content type
+const getSmartFallback = (title = '', tags = '') => {
+  const content = `${title} ${tags}`.toLowerCase();
+  
+  // Map content to appropriate placeholder
+  if (content.includes('web') || content.includes('website')) {
+    return 'https://via.placeholder.com/400x300/2563eb/ffffff?text=Web+Project';
+  }
+  if (content.includes('mobile') || content.includes('app')) {
+    return 'https://via.placeholder.com/400x300/7c3aed/ffffff?text=Mobile+App';
+  }
+  if (content.includes('photo') || content.includes('photography')) {
+    return 'https://via.placeholder.com/400x300/059669/ffffff?text=Photography';
+  }
+  if (content.includes('brand') || content.includes('logo')) {
+    return 'https://via.placeholder.com/400x300/dc2626/ffffff?text=Branding';
+  }
+  if (content.includes('design') || content.includes('ui')) {
+    return 'https://via.placeholder.com/400x300/ea580c/ffffff?text=Design';
+  }
+  
+  return 'https://via.placeholder.com/400x300/6b7280/ffffff?text=Portfolio+Item';
 };
 
 export const preloadPortfolioImages = (imageUrls) => {
