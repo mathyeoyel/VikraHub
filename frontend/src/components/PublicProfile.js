@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { publicProfileAPI, assetAPI, userAPI, followAPI, portfolioAPI } from '../api';
+import { publicProfileAPI, assetAPI, followAPI, portfolioAPI } from '../api';
 import { useAuth } from './Auth/AuthContext';
 import notificationService from '../services/notificationService';
 import PublicClientProfile from './PublicClientProfile';
@@ -120,7 +120,7 @@ const PublicProfile = () => {
         } else {
           // Fallback to separate follow stats API call
           console.log('Follow data not in profile response, fetching separately...');
-          await fetchFollowStats(username);
+          await fetchFollowStats(normalizedProfile.userId, username);
         }
         
         // Fetch user's uploaded assets to include in portfolio
@@ -273,12 +273,12 @@ const PublicProfile = () => {
       }
     };
 
-    const fetchFollowStats = async (username) => {
+    const fetchFollowStats = async (userId, username) => {
       try {
         setFollowStatsLoading(true);
         
-        // Get userId from the profile since followAPI.getFollowStats expects user_id, not username
-        if (!profile?.userId) {
+        // Validate that we have a userId to work with
+        if (!userId) {
           console.warn('No userId available for follow stats');
           setFollowerCount(0);
           setFollowingCount(0);
@@ -286,7 +286,10 @@ const PublicProfile = () => {
           return;
         }
         
-        const response = await followAPI.getFollowStats(profile.userId);
+        console.log(`📊 Fetching follow stats for userId: ${userId}, username: ${username}`);
+        const response = await followAPI.getFollowStats(userId);
+        console.log(`📈 Follow stats response:`, response.data);
+        
         setFollowerCount(response.data?.followers_count || 0);
         setFollowingCount(response.data?.following_count || 0);
         setIsFollowing(response.data?.is_following || false);

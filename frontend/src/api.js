@@ -18,9 +18,12 @@ api.interceptors.request.use(
       'creator-profiles/', // Creator profiles should be publicly viewable
     ];
     
-    // Special handling for portfolio: GET requests require auth to include user data for ownership checks
-    // Only allow public access for specific public portfolio endpoints if needed
-    const isPortfolioPublic = false; // Always require authentication for portfolio to get user data
+    // Special handling for portfolio: GET requests with username parameter are public (public profiles)
+    // Only authenticated access needed for user's own portfolio or write operations
+    const isPortfolioPublic = config.method === 'get' && 
+      config.url.includes('portfolio/') && 
+      config.url.includes('username=') && 
+      !config.url.includes('mine/');
     
     // Special handling for creative-assets: only GET requests to marketplace listings are public
     const isCreativeAssetsPublic = config.method === 'get' && 
@@ -1273,13 +1276,16 @@ export const searchAPI = {
 
   // Trending searches
   trending: async () => {
-    try {
-      // For now, return empty array since trending endpoint might not exist
-      return [];
-    } catch (error) {
-      console.error('Trending search failed:', error.response?.data || error.message);
-      return [];
-    }
+    // For now, return empty array since trending endpoint might not exist
+    // TODO: Implement actual trending API call when backend is ready
+    // try {
+    //   const response = await api.get('search/trending/');
+    //   return response.data;
+    // } catch (error) {
+    //   console.error('Trending search failed:', error.response?.data || error.message);
+    //   return [];
+    // }
+    return [];
   }
 };
 
