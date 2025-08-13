@@ -386,6 +386,21 @@ class PortfolioItemSerializer(serializers.ModelSerializer):
     def get_tags_list(self, obj):
         return obj.get_tags_list()
     
+    def to_representation(self, instance):
+        """Override to ensure safe field values"""
+        data = super().to_representation(instance)
+        
+        # Ensure tags field is never null/undefined - provide empty string fallback
+        if data.get('tags') is None:
+            data['tags'] = ''
+            
+        # Ensure other string fields are never null
+        for field in ['title', 'description', 'url']:
+            if data.get(field) is None:
+                data[field] = ''
+                
+        return data
+    
     def create(self, validated_data):
         """Create portfolio item with user set to current user"""
         # Auto-assign owner to current user (user cannot set this)
@@ -411,10 +426,10 @@ class PublicUserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ['id', 'username', 'display_name', 'user_type', 'avatar', 'bio', 
-                 'headline', 'skills_list', 'location', 'website', 'member_since', 
+                 'headline', 'skills', 'skills_list', 'location', 'website', 'member_since', 
                  'portfolio_items', 'recognitions_list', 'stats']
         read_only_fields = ['id', 'username', 'display_name', 'user_type', 'avatar', 
-                           'bio', 'headline', 'skills_list', 'location', 'website', 
+                           'bio', 'headline', 'skills', 'skills_list', 'location', 'website', 
                            'member_since', 'portfolio_items', 'recognitions_list', 'stats']
     
     def get_display_name(self, obj):
@@ -437,6 +452,21 @@ class PublicUserProfileSerializer(serializers.ModelSerializer):
         except:
             return []
     
+    def to_representation(self, instance):
+        """Override to ensure safe field values"""
+        data = super().to_representation(instance)
+        
+        # Ensure skills field is never null/undefined - provide empty string fallback
+        if data.get('skills') is None:
+            data['skills'] = ''
+            
+        # Ensure other string fields are never null
+        for field in ['bio', 'headline', 'location', 'website']:
+            if data.get(field) is None:
+                data[field] = ''
+                
+        return data
+    
     def get_recognitions_list(self, obj):
         """Get recognitions as a list, tolerant of null/blank fields"""
         try:
@@ -454,8 +484,8 @@ class PublicUserProfileSerializer(serializers.ModelSerializer):
             followers_count = obj.user.get_followers_count()
             following_count = obj.user.get_following_count()
             
-            # Count projects using DB query
-            projects_count = obj.user.portfolio_items.count()
+            # Count projects using DB query - use correct related_name 'works'
+            projects_count = obj.user.works.count()
             
             # Check if current user is following this user
             current_user = self.context.get('request').user if self.context.get('request') else None
@@ -480,10 +510,16 @@ class PublicUserProfileSerializer(serializers.ModelSerializer):
     def get_portfolio_items(self, obj):
         """Get user's portfolio items (limited for performance)"""
         try:
-            # Limit to first 6 portfolio items for performance
-            portfolio_items = obj.user.portfolio_items.all()[:6]
-            return PortfolioItemSerializer(portfolio_items, many=True, context=self.context).data
-        except:
+            # Limit to first 6 portfolio items for performance - use correct related_name 'works'
+            portfolio_items = obj.user.works.all()[:6]
+            serialized_items = PortfolioItemSerializer(portfolio_items, many=True, context=self.context).data
+            # Ensure we return a list even if serialization partially fails
+            return serialized_items if isinstance(serialized_items, list) else []
+        except Exception as e:
+            # Log the error for debugging
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error serializing portfolio items for user {obj.user.username}: {str(e)}")
             return []
 
 class TeamMemberSerializer(serializers.ModelSerializer):

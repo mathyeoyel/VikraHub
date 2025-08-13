@@ -4481,3 +4481,19 @@ INFO 2025-08-13 14:58:53,323 autoreload 30186 124612581558080 /workspaces/VikraH
 INFO 2025-08-13 14:58:54,065 autoreload 30596 124800092587840 Watching for file changes with StatReloader
 INFO 2025-08-13 15:05:19,289 autoreload 30596 124800092587840 /workspaces/VikraHub/backend/core/api_views.py changed, reloading.
 INFO 2025-08-13 15:05:19,867 autoreload 33369 130822288168768 Watching for file changes with StatReloader
+INFO 2025-08-13 15:21:16,025 autoreload 33369 130822288168768 /workspaces/VikraHub/backend/core/serializers.py changed, reloading.
+INFO 2025-08-13 15:21:16,668 autoreload 40891 127386230683456 Watching for file changes with StatReloader
+INFO 2025-08-13 15:21:31,697 autoreload 40891 127386230683456 /workspaces/VikraHub/backend/core/serializers.py changed, reloading.
+INFO 2025-08-13 15:21:32,365 autoreload 41033 133717574596416 Watching for file changes with StatReloader
+INFO 2025-08-13 15:22:36,937 basehttp 41033 133717468079808 "GET / HTTP/1.1" 200 1256
+INFO 2025-08-13 15:22:45,820 autoreload 41033 133717574596416 /workspaces/VikraHub/backend/core/serializers.py changed, reloading.
+INFO 2025-08-13 15:22:46,582 autoreload 41600 129384000309056 Watching for file changes with StatReloader
+INFO 2025-08-13 15:22:54,469 basehttp 41600 129383893264064 "GET / HTTP/1.1" 200 1256
+INFO 2025-08-13 15:23:54,933 autoreload 41600 129384000309056 /workspaces/VikraHub/backend/core/serializers.py changed, reloading.
+INFO 2025-08-13 15:23:55,613 autoreload 42130 131113298028352 Watching for file changes with StatReloader
+INFO 2025-08-13 15:24:07,339 autoreload 42130 131113298028352 /workspaces/VikraHub/backend/core/serializers.py changed, reloading.
+INFO 2025-08-13 15:24:08,264 autoreload 42256 131671081367360 Watching for file changes with StatReloader
+INFO 2025-08-13 15:24:21,021 autoreload 42256 131671081367360 /workspaces/VikraHub/backend/core/serializers.py changed, reloading.
+INFO 2025-08-13 15:24:21,590 autoreload 42396 136739302000448 Watching for file changes with StatReloader
+INFO 2025-08-13 15:24:42,587 autoreload 42396 136739302000448 /workspaces/VikraHub/backend/core/models.py changed, reloading.
+INFO 2025-08-13 15:24:43,189 autoreload 42580 130988674262848 Watching for file changes with StatReloader

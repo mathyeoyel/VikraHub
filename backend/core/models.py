@@ -260,7 +260,11 @@ class PortfolioItem(models.Model):
         return self.title
         
     def get_tags_list(self):
-        return [tag.strip() for tag in self.tags.split(',')] if self.tags else []
+        """Get tags as a list, safely handling null/empty values"""
+        try:
+            return [tag.strip() for tag in self.tags.split(',') if tag.strip()] if self.tags else []
+        except (AttributeError, TypeError):
+            return []
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
