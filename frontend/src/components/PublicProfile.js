@@ -6,6 +6,7 @@ import notificationService from '../services/notificationService';
 import PublicClientProfile from './PublicClientProfile';
 import ErrorBoundary from './ErrorBoundary';
 import { handleImageError, createPortfolioImageUrl } from '../utils/portfolioImageUtils';
+import { safeSplit, asString } from '../utils/string';
 import SEO from './common/SEO';
 import './PublicProfile.css';
 
@@ -396,7 +397,7 @@ const PublicProfile = () => {
                   <img src={profile.avatar} alt={profile.full_name} />
                 ) : (
                   <div className="avatar-placeholder">
-                    {profile.full_name.charAt(0).toUpperCase()}
+                    {asString(profile.full_name).charAt(0).toUpperCase()}
                   </div>
                 )}
               </div>
@@ -817,10 +818,10 @@ const PublicProfile = () => {
                           </div>
                         ))
                       : typeof profile.services_offered === 'string'
-                      ? profile.services_offered.split('\n').map((service, index) => (
+                      ? safeSplit(profile.services_offered, '\n').map((service, index) => (
                           <div key={index} className="service-item">
                             <span className="service-icon"><i className="fas fa-bolt icon"></i></span>
-                            <p>{service.trim()}</p>
+                            <p>{asString(service).trim()}</p>
                           </div>
                         ))
                       : null}
@@ -839,10 +840,10 @@ const PublicProfile = () => {
               <div className="collaboration-section">
                 <p>
                   {profile.user_type === 'freelancer' 
-                    ? `Looking for a skilled freelancer? Get in touch with ${profile.full_name.split(' ')[0]} for your next project!`
+                    ? `Looking for a skilled freelancer? Get in touch with ${safeSplit(profile.full_name, ' ')[0] || 'them'} for your next project!`
                     : profile.user_type === 'creator'
-                    ? `Interested in collaborating or commissioning work from ${profile.full_name.split(' ')[0]}? Let's create something amazing together!`
-                    : `Want to collaborate on a project or discuss opportunities with ${profile.full_name.split(' ')[0]}? Reach out!`}
+                    ? `Interested in collaborating or commissioning work from ${safeSplit(profile.full_name, ' ')[0] || 'them'}? Let's create something amazing together!`
+                    : `Want to collaborate on a project or discuss opportunities with ${safeSplit(profile.full_name, ' ')[0] || 'them'}? Reach out!`}
                 </p>
                 <div className="contact-methods">
                   <button className="contact-method-btn primary" onClick={handleMessage}>
@@ -936,9 +937,9 @@ const PublicProfile = () => {
             {((Array.isArray(profile.skills) && profile.skills.length > 0) || 
               (typeof profile.skills === 'string' && profile.skills.trim())) ? (
               <div className="skills-list">
-                {profile.skills.split(',').map((skill, index) => (
+                {safeSplit(profile.skills, ',').map((skill, index) => (
                   <span key={index} className="skill-tag">
-                    {skill.trim()}
+                    {asString(skill).trim()}
                   </span>
                 ))}
               </div>
@@ -1006,10 +1007,10 @@ const PublicProfile = () => {
                         </div>
                       ))
                     : typeof profile.achievements === 'string'
-                    ? profile.achievements.split('\n').map((achievement, index) => (
+                    ? safeSplit(profile.achievements, '\n').map((achievement, index) => (
                         <div key={index} className="achievement-item">
                           <span className="achievement-icon"><i className="fas fa-trophy icon"></i></span>
-                          <p>{achievement.trim()}</p>
+                          <p>{asString(achievement).trim()}</p>
                         </div>
                       ))
                     : null}

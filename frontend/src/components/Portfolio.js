@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { portfolioAPI } from '../api';
 import { handleImageError, createPortfolioImageUrl } from '../utils/portfolioImageUtils';
 import { validatePortfolioOwnership, logOwnershipCheck } from '../utils/portfolioOwnership';
+import { safeSplit, asString } from '../utils/string';
 import { useAuth } from './Auth/AuthContext';
 import SEO from './common/SEO';
 import './Portfolio.css';
@@ -212,7 +213,7 @@ const Portfolio = () => {
                 className={`filter-btn ${filter === category ? 'active' : ''}`}
               >
                 {category === 'all' ? '🌟' : getCategoryIcon(category)}
-                {category.charAt(0).toUpperCase() + category.slice(1)}
+                {asString(category).charAt(0).toUpperCase() + asString(category).slice(1)}
               </button>
             ))}
           </div>
@@ -316,18 +317,18 @@ const Portfolio = () => {
                   
                   {item.description && (
                     <p className="card-description">
-                      {item.description.length > 100 
-                        ? `${item.description.substring(0, 100)}...` 
-                        : item.description
+                      {asString(item.description).length > 100 
+                        ? `${asString(item.description).substring(0, 100)}...` 
+                        : asString(item.description)
                       }
                     </p>
                   )}
 
                   {item.tags && (
                     <div className="card-tags">
-                      {item.tags.split(',').slice(0, 3).map((tag, index) => (
+                      {safeSplit(item.tags, ',').slice(0, 3).map((tag, index) => (
                         <span key={index} className="tag">
-                          #{tag.trim()}
+                          #{asString(tag).trim()}
                         </span>
                       ))}
                     </div>
