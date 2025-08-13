@@ -125,19 +125,19 @@ const PublicProfile = () => {
         
         // Fetch user's uploaded assets to include in portfolio
         console.log('👤 Profile data:', {
-          username: response.data.user?.username,
-          userId: response.data.user?.id,
-          userType: response.data.user_type,
-          profileId: response.data.id
+          username: normalizedProfile.username,
+          userId: normalizedProfile.userId,
+          userType: normalizedProfile.userType,
+          profileId: normalizedProfile.id
         });
         
-        if (response.data.user?.id) {
-          await fetchUserAssets(response.data.user.id);
-          console.log('🚀 About to call fetchUserPortfolioItems with user ID:', response.data.user.id);
-          await fetchUserPortfolioItems(response.data.user.id);
+        if (normalizedProfile.userId) {
+          await fetchUserAssets(normalizedProfile.userId);
+          console.log('🚀 About to call fetchUserPortfolioItems with user ID:', normalizedProfile.userId);
+          await fetchUserPortfolioItems(normalizedProfile.userId);
           console.log('✅ Completed fetchUserPortfolioItems call');
         } else {
-          console.warn('⚠️ No user ID found in profile response');
+          console.warn('⚠️ No user ID found in normalized profile');
           setAssets([]);
         }
       } catch (err) {
@@ -276,7 +276,17 @@ const PublicProfile = () => {
     const fetchFollowStats = async (username) => {
       try {
         setFollowStatsLoading(true);
-        const response = await userAPI.getFollowStats(username);
+        
+        // Get userId from the profile since followAPI.getFollowStats expects user_id, not username
+        if (!profile?.userId) {
+          console.warn('No userId available for follow stats');
+          setFollowerCount(0);
+          setFollowingCount(0);
+          setIsFollowing(false);
+          return;
+        }
+        
+        const response = await followAPI.getFollowStats(profile.userId);
         setFollowerCount(response.data?.followers_count || 0);
         setFollowingCount(response.data?.following_count || 0);
         setIsFollowing(response.data?.is_following || false);
@@ -391,8 +401,8 @@ const PublicProfile = () => {
       {/* Dynamic SEO meta tags for social sharing */}
       {profile && (
         <SEO
-          title={`${profile.full_name} (@${profile.user?.username})`}
-          description={profile.bio || `${profile.full_name} is a ${profile.user_type} on VikraHub. ${profile.headline || 'Connect and collaborate on creative projects.'}`}
+          title={`${profile.displayName} (@${profile.username})`}
+          description={profile.bio || `${profile.displayName} is a ${profile.userType} on VikraHub. ${profile.headline || 'Connect and collaborate on creative projects.'}`}
           image={profile.avatar || profile.cover_photo || `${window.location.origin}/vikrahub-hero.jpg`}
           url={`${window.location.origin}/profile/${username}`}
           type="profile"
@@ -427,9 +437,7 @@ const PublicProfile = () => {
               <div className="profile-info">
                 {/* User's Name */}
                 <h1 className="profile-name">
-                  {typeof profile.full_name === 'string' ? profile.full_name : 
-                   typeof profile.full_name === 'object' && profile.full_name ? (profile.full_name.name || 'Unknown User') : 
-                   'Unknown User'}
+                  {profile.displayName}
                 </h1>
                 
                 {/* Bio */}
@@ -555,17 +563,17 @@ const PublicProfile = () => {
                 <>
                   {/* Debug portfolio items */}
                   {console.log('🎨 Rendering works section with profile:', profile)}
-                  {console.log('📁 Portfolio items in render:', profile?.portfolio_items)}
-                  {console.log('📊 Portfolio items length in render:', profile?.portfolio_items?.length || 0)}
+                  {console.log('📁 Portfolio items in render:', profile?.portfolioItems)}
+                  {console.log('📊 Portfolio items length in render:', profile?.portfolioItems?.length || 0)}
                   
                   {/* Portfolio Projects Section */}
-                  {profile?.portfolio_items && profile.portfolio_items.length > 0 ? (
+                  {profile?.portfolioItems && profile.portfolioItems.length > 0 ? (
                     <div className="portfolio-subsection">
                       <h3 className="portfolio-subsection-title">
-                        {profile.user_type === 'client' ? '📁 Client Projects' : '🎨 Portfolio Projects'}
+                        {profile.userType === 'client' ? '📁 Client Projects' : '🎨 Portfolio Projects'}
                       </h3>
                       <div className="portfolio-grid">
-                        {profile.portfolio_items.map((item) => (
+                        {profile.portfolioItems.map((item) => (
                           <div key={`portfolio-${item.id}`} className="portfolio-item portfolio-project">
                             {/* Debug image field */}
                             {console.log(`🖼️ Portfolio item ${item.id} image debug:`, {

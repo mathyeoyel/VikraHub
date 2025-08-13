@@ -45,6 +45,8 @@ export const normalizeProfileData = (data) => {
     username,
     displayName: displayName || username || 'Anonymous',
     userType,
+    // Keep both formats for backward compatibility
+    user_type: userType,
     avatar: asString(data.avatar ?? ''),
     bio: asString(data.bio ?? ''),
     headline: asString(data.headline ?? ''),
@@ -58,7 +60,14 @@ export const normalizeProfileData = (data) => {
     memberSince: data.member_since ?? data.memberSince ?? data.date_joined ?? null,
     portfolioItems: Array.isArray(data.portfolio_items) ? data.portfolio_items :
                    Array.isArray(data.portfolioItems) ? data.portfolioItems : [],
+    // Keep both formats for backward compatibility
+    portfolio_items: Array.isArray(data.portfolio_items) ? data.portfolio_items :
+                    Array.isArray(data.portfolioItems) ? data.portfolioItems : [],
     stats: normalizeStats(data.stats),
+    // Keep original fields that might be used
+    services_offered: asString(data.services_offered ?? ''),
+    achievements: asString(data.achievements ?? ''),
+    full_name: displayName,
     // Keep original data for any missed fields
     _original: data
   };
