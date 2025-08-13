@@ -4459,3 +4459,25 @@ WARNING 2025-08-11 16:28:16,409 log 12612 4724 Unauthorized: /api/portfolio/10/
 WARNING 2025-08-11 16:28:16,410 log 12612 4724 Unauthorized: /api/portfolio/10/
 INFO 2025-08-11 16:38:31,772 autoreload 25472 23812 Watching for file changes with StatReloader
 INFO 2025-08-11 18:22:08,808 autoreload 16088 22556 Watching for file changes with StatReloader
+INFO 2025-08-13 14:31:33,569 autoreload 15487 131242888369984 Watching for file changes with StatReloader
+INFO 2025-08-13 14:32:19,940 basehttp 15487 131242781533888 "GET / HTTP/1.1" 200 1256
+WARNING 2025-08-13 14:32:20,477 log 15487 131242773141184 Not Found: /favicon.ico
+WARNING 2025-08-13 14:32:20,478 basehttp 15487 131242773141184 "GET /favicon.ico HTTP/1.1" 404 179
+INFO 2025-08-13 14:36:18,267 autoreload 17988 135183478687552 Watching for file changes with StatReloader
+INFO 2025-08-13 14:37:05,709 autoreload 18830 132784347838272 Watching for file changes with StatReloader
+INFO 2025-08-13 14:37:30,612 basehttp 18830 132784241731264 "GET / HTTP/1.1" 200 1256
+INFO 2025-08-13 14:42:31,317 autoreload 18830 132784347838272 /workspaces/VikraHub/backend/core/api_views.py changed, reloading.
+INFO 2025-08-13 14:42:31,907 autoreload 21178 123747756275520 Watching for file changes with StatReloader
+INFO 2025-08-13 14:42:52,951 autoreload 21178 123747756275520 /workspaces/VikraHub/backend/core/api_views.py changed, reloading.
+INFO 2025-08-13 14:42:53,594 autoreload 21363 129470167852864 Watching for file changes with StatReloader
+INFO 2025-08-13 14:43:40,314 autoreload 21363 129470167852864 /workspaces/VikraHub/backend/core/serializers.py changed, reloading.
+INFO 2025-08-13 14:43:41,130 autoreload 21737 139664398100288 Watching for file changes with StatReloader
+INFO 2025-08-13 14:50:13,265 autoreload 25088 133976683788096 Watching for file changes with StatReloader
+INFO 2025-08-13 14:54:17,125 autoreload 28459 136079548389184 Watching for file changes with StatReloader
+INFO 2025-08-13 14:54:25,356 basehttp 28459 136079442142912 "GET / HTTP/1.1" 200 1256
+INFO 2025-08-13 14:58:05,423 autoreload 28459 136079548389184 /workspaces/VikraHub/backend/core/api_views.py changed, reloading.
+INFO 2025-08-13 14:58:05,956 autoreload 30186 124612581558080 Watching for file changes with StatReloader
+INFO 2025-08-13 14:58:53,323 autoreload 30186 124612581558080 /workspaces/VikraHub/backend/core/api_views.py changed, reloading.
+INFO 2025-08-13 14:58:54,065 autoreload 30596 124800092587840 Watching for file changes with StatReloader
+INFO 2025-08-13 15:05:19,289 autoreload 30596 124800092587840 /workspaces/VikraHub/backend/core/api_views.py changed, reloading.
+INFO 2025-08-13 15:05:19,867 autoreload 33369 130822288168768 Watching for file changes with StatReloader

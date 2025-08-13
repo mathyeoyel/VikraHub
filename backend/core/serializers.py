@@ -400,83 +400,91 @@ class PortfolioItemSerializer(serializers.ModelSerializer):
 
 class PublicUserProfileSerializer(serializers.ModelSerializer):
     """Serializer for public user profiles (only public information)"""
-    full_name = serializers.SerializerMethodField()
+    username = serializers.CharField(source='user.username', read_only=True)
+    display_name = serializers.SerializerMethodField()
     member_since = serializers.DateTimeField(source='user.date_joined', read_only=True)
     portfolio_items = serializers.SerializerMethodField()
-    client_profile = serializers.SerializerMethodField()
-    followers_count = serializers.SerializerMethodField()
-    following_count = serializers.SerializerMethodField()
-    is_following = serializers.SerializerMethodField()
+    stats = serializers.SerializerMethodField()
+    skills_list = serializers.SerializerMethodField()
+    recognitions_list = serializers.SerializerMethodField()
     
     class Meta:
         model = UserProfile
-        fields = ['id', 'user', 'user_type', 'avatar', 'cover_photo', 'bio', 'website', 'headline',
-                 'skills', 'location', 'achievements', 'services_offered', 'full_name', 'member_since', 'portfolio_items',
-                 'facebook', 'instagram', 'twitter', 'linkedin', 'github', 'client_profile', 
-                 'followers_count', 'following_count', 'is_following']
-        read_only_fields = ['id', 'user', 'user_type', 'avatar', 'cover_photo', 'bio', 'website', 'headline',
-                           'skills', 'location', 'achievements', 'services_offered', 'full_name', 'member_since', 'portfolio_items',
-                           'facebook', 'instagram', 'twitter', 'linkedin', 'github', 'client_profile',
-                           'followers_count', 'following_count', 'is_following']
+        fields = ['id', 'username', 'display_name', 'user_type', 'avatar', 'bio', 
+                 'headline', 'skills_list', 'location', 'website', 'member_since', 
+                 'portfolio_items', 'recognitions_list', 'stats']
+        read_only_fields = ['id', 'username', 'display_name', 'user_type', 'avatar', 
+                           'bio', 'headline', 'skills_list', 'location', 'website', 
+                           'member_since', 'portfolio_items', 'recognitions_list', 'stats']
     
-    def get_followers_count(self, obj):
-        return obj.user.get_followers_count()
+    def get_display_name(self, obj):
+        """Get user's display name with fallback to username"""
+        try:
+            if obj.user.first_name and obj.user.last_name:
+                return f"{obj.user.first_name} {obj.user.last_name}"
+            elif obj.user.first_name:
+                return obj.user.first_name
+            return obj.user.username
+        except:
+            return obj.user.username
     
-    def get_following_count(self, obj):
-        return obj.user.get_following_count()
+    def get_skills_list(self, obj):
+        """Get skills as a list, tolerant of null/blank fields"""
+        try:
+            if obj.skills:
+                return [skill.strip() for skill in obj.skills.split(',') if skill.strip()]
+            return []
+        except:
+            return []
     
-    def get_is_following(self, obj):
-        user = self.context.get('request').user if self.context.get('request') else None
-        return user.is_authenticated and user.is_following(obj.user) if user else False
+    def get_recognitions_list(self, obj):
+        """Get recognitions as a list, tolerant of null/blank fields"""
+        try:
+            if obj.achievements:
+                # Split achievements by line breaks and filter out empty lines
+                return [achievement.strip() for achievement in obj.achievements.split('\n') if achievement.strip()]
+            return []
+        except:
+            return []
     
-    def get_full_name(self, obj):
-        """Get user's full name"""
-        if obj.user.first_name and obj.user.last_name:
-            return f"{obj.user.first_name} {obj.user.last_name}"
-        return obj.user.username
-    
-    def get_client_profile(self, obj):
-        """Get client profile data for public viewing (limited fields)"""
-        if obj.user_type == 'client':
-            try:
-                client_profile = obj.user.client_profile
-                return {
-                    'client_type': client_profile.client_type,
-                    'client_type_display': client_profile.get_client_type_display(),
-                    'company_name': client_profile.company_name,
-                    'company_size': client_profile.company_size,
-                    'industry': client_profile.industry,
-                    'business_address': client_profile.business_address,
-                    'contact_person': client_profile.contact_person,
-                    'phone_number': client_profile.phone_number,
-                    'typical_budget_range': client_profile.typical_budget_range,
-                    'project_types': client_profile.project_types,
-                    'preferred_communication': client_profile.preferred_communication,
-                    'projects_posted': client_profile.projects_posted,
-                    'projects_completed': client_profile.projects_completed,
-                    'completion_rate': client_profile.completion_rate,
-                    'total_spent': float(client_profile.total_spent) if client_profile.total_spent else 0.0,
-                    'is_verified': client_profile.is_verified,
-                    'payment_verified': client_profile.payment_verified,
-                }
-            except:
-                return None
-        return None
+    def get_stats(self, obj):
+        """Get user statistics using DB counts for efficiency"""
+        try:
+            # Use the optimized methods from User model
+            followers_count = obj.user.get_followers_count()
+            following_count = obj.user.get_following_count()
+            
+            # Count projects using DB query
+            projects_count = obj.user.portfolio_items.count()
+            
+            # Check if current user is following this user
+            current_user = self.context.get('request').user if self.context.get('request') else None
+            is_following = (current_user.is_authenticated and 
+                          current_user.is_following(obj.user)) if current_user else False
+            
+            return {
+                'followers_count': followers_count,
+                'following_count': following_count,
+                'projects_count': projects_count,
+                'is_following': is_following,
+            }
+        except Exception as e:
+            # Return default stats if anything fails
+            return {
+                'followers_count': 0,
+                'following_count': 0,
+                'projects_count': 0,
+                'is_following': False,
+            }
     
     def get_portfolio_items(self, obj):
-        """Get user's portfolio items"""
-        portfolio_items = obj.user.portfolio_items.all()
-        return PortfolioItemSerializer(portfolio_items, many=True).data
-    
-    def to_representation(self, instance):
-        """Override to ensure proper user serialization with context"""
-        data = super().to_representation(instance)
-        
-        # Serialize user with context for follow information
-        user_serializer = PublicUserSerializer(instance.user, context=self.context)
-        data['user'] = user_serializer.data
-        
-        return data
+        """Get user's portfolio items (limited for performance)"""
+        try:
+            # Limit to first 6 portfolio items for performance
+            portfolio_items = obj.user.portfolio_items.all()[:6]
+            return PortfolioItemSerializer(portfolio_items, many=True, context=self.context).data
+        except:
+            return []
 
 class TeamMemberSerializer(serializers.ModelSerializer):
     class Meta:

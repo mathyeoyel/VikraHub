@@ -6,9 +6,11 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser, AllowAny
 from rest_framework.exceptions import PermissionDenied
 from django.contrib.auth.models import User
-from django.db.models import Q, Avg
+from django.db.models import Q, Avg, Count
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from django.http import Http404
+from django.shortcuts import get_object_or_404
 from .permissions import IsOwnerOrReadOnly, IsPortfolioOwnerOrReadOnly
 from .asset_utils import (
     get_recommended_assets, get_asset_search_results, validate_asset_purchase,
@@ -307,10 +309,56 @@ class PublicUserProfileViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'user__username'  # Allow lookup by username instead of ID
     
     def get_queryset(self):
-        """Filter out inactive users and admin accounts"""
+        """Filter out inactive users and admin accounts with optimized queries"""
         return UserProfile.objects.select_related('user').filter(
             user__is_active=True
         ).exclude(user__is_staff=True)
+    
+    def get_object(self):
+        """Get object with case-insensitive username lookup and proper error handling"""
+        import logging
+        logger = logging.getLogger(__name__)
+        
+        try:
+            username = self.kwargs.get('user__username')
+            if not username:
+                raise Http404("Username not provided")
+            
+            # Case-insensitive, 404-safe lookup with only needed fields
+            user = get_object_or_404(
+                User.objects.only("id", "username", "date_joined")
+                .filter(username__iexact=username)
+            )
+            
+            # Ensure Profile exists using get_or_create
+            profile, created = UserProfile.objects.select_related('user').get_or_create(
+                user=user,
+                defaults={
+                    'user_type': 'client',
+                    'bio': '',
+                    'skills': '',
+                    'headline': '',
+                    'location': '',
+                    'website': '',
+                    'achievements': '',
+                    'services_offered': '',
+                }
+            )
+            
+            # Check permissions (public profiles only for active users)
+            if not user.is_active or user.is_staff:
+                raise Http404("Profile not found")
+                
+            return profile
+            
+        except Exception as e:
+            logger.exception(f"Error retrieving public profile for username '{username}': {str(e)}")
+            raise
+
+    @action(detail=False, methods=['get'])
+    def search(self, request):
+            logger.exception(f"Error retrieving public profile for username '{username}': {str(e)}")
+            raise
     
     @action(detail=False, methods=['get'])
     def search(self, request):
