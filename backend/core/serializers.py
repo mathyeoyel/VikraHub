@@ -415,6 +415,7 @@ class PortfolioItemSerializer(serializers.ModelSerializer):
 
 class PublicUserProfileSerializer(serializers.ModelSerializer):
     """Serializer for public user profiles (only public information)"""
+    userId = serializers.IntegerField(source='user.id', read_only=True)
     username = serializers.CharField(source='user.username', read_only=True)
     display_name = serializers.SerializerMethodField()
     member_since = serializers.DateTimeField(source='user.date_joined', read_only=True)
@@ -425,23 +426,32 @@ class PublicUserProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = UserProfile
-        fields = ['id', 'username', 'display_name', 'user_type', 'avatar', 'bio', 
+        fields = ['id', 'userId', 'username', 'display_name', 'user_type', 'avatar', 'bio', 
                  'headline', 'skills', 'skills_list', 'location', 'website', 'member_since', 
                  'portfolio_items', 'recognitions_list', 'stats']
-        read_only_fields = ['id', 'username', 'display_name', 'user_type', 'avatar', 
+        read_only_fields = ['id', 'userId', 'username', 'display_name', 'user_type', 'avatar', 
                            'bio', 'headline', 'skills', 'skills_list', 'location', 'website', 
                            'member_since', 'portfolio_items', 'recognitions_list', 'stats']
     
     def get_display_name(self, obj):
         """Get user's display name with fallback to username"""
         try:
-            if obj.user.first_name and obj.user.last_name:
-                return f"{obj.user.first_name} {obj.user.last_name}"
-            elif obj.user.first_name:
-                return obj.user.first_name
-            return obj.user.username
-        except:
-            return obj.user.username
+            if not obj.user:
+                return 'Anonymous'
+                
+            # Try to get full name
+            full_name = obj.user.get_full_name()
+            if full_name and full_name.strip():
+                return full_name.strip()
+                
+            # Fallback to first name if available
+            if obj.user.first_name and obj.user.first_name.strip():
+                return obj.user.first_name.strip()
+                
+            # Final fallback to username
+            return obj.user.username or 'Anonymous'
+        except Exception:
+            return obj.user.username if obj.user else 'Anonymous'
     
     def get_skills_list(self, obj):
         """Get skills as a list, tolerant of null/blank fields"""
@@ -453,17 +463,32 @@ class PublicUserProfileSerializer(serializers.ModelSerializer):
             return []
     
     def to_representation(self, instance):
-        """Override to ensure safe field values"""
+        """Override to ensure safe field values and required user info"""
         data = super().to_representation(instance)
+        
+        # Ensure userId and username are always present
+        if 'userId' not in data or data['userId'] is None:
+            data['userId'] = instance.user.id if instance.user else None
+        
+        if 'username' not in data or not data['username']:
+            data['username'] = instance.user.username if instance.user else ''
+        
+        # Ensure display_name is never empty
+        if not data.get('display_name'):
+            data['display_name'] = data['username'] or 'Anonymous'
         
         # Ensure skills field is never null/undefined - provide empty string fallback
         if data.get('skills') is None:
             data['skills'] = ''
             
         # Ensure other string fields are never null
-        for field in ['bio', 'headline', 'location', 'website']:
+        for field in ['bio', 'headline', 'location', 'website', 'user_type']:
             if data.get(field) is None:
                 data[field] = ''
+                
+        # Ensure user_type has a default
+        if not data.get('user_type'):
+            data['user_type'] = 'creator'
                 
         return data
     

@@ -4497,3 +4497,20 @@ INFO 2025-08-13 15:24:21,021 autoreload 42256 131671081367360 /workspaces/VikraH
 INFO 2025-08-13 15:24:21,590 autoreload 42396 136739302000448 Watching for file changes with StatReloader
 INFO 2025-08-13 15:24:42,587 autoreload 42396 136739302000448 /workspaces/VikraHub/backend/core/models.py changed, reloading.
 INFO 2025-08-13 15:24:43,189 autoreload 42580 130988674262848 Watching for file changes with StatReloader
+INFO 2025-08-13 15:30:34,443 autoreload 42580 130988674262848 /workspaces/VikraHub/backend/core/serializers.py changed, reloading.
+INFO 2025-08-13 15:30:35,055 autoreload 45152 136639315568448 Watching for file changes with StatReloader
+INFO 2025-08-13 15:30:36,591 autoreload 45152 136639315568448 /workspaces/VikraHub/backend/core/models.py changed, reloading.
+INFO 2025-08-13 15:30:37,206 autoreload 45190 130806536935232 Watching for file changes with StatReloader
+INFO 2025-08-13 15:54:42,179 basehttp 45190 130806430262976 "GET / HTTP/1.1" 200 1256
+INFO 2025-08-13 16:11:31,483 autoreload 45190 130806536935232 /workspaces/VikraHub/backend/core/serializers.py changed, reloading.
+INFO 2025-08-13 16:11:32,297 autoreload 65238 127362789386048 Watching for file changes with StatReloader
+INFO 2025-08-13 16:11:50,333 autoreload 65238 127362789386048 /workspaces/VikraHub/backend/core/serializers.py changed, reloading.
+INFO 2025-08-13 16:11:50,869 autoreload 65408 126424325338944 Watching for file changes with StatReloader
+INFO 2025-08-13 16:12:26,254 autoreload 65408 126424325338944 /workspaces/VikraHub/backend/core/serializers.py changed, reloading.
+INFO 2025-08-13 16:12:26,799 autoreload 65683 139431344252736 Watching for file changes with StatReloader
+INFO 2025-08-13 16:12:59,185 autoreload 65683 139431344252736 /workspaces/VikraHub/backend/core/api_views.py changed, reloading.
+INFO 2025-08-13 16:12:59,749 autoreload 65967 126408167925568 Watching for file changes with StatReloader
+INFO 2025-08-13 16:13:21,734 autoreload 65967 126408167925568 /workspaces/VikraHub/backend/core/api_views.py changed, reloading.
+INFO 2025-08-13 16:13:22,313 autoreload 66156 134419153274688 Watching for file changes with StatReloader
+INFO 2025-08-13 16:23:07,609 autoreload 71713 139765362186048 Watching for file changes with StatReloader
+INFO 2025-08-13 16:25:39,525 autoreload 73205 127199581550400 Watching for file changes with StatReloader

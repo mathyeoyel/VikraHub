@@ -322,19 +322,25 @@ class PublicUserProfileViewSet(viewsets.ReadOnlyModelViewSet):
         try:
             username = self.kwargs.get('user__username')
             if not username:
+                logger.warning("No username provided in URL parameters")
                 raise Http404("Username not provided")
             
-            # Case-insensitive, 404-safe lookup with only needed fields
+            # Case-insensitive, 404-safe lookup with select_related for user info
             user = get_object_or_404(
-                User.objects.only("id", "username", "date_joined")
-                .filter(username__iexact=username)
+                User.objects.select_related().filter(username__iexact=username),
+                is_active=True
             )
             
-            # Ensure Profile exists using get_or_create
+            # Exclude staff/admin accounts from public profiles
+            if user.is_staff or user.is_superuser:
+                logger.info(f"Attempted access to staff/admin profile: {username}")
+                raise Http404("Profile not found")
+            
+            # Ensure Profile exists using get_or_create with select_related
             profile, created = UserProfile.objects.select_related('user').get_or_create(
                 user=user,
                 defaults={
-                    'user_type': 'client',
+                    'user_type': 'creator',
                     'bio': '',
                     'skills': '',
                     'headline': '',
@@ -345,21 +351,18 @@ class PublicUserProfileViewSet(viewsets.ReadOnlyModelViewSet):
                 }
             )
             
-            # Check permissions (public profiles only for active users)
-            if not user.is_active or user.is_staff:
-                raise Http404("Profile not found")
+            if created:
+                logger.info(f"Created new profile for user: {username}")
                 
             return profile
             
+        except Http404:
+            # Re-raise Http404 as-is
+            raise
         except Exception as e:
-            logger.exception(f"Error retrieving public profile for username '{username}': {str(e)}")
-            raise
+            logger.exception(f"Unexpected error retrieving public profile for username '{username}': {str(e)}")
+            raise Http404("Profile not found")
 
-    @action(detail=False, methods=['get'])
-    def search(self, request):
-            logger.exception(f"Error retrieving public profile for username '{username}': {str(e)}")
-            raise
-    
     @action(detail=False, methods=['get'])
     def search(self, request):
         """Search public profiles by username, name, or skills"""

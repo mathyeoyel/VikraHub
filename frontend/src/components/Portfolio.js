@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { portfolioAPI } from '../api';
-import { handleImageError, createPortfolioImageUrl } from '../utils/portfolioImageUtils';
 import { validatePortfolioOwnership, logOwnershipCheck } from '../utils/portfolioOwnership';
 import { safeSplit, asString } from '../utils/string';
+import { getPortfolioImage, handleImageError as handleImageErrorNew } from '../utils/image';
 import { useAuth } from './Auth/AuthContext';
 import SEO from './common/SEO';
 import './Portfolio.css';
@@ -84,20 +84,6 @@ const Portfolio = () => {
                            (item.category.name || 'general') : 'general';
         return itemCategory === filter;
       });
-
-  const getImageUrl = (item) => {
-    // Priority: previewImage > image > first file > placeholder
-    if (item.preview_image) {
-      return createPortfolioImageUrl(item.preview_image);
-    }
-    if (item.image) {
-      return createPortfolioImageUrl(item.image);
-    }
-    if (item.files && item.files.length > 0) {
-      return createPortfolioImageUrl(item.files[0]);
-    }
-    return null;
-  };
 
   const getCategoryIcon = (category) => {
     const icons = {
@@ -244,20 +230,13 @@ const Portfolio = () => {
             filteredPortfolios.map(item => (
               <div key={item.id} className="portfolio-card">
                 <div className="card-image">
-                  {getImageUrl(item) ? (
-                    <img 
-                      src={getImageUrl(item)}
-                      alt={item.title}
-                      className="portfolio-img"
-                      onError={handleImageError}
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="placeholder-image">
-                      <i className="fas fa-image"></i>
-                      <span>No Preview</span>
-                    </div>
-                  )}
+                  <img 
+                    src={getPortfolioImage(item)}
+                    alt={asString(item.title) || "Portfolio item"}
+                    className="portfolio-img"
+                    onError={(e) => handleImageErrorNew(e, item.title || "Portfolio")}
+                    loading="lazy"
+                  />
                   
                   {/* Overlay with actions */}
                   <div className="card-overlay">

@@ -5,8 +5,9 @@ import { useAuth } from './Auth/AuthContext';
 import notificationService from '../services/notificationService';
 import PublicClientProfile from './PublicClientProfile';
 import ErrorBoundary from './ErrorBoundary';
-import { handleImageError, createPortfolioImageUrl } from '../utils/portfolioImageUtils';
 import { safeSplit, asString } from '../utils/string';
+import { normalizeProfileData, isValidProfile } from '../utils/profile';
+import { getAvatarImage, getPortfolioImage, handleImageError as handleImageErrorNew } from '../utils/image';
 import SEO from './common/SEO';
 import './PublicProfile.css';
 
@@ -87,12 +88,21 @@ const PublicProfile = () => {
       try {
         setLoading(true);
         const response = await publicProfileAPI.getByUsername(username);
-        setProfile(response.data);
+        
+        // Normalize the profile data
+        const normalizedProfile = normalizeProfileData(response.data);
+        
+        if (!normalizedProfile || !isValidProfile(normalizedProfile)) {
+          throw new Error('Invalid profile data received');
+        }
+        
+        setProfile(normalizedProfile);
         
         // Debug: Log the complete profile data to see what we're getting
         console.log('🔍 Complete profile data received:', response.data);
-        console.log('📁 Portfolio items:', response.data.portfolio_items);
-        console.log('📊 Portfolio items length:', response.data.portfolio_items?.length || 0);
+        console.log('📋 Normalized profile data:', normalizedProfile);
+        console.log('📁 Portfolio items:', normalizedProfile.portfolioItems);
+        console.log('📊 Portfolio items length:', normalizedProfile.portfolioItems?.length || 0);
         
         // Check if the profile response already contains follow information
         if (response.data.followers_count !== undefined && 
@@ -349,8 +359,22 @@ const PublicProfile = () => {
     );
   }
 
+  // Validate profile has minimum required data
+  if (!profile || !isValidProfile(profile)) {
+    return (
+      <div className="public-profile">
+        <div className="container">
+          <div className="profile-error">
+            <h2>Invalid Profile</h2>
+            <p>This profile is missing required information.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // If the user is a client, use the dedicated PublicClientProfile component
-  if (profile && profile.user_type === 'client') {
+  if (profile && profile.userType === 'client') {
     return (
       <PublicClientProfile 
         profile={profile} 
@@ -393,13 +417,11 @@ const PublicProfile = () => {
           <div className="profile-header">
             <div className="profile-layout">
               <div className="profile-avatar">
-                {profile.avatar ? (
-                  <img src={profile.avatar} alt={profile.full_name} />
-                ) : (
-                  <div className="avatar-placeholder">
-                    {asString(profile.full_name).charAt(0).toUpperCase()}
-                  </div>
-                )}
+                <img 
+                  src={getAvatarImage(profile)} 
+                  alt={profile.displayName || profile.username || "User profile"}
+                  onError={(e) => handleImageErrorNew(e, profile.displayName || "User")}
+                />
               </div>
               
               <div className="profile-info">
@@ -561,35 +583,19 @@ const PublicProfile = () => {
                             
                             {/* Image section - show either image or placeholder */}
                             <div className="portfolio-image">
-                              {item.image ? (
-                                <img 
-                                  src={createPortfolioImageUrl(item.image, { title: item.title, tags: item.tags })} 
-                                  alt={item.title}
-                                  onError={(e) => {
-                                    console.error(`❌ Failed to load portfolio image for item ${item.id}:`, {
-                                      src: e.target.src,
-                                      originalImage: item.image,
-                                      item: item
-                                    });
-                                    handleImageError(e);
-                                  }}
-                                  data-original-src={item.image}
-                                />
-                              ) : (
-                                <div className="portfolio-placeholder">
-                                  <img 
-                                    src={`https://via.placeholder.com/400x300/6b7280/ffffff?text=${encodeURIComponent(item.title || 'Portfolio Item')}`}
-                                    alt={item.title}
-                                    className="placeholder-image"
-                                    style={{
-                                      width: '100%',
-                                      height: '200px',
-                                      objectFit: 'cover',
-                                      borderRadius: '8px'
-                                    }}
-                                  />
-                                </div>
-                              )}
+                              <img 
+                                src={getPortfolioImage(item)} 
+                                alt={item.title || "Portfolio item"}
+                                onError={(e) => {
+                                  console.error(`❌ Failed to load portfolio image for item ${item.id}:`, {
+                                    src: e.target.src,
+                                    originalImage: item.image,
+                                    item: item
+                                  });
+                                  handleImageErrorNew(e, item.title || "Portfolio");
+                                }}
+                                loading="lazy"
+                              />
                             </div>
                             
                             <div className="portfolio-content">
