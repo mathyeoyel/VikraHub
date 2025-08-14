@@ -33,29 +33,45 @@ const PublicProfile = () => {
 
   // Memoize follow handlers
   const handleFollow = useCallback(async () => {
-    if (!isAuthenticated || !profile?.user?.username) return;
+    if (!isAuthenticated || !profile?.userId) {
+      console.warn('Cannot follow: not authenticated or no userId available');
+      return;
+    }
 
     try {
+      console.log(`🔄 ${isFollowing ? 'Unfollowing' : 'Following'} user ${profile.username} (ID: ${profile.userId})`);
+      
       if (isFollowing) {
-        await followAPI.unfollow(profile.user.username);
+        await followAPI.unfollow(profile.userId);
         setIsFollowing(false);
-        setFollowerCount(prev => prev - 1);
-        notificationService.showSuccess('Unfollowed successfully');
+        setFollowerCount(prev => Math.max(0, prev - 1));
+        notificationService.showSuccess(`Unfollowed ${profile.displayName || profile.username}`);
+        console.log('✅ Unfollow successful');
       } else {
-        await followAPI.follow(profile.user.username);
+        await followAPI.follow(profile.userId);
         setIsFollowing(true);
         setFollowerCount(prev => prev + 1);
-        notificationService.showSuccess('Following successfully');
+        notificationService.showSuccess(`Now following ${profile.displayName || profile.username}`);
+        console.log('✅ Follow successful');
       }
     } catch (error) {
-      notificationService.showError(error.response?.data?.detail || 'Failed to update follow status');
+      console.error('❌ Follow operation failed:', error);
+      const errorMessage = error.response?.data?.detail || 
+                          error.response?.data?.message || 
+                          error.message || 
+                          'Failed to update follow status';
+      notificationService.showError(errorMessage);
     }
-  }, [isAuthenticated, profile?.user?.username, isFollowing]);
+  }, [isAuthenticated, profile?.userId, profile?.username, profile?.displayName, isFollowing]);
 
   const handleMessage = useCallback(() => {
-    if (!isAuthenticated || !profile?.user?.username) return;
-    navigate(`/chat?user=${profile.user.username}`);
-  }, [isAuthenticated, profile?.user?.username, navigate]);
+    if (!isAuthenticated || !profile?.username) {
+      console.warn('Cannot message: not authenticated or no username available');
+      return;
+    }
+    console.log(`💬 Opening chat with ${profile.username}`);
+    navigate(`/chat?user=${profile.username}`);
+  }, [isAuthenticated, profile?.username, navigate]);
 
   // Memoize computed values
   const userTypeInfo = useMemo(() => {
@@ -108,6 +124,15 @@ const PublicProfile = () => {
           cover_photo_medium: normalizedProfile.cover_photo_medium,
           cover_photo_large: normalizedProfile.cover_photo_large,
           hasCoverPhoto: !!normalizedProfile.cover_photo
+        });
+
+        console.log('🔐 Auth and profile debug:', {
+          isAuthenticated,
+          currentUser: user?.username,
+          profileUser: normalizedProfile.username,
+          routeUsername: username,
+          canFollow: isAuthenticated && user?.username !== username,
+          profileUserId: normalizedProfile.userId
         });
         
         // Check if the profile response already contains follow information
