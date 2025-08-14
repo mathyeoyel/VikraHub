@@ -426,10 +426,10 @@ class PublicUserProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = UserProfile
-        fields = ['id', 'userId', 'username', 'display_name', 'user_type', 'avatar', 'bio', 
+        fields = ['id', 'userId', 'username', 'display_name', 'user_type', 'avatar', 'cover_photo', 'bio', 
                  'headline', 'skills', 'skills_list', 'location', 'website', 'member_since', 
                  'portfolio_items', 'recognitions_list', 'stats']
-        read_only_fields = ['id', 'userId', 'username', 'display_name', 'user_type', 'avatar', 
+        read_only_fields = ['id', 'userId', 'username', 'display_name', 'user_type', 'avatar', 'cover_photo',
                            'bio', 'headline', 'skills', 'skills_list', 'location', 'website', 
                            'member_since', 'portfolio_items', 'recognitions_list', 'stats']
     
@@ -489,6 +489,17 @@ class PublicUserProfileSerializer(serializers.ModelSerializer):
         # Ensure user_type has a default
         if not data.get('user_type'):
             data['user_type'] = 'creator'
+        
+        # Add optimized cover photo URLs if cover photo exists
+        if data.get('cover_photo'):
+            data['cover_photo_small'] = get_optimized_avatar_url(data['cover_photo'], size=600)
+            data['cover_photo_medium'] = get_optimized_avatar_url(data['cover_photo'], size=1200)
+            data['cover_photo_large'] = get_optimized_avatar_url(data['cover_photo'], size=1920)
+        else:
+            # Ensure optimized cover photo fields are empty strings if no cover photo
+            data['cover_photo_small'] = ''
+            data['cover_photo_medium'] = ''
+            data['cover_photo_large'] = ''
                 
         return data
     
