@@ -300,9 +300,9 @@ def get_follow_stats_query(request):
 
 
 @api_view(['GET'])
-@permission_classes([permissions.IsAuthenticated])
+@permission_classes([permissions.AllowAny])
 def get_follow_stats(request, user_id):
-    """Get follow statistics for a user"""
+    """Get follow statistics for a user (public access)"""
     user = get_object_or_404(User, id=user_id)
     serializer = FollowStatsSerializer(user, context={'request': request})
     return Response(serializer.data)

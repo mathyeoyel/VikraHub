@@ -48,11 +48,19 @@ api.interceptors.request.use(
       !config.url.includes('/comments/') &&
       !config.url.includes('my_posts/');
     
+    // Special handling for follow stats: GET requests to view follow stats are public
+    const isFollowStatsPublic = config.method === 'get' && 
+      config.url.includes('follow/stats/') && 
+      !config.url.includes('/follow/') && // Don't allow follow/unfollow actions
+      !config.url.includes('/followers/') && // Don't allow followers list access
+      !config.url.includes('/following/'); // Don't allow following list access
+    
     const isPublicRoute = publicRoutes.some(route => config.url.includes(route)) || 
                          isPortfolioPublic ||
                          isCreativeAssetsPublic || 
                          isPostsPublic ||
-                         isBlogPublic;
+                         isBlogPublic ||
+                         isFollowStatsPublic;
     
     if (!isPublicRoute) {
       const token = getAccessToken();

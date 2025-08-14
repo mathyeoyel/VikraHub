@@ -4516,3 +4516,5 @@ INFO 2025-08-13 16:23:07,609 autoreload 71713 139765362186048 Watching for file 
 INFO 2025-08-13 16:25:39,525 autoreload 73205 127199581550400 Watching for file changes with StatReloader
 INFO 2025-08-13 17:16:51,328 autoreload 96323 136733171152704 Watching for file changes with StatReloader
 INFO 2025-08-13 17:22:03,337 autoreload 98712 123964939294528 Watching for file changes with StatReloader
+INFO 2025-08-14 19:44:51,366 autoreload 6330 135833632528192 Watching for file changes with StatReloader
+INFO 2025-08-14 19:51:27,570 basehttp 6330 135833525905088 "GET /api/follow/stats/6/ HTTP/1.1" 301 0
