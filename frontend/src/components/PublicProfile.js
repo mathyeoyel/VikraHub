@@ -7,7 +7,7 @@ import PublicClientProfile from './PublicClientProfile';
 import ErrorBoundary from './ErrorBoundary';
 import { safeSplit, asString } from '../utils/string';
 import { normalizeProfileData, isValidProfile } from '../utils/profile';
-import { getAvatarImage, getPortfolioImage, handleImageError as handleImageErrorNew } from '../utils/image';
+import { getAvatarImage, getCoverPhotoImage, getPortfolioImage, handleImageError as handleImageErrorNew } from '../utils/image';
 import SEO from './common/SEO';
 import './PublicProfile.css';
 
@@ -103,6 +103,12 @@ const PublicProfile = () => {
         console.log('📋 Normalized profile data:', normalizedProfile);
         console.log('📁 Portfolio items:', normalizedProfile.portfolioItems);
         console.log('📊 Portfolio items length:', normalizedProfile.portfolioItems?.length || 0);
+        console.log('🖼️ Cover photo debug:', {
+          cover_photo: normalizedProfile.cover_photo,
+          cover_photo_medium: normalizedProfile.cover_photo_medium,
+          cover_photo_large: normalizedProfile.cover_photo_large,
+          hasCoverPhoto: !!normalizedProfile.cover_photo
+        });
         
         // Check if the profile response already contains follow information
         if (response.data.followers_count !== undefined && 
@@ -417,8 +423,17 @@ const PublicProfile = () => {
         {/* Cover Photo Section */}
         <div className="profile-cover">
           <div className="cover-image">
-            {profile.cover_photo ? (
-              <img src={profile.cover_photo} alt="Cover" className="cover-img" />
+            {getCoverPhotoImage(profile) ? (
+              <img 
+                src={getCoverPhotoImage(profile)} 
+                alt="Cover" 
+                className="cover-img"
+                onError={(e) => {
+                  // Hide broken cover image and show placeholder
+                  e.target.style.display = 'none';
+                  e.target.parentElement.innerHTML = '<div class="cover-placeholder"><div class="cover-gradient"></div></div>';
+                }}
+              />
             ) : (
               <div className="cover-placeholder">
                 <div className="cover-gradient"></div>

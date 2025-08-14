@@ -48,6 +48,10 @@ export const normalizeProfileData = (data) => {
     // Keep both formats for backward compatibility
     user_type: userType,
     avatar: asString(data.avatar ?? ''),
+    cover_photo: asString(data.cover_photo ?? data.coverPhoto ?? ''),
+    cover_photo_small: asString(data.cover_photo_small ?? ''),
+    cover_photo_medium: asString(data.cover_photo_medium ?? ''),
+    cover_photo_large: asString(data.cover_photo_large ?? ''),
     bio: asString(data.bio ?? ''),
     headline: asString(data.headline ?? ''),
     location: asString(data.location ?? ''),

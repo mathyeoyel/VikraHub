@@ -76,6 +76,32 @@ export const getAvatarImage = (profile) => {
 };
 
 /**
+ * Get a safe cover photo URL with optimized fallbacks
+ * @param profile - User profile object from API
+ * @returns Safe cover photo URL or null if no cover photo
+ */
+export const getCoverPhotoImage = (profile) => {
+  if (!profile) {
+    return null;
+  }
+
+  // Try optimized versions first (largest to smallest)
+  const coverPhotoUrl = 
+    profile.cover_photo_large ||
+    profile.cover_photo_medium ||
+    profile.cover_photo_small ||
+    profile.cover_photo ||
+    null;
+
+  // Only return valid HTTP URLs, no fallback for cover photos
+  if (isValidImageUrl(coverPhotoUrl)) {
+    return coverPhotoUrl;
+  }
+
+  return null;
+};
+
+/**
  * Validate if a URL is a valid HTTP/HTTPS URL
  * @param url - URL string to validate
  * @returns boolean indicating if URL is valid
@@ -101,6 +127,7 @@ const imageUtils = {
   placeholderDataUri,
   getPortfolioImage,
   getAvatarImage,
+  getCoverPhotoImage,
   isValidImageUrl,
   handleImageError
 };
