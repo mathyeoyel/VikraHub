@@ -131,9 +131,33 @@ api.interceptors.request.use(
 
 // Response interceptor to handle token expiration and errors
 api.interceptors.response.use(
-  response => response,
+  response => {
+    // Log successful API responses for debugging
+    if (response.config.url.includes('blog')) {
+      console.log('✅ Blog API response success:', {
+        status: response.status,
+        url: response.config.url,
+        method: response.config.method
+      });
+    }
+    return response;
+  },
   async error => {
     const originalRequest = error.config;
+    
+    // Enhanced logging for blog API errors
+    if (originalRequest?.url?.includes('blog')) {
+      console.error('❌ Blog API response error:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        url: originalRequest.url,
+        baseURL: originalRequest.baseURL,
+        fullURL: (originalRequest.baseURL || '') + (originalRequest.url || ''),
+        method: originalRequest.method,
+        headers: originalRequest.headers,
+        responseData: error.response?.data
+      });
+    }
     
     // Skip token refresh for public routes
     const publicRoutes = [
@@ -374,9 +398,48 @@ export const blogAPI = {
   },
   getMyPosts: async () => {
     try {
-      const response = await api.get("blog/my_posts/");
+      // Ensure we have a valid token before making the request
+      const token = getAccessToken();
+      if (!token) {
+        console.error("❌ No access token found for blog/my_posts/ request");
+        throw new Error("Authentication required - please login again");
+      }
+      
+      console.log('🔐 Making authenticated blog request:', {
+        hasToken: !!token,
+        tokenLength: token.length,
+        tokenStart: token.substring(0, 10) + '...',
+        endpoint: 'blog/my_posts/'
+      });
+      
+      // Force authentication header for this specific request
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      };
+      
+      const response = await api.get("blog/my_posts/", config);
+      console.log('✅ Blog API request successful:', response.status);
       return response.data;
     } catch (error) {
+      console.error('❌ Blog API error:', {
+        message: error.message,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        url: error.config?.url,
+        baseURL: error.config?.baseURL,
+        fullURL: (error.config?.baseURL || '') + (error.config?.url || ''),
+        headers: error.config?.headers,
+        responseData: error.response?.data
+      });
+      
+      // If 401, clear tokens and suggest re-login
+      if (error.response?.status === 401) {
+        console.warn('🔄 401 Unauthorized - may need to refresh token or re-login');
+      }
+      
       return handleAPIError(error, "Failed to fetch your blog posts");
     }
   },
