@@ -8,6 +8,13 @@ const api = axios.create({
   },   
 });
 
+// Debug: Log the API base URL being used
+console.log('🌐 API Configuration:', {
+  baseURL: api.defaults.baseURL,
+  env: process.env.NODE_ENV,
+  apiUrl: process.env.REACT_APP_API_URL
+});
+
 // Request interceptor to add JWT token
 api.interceptors.request.use(
   config => {
@@ -61,7 +68,18 @@ api.interceptors.request.use(
                          isPostsPublic ||
                          isBlogPublic ||
                          isFollowStatsPublic;
-    
+
+    // Debug route classification for blog endpoints
+    if (config.url.includes('blog')) {
+      console.log('🔍 Blog route classification:', {
+        url: config.url,
+        method: config.method,
+        isBlogPublic: isBlogPublic,
+        isPublicRoute: isPublicRoute,
+        includesMyPosts: config.url.includes('my_posts/')
+      });
+    }
+
     if (!isPublicRoute) {
       const token = getAccessToken();
       if (token) {
@@ -87,9 +105,13 @@ api.interceptors.request.use(
           console.log('📝 Blog request authentication:', {
             method: config.method,
             url: config.url,
+            baseURL: config.baseURL,
+            fullURL: config.baseURL + config.url,
             hasToken: !!token,
             tokenLength: token ? token.length : 0,
-            headers: config.headers
+            tokenPreview: token ? token.substring(0, 20) + '...' : 'No token',
+            headers: config.headers,
+            authHeader: config.headers.Authorization
           });
         }
       } else {
