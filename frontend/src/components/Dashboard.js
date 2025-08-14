@@ -58,7 +58,7 @@ const Dashboard = () => {
       console.log('Fetching dashboard data for user:', user.username);
       
       // Debug: Check if we have a valid token
-      const token = localStorage.getItem('access_token');
+      const token = localStorage.getItem('access');
       if (!token) {
         console.warn('⚠️ No access token found - user may need to re-authenticate');
       } else {
@@ -356,12 +356,30 @@ const Dashboard = () => {
       // Use the same URL construction logic as WebSocketContext
       // This ensures consistency between dashboard and messaging WebSocket connections
       const baseWsUrl = process.env.REACT_APP_WS_URL || 'ws://localhost:8000/ws/';
-      const wsUrl = `${baseWsUrl}messaging/`;
+      const baseWsUrlPath = `${baseWsUrl}messaging/`;
+      
+      // Add JWT token as query parameter for authentication (same as WebSocketContext)
+      const jwtToken = localStorage.getItem('access');
+      const wsUrl = jwtToken ? `${baseWsUrlPath}?token=${jwtToken}` : baseWsUrlPath;
+      
+      console.log('Dashboard WebSocket connecting to:', wsUrl.replace(/token=[^&]*/, 'token=***'));
+      console.log('Dashboard JWT Token present:', !!jwtToken);
+      
       const ws = new WebSocket(wsUrl);
       
       ws.onopen = () => {
-        console.log('WebSocket connected for real-time profile updates');
+        console.log('Dashboard WebSocket connected for real-time profile updates');
         websocketRef.current = ws;
+        
+        // Send authentication message with JWT token (same as WebSocketContext)
+        const token = localStorage.getItem('access');
+        if (token) {
+          ws.send(JSON.stringify({
+            type: 'authenticate',
+            token: token
+          }));
+          console.log('Dashboard WebSocket authentication sent');
+        }
       };
 
       ws.onmessage = (event) => {

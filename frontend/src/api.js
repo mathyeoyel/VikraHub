@@ -66,7 +66,7 @@ api.interceptors.request.use(
       const token = getAccessToken();
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
-        // Debug follow/portfolio requests
+        // Debug follow/portfolio/blog requests
         if (config.url.includes('follow')) {
           console.log('🤝 Follow request authentication:', {
             method: config.method,
@@ -77,6 +77,14 @@ api.interceptors.request.use(
           });
         } else if (config.url.includes('portfolio')) {
           console.log('🎯 Portfolio request authentication:', {
+            method: config.method,
+            url: config.url,
+            hasToken: !!token,
+            tokenLength: token ? token.length : 0,
+            headers: config.headers
+          });
+        } else if (config.url.includes('blog')) {
+          console.log('📝 Blog request authentication:', {
             method: config.method,
             url: config.url,
             hasToken: !!token,
