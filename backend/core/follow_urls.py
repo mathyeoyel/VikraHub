@@ -5,7 +5,10 @@ from . import follow_views
 app_name = 'follow'
 
 urlpatterns = [
-    # Follow/Unfollow actions
+    # New idempotent follow/unfollow endpoints
+    path('toggle/<int:user_id>/', follow_views.FollowToggleView.as_view(), name='follow-toggle'),
+    
+    # Legacy Follow/Unfollow actions (for backward compatibility)
     path('follow/', follow_views.FollowCreateView.as_view(), name='follow-user'),
     path('unfollow/<int:user_id>/', follow_views.unfollow_user, name='unfollow-user'),
     

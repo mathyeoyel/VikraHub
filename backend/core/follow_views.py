@@ -34,31 +34,36 @@ class FollowPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class FollowCreateView(generics.CreateAPIView):
-    """Follow a user with robust error handling"""
+class FollowToggleView(generics.GenericAPIView):
+    """Idempotent follow/unfollow endpoint with consistent responses"""
     permission_classes = [permissions.IsAuthenticated]
     
+    def put(self, request, user_id):
+        """Idempotent follow operation - always returns current follow state"""
+        return self._handle_follow_operation(request, user_id, follow=True)
+    
+    def delete(self, request, user_id):
+        """Idempotent unfollow operation - always returns current follow state"""
+        return self._handle_follow_operation(request, user_id, follow=False)
+    
     def post(self, request, *args, **kwargs):
-        """Create follow relationship with comprehensive validation and error handling"""
+        """Legacy POST endpoint for backward compatibility"""
+        data = request.data
+        user_id = data.get('user_id')
+        
+        if not user_id:
+            return Response({
+                "error": "user_id is required"
+            }, status=status.HTTP_400_BAD_REQUEST)
+            
+        return self._handle_follow_operation(request, user_id, follow=True)
+    
+    def _handle_follow_operation(self, request, user_id, follow=True):
+        """Unified idempotent follow/unfollow logic"""
         try:
-            # Get input data
-            data = request.data
-            user_id = data.get('user_id')
-            username = data.get('username')
-            
-            # Validate input - require either user_id or username
-            if not user_id and not username:
-                return Response({
-                    "error": "user_id or username is required"
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
             # Resolve target user
-            target_user = None
             try:
-                if user_id:
-                    target_user = get_object_or_404(User, id=user_id)
-                elif username:
-                    target_user = get_object_or_404(User, username=username)
+                target_user = get_object_or_404(User, id=user_id)
             except Exception as e:
                 logger.warning(f"User lookup failed: {e}")
                 return Response({
@@ -71,53 +76,62 @@ class FollowCreateView(generics.CreateAPIView):
                     "error": "You cannot follow yourself"
                 }, status=status.HTTP_400_BAD_REQUEST)
             
-            # Create follow relationship with error handling
-            try:
-                follow_rel, created = Follow.objects.get_or_create(
-                    follower=request.user, 
-                    followed=target_user,
-                    defaults={'is_active': True}
-                )
-                
-                if not created:
-                    # User is already following
-                    if follow_rel.is_active:
-                        return Response({
-                            "error": "Already following this user"
-                        }, status=status.HTTP_400_BAD_REQUEST)
-                    else:
-                        # Reactivate follow relationship
-                        follow_rel.is_active = True
-                        follow_rel.save()
-                
-                # Create notification for the followed user
+            # Get or create follow relationship
+            follow_rel, created = Follow.objects.get_or_create(
+                follower=request.user, 
+                followed=target_user,
+                defaults={'is_active': follow}
+            )
+            
+            # Track if state actually changed
+            state_changed = False
+            previous_state = follow_rel.is_active
+            
+            if follow_rel.is_active != follow:
+                follow_rel.is_active = follow
+                follow_rel.save()
+                state_changed = True
+            
+            # Handle notifications only if state changed to following
+            if follow and state_changed:
                 try:
                     notification, _ = FollowNotification.objects.get_or_create(
                         follow=follow_rel,
                         recipient=target_user
                     )
-                    
-                    # Send real-time notification via WebSocket
                     self.send_follow_notification(follow_rel)
                 except Exception as notification_error:
                     logger.warning(f"Failed to create notification: {notification_error}")
-                    # Don't fail the follow operation if notification fails
-                
-                return Response({
-                    "detail": "Followed successfully",
-                    "status": "success", 
-                    "message": f"You are now following {target_user.username}",
-                    "follow": FollowSerializer(follow_rel).data
-                }, status=status.HTTP_201_CREATED)
-                
-            except Exception as follow_error:
-                logger.exception(f'Error creating follow relationship: {follow_error}')
-                return Response({
-                    "error": "Failed to follow user"
-                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            # Get current follow stats for target user
+            followers_count = Follow.objects.filter(
+                followed=target_user, 
+                is_active=True
+            ).count()
+            
+            following_count = Follow.objects.filter(
+                follower=target_user,
+                is_active=True  
+            ).count()
+            
+            # Return consistent response format regardless of previous state
+            return Response({
+                "status": "success",
+                "is_following": follow_rel.is_active,
+                "state_changed": state_changed,
+                "previous_state": previous_state,
+                "message": f"{'Now following' if follow_rel.is_active else 'Unfollowed'} {target_user.username}",
+                "target_user": {
+                    "id": target_user.id,
+                    "username": target_user.username,
+                    "followers_count": followers_count,
+                    "following_count": following_count
+                },
+                "follow_data": FollowSerializer(follow_rel).data if follow_rel.is_active else None
+            }, status=status.HTTP_200_OK)
                 
         except Exception as exc:
-            logger.exception(f'Error in follow endpoint: {exc}')
+            logger.exception(f'Error in follow operation: {exc}')
             return Response({
                 "error": "An unexpected error occurred"
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -156,81 +170,19 @@ class FollowCreateView(generics.CreateAPIView):
         return None
 
 
+# Legacy endpoints for backward compatibility
+class FollowCreateView(FollowToggleView):
+    """Legacy follow endpoint - redirects to new idempotent endpoint"""
+    pass
+
+
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def unfollow_user(request, user_id):
-    """Unfollow a user with robust error handling"""
-    try:
-        # Get target user
-        try:
-            followed_user = get_object_or_404(User, id=user_id)
-        except Exception as e:
-            logger.warning(f"User lookup failed for unfollow: {e}")
-            return Response({
-                'error': 'User not found'
-            }, status=status.HTTP_404_NOT_FOUND)
-        
-        # Validate user cannot unfollow themselves
-        if followed_user == request.user:
-            return Response({
-                'error': 'You cannot unfollow yourself'
-            }, status=status.HTTP_400_BAD_REQUEST)
-        
-        # Try to find and deactivate follow relationship
-        try:
-            follow_rel = Follow.objects.get(
-                follower=request.user,
-                followed=followed_user,
-                is_active=True
-            )
-            
-            # Deactivate the follow relationship
-            follow_rel.is_active = False
-            follow_rel.save()
-            
-            # Send real-time notification about unfollow
-            try:
-                channel_layer = get_channel_layer()
-                async_to_sync(channel_layer.group_send)(
-                    f"user_{followed_user.id}",
-                    {
-                        'type': 'follow_notification',
-                        'notification': {
-                            'type': 'unfollowed',
-                            'follower': {
-                                'id': request.user.id,
-                                'username': request.user.username,
-                            },
-                            'message': f'{request.user.username} unfollowed you',
-                            'timestamp': timezone.now().isoformat()
-                        }
-                    }
-                )
-            except Exception as notification_error:
-                logger.warning(f"Failed to send unfollow notification: {notification_error}")
-                # Don't fail the unfollow operation if notification fails
-            
-            return Response({
-                'status': 'success',
-                'detail': 'Unfollowed successfully',
-                'message': f'You unfollowed {followed_user.username}'
-            }, status=status.HTTP_200_OK)
-            
-        except Follow.DoesNotExist:
-            return Response({
-                'error': 'You are not following this user'
-            }, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as unfollow_error:
-            logger.exception(f'Error unfollowing user: {unfollow_error}')
-            return Response({
-                'error': 'Failed to unfollow user'
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
-    except Exception as exc:
-        logger.exception(f'Error in unfollow endpoint: {exc}')
-        return Response({
-            'error': 'An unexpected error occurred'
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    """Legacy unfollow endpoint - redirects to new idempotent endpoint"""
+    # Use the new idempotent view
+    view = FollowToggleView()
+    return view.delete(request, user_id)
 
 
 class UserFollowersListView(generics.ListAPIView):

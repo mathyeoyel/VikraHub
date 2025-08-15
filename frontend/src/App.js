@@ -4,6 +4,7 @@ import { AuthProvider } from './components/Auth/AuthContext';
 import { NotificationProvider } from './components/common/NotificationContext';
 import { WebSocketProvider } from './contexts/WebSocketContext';
 import { FollowProvider } from './contexts/FollowContext';
+import QueryClientProvider from './contexts/QueryClientProvider';
 import NotificationContainer from './components/common/NotificationContainer';
 import ToastNotifications from './components/ToastNotifications';
 import Layout from './components/Layout';
@@ -47,14 +48,15 @@ const EmailVerified = React.lazy(() => import("./components/Auth/EmailVerified")
 function App() {
   return (
     <ErrorBoundary>
-      <NotificationProvider>
-        <AuthProvider>
-          <WebSocketProvider>
-            <FollowProvider>
-              <BrowserRouter>
-                <Layout>
-                  <Suspense fallback={<LoadingSpinner message="Loading page..." />}>
-                      <Routes>
+      <QueryClientProvider>
+        <NotificationProvider>
+          <AuthProvider>
+            <WebSocketProvider>
+              <FollowProvider>
+                <BrowserRouter>
+                  <Layout>
+                    <Suspense fallback={<LoadingSpinner message="Loading page..." />}>
+                        <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -197,6 +199,7 @@ function App() {
           </WebSocketProvider>
         </AuthProvider>
       </NotificationProvider>
+      </QueryClientProvider>
     </ErrorBoundary>
   );
 }

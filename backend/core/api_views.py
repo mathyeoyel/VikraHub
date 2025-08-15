@@ -1484,32 +1484,53 @@ class PostViewSet(viewsets.ModelViewSet):
         """Set the post creator to the current user"""
         serializer.save(user=self.request.user)
     
-    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    @action(detail=True, methods=['put', 'delete', 'post'], permission_classes=[IsAuthenticated])
     def like(self, request, pk=None):
-        """Like or unlike a post"""
+        """Idempotent like/unlike a post"""
         post = self.get_object()
         user = request.user
         
-        # Check if user already liked this post
+        # Determine desired like state
+        if request.method == 'PUT':
+            desired_state = True
+        elif request.method == 'DELETE':
+            desired_state = False
+        else:  # POST - legacy toggle behavior
+            desired_state = not Like.objects.filter(user=user, post=post).exists()
+        
+        # Get or create like relationship
         like, created = Like.objects.get_or_create(user=user, post=post)
         
-        if created:
+        # Track if state actually changed
+        state_changed = False
+        current_state = not created  # If just created, previous state was unliked
+        
+        if desired_state and created:
             # New like
             post.increment_like_count()
-            return Response({
-                'status': 'liked',
-                'like_count': post.like_count,
-                'message': 'Post liked successfully'
-            })
-        else:
-            # Unlike
+            state_changed = True
+        elif not desired_state and not created:
+            # Remove like
             like.delete()
             post.decrement_like_count()
-            return Response({
-                'status': 'unliked',
-                'like_count': post.like_count,
-                'message': 'Post unliked successfully'
-            })
+            state_changed = True
+        elif desired_state and not created:
+            # Already liked - no change needed
+            pass
+        else:
+            # Already not liked - no change needed (like was just created and will be deleted)
+            like.delete()
+        
+        # Get current state
+        is_liked = Like.objects.filter(user=user, post=post).exists()
+        
+        return Response({
+            'status': 'liked' if is_liked else 'unliked',
+            'is_liked': is_liked,
+            'state_changed': state_changed,
+            'like_count': post.like_count,
+            'message': f'Post {"liked" if is_liked else "unliked"} successfully'
+        })
     
     @action(detail=True, methods=['get'], permission_classes=[IsAuthenticatedOrReadOnly])
     def comments(self, request, pk=None):
@@ -1562,34 +1583,54 @@ class CommentViewSet(viewsets.ModelViewSet):
         post.increment_comment_count()
         return comment
     
-    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    @action(detail=True, methods=['put', 'delete', 'post'], permission_classes=[IsAuthenticated])
     def like(self, request, pk=None):
-        """Like or unlike a comment"""
+        """Idempotent like/unlike a comment"""
         comment = self.get_object()
         user = request.user
         
-        # Check if user already liked this comment
+        # Determine desired like state
+        if request.method == 'PUT':
+            desired_state = True
+        elif request.method == 'DELETE':
+            desired_state = False
+        else:  # POST - legacy toggle behavior
+            desired_state = not CommentLike.objects.filter(user=user, comment=comment).exists()
+        
+        # Get or create like relationship
         like, created = CommentLike.objects.get_or_create(user=user, comment=comment)
         
-        if created:
+        # Track if state actually changed
+        state_changed = False
+        
+        if desired_state and created:
             # New like
             comment.like_count += 1
             comment.save(update_fields=['like_count'])
-            return Response({
-                'status': 'liked',
-                'like_count': comment.like_count,
-                'message': 'Comment liked successfully'
-            })
-        else:
-            # Unlike
+            state_changed = True
+        elif not desired_state and not created:
+            # Remove like
             like.delete()
             comment.like_count = max(0, comment.like_count - 1)
             comment.save(update_fields=['like_count'])
-            return Response({
-                'status': 'unliked',
-                'like_count': comment.like_count,
-                'message': 'Comment unliked successfully'
-            })
+            state_changed = True
+        elif desired_state and not created:
+            # Already liked - no change needed
+            pass
+        else:
+            # Already not liked - no change needed (like was just created and will be deleted)
+            like.delete()
+        
+        # Get current state
+        is_liked = CommentLike.objects.filter(user=user, comment=comment).exists()
+        
+        return Response({
+            'status': 'liked' if is_liked else 'unliked',
+            'is_liked': is_liked,
+            'state_changed': state_changed,
+            'like_count': comment.like_count,
+            'message': f'Comment {"liked" if is_liked else "unliked"} successfully'
+        })
     
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def reply(self, request, pk=None):
@@ -1607,10 +1648,10 @@ class CommentViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Blog engagement views
-@api_view(['POST'])
+@api_view(['PUT', 'DELETE', 'POST'])
 @permission_classes([IsAuthenticated])
 def blog_like(request, blog_id):
-    """Like or unlike a blog post"""
+    """Idempotent like/unlike a blog post"""
     try:
         blog_post = BlogPost.objects.get(id=blog_id)
     except BlogPost.DoesNotExist:
@@ -1618,26 +1659,46 @@ def blog_like(request, blog_id):
     
     user = request.user
     
-    # Check if user already liked this blog
+    # Determine desired like state
+    if request.method == 'PUT':
+        desired_state = True
+    elif request.method == 'DELETE':
+        desired_state = False
+    else:  # POST - legacy toggle behavior
+        desired_state = not BlogLike.objects.filter(user=user, blog_post=blog_post).exists()
+    
+    # Get or create like relationship
     like, created = BlogLike.objects.get_or_create(user=user, blog_post=blog_post)
     
-    if created:
+    # Track if state actually changed
+    state_changed = False
+    
+    if desired_state and created:
         # New like
         blog_post.increment_like_count()
-        return Response({
-            'status': 'liked',
-            'like_count': blog_post.like_count,
-            'message': 'Blog post liked successfully'
-        })
-    else:
-        # Unlike
+        state_changed = True
+    elif not desired_state and not created:
+        # Remove like
         like.delete()
         blog_post.decrement_like_count()
-        return Response({
-            'status': 'unliked',
-            'like_count': blog_post.like_count,
-            'message': 'Blog post unliked successfully'
-        })
+        state_changed = True
+    elif desired_state and not created:
+        # Already liked - no change needed
+        pass
+    else:
+        # Already not liked - no change needed (like was just created and will be deleted)
+        like.delete()
+    
+    # Get current state
+    is_liked = BlogLike.objects.filter(user=user, blog_post=blog_post).exists()
+    
+    return Response({
+        'status': 'liked' if is_liked else 'unliked',
+        'is_liked': is_liked,
+        'state_changed': state_changed,
+        'like_count': blog_post.like_count,
+        'message': f'Blog post {"liked" if is_liked else "unliked"} successfully'
+    })
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticatedOrReadOnly])
@@ -1673,10 +1734,10 @@ def blog_comments(request, blog_id):
             return Response(BlogCommentSerializer(comment, context={'request': request}).data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
+@api_view(['PUT', 'DELETE', 'POST'])
 @permission_classes([IsAuthenticated])
 def blog_comment_like(request, comment_id):
-    """Like or unlike a blog comment"""
+    """Idempotent like/unlike a blog comment"""
     try:
         comment = BlogComment.objects.get(id=comment_id)
     except BlogComment.DoesNotExist:
@@ -1684,28 +1745,49 @@ def blog_comment_like(request, comment_id):
     
     user = request.user
     
-    # Check if user already liked this comment
+    # Determine desired like state
+    if request.method == 'PUT':
+        desired_state = True
+    elif request.method == 'DELETE':
+        desired_state = False
+    else:  # POST - legacy toggle behavior
+        desired_state = not BlogCommentLike.objects.filter(user=user, comment=comment).exists()
+    
+    # Get or create like relationship
     like, created = BlogCommentLike.objects.get_or_create(user=user, comment=comment)
     
-    if created:
+    # Track if state actually changed
+    state_changed = False
+    
+    if desired_state and created:
         # New like
         comment.like_count += 1
         comment.save(update_fields=['like_count'])
-        return Response({
-            'status': 'liked',
-            'like_count': comment.like_count,
-            'message': 'Comment liked successfully'
-        })
-    else:
-        # Unlike
+        state_changed = True
+    elif not desired_state and not created:
+        # Remove like
         like.delete()
         comment.like_count = max(0, comment.like_count - 1)
         comment.save(update_fields=['like_count'])
-        return Response({
-            'status': 'unliked',
-            'like_count': comment.like_count,
-            'message': 'Comment unliked successfully'
-        })
+        state_changed = True
+    elif desired_state and not created:
+        # Already liked - no change needed
+        pass
+    else:
+        # Already not liked - no change needed (like was just created and will be deleted)
+        like.delete()
+    
+    # Get current state
+    is_liked = BlogCommentLike.objects.filter(user=user, comment=comment).exists()
+    
+    return Response({
+        'status': 'liked' if is_liked else 'unliked',
+        'is_liked': is_liked,
+        'state_changed': state_changed,
+        'like_count': comment.like_count,
+        'message': f'Comment {"liked" if is_liked else "unliked"} successfully'
+    })
+
 
 # Blog meta tags endpoint for social media sharing
 @api_view(['GET'])

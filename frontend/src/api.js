@@ -766,30 +766,34 @@ export const notificationsAPI = {
 
 // Follow System API
 export const followAPI = {
-  // Core follow functions - follow and unfollow both expect user_id
-  follow: async (userId) => {
+  // New idempotent endpoints
+  toggleFollow: async (userId, action = 'follow') => {
     try {
-      const response = await api.post("follow/follow/", { user_id: userId });
+      const method = action === 'follow' ? 'PUT' : 'DELETE';
+      const response = await api.request({
+        method,
+        url: `follow/toggle/${userId}/`,
+      });
       return response.data;
     } catch (error) {
-      console.error('Follow request failed:', error.response?.data || error.message);
-      throw error;
-    }
-  },
-  unfollow: async (userId) => {
-    try {
-      const response = await api.post(`follow/unfollow/${userId}/`);
-      return response.data;
-    } catch (error) {
-      console.error('Unfollow request failed:', error.response?.data || error.message);
+      console.error(`${action} request failed:`, error.response?.data || error.message);
       throw error;
     }
   },
   
-  // Enhanced follow functions with profile refresh
+  // Explicit follow/unfollow methods using idempotent endpoints
+  follow: async (userId) => {
+    return followAPI.toggleFollow(userId, 'follow');
+  },
+  
+  unfollow: async (userId) => {
+    return followAPI.toggleFollow(userId, 'unfollow');
+  },
+  
+  // Legacy follow functions with profile refresh (backward compatibility)
   followWithRefresh: async (userId, username) => {
     try {
-      const followResponse = await api.post("follow/follow/", { user_id: userId });
+      const followResponse = await followAPI.follow(userId);
       
       // Refetch the user's profile to get updated follow status
       let updatedProfile = null;
@@ -803,7 +807,7 @@ export const followAPI = {
       }
       
       return {
-        followResult: followResponse.data,
+        followResult: followResponse,
         updatedProfile: updatedProfile
       };
     } catch (error) {
@@ -814,7 +818,7 @@ export const followAPI = {
   
   unfollowWithRefresh: async (userId, username) => {
     try {
-      const unfollowResponse = await api.post(`follow/unfollow/${userId}/`);
+      const unfollowResponse = await followAPI.unfollow(userId);
       
       // Refetch the user's profile to get updated follow status
       let updatedProfile = null;
@@ -828,7 +832,7 @@ export const followAPI = {
       }
       
       return {
-        unfollowResult: unfollowResponse.data,
+        unfollowResult: unfollowResponse,
         updatedProfile: updatedProfile
       };
     } catch (error) {
