@@ -30,27 +30,6 @@ const MessagesDashboard = () => {
       );
       
       setConversations(validConversations);
-          conversationMap.set(partnerId, {
-            partner,
-            lastMessage: message,
-            unreadCount: 0
-          });
-        } else {
-          const existing = conversationMap.get(partnerId);
-          if (new Date(message.timestamp) > new Date(existing.lastMessage.timestamp)) {
-            existing.lastMessage = message;
-          }
-        }
-        
-        // Count unread messages from this partner
-        if (!message.is_read && message.recipient.id === user.id) {
-          conversationMap.get(partnerId).unreadCount++;
-        }
-      });
-      
-      setConversations(Array.from(conversationMap.values()).sort((a, b) => 
-        new Date(b.lastMessage.timestamp) - new Date(a.lastMessage.timestamp)
-      ));
     } catch (error) {
       console.error('Failed to fetch conversations:', error);
       setConversations([]);
