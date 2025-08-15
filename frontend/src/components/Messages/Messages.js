@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../Auth/AuthContext';
-import { messagingAPI } from '../../api';
+import { messagesAPI } from '../../api';
 import { handleImageError, getAvatarUrl } from '../../utils/imageUtils';
 import './Messages.css';
 
@@ -385,22 +385,56 @@ const Messages = () => {
     }
   }, [location.state, conversations]);
 
-  // Function to create a new conversation
+  // Function to create a new conversation (idempotent)
   const createNewConversation = async (recipientUsername, recipientName = null) => {
     try {
       setLoading(true);
-      console.log(`🔄 Creating conversation with ${recipientUsername}`);
+      setError(null);
+      console.log(`🔄 Getting/creating conversation with ${recipientUsername}`);
       
-      const response = await messagingAPI.createConversation(recipientUsername);
-      const newConversation = response.data;
+      // First, find the user ID from username
+      // Check if we already have this user in our conversations
+      let recipientId = null;
+      const existingConv = conversations.find(conv => 
+        conv.other_participant?.username === recipientUsername
+      );
       
-      console.log(`✅ New conversation created:`, newConversation);
+      if (existingConv) {
+        recipientId = existingConv.other_participant.id;
+      } else {
+        // For username-only creation, use legacy API temporarily
+        // TODO: Add user lookup endpoint or pass user ID from calling component
+        console.warn('⚠️ Using legacy API for username-based conversation creation');
+        
+        const response = await messagesAPI.legacy.createConversation({ recipient_username: recipientUsername });
+        const newConversation = response.data;
+        
+        console.log(`✅ New conversation created (legacy):`, newConversation);
+        
+        // Add the new conversation to the list
+        setConversations(prev => [newConversation, ...prev]);
+        setSelectedConversation(newConversation);
+        console.log(`🎉 Ready to message ${recipientName || recipientUsername}!`);
+        setLoading(false);
+        return;
+      }
       
-      // Add the new conversation to the list
-      setConversations(prev => [newConversation, ...prev]);
+      // Use new idempotent API with user ID
+      const conversation = await messagesAPI.getOrCreateConversation(recipientId);
+      
+      console.log(`✅ Conversation retrieved/created:`, conversation);
+      
+      // Update conversations list if this is a new conversation
+      setConversations(prev => {
+        const exists = prev.find(conv => conv.conversation_id === conversation.conversation_id);
+        if (exists) {
+          return prev;
+        }
+        return [conversation, ...prev];
+      });
       
       // Select the new conversation
-      setSelectedConversation(newConversation);
+      setSelectedConversation(conversation);
       
       // Show success message
       console.log(`🎉 Ready to message ${recipientName || recipientUsername}!`);
@@ -427,19 +461,20 @@ const Messages = () => {
       setError(null);
       console.log('🔄 Fetching conversations...');
       
-      // Use the correct messaging API endpoint with enhanced error handling
-      const response = await messagingAPI.getConversations();
+      // Use the new conversations API endpoint
+      const response = await messagesAPI.getConversations();
       const data = response.data || [];
       
       console.log('📥 Raw conversations data:', data);
       
-      // Filter out fake or invalid user conversations with enhanced validation
+      // Validate conversations - new API structure has conversation_id and participant fields
       const validConversations = data.filter(conv => {
-        const isValid = conv.other_participant &&
-          conv.other_participant.id &&
-          conv.other_participant.username &&
-          typeof conv.other_participant.id === 'number' &&
-          conv.other_participant.username.trim() !== '';
+        const isValid = conv.conversation_id &&
+          conv.participant &&
+          conv.participant.id &&
+          conv.participant.username &&
+          typeof conv.participant.id === 'number' &&
+          conv.participant.username.trim() !== '';
         
         if (!isValid) {
           console.warn('⚠️ Filtered out invalid conversation:', conv);
@@ -478,21 +513,27 @@ const Messages = () => {
       setLoading(true);
       console.log('🔄 Fetching messages for conversation:', conversationId);
       
-      // Use the correct messaging API endpoint
-      const response = await messagingAPI.getMessages(conversationId);
+      // Use the new messages API endpoint
+      const response = await messagesAPI.getMessages(conversationId);
       console.log('📥 Raw messages response:', response);
       console.log('📥 Response data:', response?.data);
       console.log('📥 Response type:', typeof response);
       
-      // Handle different response structures
+      // Handle different response structures - new API returns direct array or paginated results
       let messagesData = [];
       
       // Try multiple ways to extract messages array
-      if (response?.data?.messages && Array.isArray(response.data.messages)) {
-        messagesData = response.data.messages;
-        console.log('✅ Found messages in response.data.messages:', messagesData.length);
-      } else if (response?.data?.results && Array.isArray(response.data.results)) {
+      if (response?.data?.results && Array.isArray(response.data.results)) {
+        // Paginated response
         messagesData = response.data.results;
+        console.log('✅ Found paginated messages in response.data.results:', messagesData.length);
+      } else if (Array.isArray(response?.data)) {
+        // Direct array response
+        messagesData = response.data;
+        console.log('✅ Found messages in response.data array:', messagesData.length);
+      } else if (response?.data?.messages && Array.isArray(response.data.messages)) {
+        // Legacy format
+        messagesData = response.data.messages;
         console.log('✅ Found messages in response.data.results:', messagesData.length);
       } else if (Array.isArray(response?.data)) {
         messagesData = response.data;
@@ -538,8 +579,8 @@ const Messages = () => {
         reply_to_id: replyToMessage?.id || null
       };
       
-      // Use the correct messaging API endpoint
-      const response = await messagingAPI.sendMessage(selectedConversation.id, messageData.content, messageData.reply_to_id);
+      // Use the new messaging API endpoint
+      const response = await messagesAPI.sendMessage(selectedConversation.conversation_id || selectedConversation.id, messageData);
       console.log('✅ Message sent successfully:', response);
       
       // Add message to local state - ensure messages is an array first
@@ -654,8 +695,8 @@ const Messages = () => {
 
   const markAsRead = async (conversationId) => {
     try {
-      // Use the correct messaging API endpoint
-      await messagingAPI.markConversationRead(conversationId);
+      // Use the new messaging API endpoint
+      await messagesAPI.markAsRead(conversationId);
       
       // Send via WebSocket for real-time updates
       if (ws && ws.readyState === WebSocket.OPEN) {
@@ -704,10 +745,10 @@ const Messages = () => {
       // Send reaction to backend API for persistence
       try {
         if (isRemovingReaction) {
-          await messagingAPI.removeReaction(messageId);
+          await messagesAPI.removeReaction(messageId);
           console.log('✅ Reaction removed from backend:', { messageId, reactionType });
         } else {
-          await messagingAPI.addReaction(messageId, reactionType);
+          await messagesAPI.addReaction(messageId, reactionType);
           console.log('✅ Reaction saved to backend:', { messageId, reactionType });
         }
       } catch (apiError) {

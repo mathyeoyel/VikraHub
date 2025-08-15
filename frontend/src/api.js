@@ -740,15 +740,67 @@ export const assetAPI = {
   getFreelancer: (id) => api.get(`freelancer-profiles/${id}/`),
 };
 
-// Messages API
+// Messages API - Enhanced with idempotent conversation creation
 export const messagesAPI = {
-  getConversations: () => api.get("conversations/"),
-  getMessages: (conversationId) => api.get(`conversations/${conversationId}/messages/`),
-  sendMessage: (data) => api.post("messages/", data),
-  markAsRead: (conversationId) => api.patch(`conversations/${conversationId}/mark_read/`),
-  createConversation: (data) => api.post("conversations/", data),
-  deleteConversation: (id) => api.delete(`conversations/${id}/`),
+  // Get all conversations for authenticated user
+  getConversations: () => api.get("messaging/conversations/"),
+  
+  // Get or create conversation with target user (idempotent)
+  getOrCreateConversation: async (targetUserId) => {
+    try {
+      const response = await api.post("messaging/conversations/", {
+        target_user_id: targetUserId
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to get/create conversation:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+  
+  // Get conversation details
+  getConversation: (conversationId) => api.get(`messaging/conversations/${conversationId}/`),
+  
+  // Get messages in conversation (paginated)
+  getMessages: (conversationId, page = 1) => {
+    const params = page > 1 ? `?page=${page}` : '';
+    return api.get(`messaging/conversations/${conversationId}/messages/${params}`);
+  },
+  
+  // Send message to conversation
+  sendMessage: async (conversationId, messageData) => {
+    try {
+      const response = await api.post(`messaging/conversations/${conversationId}/messages/`, messageData);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to send message:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+  
+  // Mark conversation as read (legacy)
+  markAsRead: (conversationId) => api.post(`messaging/conversations/${conversationId}/mark-read/`),
+  
+  // Delete conversation (soft delete for user)
+  deleteConversation: (conversationId) => api.delete(`messaging/conversations/${conversationId}/`),
+  
+  // Get total unread messages count
   getUnreadCount: () => api.get("messaging/unread-count/"),
+  
+  // Legacy endpoints for backward compatibility
+  legacy: {
+    createConversation: (data) => api.post("messaging/conversations/legacy/", data),
+    getMessagesBetweenUsers: (userId) => api.get(`messaging/messages/?user_id=${userId}`),
+    getUnreadMessagesCount: (userId) => api.get(`messaging/messages/user/${userId}/unread/`),
+  },
+  
+  // Typing indicators
+  startTyping: (conversationId) => api.post(`messaging/conversations/${conversationId}/typing/start/`),
+  stopTyping: (conversationId) => api.post(`messaging/conversations/${conversationId}/typing/stop/`),
+  
+  // Message reactions
+  addReaction: (messageId, reaction) => api.post(`messaging/messages/${messageId}/reactions/`, { reaction }),
+  removeReaction: (messageId) => api.post(`messaging/messages/${messageId}/reactions/remove/`),
 };
 
 // Notifications API

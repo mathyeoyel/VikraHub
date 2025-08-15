@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './Auth/AuthContext';
-import { messagingAPI } from '../api';
+import { messagesAPI } from '../api';
 import ChatButton from './Chat/ChatButton';
 import './MessagesDashboard.css';
 
@@ -18,16 +18,18 @@ const MessagesDashboard = () => {
   const fetchConversations = async () => {
     try {
       setLoading(true);
-      // This is a placeholder - you might want to create an API endpoint for user conversations
-      const response = await messagingAPI.getMessages();
+      // Use the new conversations API endpoint
+      const response = await messagesAPI.getConversations();
       
-      // Group messages by conversation partner
-      const conversationMap = new Map();
-      response.data.forEach(message => {
-        const partnerId = message.sender.id === user.id ? message.recipient.id : message.sender.id;
-        const partner = message.sender.id === user.id ? message.recipient : message.sender;
-        
-        if (!conversationMap.has(partnerId)) {
+      console.log('📥 Dashboard conversations data:', response.data);
+      
+      // New API returns conversations with participant info directly
+      const conversationsData = response.data || [];
+      const validConversations = conversationsData.filter(conv => 
+        conv.participant && conv.participant.id && conv.participant.username
+      );
+      
+      setConversations(validConversations);
           conversationMap.set(partnerId, {
             partner,
             lastMessage: message,
@@ -59,8 +61,8 @@ const MessagesDashboard = () => {
 
   const fetchUnreadCount = async () => {
     try {
-      const response = await messagingAPI.getUnreadMessagesCount();
-      setUnreadCount(response.data.count);
+      const response = await messagesAPI.getUnreadCount();
+      setUnreadCount(response.data.unread_count);
     } catch (error) {
       console.error('Failed to fetch unread count:', error);
     }

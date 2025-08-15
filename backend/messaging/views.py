@@ -763,3 +763,206 @@ def remove_message_reaction(request, message_id):
             {'error': 'Failed to remove reaction'}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def mark_conversation_as_read(request, conversation_id):
+    """Legacy endpoint for marking conversation as read"""
+    try:
+        conversation = get_object_or_404(
+            Conversation,
+            id=conversation_id,
+            participants=request.user,
+            is_deleted=False
+        )
+        
+        # Mark messages as read
+        unread_messages = conversation.messages.filter(
+            is_deleted=False,
+            read_at__isnull=True
+        ).exclude(sender=request.user)
+        
+        for message in unread_messages:
+            message.mark_as_read(request.user)
+        
+        # Update participant's last_read_at
+        participant_record, created = ConversationParticipant.objects.get_or_create(
+            conversation=conversation,
+            user=request.user
+        )
+        participant_record.last_read_at = timezone.now()
+        participant_record.save()
+        
+        return Response({'status': 'success'}, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        logger.error(f"Error marking conversation as read: {e}")
+        return Response(
+            {'error': 'Failed to mark conversation as read'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def start_typing(request, conversation_id):
+    """Handle typing start events"""
+    try:
+        conversation = get_object_or_404(
+            Conversation,
+            id=conversation_id,
+            participants=request.user,
+            is_deleted=False
+        )
+        
+        # Broadcast typing event via WebSockets
+        channel_layer = get_channel_layer()
+        conversation_group_name = f"conversation_{conversation_id}"
+        
+        async_to_sync(channel_layer.group_send)(
+            conversation_group_name,
+            {
+                'type': 'typing_start',
+                'user': {
+                    'id': request.user.id,
+                    'username': request.user.username
+                }
+            }
+        )
+        
+        return Response({'status': 'success'}, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        logger.error(f"Error starting typing indicator: {e}")
+        return Response(
+            {'error': 'Failed to start typing'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def stop_typing(request, conversation_id):
+    """Handle typing stop events"""
+    try:
+        conversation = get_object_or_404(
+            Conversation,
+            id=conversation_id,
+            participants=request.user,
+            is_deleted=False
+        )
+        
+        # Broadcast typing stop event via WebSockets
+        channel_layer = get_channel_layer()
+        conversation_group_name = f"conversation_{conversation_id}"
+        
+        async_to_sync(channel_layer.group_send)(
+            conversation_group_name,
+            {
+                'type': 'typing_stop',
+                'user': {
+                    'id': request.user.id,
+                    'username': request.user.username
+                }
+            }
+        )
+        
+        return Response({'status': 'success'}, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        logger.error(f"Error stopping typing indicator: {e}")
+        return Response(
+            {'error': 'Failed to stop typing'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_messages_between_users(request):
+    """Legacy endpoint to get messages between users"""
+    try:
+        user_id = request.GET.get('user_id')
+        if not user_id:
+            return Response(
+                {'error': 'user_id parameter required'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        other_user = get_object_or_404(User, id=user_id)
+        
+        # Find conversation between users
+        conversation = Conversation.objects.filter(
+            participants=request.user,
+            is_deleted=False
+        ).filter(participants=other_user).first()
+        
+        if not conversation:
+            return Response({'messages': []}, status=status.HTTP_200_OK)
+        
+        # Get messages
+        messages = conversation.messages.filter(
+            is_deleted=False
+        ).select_related('sender', 'recipient').order_by('created_at')
+        
+        serializer = MessageSerializer(messages, many=True, context={'request': request})
+        return Response({'messages': serializer.data}, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        logger.error(f"Error getting messages between users: {e}")
+        return Response(
+            {'error': 'Failed to get messages'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_unread_messages_count(request, user_id):
+    """Get count of unread messages from specific user"""
+    try:
+        other_user = get_object_or_404(User, id=user_id)
+        
+        # Find conversation
+        conversation = Conversation.objects.filter(
+            participants=request.user,
+            is_deleted=False
+        ).filter(participants=other_user).first()
+        
+        if not conversation:
+            return Response({'unread_count': 0}, status=status.HTTP_200_OK)
+        
+        unread_count = conversation.get_unread_count(request.user)
+        
+        return Response({'unread_count': unread_count}, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        logger.error(f"Error getting unread count: {e}")
+        return Response(
+            {'error': 'Failed to get unread count'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_unread_count(request):
+    """Get total unread messages count for user"""
+    try:
+        # Get all conversations for user
+        conversations = Conversation.objects.filter(
+            participants=request.user,
+            is_deleted=False
+        ).exclude(deleted_by=request.user)
+        
+        total_unread = sum(conv.get_unread_count(request.user) for conv in conversations)
+        
+        return Response({'unread_count': total_unread}, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        logger.error(f"Error getting total unread count: {e}")
+        return Response(
+            {'error': 'Failed to get unread count'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
