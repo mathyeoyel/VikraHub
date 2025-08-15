@@ -520,7 +520,7 @@ export const blogAPI = {
       
       return handleAPIError(error, "Failed to update blog post");
     }
-  },  });
+  },
   delete: async (id) => {
     try {
       // Ensure we have a valid token before making the request
@@ -574,70 +574,6 @@ export const blogAPI = {
         });
       }
       
-      return handleAPIError(error, "Failed to delete blog post");
-    }
-  },  
-      if (data instanceof FormData) {
-        config.headers['Content-Type'] = 'multipart/form-data';
-      } else {
-        config.headers['Content-Type'] = 'application/json';
-      }
-      
-      const response = await api.patch(`blog/${id}/`, data, config);
-      console.log('✅ Blog update request successful:', response.status);
-      return response.data;
-    } catch (error) {
-      console.error('❌ Blog update error:', {
-        message: error.message,
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        url: error.config?.url,
-        baseURL: error.config?.baseURL,
-        fullURL: (error.config?.baseURL || '') + (error.config?.url || ''),
-        headers: error.config?.headers,
-        responseData: error.response?.data
-      });
-      return handleAPIError(error, "Failed to update blog post");
-    }
-  },
-  delete: async (id) => {
-    try {
-      // Ensure we have a valid token before making the request
-      const token = getAccessToken();
-      if (!token) {
-        console.error("❌ No access token found for blog delete request");
-        throw new Error("Authentication required - please login again");
-      }
-      
-      console.log('🔐 Making authenticated blog delete request:', {
-        id: id,
-        hasToken: !!token,
-        tokenLength: token.length,
-        endpoint: `blog/${id}/`
-      });
-
-      // Force authentication header for this specific request
-      const config = {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      };
-      
-      const response = await api.delete(`blog/${id}/`, config);
-      console.log('✅ Blog delete request successful:', response.status);
-      return response.data;
-    } catch (error) {
-      console.error('❌ Blog delete error:', {
-        message: error.message,
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        url: error.config?.url,
-        baseURL: error.config?.baseURL,
-        fullURL: (error.config?.baseURL || '') + (error.config?.url || ''),
-        headers: error.config?.headers,
-        responseData: error.response?.data
-      });
       return handleAPIError(error, "Failed to delete blog post");
     }
   },
