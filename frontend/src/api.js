@@ -461,25 +461,183 @@ export const blogAPI = {
   },
   update: async (id, data) => {
     try {
+      // Ensure we have a valid token before making the request
+      const token = getAccessToken();
+      if (!token) {
+        console.error("❌ No access token found for blog update request");
+        throw new Error("Authentication required - please login again");
+      }
+      
+      console.log('🔐 Making authenticated blog update request:', {
+        id: id,
+        hasToken: !!token,
+        tokenLength: token.length,
+        isFormData: data instanceof FormData,
+        endpoint: `blog/${id}/`
+      });
+
       // Check if data is FormData (for file uploads)
-      const config = {};
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      };
+      
       if (data instanceof FormData) {
-        config.headers = {
-          'Content-Type': 'multipart/form-data',
-        };
+        config.headers['Content-Type'] = 'multipart/form-data';
+      } else {
+        config.headers['Content-Type'] = 'application/json';
       }
       
       const response = await api.patch(`blog/${id}/`, data, config);
+      console.log('✅ Blog update request successful:', response.status);
       return response.data;
     } catch (error) {
+      console.error('❌ Blog update error:', {
+        message: error.message,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        url: error.config?.url,
+        baseURL: error.config?.baseURL,
+        fullURL: (error.config?.baseURL || '') + (error.config?.url || ''),
+        headers: error.config?.headers,
+        responseData: error.response?.data,
+        blogId: id
+      });
+      
+      // Special handling for 500 errors
+      if (error.response?.status === 500) {
+        console.error('🚨 Server error while updating blog post:', {
+          blogId: id,
+          possibleCauses: [
+            'Blog post does not exist',
+            'Invalid data format',
+            'Database constraint violation',
+            'Server-side permission error'
+          ]
+        });
+      }
+      
+      return handleAPIError(error, "Failed to update blog post");
+    }
+  },  });
+  delete: async (id) => {
+    try {
+      // Ensure we have a valid token before making the request
+      const token = getAccessToken();
+      if (!token) {
+        console.error("❌ No access token found for blog delete request");
+        throw new Error("Authentication required - please login again");
+      }
+      
+      console.log('🔐 Making authenticated blog delete request:', {
+        id: id,
+        hasToken: !!token,
+        tokenLength: token.length,
+        endpoint: `blog/${id}/`
+      });
+
+      // Force authentication header for this specific request
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      };
+      
+      const response = await api.delete(`blog/${id}/`, config);
+      console.log('✅ Blog delete request successful:', response.status);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Blog delete error:', {
+        message: error.message,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        url: error.config?.url,
+        baseURL: error.config?.baseURL,
+        fullURL: (error.config?.baseURL || '') + (error.config?.url || ''),
+        headers: error.config?.headers,
+        responseData: error.response?.data,
+        blogId: id
+      });
+      
+      // Special handling for 500 errors
+      if (error.response?.status === 500) {
+        console.error('🚨 Server error while deleting blog post:', {
+          blogId: id,
+          possibleCauses: [
+            'Blog post does not exist',
+            'Database constraint violation', 
+            'Server-side permission error',
+            'Related data dependencies'
+          ]
+        });
+      }
+      
+      return handleAPIError(error, "Failed to delete blog post");
+    }
+  },  
+      if (data instanceof FormData) {
+        config.headers['Content-Type'] = 'multipart/form-data';
+      } else {
+        config.headers['Content-Type'] = 'application/json';
+      }
+      
+      const response = await api.patch(`blog/${id}/`, data, config);
+      console.log('✅ Blog update request successful:', response.status);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Blog update error:', {
+        message: error.message,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        url: error.config?.url,
+        baseURL: error.config?.baseURL,
+        fullURL: (error.config?.baseURL || '') + (error.config?.url || ''),
+        headers: error.config?.headers,
+        responseData: error.response?.data
+      });
       return handleAPIError(error, "Failed to update blog post");
     }
   },
   delete: async (id) => {
     try {
-      const response = await api.delete(`blog/${id}/`);
+      // Ensure we have a valid token before making the request
+      const token = getAccessToken();
+      if (!token) {
+        console.error("❌ No access token found for blog delete request");
+        throw new Error("Authentication required - please login again");
+      }
+      
+      console.log('🔐 Making authenticated blog delete request:', {
+        id: id,
+        hasToken: !!token,
+        tokenLength: token.length,
+        endpoint: `blog/${id}/`
+      });
+
+      // Force authentication header for this specific request
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      };
+      
+      const response = await api.delete(`blog/${id}/`, config);
+      console.log('✅ Blog delete request successful:', response.status);
       return response.data;
     } catch (error) {
+      console.error('❌ Blog delete error:', {
+        message: error.message,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        url: error.config?.url,
+        baseURL: error.config?.baseURL,
+        fullURL: (error.config?.baseURL || '') + (error.config?.url || ''),
+        headers: error.config?.headers,
+        responseData: error.response?.data
+      });
       return handleAPIError(error, "Failed to delete blog post");
     }
   },
