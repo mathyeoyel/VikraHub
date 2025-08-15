@@ -25,26 +25,37 @@ export const useFollow = (userId) => {
     error: statsError
   } = useQuery({
     queryKey: followKeys.stats(userId),
-    queryFn: () => followAPI.getFollowStats(userId),
+    queryFn: async () => {
+      console.log(`🔍 Fetching follow stats for user ${userId}`);
+      const response = await followAPI.getFollowStats(userId);
+      console.log(`📊 Follow stats response:`, response.data);
+      return response.data;
+    },
     enabled: !!userId,
-    staleTime: 30000, // 30 seconds
-    cacheTime: 300000, // 5 minutes
-    select: (response) => response.data
+    staleTime: 5000, // 5 seconds - shorter to ensure fresh data
+    cacheTime: 60000, // 1 minute 
+    refetchOnMount: true, // Always refetch when component mounts
+    refetchOnWindowFocus: true, // Refetch when window gains focus
   });
 
   // Follow mutation with optimistic updates
   const followMutation = useMutation({
-    mutationFn: (targetUserId) => {
+    mutationFn: async (targetUserId) => {
+      console.log(`➡️ Following user ${targetUserId}`);
       // Use new idempotent endpoint
-      return fetch(`/api/follow/toggle/${targetUserId}/`, {
+      const response = await fetch(`/api/follow/toggle/${targetUserId}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
-      }).then(res => res.json());
+      });
+      const data = await response.json();
+      console.log(`✅ Follow response:`, data);
+      return data;
     },
     onMutate: async (targetUserId) => {
+      console.log(`🔄 Optimistically updating follow state for user ${targetUserId}`);
       // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: followKeys.stats(targetUserId) });
       
@@ -53,7 +64,12 @@ export const useFollow = (userId) => {
       
       // Optimistically update to the new value
       queryClient.setQueryData(followKeys.stats(targetUserId), (old) => {
-        if (!old) return old;
+        if (!old) return {
+          is_following: true,
+          followers_count: 1,
+          following_count: 0,
+          is_followed_by: false
+        };
         return {
           ...old,
           is_following: true,
@@ -64,14 +80,29 @@ export const useFollow = (userId) => {
       // Return a context object with the snapshotted value
       return { previousStats, targetUserId };
     },
+    onSuccess: (data, targetUserId) => {
+      console.log(`🎉 Follow mutation succeeded, updating cache with server data`);
+      // Update cache with actual server response
+      queryClient.setQueryData(followKeys.stats(targetUserId), data.target_user ? {
+        is_following: data.is_following,
+        followers_count: data.target_user.followers_count,
+        following_count: data.target_user.following_count,
+        is_followed_by: false // This would need to be included in server response
+      } : (old) => ({
+        ...old,
+        is_following: data.is_following
+      }));
+    },
     onError: (err, targetUserId, context) => {
+      console.error(`❌ Follow mutation failed:`, err);
       // Roll back to previous state on error
       if (context?.previousStats) {
         queryClient.setQueryData(followKeys.stats(context.targetUserId), context.previousStats);
       }
     },
     onSettled: (data, error, targetUserId) => {
-      // Always refetch after error or success
+      console.log(`🔄 Follow mutation settled, invalidating queries`);
+      // Always refetch after error or success to ensure consistency
       queryClient.invalidateQueries({ queryKey: followKeys.stats(targetUserId) });
       queryClient.invalidateQueries({ queryKey: followKeys.myStats() });
     }
@@ -79,17 +110,22 @@ export const useFollow = (userId) => {
 
   // Unfollow mutation with optimistic updates
   const unfollowMutation = useMutation({
-    mutationFn: (targetUserId) => {
+    mutationFn: async (targetUserId) => {
+      console.log(`➡️ Unfollowing user ${targetUserId}`);
       // Use new idempotent endpoint
-      return fetch(`/api/follow/toggle/${targetUserId}/`, {
+      const response = await fetch(`/api/follow/toggle/${targetUserId}/`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
-      }).then(res => res.json());
+      });
+      const data = await response.json();
+      console.log(`✅ Unfollow response:`, data);
+      return data;
     },
     onMutate: async (targetUserId) => {
+      console.log(`🔄 Optimistically updating unfollow state for user ${targetUserId}`);
       // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: followKeys.stats(targetUserId) });
       
@@ -98,7 +134,12 @@ export const useFollow = (userId) => {
       
       // Optimistically update to the new value
       queryClient.setQueryData(followKeys.stats(targetUserId), (old) => {
-        if (!old) return old;
+        if (!old) return {
+          is_following: false,
+          followers_count: 0,
+          following_count: 0,
+          is_followed_by: false
+        };
         return {
           ...old,
           is_following: false,
@@ -109,14 +150,29 @@ export const useFollow = (userId) => {
       // Return a context object with the snapshotted value
       return { previousStats, targetUserId };
     },
+    onSuccess: (data, targetUserId) => {
+      console.log(`🎉 Unfollow mutation succeeded, updating cache with server data`);
+      // Update cache with actual server response
+      queryClient.setQueryData(followKeys.stats(targetUserId), data.target_user ? {
+        is_following: data.is_following,
+        followers_count: data.target_user.followers_count,
+        following_count: data.target_user.following_count,
+        is_followed_by: false // This would need to be included in server response
+      } : (old) => ({
+        ...old,
+        is_following: data.is_following
+      }));
+    },
     onError: (err, targetUserId, context) => {
+      console.error(`❌ Unfollow mutation failed:`, err);
       // Roll back to previous state on error
       if (context?.previousStats) {
         queryClient.setQueryData(followKeys.stats(context.targetUserId), context.previousStats);
       }
     },
     onSettled: (data, error, targetUserId) => {
-      // Always refetch after error or success
+      console.log(`🔄 Unfollow mutation settled, invalidating queries`);
+      // Always refetch after error or success to ensure consistency
       queryClient.invalidateQueries({ queryKey: followKeys.stats(targetUserId) });
       queryClient.invalidateQueries({ queryKey: followKeys.myStats() });
     }
@@ -151,7 +207,12 @@ export const useFollow = (userId) => {
     // Actions
     follow: (targetUserId) => followMutation.mutate(targetUserId),
     unfollow: (targetUserId) => unfollowMutation.mutate(targetUserId),
-    toggleFollow
+    toggleFollow,
+    
+    // Helper to force refresh
+    refreshFollowStatus: () => {
+      queryClient.invalidateQueries({ queryKey: followKeys.stats(userId) });
+    }
   };
 };
 

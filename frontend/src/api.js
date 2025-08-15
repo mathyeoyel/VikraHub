@@ -56,11 +56,8 @@ api.interceptors.request.use(
       !config.url.includes('my_posts/');
     
     // Special handling for follow stats: GET requests to view follow stats are public
-    const isFollowStatsPublic = config.method === 'get' && 
-      config.url.includes('follow/stats/') && 
-      !config.url.includes('/follow/') && // Don't allow follow/unfollow actions
-      !config.url.includes('/followers/') && // Don't allow followers list access
-      !config.url.includes('/following/'); // Don't allow following list access
+    // BUT we still want to send the auth token if available to get relationship info
+    const isFollowStatsPublic = false; // Changed to false so auth token is always sent
     
     const isPublicRoute = publicRoutes.some(route => config.url.includes(route)) || 
                          isPortfolioPublic ||
@@ -870,7 +867,17 @@ export const followAPI = {
   getMyStats: () => api.get("follow/my-stats/"),
   getMyFollowStats: () => api.get("follow/my-stats/"), // Alias for compatibility
   getUserStats: (user_id) => api.get(`follow/stats/${user_id}/`),
-  getFollowStats: (user_id) => api.get(`follow/stats/${user_id}/`), // Alias for getUserStats
+  getFollowStats: async (user_id) => {
+    try {
+      console.log(`📡 Fetching follow stats for user ${user_id}`);
+      const response = await api.get(`follow/stats/${user_id}/`);
+      console.log(`📊 Follow stats API response:`, response.data);
+      return response;
+    } catch (error) {
+      console.error(`❌ Follow stats API error:`, error.response?.data || error.message);
+      throw error;
+    }
+  },
   getFollowers: (user_id) => api.get(`follow/followers/${user_id}/`),
   getFollowing: (user_id) => api.get(`follow/following/${user_id}/`),
   

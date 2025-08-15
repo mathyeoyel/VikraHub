@@ -13,6 +13,7 @@ import LoadingSpinner from './components/common/LoadingSpinner';
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import Home from "./Home";
 import Login from "./Login";
+import FollowDebug from './components/Debug/FollowDebug';
 
 // Lazy load components for better performance
 const Team = React.lazy(() => import("./Team"));
@@ -194,6 +195,7 @@ function App() {
           </Layout>
           <NotificationContainer />
           <ToastNotifications />
+          {process.env.NODE_ENV === 'development' && <FollowDebug />}
         </BrowserRouter>
             </FollowProvider>
           </WebSocketProvider>

@@ -29,6 +29,19 @@ const FollowButtonPersistent = ({
     toggleFollow
   } = useFollow(userId);
 
+  // Debug logging
+  React.useEffect(() => {
+    console.log(`🔍 FollowButton Debug - User ${userId}:`, {
+      isFollowing,
+      followersCount,
+      isLoading,
+      isFollowingUser,
+      isUnfollowingUser,
+      currentUser: user?.id,
+      targetUser: userId
+    });
+  }, [isFollowing, followersCount, isLoading, isFollowingUser, isUnfollowingUser, userId, user?.id]);
+
   // Don't show follow button for current user or if not authenticated
   if (!isAuthenticated || !user || user.id === parseInt(userId)) {
     return null;

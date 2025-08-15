@@ -17,14 +17,20 @@ const queryClient = new QueryClient({
         return failureCount < 3;
       },
       
-      // Consider data stale after 30 seconds
-      staleTime: 30000,
+      // Consider data stale after 5 seconds for better consistency
+      staleTime: 5000,
       
-      // Keep data in cache for 5 minutes
-      cacheTime: 300000,
+      // Keep data in cache for 1 minute 
+      cacheTime: 60000,
       
       // Refetch on window focus for critical data
       refetchOnWindowFocus: true,
+      
+      // Refetch when reconnecting to the internet
+      refetchOnReconnect: true,
+      
+      // Refetch on mount to ensure fresh data
+      refetchOnMount: true,
       
       // Background refetch interval for active queries
       refetchInterval: false, // Disabled by default, can be enabled per query
