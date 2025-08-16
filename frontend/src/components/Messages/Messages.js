@@ -368,10 +368,11 @@ const Messages = () => {
     const recipientName = location.state?.recipientName;
     
     if (recipientUsername && conversations.length > 0) {
-      // Find existing conversation with this user
-      const existingConv = conversations.find(conv => 
-        conv.other_participant?.username === recipientUsername
-      );
+      // Find existing conversation with this user (handle both API structures)
+      const existingConv = conversations.find(conv => {
+        const participantUsername = conv.participant?.username || conv.other_participant?.username;
+        return participantUsername === recipientUsername;
+      });
       
       if (existingConv) {
         console.log(`📩 Opening existing conversation with ${recipientUsername}`);
@@ -393,14 +394,15 @@ const Messages = () => {
       console.log(`🔄 Getting/creating conversation with ${recipientUsername}`);
       
       // First, find the user ID from username
-      // Check if we already have this user in our conversations
+      // Check if we already have this user in our conversations (handle both API structures)
       let recipientId = null;
-      const existingConv = conversations.find(conv => 
-        conv.other_participant?.username === recipientUsername
-      );
+      const existingConv = conversations.find(conv => {
+        const participantUsername = conv.participant?.username || conv.other_participant?.username;
+        return participantUsername === recipientUsername;
+      });
       
       if (existingConv) {
-        recipientId = existingConv.other_participant.id;
+        recipientId = existingConv.participant?.id || existingConv.other_participant?.id;
       } else {
         // For username-only creation, use legacy API temporarily
         // TODO: Add user lookup endpoint or pass user ID from calling component
@@ -467,18 +469,22 @@ const Messages = () => {
       
       console.log('📥 Raw conversations data:', data);
       
-      // Validate conversations - new API structure has conversation_id and participant fields
+      // Validate conversations - handle both old and new API structures during transition
       const validConversations = data.filter(conv => {
-        const isValid = conv.conversation_id &&
-          conv.participant &&
-          conv.participant.id &&
-          conv.participant.username &&
-          typeof conv.participant.id === 'number' &&
-          conv.participant.username.trim() !== '';
+        // Check for new API structure first (conversation_id + participant)
+        const hasNewStructure = conv.conversation_id && conv.participant && conv.participant.id && conv.participant.username;
+        
+        // Check for old API structure (id + other_participant) 
+        const hasOldStructure = conv.id && conv.other_participant && conv.other_participant.id && conv.other_participant.username;
+        
+        const isValid = hasNewStructure || hasOldStructure;
         
         if (!isValid) {
-          console.warn('⚠️ Filtered out invalid conversation:', conv);
+          console.warn('⚠️ Filtered out invalid conversation (missing required fields):', conv);
+        } else if (hasOldStructure && !hasNewStructure) {
+          console.info('ℹ️ Using legacy conversation structure:', conv.id);
         }
+        
         return isValid;
       });
       
@@ -678,12 +684,15 @@ const Messages = () => {
     // Clear previous messages before fetching new ones
     setMessages([]);
     
-    fetchMessages(conversation.id);
+    // Use appropriate ID format for fetching messages
+    const conversationId = conversation.conversation_id || conversation.id;
+    fetchMessages(conversationId);
     
     // Mark as read
     if (conversation.unread_count > 0) {
       console.log('📖 Marking conversation as read, unread count:', conversation.unread_count);
-      markAsRead(conversation.id);
+      const conversationId = conversation.conversation_id || conversation.id;
+      markAsRead(conversationId);
     }
   };
 
@@ -918,10 +927,17 @@ const Messages = () => {
     }
   };
 
-  const filteredConversations = conversations.filter(conv =>
-    conv.other_participant.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    conv.other_participant.username?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredConversations = conversations.filter(conv => {
+    // Handle both API structures for search
+    const participant = conv.participant || conv.other_participant;
+    const fullName = participant?.full_name || participant?.display_name;
+    const username = participant?.username;
+    
+    return (
+      fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      username?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
 
   const totalUnread = conversations.reduce((sum, conv) => sum + conv.unread_count, 0);
 
@@ -985,23 +1001,35 @@ const Messages = () => {
                       onClick={() => selectConversation(conversation)}
                     >
                       <div className="conversation-avatar-container">
-                        <img
-                          src={getAvatarUrl(conversation.other_participant)}
-                          alt={conversation.other_participant.full_name || conversation.other_participant.username}
-                          className="conversation-avatar"
-                          onError={(e) => handleImageError(e, 'avatar')}
-                        />
-                        <div className={`presence-indicator ${userStatus}`}></div>
+                        {(() => {
+                          const participant = conversation.participant || conversation.other_participant;
+                          const displayName = participant?.full_name || participant?.display_name || participant?.username;
+                          return (
+                            <>
+                              <img
+                                src={getAvatarUrl(participant)}
+                                alt={displayName}
+                                className="conversation-avatar"
+                                onError={(e) => handleImageError(e, 'avatar')}
+                              />
+                              <div className={`presence-indicator ${userStatus}`}></div>
+                            </>
+                          );
+                        })()}
                       </div>
                       <div className="conversation-info">
                         <div className="conversation-header">
-                          <h4>{conversation.other_participant.full_name || conversation.other_participant.username}</h4>
+                          {(() => {
+                            const participant = conversation.participant || conversation.other_participant;
+                            const displayName = participant?.full_name || participant?.display_name || participant?.username;
+                            return <h4>{displayName}</h4>;
+                          })()}
                           <span className="conversation-time">
                             {conversation.latest_message ? formatTime(conversation.latest_message.created_at) : ''}
                           </span>
                         </div>
                         <p className="last-message">
-                          {conversation.latest_message?.content || 'No messages yet'}
+                          {conversation.latest_message?.content || conversation.latest_message?.body || 'No messages yet'}
                         </p>
                         {conversation.unread_count > 0 && (
                           <span className="unread-count">{conversation.unread_count}</span>
@@ -1029,20 +1057,37 @@ const Messages = () => {
                     </button>
                   )}
                   <div className="participant-avatar-container">
-                    <img
-                      src={getAvatarUrl(selectedConversation.other_participant)}
-                      alt={selectedConversation.other_participant.full_name || selectedConversation.other_participant.username}
-                      className="participant-avatar"
-                      onError={(e) => handleImageError(e, 'avatar')}
-                    />
-                    <div className={`presence-indicator ${getUserStatus(selectedConversation.other_participant.id)}`}></div>
+                    {(() => {
+                      const participant = selectedConversation.participant || selectedConversation.other_participant;
+                      const displayName = participant?.full_name || participant?.display_name || participant?.username;
+                      return (
+                        <>
+                          <img
+                            src={getAvatarUrl(participant)}
+                            alt={displayName}
+                            className="participant-avatar"
+                            onError={(e) => handleImageError(e, 'avatar')}
+                          />
+                          <div className={`presence-indicator ${getUserStatus(participant.id)}`}></div>
+                        </>
+                      );
+                    })()}
                   </div>
                   <div className="participant-info">
-                    <h3>{selectedConversation.other_participant.full_name || selectedConversation.other_participant.username}</h3>
-                    <span className="participant-status">
-                      @{selectedConversation.other_participant.username} • 
-                      {getUserStatus(selectedConversation.other_participant.id) === 'online' ? ' Online' : ' Offline'}
-                    </span>
+                    {(() => {
+                      const participant = selectedConversation.participant || selectedConversation.other_participant;
+                      const displayName = participant?.full_name || participant?.display_name || participant?.username;
+                      const username = participant?.username;
+                      return (
+                        <>
+                          <h3>{displayName}</h3>
+                          <span className="participant-status">
+                            @{username} • 
+                            {getUserStatus(participant.id) === 'online' ? ' Online' : ' Offline'}
+                          </span>
+                        </>
+                      );
+                    })()}
                   </div>
                 </div>
 
